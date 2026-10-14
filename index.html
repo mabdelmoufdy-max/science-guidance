@@ -1,4 +1,5 @@
 <!doctype html>
+<!-- v125: البيانات التكميلية (الهاتف، العنوان، مدير المدرسة) لا تُحسب نواقص ولا تظهر في التنبيهات؛ معلم الأجر لا تُطلب له درجة وظيفية ولا تاريخ تعيين. -->
 <!-- v124 تجربة: لوحة مشرف المادة/مدير المدرسة: مؤشرات المدرسة وتنبيهات النواقص القابلة للضغط وجدول نصاب المعلمين؛ مصدر النسخة v123. -->
 <!-- v123 تجربة: عرض المؤهل من مصدر البيانات المرفوع عند خلو عمود المؤهل (معلمو الإعدادي) في تقرير بيانات المعلمين ونموذج التعديل؛ مصدر النسخة v122. -->
 <!-- v122 تجربة: تقرير الانتداب يعرض المدرسة الأخرى وحصص المعلم فيها حتى لو كانت خارج نطاق الموجه (عبر get_delegation_periods)؛ مصدر النسخة v121. -->
@@ -41,7 +42,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#152c43">
-<title>نظام توجيه العلوم — v124</title>
+<title>نظام توجيه العلوم — v125</title>
 <style>
 /* School dossier: stable readable layout on mobile and desktop. */
 .v110-dossier{display:grid;gap:14px;min-width:0}
@@ -2735,7 +2736,7 @@ async function loadSmartAlerts({force=false}={}){
    if(!school.stage||!String(school.name||'').trim())alertPush(list,{key:`school-fields:${sid}`,level:'danger',title:`بيانات أساسية ناقصة — ${row.school_name||'مدرسة'}`,message:'اسم المدرسة أو المرحلة غير مكتمل.',page:'schools',schoolId:sid,schoolName:row.school_name});
   }
   for(const t of teachers){
-   const missing=[];if(!String(t.full_name||'').trim())missing.push('الاسم');if(!t.home_school_id)missing.push('المدرسة');if(!String(t.job_title||'').trim())missing.push('الدرجة الوظيفية');if(!alertValidCivil(t.civil_id))missing.push('الرقم المدني');
+   const missing=[];if(!String(t.full_name||'').trim())missing.push('الاسم');if(!t.home_school_id)missing.push('المدرسة');if(t.work_type!=='paid'&&!String(t.job_title||'').trim())missing.push('الدرجة الوظيفية');if(!alertValidCivil(t.civil_id))missing.push('الرقم المدني');
    if(missing.length)alertPush(list,{key:`teacher-missing:${t.id||t.teacher_id}`,level:'danger',title:`بيانات معلم غير مكتملة — ${t.full_name||'بدون اسم'}`,message:`الحقول المطلوب استكمالها: ${missing.join('، ')}.`,page:'teachers',teacherId:t.id||t.teacher_id,schoolId:t.home_school_id,schoolName:t.home_school_name});
   }
   for(const [civil,rows] of alertDuplicateCivils(teachers))alertPush(list,{key:`dup-civil:${civil}`,level:'danger',title:'رقم مدني مكرر',message:`الرقم ${civil} مسجل لأكثر من معلم: ${rows.map(x=>x.full_name||'بدون اسم').join('، ')}.`,page:'teachers'});
@@ -4079,6 +4080,10 @@ const COMPLETION_FIELDS={
  teacher:[['phone','رقم الهاتف'],['job_title','الدرجة الوظيفية'],['work_start_date','تاريخ استلام العمل']],
  supervisor:[['phone','رقم الهاتف'],['job_title','المسمى الوظيفي'],['employment_grade','الدرجة الوظيفية'],['appointment_date','تاريخ التعيين'],['work_start_date','تاريخ استلام العمل']]
 };
+// v125: بيانات تكميلية (الهاتف، العنوان، مدير المدرسة) لا تُحسب نواقص ولا تظهر في التنبيهات
+const COMPLETION_OPTIONAL={school:['address','phone','manager_profile_id'],teacher:['phone'],supervisor:['phone']};
+// معلم الأجر مؤقت: لا درجة وظيفية ولا تاريخ تعيين، المطلوب فقط تاريخ المباشرة
+function completionOptional(entity,field,rec){return (COMPLETION_OPTIONAL[entity]||[]).includes(field)||(entity==='teacher'&&rec?.work_type==='paid'&&['job_title','appointment_date'].includes(field))}
 let completionTab='missing';
 function completionEmpty(v){return v==null||String(v).trim()===''}
 function completionStatusLabel(v){return v==='pending_admin_approval'?'🟡 انتظار الاعتماد':v==='approved'?'🔵 تعديل معتمد':v==='applied'?'🟢 مكتمل':'🔴 ناقص'}
@@ -4086,7 +4091,7 @@ function completionFieldLabel(entity,field){return COMPLETION_FIELDS[entity]?.fi
 async function loadCompletionData(){
  const [schoolsR,teachersR,supsR,changesR]=await Promise.all([
   sb.from('schools').select('id,name,stage,school_type,gender_type,address,phone,manager_profile_id,supervisor_id').order('name'),
-  sb.from('teacher_records').select('id,full_name,civil_id,phone,job_title,appointment_date,work_start_date,home_school_id').eq('active',true).order('full_name'),
+  sb.from('teacher_records').select('id,full_name,civil_id,phone,job_title,appointment_date,work_start_date,home_school_id,work_type').eq('active',true).order('full_name'),
   sb.from('supervisors').select('id,profile_id,full_name,phone,job_title,employment_grade,appointment_date,work_start_date').eq('active',true).order('full_name'),
   sb.from('data_completion_changes').select('*').order('changed_at',{ascending:false}).limit(500)
  ]);
@@ -4103,12 +4108,12 @@ function completionEntityRows(data){
  if(['admin','first_supervisor','stage_coordinator','supervisor'].includes(profile.role))for(const u of data.supervisors)rows.push({entity:'supervisor',id:u.id,name:u.full_name||'موجه',meta:'بيانات الموجه',schoolId:null,record:u});
  return rows;
 }
-function completionEntityMissing(row){return (COMPLETION_FIELDS[row.entity]||[]).filter(([f])=>completionEmpty(row.record?.[f])).length}
+function completionEntityMissing(row){return (COMPLETION_FIELDS[row.entity]||[]).filter(([f])=>!completionOptional(row.entity,f,row.record)&&completionEmpty(row.record?.[f])).length}
 function completionRowPendingCount(row,pmap){return (COMPLETION_FIELDS[row.entity]||[]).filter(([f])=>pmap.has(`${row.entity}:${row.id}:${f}`)).length}
 function completionFieldHtml(row,field,label,pmap){
- const v=row.record?.[field],pending=pmap.get(`${row.entity}:${row.id}:${field}`),missing=completionEmpty(v);
- const state=pending?'pending':missing?'missing':'done';
- const stateText=pending?'🟡 انتظار الاعتماد':missing?'🔴 ناقص':'🟢 مكتمل';
+ const v=row.record?.[field],pending=pmap.get(`${row.entity}:${row.id}:${field}`),missing=completionEmpty(v),optional=completionOptional(row.entity,field,row.record);
+ const state=pending?'pending':missing?(optional?'done':'missing'):'done';
+ const stateText=pending?'🟡 انتظار الاعتماد':missing?(optional?'⚪ تكميلي (اختياري)':'🔴 ناقص'):'🟢 مكتمل';
  const shown=field==='manager_profile_id'?(v?'حساب مدير مرتبط':'غير محدد'):(v||'غير مدخل');
  return `<div class="completion-field"><div class="cf-copy"><span class="cf-label">${esc(label)} <span class="completion-state ${state}">${stateText}</span></span><div class="cf-value">${esc(shown)}</div>${pending?`<small class="muted">القيمة السابقة: ${esc(pending.old_value||'فارغ')}</small>`:''}</div><button class="btn secondary" onclick="openCompletionEdit('${row.entity}','${row.id}','${field}',${handlerArg(String(v||''))})">${missing?'إدخال':'تعديل'}</button></div>`;
 }
@@ -4120,7 +4125,7 @@ function completionHierarchyHtml(data){
  if(!['admin','first_supervisor','stage_coordinator','supervisor'].includes(profile.role))return '';
  const pmap=completionPendingMap(data.changes), rows=completionEntityRows(data).filter(x=>x.entity!=='supervisor');
  const bySchool=new Map();for(const s of data.schools)bySchool.set(s.id,{school:s,total:0,done:0,pending:0});
- for(const r of rows){const o=bySchool.get(r.schoolId);if(!o)continue;for(const [f] of COMPLETION_FIELDS[r.entity]){o.total++;if(!completionEmpty(r.record?.[f]))o.done++;if(pmap.has(`${r.entity}:${r.id}:${f}`))o.pending++;}}
+ for(const r of rows){const o=bySchool.get(r.schoolId);if(!o)continue;for(const [f] of COMPLETION_FIELDS[r.entity]){if(completionOptional(r.entity,f,r.record))continue;o.total++;if(!completionEmpty(r.record?.[f]))o.done++;if(pmap.has(`${r.entity}:${r.id}:${f}`))o.pending++;}}
  const items=[...bySchool.values()].map(o=>({...o,pct:o.total?Math.round(o.done*100/o.total):100})).sort((a,b)=>a.pct-b.pct).slice(0,30);
  return `<div class="statistics-section-caption"><h3>متابعة الاستكمال حسب المدرسة</h3><small>الأقل اكتمالًا أولًا</small></div><div class="completion-hierarchy">${items.map(o=>`<div class="mini"><b>${esc(o.school.name)}</b><span>${esc(o.school.stage)} - اكتمال ${o.pct}% - انتظار اعتماد ${o.pending}</span></div>`).join('')}</div>`;
 }
@@ -9497,7 +9502,7 @@ async function v124SchoolBoard(force){
   (w.teachers||[]).forEach(t=>{const id=String(t.teacher_id||t.id),n=need.get(id)||0,d=done.get(id)||0;if(n>0&&d<n)alerts.push({tone:'warn',text:`جدول ${t.full_name} غير مكتمل: ${d} / ${n}`,action:`v124OpenTimetable('${esc(id)}')`,btn:'الجدول'})});}}catch(_){}
  // بيانات ناقصة
  try{const ids=teachers.map(v91TeacherId).filter(Boolean);if(ids.length){const r=await sb.from('teacher_records').select('id,full_name,phone,qualification,qualification_year,source_reference,appointment_date,work_type,home_school_id').in('id',ids);
-  (r.data||[]).filter(t=>String(t.home_school_id)===String(school.id)).forEach(t=>{const miss=[];if(!t.phone)miss.push('الهاتف');if(!v123Qualification(t))miss.push('المؤهل');if(t.work_type!=='paid'&&!t.appointment_date)miss.push('تاريخ التعيين');if(miss.length)alerts.push({tone:'info',text:`${t.full_name}: ينقص ${miss.join('، ')}`,action:`editTeacherForm('${esc(t.id)}')`,btn:'تعديل'})});}}catch(_){}
+  (r.data||[]).filter(t=>String(t.home_school_id)===String(school.id)).forEach(t=>{const miss=[];if(!v123Qualification(t))miss.push('المؤهل');if(t.work_type!=='paid'&&!t.appointment_date)miss.push('تاريخ التعيين');if(miss.length)alerts.push({tone:'info',text:`${t.full_name}: ينقص ${miss.join('، ')}`,action:`editTeacherForm('${esc(t.id)}')`,btn:'تعديل'})});}}catch(_){}
  // حالة الاعتماد
  try{const r=await sb.from('school_submissions').select('status,return_reason').eq('term_id',activeTerm.id).eq('school_id',school.id).maybeSingle();if(r.data?.status==='returned_for_edit')alerts.unshift({tone:'danger',text:`ملف المدرسة معاد للتعديل${r.data.return_reason?': '+r.data.return_reason:''}`,action:`go('approval')`,btn:'الاعتماد'})}catch(_){}
  const kpis=[v124Kpi('الفصول',classes.length),v124Kpi('الحصص المطلوبة',required),v124Kpi('الحصص المسندة',assigned),ready?(deficit>0?v124Kpi('العجز',deficit,'danger'):surplus>0?v124Kpi('الزيادة',surplus,'ok'):v124Kpi('العجز',0,'ok')):v124Kpi('العجز','غير مكتمل','warn')].join('');
