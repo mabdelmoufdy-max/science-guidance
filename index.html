@@ -1,4 +1,5 @@
 <!doctype html>
+<!-- v126: حصتا الإشراف تدخلان في إجمالي نصاب المعلم ولا تُحتسبان زيادة ولا تُخصمان من حصص المدرسة -->
 <!-- v125: البيانات التكميلية (الهاتف، العنوان، مدير المدرسة) لا تُحسب نواقص ولا تظهر في التنبيهات؛ معلم الأجر لا تُطلب له درجة وظيفية ولا تاريخ تعيين. -->
 <!-- v124 تجربة: لوحة مشرف المادة/مدير المدرسة: مؤشرات المدرسة وتنبيهات النواقص القابلة للضغط وجدول نصاب المعلمين؛ مصدر النسخة v123. -->
 <!-- v123 تجربة: عرض المؤهل من مصدر البيانات المرفوع عند خلو عمود المؤهل (معلمو الإعدادي) في تقرير بيانات المعلمين ونموذج التعديل؛ مصدر النسخة v122. -->
@@ -42,7 +43,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#152c43">
-<title>نظام توجيه العلوم — v125</title>
+<title>نظام توجيه العلوم — v126</title>
 <style>
 /* School dossier: stable readable layout on mobile and desktop. */
 .v110-dossier{display:grid;gap:14px;min-width:0}
@@ -3395,7 +3396,9 @@ function workloadTeachingTargetLabel(t){
  const target=workloadTeachingTarget(t);if(target==null)return '—';
  const duties=Number(t?.supervision_periods||0)+Number(t?.leadership_periods||0);
  const total=target+duties,legal=Number(t?.weekly_target||0),delta=total-legal;
- const deltaText=delta>0?`زيادة ${delta}`:delta<0?`نقص ${Math.abs(delta)}`:'مطابق';
+ // حصتا الإشراف تدخلان في الإجمالي ولا تُحتسبان زيادة؛ الزيادة = التدريس + الريادة − النصاب.
+ const supervision=Number(t?.supervision_periods||0),countedSurplus=total-supervision-legal;
+ const deltaText=countedSurplus>0?`زيادة ${countedSurplus}`:delta<0?`نقص ${Math.abs(delta)}`:supervision&&delta>0?'مكتمل — الإشراف لا يُحتسب زيادة':'مطابق';
  return `${target} تدريس${duties?` + ${duties} إشراف/ريادة`:''} = ${total} (${deltaText})`;
 }
 
