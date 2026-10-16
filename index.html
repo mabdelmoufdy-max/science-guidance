@@ -1,4 +1,5 @@
 <!doctype html>
+<!-- v127: حذف الريادة من الواجهة بالكامل (حقل رائد الفصل وأعمدتها وحساباتها وتقاريرها). -->
 <!-- v126: حصتا الإشراف تدخلان في إجمالي نصاب المعلم ولا تُحتسبان زيادة ولا تُخصمان من حصص المدرسة -->
 <!-- v125: البيانات التكميلية (الهاتف، العنوان، مدير المدرسة) لا تُحسب نواقص ولا تظهر في التنبيهات؛ معلم الأجر لا تُطلب له درجة وظيفية ولا تاريخ تعيين. -->
 <!-- v124 تجربة: لوحة مشرف المادة/مدير المدرسة: مؤشرات المدرسة وتنبيهات النواقص القابلة للضغط وجدول نصاب المعلمين؛ مصدر النسخة v123. -->
@@ -43,7 +44,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#152c43">
-<title>نظام توجيه العلوم — v126</title>
+<title>نظام توجيه العلوم — v127</title>
 <style>
 /* School dossier: stable readable layout on mobile and desktop. */
 .v110-dossier{display:grid;gap:14px;min-width:0}
@@ -3388,18 +3389,18 @@ function workloadTeachingTarget(t){
  if(isPaidTeacher(t))return null;
  if(t?.weekly_target==null)return null;
  if(t?.workload_rule_type==='maximum')return Number(t.weekly_target||0);
- return planTeacherTeachingCapacity(Number(t.weekly_target||0),Number(t.supervision_periods||0)+Number(t.leadership_periods||0),t.home_school_stage);
+ return planTeacherTeachingCapacity(Number(t.weekly_target||0),Number(t.supervision_periods||0),t.home_school_stage);
 }
 
 function workloadTeachingTargetLabel(t){
  if(isPaidTeacher(t))return 'حسب إسناد المدرسة';
  const target=workloadTeachingTarget(t);if(target==null)return '—';
- const duties=Number(t?.supervision_periods||0)+Number(t?.leadership_periods||0);
+ const duties=Number(t?.supervision_periods||0);
  const total=target+duties,legal=Number(t?.weekly_target||0),delta=total-legal;
- // حصتا الإشراف تدخلان في الإجمالي ولا تُحتسبان زيادة؛ الزيادة = التدريس + الريادة − النصاب.
+ // حصتا الإشراف تدخلان في الإجمالي ولا تُحتسبان زيادة؛ الزيادة = التدريس − النصاب.
  const supervision=Number(t?.supervision_periods||0),countedSurplus=total-supervision-legal;
  const deltaText=countedSurplus>0?`زيادة ${countedSurplus}`:delta<0?`نقص ${Math.abs(delta)}`:supervision&&delta>0?'مكتمل — الإشراف لا يُحتسب زيادة':'مطابق';
- return `${target} تدريس${duties?` + ${duties} إشراف/ريادة`:''} = ${total} (${deltaText})`;
+ return `${target} تدريس${duties?` + ${duties} إشراف`:''} = ${total} (${deltaText})`;
 }
 
 async function teachersPage({force=false}={}){
@@ -3791,26 +3792,24 @@ function updateCurriculumPreview(){const st=document.getElementById('classStage'
 async function classesPage(){
  const s=await mySchool();if(!s)return '<div class="notice">لا توجد مدرسة مرتبطة بالحساب.</div>';
  const {data:classes,error}=await sb.from('school_classes')
-   .select('id,stage,grade,class_name,science_periods,grade_order,leader_teacher_id,teacher_records!school_classes_leader_teacher_id_fkey(full_name),class_subject_requirements(id,weekly_periods,subject_id,curriculum_subjects(subject_name,sort_order))')
+   .select('id,stage,grade,class_name,science_periods,grade_order,class_subject_requirements(id,weekly_periods,subject_id,curriculum_subjects(subject_name,sort_order))')
    .eq('school_id',s.id).eq('term_id',activeTerm.id).order('grade_order').order('class_name');
  if(error)return `<div class="error">${esc(error.message)}</div>`;
  return `<div class="page-head"><div><h2>الفصول والمواد</h2><p>${esc(s.name)} — العلوم تبدأ من الصف الرابع الابتدائي، وتحدد مواد كل صف تلقائيًا من المنهج.</p></div><button id="addClassButton" type="button" class="btn primary add-class-action" data-action="add-class" data-school-id="${s.id}">+ إضافة فصل</button></div>
  <div class="notice"><b>الثانوي:</b> الأول «علوم متكاملة»، والثاني والثالث «الكيمياء + الفيزياء + الأحياء».</div>
- ${v119GradeSummaryCard(classes||[])}<details class="card v119-class-details"><summary><b>عرض الفصول تفصيليًا وتعديلها</b> <small class="muted">(${(classes||[]).length} فصل)</small></summary><div class="table-wrap v118-plain-wrap"><table class="table no-compact-directory v118-plain-table v118-classes-table"><thead><tr><th>المرحلة</th><th>الصف</th><th>الفصل</th><th>المواد / الحصص</th><th>إجمالي حصص العلوم</th><th>رائد الفصل</th><th></th></tr></thead><tbody>${(classes||[]).map(c=>{
+ ${v119GradeSummaryCard(classes||[])}<details class="card v119-class-details"><summary><b>عرض الفصول تفصيليًا وتعديلها</b> <small class="muted">(${(classes||[]).length} فصل)</small></summary><div class="table-wrap v118-plain-wrap"><table class="table no-compact-directory v118-plain-table v118-classes-table"><thead><tr><th>المرحلة</th><th>الصف</th><th>الفصل</th><th>المواد / الحصص</th><th>إجمالي حصص العلوم</th><th></th></tr></thead><tbody>${(classes||[]).map(c=>{
    const reqs=(c.class_subject_requirements||[]).sort((a,b)=>(a.curriculum_subjects?.sort_order||0)-(b.curriculum_subjects?.sort_order||0));
    const subjects=reqs.map(r=>`<span class="chip">${esc(r.curriculum_subjects?.subject_name||'مادة')} <b>${r.weekly_periods}</b></span>`).join('');
-   return `<tr><td>${esc(c.stage)}</td><td>${esc(gradeLabel(c.stage,c.grade))}</td><td><b>${esc(c.class_name)}</b></td><td>${subjects||'—'}</td><td><b>${c.science_periods||0}</b></td><td>${esc(c.teacher_records?.full_name||'—')}</td><td><button class="btn secondary v118-edit-btn" onclick="subjectPeriodsForm('${c.id}')">تعديل</button></td></tr>`
- }).join('')||'<tr><td colspan="7">لم يتم إدخال الفصول بعد.</td></tr>'}</tbody></table></div></details>`
+   return `<tr><td>${esc(c.stage)}</td><td>${esc(gradeLabel(c.stage,c.grade))}</td><td><b>${esc(c.class_name)}</b></td><td>${subjects||'—'}</td><td><b>${c.science_periods||0}</b></td><td><button class="btn secondary v118-edit-btn" onclick="subjectPeriodsForm('${c.id}')">تعديل</button></td></tr>`
+ }).join('')||'<tr><td colspan="6">لم يتم إدخال الفصول بعد.</td></tr>'}</tbody></table></div></details>`
 }
 
 async function classForm(schoolId){
- const {data:teachers}=await sb.from('teacher_records').select('id,full_name').eq('home_school_id',schoolId).eq('active',true).order('full_name');
  modal(`<h3>إضافة فصل</h3><form onsubmit="saveClass(event,'${schoolId}')">
  <div class="form-grid">
   <div class="field"><label>المرحلة</label><select id="classStage" name="stage" onchange="updateGradeSelect()"><option>ابتدائي</option><option>إعدادي</option><option>ثانوي</option></select></div>
   <div class="field"><label>الصف</label><select id="classGrade" name="grade" onchange="updateCurriculumPreview()"></select></div>
   <div class="field"><label>الفصل</label><input name="class_name" placeholder="مثال: 4/1 أو 2/3" required></div>
-  <div class="field"><label>رائد الفصل</label><select name="leader_teacher_id"><option value="">بدون</option>${(teachers||[]).map(t=>`<option value="${t.id}">${esc(t.full_name)}</option>`).join('')}</select></div>
  </div>
  <div class="notice" style="margin-top:12px"><b>مواد الصف:</b> <span id="curriculumPreview"></span><br><small>بعد إنشاء الفصل حدّد عدد الحصص الأسبوعية لكل مادة من زر «حصص المواد».</small></div>
  <div class="actions"><button class="btn primary">حفظ</button><button type="button" class="btn secondary" onclick="closeModal()">إلغاء</button></div></form>`);
@@ -3820,7 +3819,7 @@ async function classForm(schoolId){
 async function saveClass(e,schoolId){
  e.preventDefault();const f=Object.fromEntries(new FormData(e.target).entries());
  const row=gradeRows(f.stage).find(x=>x.v===f.grade);
- Object.assign(f,{school_id:schoolId,academic_year_id:activeYear.id,term_id:activeTerm.id,science_periods:0,grade_order:row?.order||null,leader_teacher_id:f.leader_teacher_id||null});
+ Object.assign(f,{school_id:schoolId,academic_year_id:activeYear.id,term_id:activeTerm.id,science_periods:0,grade_order:row?.order||null});
  const {error}=await sb.from('school_classes').insert(f);if(error)return moneySafeError(error);
  closeModal();toast('تمت إضافة الفصل والمواد المقررة تلقائيًا');refreshCurrentPage({invalidate:['classes','assignments','dashboard','page:reports','school:self']}).catch(moneySafeError)
 }
@@ -3906,14 +3905,13 @@ function buildOperationalSchoolPlanData(input={}){
   const paid=schoolTeachers.filter(t=>String(t.work_type||'')==='paid');
   const targetDetails=permanent.map(teacher=>{
    const target=planRuleTarget(teacher,school.stage,rules);
-   const leadership=detailed.filter(row=>row.leader_teacher_id===teacher.id).length;
    const supervision=teacher.is_senior_teacher?2:0;
-   // حصتا الإشراف والريادة تدخلان في النصاب الشخصي، ثم يحول المتبقي إلى أقرب عدد صالح من الفصول الكاملة (كل فصل إعدادي = 4 حصص علوم).
-   const personalDuties=leadership+supervision;
+   // حصتا الإشراف تدخلان في النصاب الشخصي، ثم يحول المتبقي إلى أقرب عدد صالح من الفصول الكاملة (كل فصل إعدادي = 4 حصص علوم).
+   const personalDuties=supervision;
    const schoolCoverageDuties=personalDuties;
    const rawTeachingTarget=target==null?null:Math.max(target-personalDuties,0);
    const available=target==null?0:planTeacherTeachingCapacity(target,personalDuties,school.stage);
-   return {teacher,target,leadership,supervision,schoolCoverageDuties,personalDuties,rawTeachingTarget,available};
+   return {teacher,target,supervision,schoolCoverageDuties,personalDuties,rawTeachingTarget,available};
   });
   const missingTargets=targetDetails.filter(item=>item.target==null).length;
   const basicNormTotal=targetDetails.reduce((sum,item)=>sum+summaryPlanNumber(item.target),0);
@@ -3935,7 +3933,7 @@ function buildOperationalSchoolPlanData(input={}){
   if(defaultPeriodClasses)notes.push(`${defaultPeriodClasses} فصل محسوب × 4 لعدم تحديد حصص مواده`);
   if(!permanent.length&&calculationReady)notes.push('بدون معلم أساسي');
   if(missingTargets)notes.push(`${missingTargets} معلم بلا درجة/نصاب معتمد`);
-  if(normFormula)notes.push(`الأنصبة القانونية ← بعد الإشراف/الريادة ← أقرب حمل فصول كاملة: ${normFormula}`);
+  if(normFormula)notes.push(`الأنصبة القانونية ← بعد الإشراف ← أقرب حمل فصول كاملة: ${normFormula}`);
   if(supervisionPeriods)notes.push(`إشراف أقدم معلم: ${supervisionPeriods} حصة تدخل في نصابه الشخصي، ولا تعد من حصص المدرسة؛ التدريس نفسه يوزع فصولًا كاملة فقط`);
   if(paid.length&&!paidAssigned)notes.push(`${paid.length} معلم أجر بلا حصص مسندة`);
   return {
@@ -3976,7 +3974,7 @@ async function assignmentsPage({force=false}={}){
  window.__assignmentWorkspace={teachers,classes,assignments:assigns,schoolId:s.id,termId:activeTerm.id};
  return `<div class="page-head"><div><h2>توزيع المعلمين على الفصول</h2><p>اختر المعلم ثم أسند إليه فصل العلوم كاملًا. يمكن لمشرف المادة تعديل المعلم المسند لأي فصل داخل مدرسته. وتظل الحصة كاملة للفصل؛ فلا تُجزأ بين معلمين.</p></div><button class="btn primary" onclick='assignmentForm(${JSON.stringify(teachers||[]).replaceAll("'","&#39;")},${JSON.stringify(availableClasses).replaceAll("'","&#39;")})' ${availableClasses.length?'':'disabled'}>+ إسناد فصل لمعلم</button></div>
  ${availableClasses.length?'':`<div class="notice ok">تم إسناد جميع الفصول المتاحة في هذه المدرسة.</div>`}
- <div class="card"><h3>الأنصبة الحالية</h3><div class="table-wrap"><table class="table"><thead><tr><th>المعلم</th><th>تدريس فعلي</th><th>إشراف</th><th>ريادة</th><th>الإجمالي</th><th>النصاب القانوني</th><th>هدف التدريس بفصول كاملة</th><th>العجز</th><th>الزيادة</th><th>الحالة</th></tr></thead><tbody>${(summary||[]).map(t=>`<tr><td>${esc(t.full_name)}</td><td>${t.teaching_periods}</td><td>${t.supervision_periods}</td><td>${t.leadership_periods}</td><td><b>${t.total_counted_periods}</b></td><td>${esc(workloadTargetLabel(t))}</td><td>${esc(workloadTeachingTargetLabel(t))}</td><td>${workloadDeficitLabel(t)}</td><td>${workloadSurplusLabel(t)}</td><td>${workloadStatusBadge(t)}</td></tr>`).join('')}</tbody></table></div></div>
+ <div class="card"><h3>الأنصبة الحالية</h3><div class="table-wrap"><table class="table"><thead><tr><th>المعلم</th><th>تدريس فعلي</th><th>إشراف</th><th>الإجمالي</th><th>النصاب القانوني</th><th>هدف التدريس بفصول كاملة</th><th>العجز</th><th>الزيادة</th><th>الحالة</th></tr></thead><tbody>${(summary||[]).map(t=>`<tr><td>${esc(t.full_name)}</td><td>${t.teaching_periods}</td><td>${t.supervision_periods}</td><td><b>${t.total_counted_periods}</b></td><td>${esc(workloadTargetLabel(t))}</td><td>${esc(workloadTeachingTargetLabel(t))}</td><td>${workloadDeficitLabel(t)}</td><td>${workloadSurplusLabel(t)}</td><td>${workloadStatusBadge(t)}</td></tr>`).join('')}</tbody></table></div></div>
  <div class="card"><h3>الإسنادات</h3><div class="table-wrap"><table class="table"><thead><tr><th>المعلم</th><th>المرحلة</th><th>الصف</th><th>الفصل</th><th>المادة</th><th>الحصص</th>${canManage?'<th>إدارة</th>':''}</tr></thead><tbody>${(assigns||[]).map(a=>`<tr><td>${esc(a.teacher_records?.full_name)}</td><td>${esc(a.school_classes?.stage)}</td><td>${esc(gradeLabel(a.school_classes?.stage,a.school_classes?.grade))}</td><td>${esc(a.school_classes?.class_name)}</td><td><b>${esc(a.curriculum_subjects?.subject_name||'')}</b></td><td>${a.weekly_periods}</td>${canManage?`<td><button class="btn secondary" type="button" onclick="editAssignmentForm('${a.id}')">تعديل</button></td>`:''}</tr>`).join('')||`<tr><td colspan="${canManage?7:6}">لا توجد إسنادات.</td></tr>`}</tbody></table></div></div>`
 }
 
@@ -4069,9 +4067,9 @@ async function myAssignmentsPage(){
  if(!t)return `<div class="page-head"><div><h2>حصصي وفصولي</h2><p>الدور التعليمي مفعل لهذا الحساب.</p></div></div><div class="card"><div class="notice warn"><b>الدور مفعل، لكن سجل المعلم لم يُربط بعد.</b><br>يلزم تحديد المدرسة الأصلية والرقم المدني والبيانات الوظيفية مرة واحدة، وبعدها ستظهر الحصص والفصول والنصاب هنا تلقائيًا.</div></div>`;
  const {data:a}=await sb.from('teaching_assignments').select('weekly_periods,curriculum_subjects(subject_name),school_classes(stage,grade,class_name,schools(name))').eq('teacher_id',t.id).eq('term_id',activeTerm.id);
  const {data:w}=await sb.from('teacher_workload_summary').select(TEACHER_WORKLOAD_FIELDS).eq('teacher_id',t.id).maybeSingle();
- const ws=w||{teaching_periods:0,supervision_periods:0,leadership_periods:0,total_counted_periods:0};
+ const ws=w||{teaching_periods:0,supervision_periods:0,total_counted_periods:0};
  return `<div class="page-head"><div><h2>حصصي وفصولي</h2><p>عرض فقط.</p></div></div>
- <div class="grid4"><div class="card stat-card"><div class="stat-label">الرقم المدني</div><div class="stat-value" style="font-size:22px">${esc(t.civil_id)}</div></div><div class="card stat-card"><div class="stat-label">تدريس</div><div class="stat-value">${ws.teaching_periods}</div></div><div class="card stat-card"><div class="stat-label">إشراف + ريادة</div><div class="stat-value">${ws.supervision_periods+ws.leadership_periods}</div></div><div class="card stat-card"><div class="stat-label">الإجمالي</div><div class="stat-value">${ws.total_counted_periods}</div></div></div>
+ <div class="grid4"><div class="card stat-card"><div class="stat-label">الرقم المدني</div><div class="stat-value" style="font-size:22px">${esc(t.civil_id)}</div></div><div class="card stat-card"><div class="stat-label">تدريس</div><div class="stat-value">${ws.teaching_periods}</div></div><div class="card stat-card"><div class="stat-label">إشراف</div><div class="stat-value">${ws.supervision_periods}</div></div><div class="card stat-card"><div class="stat-label">الإجمالي</div><div class="stat-value">${ws.total_counted_periods}</div></div></div>
  <div class="notice"><b>النصاب / الحد:</b> ${esc(workloadTargetLabel(ws))} &nbsp; | &nbsp; <b>هدف التدريس بفصول كاملة:</b> ${esc(workloadTeachingTargetLabel(ws))} &nbsp; | &nbsp; <b>العجز:</b> ${workloadDeficitLabel(ws)} &nbsp; | &nbsp; <b>الزيادة:</b> ${workloadSurplusLabel(ws)} &nbsp; | &nbsp; <b>الحالة:</b> ${workloadStatusBadge(ws)}</div>
  <div class="card"><div class="table-wrap"><table class="table"><thead><tr><th>المدرسة</th><th>المرحلة</th><th>الصف</th><th>الفصل</th><th>المادة</th><th>الحصص</th></tr></thead><tbody>${(a||[]).filter(x=>v97StageMatches(x.school_classes?.stage)).map(x=>`<tr><td>${esc(x.school_classes?.schools?.name)}</td><td>${esc(x.school_classes?.stage)}</td><td>${esc(gradeLabel(x.school_classes?.stage,x.school_classes?.grade))}</td><td>${esc(x.school_classes?.class_name)}</td><td><b>${esc(x.curriculum_subjects?.subject_name||'')}</b></td><td>${x.weekly_periods}</td></tr>`).join('')||'<tr><td colspan="6">لا توجد حصص مسندة حاليًا.</td></tr>'}</tbody></table></div></div>`
 }
@@ -4801,7 +4799,7 @@ function loadReportJsPDF(){
   return reportJsPdfPromise;
 }
 
-async function workloadPage(){const {data:r}=await sb.from('workload_rules').select(WORKLOAD_RULE_FIELDS).eq('active',true);const titles=['معلم مساعد + معلم','معلم أول','معلم أول (أ)','معلم خبير','كبير معلمين'];const m=Object.fromEntries((r||[]).map(x=>[`${x.job_title}:${x.stage}`,x]));return `<div class="page-head"><div><h2>الأنصبة الأسبوعية</h2><p>النصاب القانوني حسب الدرجة الوظيفية والمرحلة التعليمية.</p></div></div><div class="card"><div class="table-wrap"><table class="table"><thead><tr><th>الدرجة الوظيفية</th><th>المرحلة الابتدائية</th><th>المرحلة الإعدادية</th><th>المرحلة الثانوية</th></tr></thead><tbody>${titles.map(j=>`<tr><td><b>${esc(workloadJobLabel(j))}</b></td><td><b>${m[`${j}:ابتدائي`]?.weekly_norm??'—'}</b> حصة</td><td><b>${m[`${j}:إعدادي`]?.weekly_norm??'—'}</b> حصة</td><td><b>${m[`${j}:ثانوي`]?.weekly_norm??'—'}</b> حصة</td></tr>`).join('')}</tbody></table></div></div><div class="notice"><b>قاعدة توزيع العلوم:</b> الفصل الإعدادي = 4 حصص أسبوعيًا، لذا التدريس الفعلي للمعلم يكون بمضاعفات 4 فقط (مثل 16، 20، 24). حصتا إشراف أقدم معلم والريادة تدخلان في النصاب الشخصي أولًا، ثم يحول المتبقي إلى أقرب حمل صالح من الفصول الكاملة. مثال: نصاب 21 − إشراف 2 = 19 نظريًا → 20 تدريس + 2 إشراف = 22، أي زيادة حصة واحدة على النصاب القانوني. معلم الأجر بلا حد أدنى أو أعلى؛ تُحسب حصصه وفق إسناد المدرسة، ويمكن انتدابه، ولا يُحسب له عجز أو زيادة.</div>`}
+async function workloadPage(){const {data:r}=await sb.from('workload_rules').select(WORKLOAD_RULE_FIELDS).eq('active',true);const titles=['معلم مساعد + معلم','معلم أول','معلم أول (أ)','معلم خبير','كبير معلمين'];const m=Object.fromEntries((r||[]).map(x=>[`${x.job_title}:${x.stage}`,x]));return `<div class="page-head"><div><h2>الأنصبة الأسبوعية</h2><p>النصاب القانوني حسب الدرجة الوظيفية والمرحلة التعليمية.</p></div></div><div class="card"><div class="table-wrap"><table class="table"><thead><tr><th>الدرجة الوظيفية</th><th>المرحلة الابتدائية</th><th>المرحلة الإعدادية</th><th>المرحلة الثانوية</th></tr></thead><tbody>${titles.map(j=>`<tr><td><b>${esc(workloadJobLabel(j))}</b></td><td><b>${m[`${j}:ابتدائي`]?.weekly_norm??'—'}</b> حصة</td><td><b>${m[`${j}:إعدادي`]?.weekly_norm??'—'}</b> حصة</td><td><b>${m[`${j}:ثانوي`]?.weekly_norm??'—'}</b> حصة</td></tr>`).join('')}</tbody></table></div></div><div class="notice"><b>قاعدة توزيع العلوم:</b> الفصل الإعدادي = 4 حصص أسبوعيًا، لذا التدريس الفعلي للمعلم يكون بمضاعفات 4 فقط (مثل 16، 20، 24). حصتا إشراف أقدم معلم تدخلان في النصاب الشخصي أولًا، ثم يحول المتبقي إلى أقرب حمل صالح من الفصول الكاملة. مثال: نصاب 21 − إشراف 2 = 19 نظريًا → 20 تدريس + 2 إشراف = 22 في إجمالي المعلم، ولا تُحتسب حصتا الإشراف زيادة (الزيادة = التدريس − النصاب). معلم الأجر بلا حد أدنى أو أعلى؛ تُحسب حصصه وفق إسناد المدرسة، ويمكن انتدابه، ولا يُحسب له عجز أو زيادة.</div>`}
 
 /* v95: عرض بيانات ميزانيتي الثانوية المدخلة، ضمن صلاحيات القراءة الحالية. */
 const SECONDARY_BUDGET_LABELS_V95={sep_2026_general_secondary_qous:'سبتمبر 2026 — ثانوي عام',sep_2026_industrial_secondary_qous:'سبتمبر 2026 — ثانوي صناعي'};
@@ -5173,7 +5171,7 @@ async function reportsPage({force=false}={}){
     <summary>
       <div><b>الخطة التشغيلية المولدة من البيانات الحالية</b><div class="cell-sub">ليست صورة ولا ملفًا مرفوعًا: كل صف محسوب من الفصول الفعلية وحصص العلوم ودرجات المعلمين وقواعد الأنصبة والإسنادات المسجلة.</div></div>
     </summary>
-    <div class="notice info"><b>قاعدة الحساب:</b> المطلوب = مجموع حصص العلوم للفصول. المتاح = الأنصبة القانونية للمعلمين الأساسيين بعد خصم الإشراف والريادة. العجز = المطلوب − المتاح − حصص الأجر المسندة، والزيادة تظهر عندما يزيد المتاح على المطلوب.</div>
+    <div class="notice info"><b>قاعدة الحساب:</b> المطلوب = مجموع حصص العلوم للفصول. المتاح = الأنصبة القانونية للمعلمين الأساسيين بعد خصم الإشراف. العجز = المطلوب − المتاح − حصص الأجر المسندة، والزيادة تظهر عندما يزيد المتاح على المطلوب.</div>
     <div class="report-mini-stats">
       <span class="badge ok">فصول مفصلة: ${operationalStats.totalClasses}</span>
       <span class="badge info">الأول: ${operationalStats.grade1}</span>
@@ -5402,7 +5400,7 @@ async function reportsPage({force=false}={}){
  }
 }
 
-function exportCSV(){const rows=[['المعلم','الرقم المدني','المدرسة','الدرجة الوظيفية','نوع العمل','تدريس','إشراف','ريادة','الإجمالي','النصاب/الحد','العجز','الزيادة','الحالة']];(window.__reportRows||[]).forEach(t=>rows.push([t.full_name,t.civil_id,t.scope_school_name||t.home_school_name,t.job_title,t.work_type,t.teaching_periods,t.supervision_periods,t.leadership_periods,t.total_counted_periods,workloadTargetLabel(t),isPaidTeacher(t)?'':t.deficit_periods??'',isPaidTeacher(t)?'':t.surplus_periods??'',isPaidTeacher(t)?'حسب الحصص المسندة':t.workload_status||'']));rows.push([]);rows.push([reportIssuerText()]);const csv='\ufeff'+rows.map(r=>r.map(v=>`"${String(v??'').replaceAll('"','""')}"`).join(',')).join('\n');const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8'}));a.download='science-guidance-report.csv';a.click()}
+function exportCSV(){const rows=[['المعلم','الرقم المدني','المدرسة','الدرجة الوظيفية','نوع العمل','تدريس','إشراف','الإجمالي','النصاب/الحد','العجز','الزيادة','الحالة']];(window.__reportRows||[]).forEach(t=>rows.push([t.full_name,t.civil_id,t.scope_school_name||t.home_school_name,t.job_title,t.work_type,t.teaching_periods,t.supervision_periods,t.total_counted_periods,workloadTargetLabel(t),isPaidTeacher(t)?'':t.deficit_periods??'',isPaidTeacher(t)?'':t.surplus_periods??'',isPaidTeacher(t)?'حسب الحصص المسندة':t.workload_status||'']));rows.push([]);rows.push([reportIssuerText()]);const csv='\ufeff'+rows.map(r=>r.map(v=>`"${String(v??'').replaceAll('"','""')}"`).join(',')).join('\n');const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8'}));a.download='science-guidance-report.csv';a.click()}
 
 /* Module: mobile-ui */
 
@@ -6192,7 +6190,7 @@ const roleAwareFetch=(input,init={})=>{
 const sb=supabase.createClient(SUPABASE_URL,SUPABASE_KEY,{global:{fetch:roleAwareFetch},auth:{persistSession:true,autoRefreshToken:true}});
 
 /* === v29 Performance Core: cache + dedup + cancellation + partial refresh === */
-const TEACHER_WORKLOAD_FIELDS='teacher_id,profile_id,civil_id,full_name,work_type,job_title,home_school_id,home_school_name,home_school_stage,is_senior_teacher,teaching_periods,supervision_periods,leadership_periods,total_counted_periods,weekly_target,workload_rule_type,deficit_periods,surplus_periods,remaining_periods,workload_status';
+const TEACHER_WORKLOAD_FIELDS='teacher_id,profile_id,civil_id,full_name,work_type,job_title,home_school_id,home_school_name,home_school_stage,is_senior_teacher,teaching_periods,supervision_periods,total_counted_periods,weekly_target,workload_rule_type,deficit_periods,surplus_periods,remaining_periods,workload_status';
 const SCHOOL_FIELDS='id,name,stage,school_type,gender_type,address,phone,class_count,supervisor_id,manager_profile_id,status,approval_authority,created_at,updated_at,row_version';
 const SUPERVISOR_FIELDS='id,profile_id,created_by,active,created_at,civil_id,full_name,phone,job_title,employment_grade,appointment_date,work_start_date,assignment_status';
 const TEACHER_RECORD_FIELDS='id,profile_id,civil_id,full_name,phone,email,job_title,grade_acquired_date,work_start_date,appointment_date,work_type,home_school_id,is_senior_teacher,active,created_at,updated_at,row_version,source_reference,source_validation_status,specialty,qualification,qualification_year,teacher_code,residence';
@@ -6720,8 +6718,8 @@ function formatWorkloadReport(raw,ctx){
  return makeReportSchema({reportId:'workload',title:'تقرير الأنصبة القانونية',subtitle:'الأنصبة القانونية حسب المرحلة والدرجة الوظيفية',period:ctx.period,summary:[reportMetric('عدد الدرجات',rows.length),reportMetric('عدد قواعد الأنصبة',raw.rules?.length||0)],columns:[reportColumn('job','الدرجة الوظيفية',1.6),reportColumn('primary','ابتدائي',1,{numeric:true}),reportColumn('prep','إعدادي',1,{numeric:true}),reportColumn('secondary','ثانوي',1,{numeric:true})],rows,totals:[reportTotalsMetric('قواعد نشطة',raw.rules?.length||0)],issuer:ctx.issuer});
 }
 function formatClassesReport(raw,ctx){
- const rows=(raw.classes||[]).map(c=>{const reqs=c.class_subject_requirements||[];const subjects=reqs.length?reqs.map(r=>`${r.curriculum_subjects?.subject_name||'علوم'} (${reportNumber(r.weekly_periods)})`).join('، '):'—';return {school:reportCellValue(c.schools?.name),stage:reportCellValue(c.stage),grade:reportCellValue(gradeLabel(c.stage,c.grade)),className:reportCellValue(c.class_name),subjects,periods:reportNumber(c.science_periods),leader:reportCellValue(c.teacher_records?.full_name),_schoolId:String(c.school_id||''),_school:reportCellValue(c.schools?.name),_stage:reportCellValue(c.stage)}});
- return makeReportSchema({reportId:'classes',title:'تقرير الفصول',subtitle:'الفصول ومتطلبات تدريس العلوم للفترة المحددة',period:ctx.period,summary:[reportMetric('عدد الفصول',rows.length),reportMetric('إجمالي حصص العلوم',rows.reduce((a,r)=>a+r.periods,0))],columns:[reportColumn('school','المدرسة',1.8),reportColumn('stage','المرحلة',.8),reportColumn('grade','الصف',.9),reportColumn('className','الفصل',.9),reportColumn('subjects','المواد / الحصص',2.2),reportColumn('periods','إجمالي العلوم',.8,{numeric:true}),reportColumn('leader','مشرف الفصل',1.4)],rows,totals:[reportTotalsMetric('إجمالي الفصول',rows.length),reportTotalsMetric('إجمالي الحصص',rows.reduce((a,r)=>a+r.periods,0))],issuer:ctx.issuer});
+ const rows=(raw.classes||[]).map(c=>{const reqs=c.class_subject_requirements||[];const subjects=reqs.length?reqs.map(r=>`${r.curriculum_subjects?.subject_name||'علوم'} (${reportNumber(r.weekly_periods)})`).join('، '):'—';return {school:reportCellValue(c.schools?.name),stage:reportCellValue(c.stage),grade:reportCellValue(gradeLabel(c.stage,c.grade)),className:reportCellValue(c.class_name),subjects,periods:reportNumber(c.science_periods),_schoolId:String(c.school_id||''),_school:reportCellValue(c.schools?.name),_stage:reportCellValue(c.stage)}});
+ return makeReportSchema({reportId:'classes',title:'تقرير الفصول',subtitle:'الفصول ومتطلبات تدريس العلوم للفترة المحددة',period:ctx.period,summary:[reportMetric('عدد الفصول',rows.length),reportMetric('إجمالي حصص العلوم',rows.reduce((a,r)=>a+r.periods,0))],columns:[reportColumn('school','المدرسة',1.8),reportColumn('stage','المرحلة',.8),reportColumn('grade','الصف',.9),reportColumn('className','الفصل',.9),reportColumn('subjects','المواد / الحصص',2.2),reportColumn('periods','إجمالي العلوم',.8,{numeric:true})],rows,totals:[reportTotalsMetric('إجمالي الفصول',rows.length),reportTotalsMetric('إجمالي الحصص',rows.reduce((a,r)=>a+r.periods,0))],issuer:ctx.issuer});
 }
 function formatDistributionReport(raw,ctx){
  const tmap=Object.fromEntries((raw.teachers||[]).map(t=>[t.id,t.full_name]));const cmap=Object.fromEntries((raw.classes||[]).map(c=>[c.id,c]));const smap=Object.fromEntries((raw.subjects||[]).map(s=>[s.id,s.subject_name]));
@@ -6744,10 +6742,10 @@ const ReportAdapters={
  teachers:{async load(ctx){const r=await sb.from('teacher_workload_summary').select(TEACHER_WORKLOAD_FIELDS).order('full_name');return formatTeachersReport({teachers:reportError(r,'المعلمون')},ctx)}},
  supervisionPriority:{async load(ctx){const r=await sb.from('teacher_supervision_priority').select('teacher_id,civil_id,full_name,home_school_id,school_name,stage,job_title,work_type,grade_acquired_date,work_start_date,appointment_date,is_senior_teacher,general_priority,school_priority,supervision_status').order('general_priority');return formatSupervisionPriorityReport({rows:reportError(r,'أولوية الإشراف')},ctx)}},
  workload:{async load(ctx){const r=await sb.from('workload_rules').select(WORKLOAD_RULE_FIELDS).eq('active',true).order('job_title');return formatWorkloadReport({rules:reportError(r,'الأنصبة')},ctx)}},
- classes:{async load(ctx){const r=await sb.from('school_classes').select('id,school_id,stage,grade,class_name,science_periods,grade_order,schools(name),teacher_records!school_classes_leader_teacher_id_fkey(full_name),class_subject_requirements(weekly_periods,curriculum_subjects(subject_name))').eq('term_id',activeTerm.id).order('grade_order');return formatClassesReport({classes:reportError(r,'الفصول')},ctx)}},
+ classes:{async load(ctx){const r=await sb.from('school_classes').select('id,school_id,stage,grade,class_name,science_periods,grade_order,schools(name),class_subject_requirements(weekly_periods,curriculum_subjects(subject_name))').eq('term_id',activeTerm.id).order('grade_order');return formatClassesReport({classes:reportError(r,'الفصول')},ctx)}},
  distribution:{async load(ctx){const [ar,tr,cr,sr]=await Promise.all([sb.from('teaching_assignments').select('teacher_id,class_id,subject_id,weekly_periods').eq('term_id',activeTerm.id),sb.from('teacher_records').select('id,full_name').eq('active',true),sb.from('school_classes').select('id,school_id,stage,grade,class_name,schools(name)').eq('term_id',activeTerm.id),sb.from('curriculum_subjects').select('id,subject_name')]);return formatDistributionReport({assignments:reportError(ar,'الإسنادات'),teachers:reportError(tr,'المعلمون'),classes:reportError(cr,'الفصول'),subjects:reportError(sr,'المواد')},ctx)}},
  approval:{async load(ctx){const [sub,sch]=await Promise.all([sb.from('school_submissions').select('id,school_id,status,submitted_at,approved_at,return_reason,entry_source').eq('term_id',activeTerm.id).order('submitted_at',{ascending:false}),sb.from('schools').select('id,name,stage,status,approval_authority')]);return formatApprovalReport({submissions:reportError(sub,'الاعتمادات'),schools:reportError(sch,'المدارس')},ctx)}},
- summaryPlan:{async load(ctx){let cq=sb.from('school_classes').select('id,school_id,stage,grade,science_periods,leader_teacher_id,class_subject_requirements(weekly_periods)').eq('stage','إعدادي');if(activeYear?.id)cq=cq.eq('academic_year_id',activeYear.id);if(activeTerm?.id)cq=cq.eq('term_id',activeTerm.id);let aq=sb.from('teaching_assignments').select('teacher_id,class_id,weekly_periods');if(activeTerm?.id)aq=aq.eq('term_id',activeTerm.id);const [sr,cr,tr,wr,ar]=await Promise.all([sb.from('schools').select('id,name,stage,class_count').eq('stage','إعدادي').order('name'),cq,sb.from('teacher_records').select('id,full_name,work_type,job_title,home_school_id,is_senior_teacher,active').eq('active',true),sb.from('workload_rules').select('job_title,stage,weekly_norm,effective_from,effective_to,active').eq('active',true),aq]);const plan=buildOperationalSchoolPlanData({schools:reportError(sr,'المدارس'),classes:reportError(cr,'الفصول'),teachers:reportError(tr,'المعلمون'),rules:reportError(wr,'الأنصبة'),assignments:reportError(ar,'الإسنادات')});return formatSummaryPlanReport(plan,ctx)}}
+ summaryPlan:{async load(ctx){let cq=sb.from('school_classes').select('id,school_id,stage,grade,science_periods,class_subject_requirements(weekly_periods)').eq('stage','إعدادي');if(activeYear?.id)cq=cq.eq('academic_year_id',activeYear.id);if(activeTerm?.id)cq=cq.eq('term_id',activeTerm.id);let aq=sb.from('teaching_assignments').select('teacher_id,class_id,weekly_periods');if(activeTerm?.id)aq=aq.eq('term_id',activeTerm.id);const [sr,cr,tr,wr,ar]=await Promise.all([sb.from('schools').select('id,name,stage,class_count').eq('stage','إعدادي').order('name'),cq,sb.from('teacher_records').select('id,full_name,work_type,job_title,home_school_id,is_senior_teacher,active').eq('active',true),sb.from('workload_rules').select('job_title,stage,weekly_norm,effective_from,effective_to,active').eq('active',true),aq]);const plan=buildOperationalSchoolPlanData({schools:reportError(sr,'المدارس'),classes:reportError(cr,'الفصول'),teachers:reportError(tr,'المعلمون'),rules:reportError(wr,'الأنصبة'),assignments:reportError(ar,'الإسنادات')});return formatSummaryPlanReport(plan,ctx)}}
 };
 
 ReportAdapters.deficitSurplus={async load(ctx){
@@ -7301,19 +7299,17 @@ classForm=async function(schoolId){
  // استجابة فورية للموبايل قبل أي استعلام شبكي
  modal(`<h3>إضافة فصل</h3><div class="notice info"><span class="smart-save-state"><span class="smart-spinner"></span>جارٍ تجهيز بيانات المدرسة والفصول...</span></div><div class="actions"><button type="button" class="btn secondary" onclick="closeModal()">إلغاء</button></div>`);
  try{
-  const [teachersRes,existingRes,schoolRes]=await Promise.all([
-   sb.rpc('get_school_teacher_roster',{p_school_id:schoolId,p_term_id:activeTerm.id}),
+  const [existingRes,schoolRes]=await Promise.all([
    sb.from('school_classes').select('class_name').eq('school_id',schoolId).eq('term_id',activeTerm.id),
    sb.from('schools').select('id,name,stage').eq('id',schoolId).maybeSingle()
   ]);
-  if(teachersRes.error)throw teachersRes.error;
   if(existingRes.error)throw existingRes.error;
   if(schoolRes.error)throw schoolRes.error;
   const targetSchool=schoolRes.data;
   if(!targetSchool)throw new Error('تعذر الوصول إلى المدرسة المرتبطة بهذا الحساب');
-  const teachers=(teachersRes.data||[]).map(t=>({...t,id:t.teacher_id||t.id})),existing=existingRes.data||[];
+  const existing=existingRes.data||[];
   const stage=targetSchool.stage||'إعدادي';const existingNames=existing.map(x=>x.class_name);
-  modal(`<h3>توليد الفصول جماعيًا</h3><div class="notice info"><b>${esc(targetSchool.name||'المدرسة')}</b> — سيتم الحفظ على نفس المدرسة الموجودة فقط.</div><form id="classBatchForm" onsubmit="saveClass(event,'${schoolId}')"><div class="form-grid"><div class="field"><label>المرحلة</label><input id="classStage" name="stage" value="${esc(stage)}" readonly></div><div class="field"><label>الصف</label><select id="classGrade" name="grade" onchange='uxUpdateClassBatchPreview(${JSON.stringify(existingNames).replaceAll("'","&#39;")});updateCurriculumPreview()'></select></div><div class="field"><label>عدد الفصول</label><input id="classCount" name="class_count" type="number" min="1" max="100" value="1" oninput='uxUpdateClassBatchPreview(${JSON.stringify(existingNames).replaceAll("'","&#39;")})' required></div><div class="field"><label>ابدأ من الفصل رقم</label><input id="classStart" name="start_number" type="number" min="1" max="100" value="1" oninput='uxUpdateClassBatchPreview(${JSON.stringify(existingNames).replaceAll("'","&#39;")})' required></div><div class="field"><label>رائد الفصل (اختياري للدفعة)</label><select name="leader_teacher_id"><option value="">بدون</option>${teachers.map(t=>`<option value="${t.id}">${esc(t.full_name)}</option>`).join('')}</select></div></div><div class="notice"><b>سيتم إنشاء:</b><div id="classBatchPreview" class="class-bulk-preview"></div><div style="margin-top:7px"><b>مواد الصف:</b> <span id="curriculumPreview"></span></div></div><div class="actions"><button id="saveClassBatch" type="submit" class="btn primary">إنشاء الفصول</button><button type="button" class="btn secondary" onclick="closeModal()">إلغاء</button></div></form>`);
+  modal(`<h3>توليد الفصول جماعيًا</h3><div class="notice info"><b>${esc(targetSchool.name||'المدرسة')}</b> — سيتم الحفظ على نفس المدرسة الموجودة فقط.</div><form id="classBatchForm" onsubmit="saveClass(event,'${schoolId}')"><div class="form-grid"><div class="field"><label>المرحلة</label><input id="classStage" name="stage" value="${esc(stage)}" readonly></div><div class="field"><label>الصف</label><select id="classGrade" name="grade" onchange='uxUpdateClassBatchPreview(${JSON.stringify(existingNames).replaceAll("'","&#39;")});updateCurriculumPreview()'></select></div><div class="field"><label>عدد الفصول</label><input id="classCount" name="class_count" type="number" min="1" max="100" value="1" oninput='uxUpdateClassBatchPreview(${JSON.stringify(existingNames).replaceAll("'","&#39;")})' required></div><div class="field"><label>ابدأ من الفصل رقم</label><input id="classStart" name="start_number" type="number" min="1" max="100" value="1" oninput='uxUpdateClassBatchPreview(${JSON.stringify(existingNames).replaceAll("'","&#39;")})' required></div></div><div class="notice"><b>سيتم إنشاء:</b><div id="classBatchPreview" class="class-bulk-preview"></div><div style="margin-top:7px"><b>مواد الصف:</b> <span id="curriculumPreview"></span></div></div><div class="actions"><button id="saveClassBatch" type="submit" class="btn primary">إنشاء الفصول</button><button type="button" class="btn secondary" onclick="closeModal()">إلغاء</button></div></form>`);
   const gr=document.getElementById('classGrade');
   if(!gr)throw new Error('تعذر تجهيز نموذج إضافة الفصل');
   gr.innerHTML=gradeRows(stage).map(g=>`<option value="${g.v}">${g.label}</option>`).join('');
@@ -7327,7 +7323,7 @@ classForm=async function(schoolId){
  }
 };
 
-saveClass=async function(e,schoolId){if(!uxBeginSubmit(e,'جارٍ إنشاء الفصول...'))return;const form=e.target;try{const f=Object.fromEntries(new FormData(form).entries()),names=uxSafeJsonParse(document.getElementById('classBatchPreview')?.dataset.names,[]);if(!names.length)throw new Error('لا توجد فصول صالحة للإنشاء');const {data,error}=await sb.rpc('create_classes_bulk_atomic',{p_school_id:schoolId,p_academic_year_id:activeYear.id,p_term_id:activeTerm.id,p_stage:f.stage,p_grade:f.grade,p_class_names:names,p_leader_teacher_id:f.leader_teacher_id||null});if(error)throw error;uxClearDraft(form);closeModal();invalidateData('classes','assignments','dashboard','page:reports','school:self');await loadPage(true);const ids=(data?.classes||[]).map(x=>x.id);uxShowUndo(`${profile?.role==='senior_teacher'?'تم إنشاء واعتماد':'تم إنشاء'} ${Number(data?.count||ids.length)} فصلًا دفعة واحدة`,async()=>{if(!ids.length)return;const {error:de}=await sb.from('school_classes').delete().in('id',ids);if(de)throw de;invalidateData('classes','assignments','dashboard','page:reports');await loadPage(true)})}catch(err){moneySafeError(err)}finally{if(document.body.contains(form))uxFinishSubmit(form)}};
+saveClass=async function(e,schoolId){if(!uxBeginSubmit(e,'جارٍ إنشاء الفصول...'))return;const form=e.target;try{const f=Object.fromEntries(new FormData(form).entries()),names=uxSafeJsonParse(document.getElementById('classBatchPreview')?.dataset.names,[]);if(!names.length)throw new Error('لا توجد فصول صالحة للإنشاء');const {data,error}=await sb.rpc('create_classes_bulk_atomic',{p_school_id:schoolId,p_academic_year_id:activeYear.id,p_term_id:activeTerm.id,p_stage:f.stage,p_grade:f.grade,p_class_names:names});if(error)throw error;uxClearDraft(form);closeModal();invalidateData('classes','assignments','dashboard','page:reports','school:self');await loadPage(true);const ids=(data?.classes||[]).map(x=>x.id);uxShowUndo(`${profile?.role==='senior_teacher'?'تم إنشاء واعتماد':'تم إنشاء'} ${Number(data?.count||ids.length)} فصلًا دفعة واحدة`,async()=>{if(!ids.length)return;const {error:de}=await sb.from('school_classes').delete().in('id',ids);if(de)throw de;invalidateData('classes','assignments','dashboard','page:reports');await loadPage(true)})}catch(err){moneySafeError(err)}finally{if(document.body.contains(form))uxFinishSubmit(form)}};
 
 const __uxBaseSubjectPeriodsForm=subjectPeriodsForm;
 subjectPeriodsForm=async function(classId){await __uxBaseSubjectPeriodsForm(classId);requestAnimationFrame(()=>uxSmartifyForm(document.querySelector('#modal form'),{draftKey:`class-periods:${classId}`}))};
@@ -7486,7 +7482,7 @@ async function loadPaidShortageSchool(schoolId){
  body.innerHTML='<div class="muted">جارٍ التحميل...</div>';
  const [sr,tr,ar]=await Promise.all([
   sb.from('school_official_staffing').select('*').eq('school_id',schoolId).eq('term_id',activeTerm.id).maybeSingle(),
-  sb.from('teacher_official_staffing').select('teacher_id,full_name,job_title,weekly_target,supervision_periods,leadership_periods,official_teaching_periods,suggested_paid_periods').eq('home_school_id',schoolId).eq('work_type','permanent').order('full_name'),
+  sb.from('teacher_official_staffing').select('teacher_id,full_name,job_title,weekly_target,supervision_periods,official_teaching_periods,suggested_paid_periods').eq('home_school_id',schoolId).eq('work_type','permanent').order('full_name'),
   sb.from('teacher_paid_shortage_allocations').select('teacher_id,paid_periods,note').eq('school_id',schoolId).eq('term_id',activeTerm.id)
  ]);
  if(sr.error||tr.error||ar.error){body.innerHTML=`<div class="notice danger">${esc(sr.error?.message||tr.error?.message||ar.error?.message||'تعذر التحميل')}</div>`;return}
@@ -7868,7 +7864,7 @@ saveClass=async function(e,schoolId){
  e.preventDefault();const f=Object.fromEntries(new FormData(e.target).entries());
  const row=gradeRows(f.stage).find(x=>x.v===f.grade);
  try{
-  const count=Number(f.class_count),start=Number(f.start_number);if(!Number.isInteger(count)||count<1||count>100||!Number.isInteger(start)||start<1)throw new Error('عدد الفصول ورقم البداية غير صالحين');const preview=document.getElementById('classBatchPreview');const names=preview?uxSafeJsonParse(preview.dataset.names,[]):Array.from({length:count},(_,i)=>`${uxGradePrefix(f.stage,f.grade)}/${start+i}`);if(!names.length)throw new Error('لا توجد فصول جديدة للإنشاء');await supervisorInvokeV75('create_class_and_approve',schoolId,{class:{stage:f.stage,grade:f.grade,class_names:names,grade_order:row?.order??null,leader_teacher_id:f.leader_teacher_id||null}});
+  const count=Number(f.class_count),start=Number(f.start_number);if(!Number.isInteger(count)||count<1||count>100||!Number.isInteger(start)||start<1)throw new Error('عدد الفصول ورقم البداية غير صالحين');const preview=document.getElementById('classBatchPreview');const names=preview?uxSafeJsonParse(preview.dataset.names,[]):Array.from({length:count},(_,i)=>`${uxGradePrefix(f.stage,f.grade)}/${start+i}`);if(!names.length)throw new Error('لا توجد فصول جديدة للإنشاء');await supervisorInvokeV75('create_class_and_approve',schoolId,{class:{stage:f.stage,grade:f.grade,class_names:names,grade_order:row?.order??null}});
   closeModal();toast('تمت إضافة الفصل الجديد وحفظه واعتماده مباشرة');
   refreshCurrentPage({invalidate:['classes','assignments','approval','dashboard','page:reports','school:self']}).catch(moneySafeError);
  }catch(error){moneySafeError(error)}
@@ -7984,10 +7980,10 @@ function v84RemoveGuidanceCards(root=document){
    لذلك يظهر مجموع تدريس إيمان 8، ولا يتحول إلى 10 بإضافة إشراف. */
 formatTeachersReport=function(raw,ctx){
  const rows=(raw.teachers||[]).map(t=>{
-  const teaching=reportNumber(t.teaching_periods),supervision=reportNumber(t.supervision_periods),leadership=reportNumber(t.leadership_periods);
+  const teaching=reportNumber(t.teaching_periods),supervision=reportNumber(t.supervision_periods);
   return {
    name:reportCellValue(t.full_name),civil:reportCellValue(t.civil_id),school:t.delegation_source_school_name?`منتدب من مدرسة ${reportCellValue(t.delegation_source_school_name)}`:reportCellValue(t.home_school_name),workType:t.work_type==='paid'?'بالأجر':'ثابت',job:reportCellValue(t.job_title),
-   teaching,supervision,leadership,functionalTotal:teaching+supervision+leadership,
+   teaching,supervision,functionalTotal:teaching+supervision,
    target:workloadTargetLabel(t),
    deficit:isPaidTeacher(t)?'—':(t.deficit_periods==null?'—':reportNumber(t.deficit_periods)),surplus:isPaidTeacher(t)||t.surplus_periods==null?'—':reportNumber(t.surplus_periods),status:isPaidTeacher(t)?'حسب الحصص المسندة':reportCellValue(t.workload_status),
    _school:reportCellValue(t.home_school_name),_status:isPaidTeacher(t)?'حسب الحصص المسندة':reportCellValue(t.workload_status),_search:[t.full_name,t.civil_id,t.home_school_name,t.job_title].filter(Boolean).join(' ')
@@ -7995,9 +7991,9 @@ formatTeachersReport=function(raw,ctx){
  });
  const sum=field=>rows.reduce((total,row)=>total+reportNumber(row[field]),0);
  return makeReportSchema({
-  reportId:'teachers',title:'تقرير المعلمين',subtitle:'حصص التدريس الفعلية من الإسنادات المسجلة؛ الإشراف والريادة يظهران منفصلين ولا يضافان إلى التدريس.',period:ctx.period,
+  reportId:'teachers',title:'تقرير المعلمين',subtitle:'حصص التدريس الفعلية من الإسنادات المسجلة؛ الإشراف يظهر منفصلًا ولا يضاف إلى التدريس.',period:ctx.period,
   summary:[reportMetric('عدد المعلمين',rows.length),reportMetric('إجمالي التدريس الفعلي',sum('teaching')),reportMetric('إجمالي الإشراف',sum('supervision')),reportMetric('إجمالي العجز',rows.reduce((a,r)=>a+(typeof r.deficit==='number'?r.deficit:0),0))],
-  columns:[reportColumn('name','المعلم',1.45),reportColumn('civil','الرقم المدني',1.05,{id:true,nowrap:true}),reportColumn('school','المدرسة',1.55),reportColumn('workType','النوع',.65),reportColumn('job','الدرجة الوظيفية',.9),reportColumn('teaching','تدريس فعلي',.7,{numeric:true}),reportColumn('supervision','إشراف',.55,{numeric:true}),reportColumn('leadership','ريادة',.55,{numeric:true}),reportColumn('functionalTotal','إجمالي وظيفي',.7,{numeric:true}),reportColumn('target','النصاب / الحد',.85),reportColumn('deficit','العجز',.5,{numeric:true}),reportColumn('surplus','الزيادة',.5,{numeric:true}),reportColumn('status','الحالة',.7)],
+  columns:[reportColumn('name','المعلم',1.45),reportColumn('civil','الرقم المدني',1.05,{id:true,nowrap:true}),reportColumn('school','المدرسة',1.55),reportColumn('workType','النوع',.65),reportColumn('job','الدرجة الوظيفية',.9),reportColumn('teaching','تدريس فعلي',.7,{numeric:true}),reportColumn('supervision','إشراف',.55,{numeric:true}),reportColumn('functionalTotal','إجمالي وظيفي',.7,{numeric:true}),reportColumn('target','النصاب / الحد',.85),reportColumn('deficit','العجز',.5,{numeric:true}),reportColumn('surplus','الزيادة',.5,{numeric:true}),reportColumn('status','الحالة',.7)],
   rows,totals:[reportTotalsMetric('عدد المعلمين',rows.length),reportTotalsMetric('إجمالي التدريس الفعلي',sum('teaching'))],issuer:ctx.issuer
  });
 };
@@ -8019,8 +8015,7 @@ function v86ApplyPartialDelegateRule(row,partial){
  if(isPaidTeacher(row))return {...row,weekly_target:null,workload_rule_type:'unrestricted',deficit_periods:null,surplus_periods:null,remaining_periods:null,workload_status:'حسب الحصص المسندة'};
  if(!partial)return row;
  const teaching=Number(row?.teaching_periods??partial?.teaching_periods??0)||0;
- const leadership=Number(row?.leadership_periods??partial?.leadership_periods??0)||0;
- const total=teaching+leadership;
+ const total=teaching;
  const target=Number(row?.weekly_target||0)||0;
  const maximum=row?.workload_rule_type==='maximum';
  return {...row,is_senior_teacher:false,supervision_periods:0,total_counted_periods:total,
@@ -8135,7 +8130,6 @@ function v91UniqueGlobalTeachers(scopeRows=[],fallback=[]){
   map.set(id,{...row,
    teaching_periods:summaryPlanNumber(row.global_teaching_periods??row.teaching_periods),
    supervision_periods:summaryPlanNumber(row.global_supervision_periods??row.supervision_periods),
-   leadership_periods:summaryPlanNumber(row.global_leadership_periods??row.leadership_periods),
    total_counted_periods:summaryPlanNumber(row.global_total_counted_periods??row.total_counted_periods)
   });
  }
@@ -8194,8 +8188,7 @@ buildOperationalSchoolPlanData=function(input={}){
    const localTeaching=summaryPlanNumber(teacher.teaching_periods);
    const globalTeaching=summaryPlanNumber(teacher.global_teaching_periods??teacher.teaching_periods);
    const globalSupervision=summaryPlanNumber(teacher.global_supervision_periods??teacher.supervision_periods);
-   const globalLeadership=summaryPlanNumber(teacher.global_leadership_periods??teacher.leadership_periods);
-   const personalDuties=globalSupervision+globalLeadership;
+   const personalDuties=globalSupervision;
    const legalAvailable=target==null?0:planTeacherTeachingCapacity(target,personalDuties,school.stage);
    let available=legalAvailable;
    if(relation==='delegated_in_partial')available=localTeaching;
@@ -8203,7 +8196,7 @@ buildOperationalSchoolPlanData=function(input={}){
     const externalTeaching=Math.max(globalTeaching-localTeaching,0);
     available=Math.max(localTeaching,planNearestWholeClassLoad(Math.max(legalAvailable-externalTeaching,0),school.stage));
    }
-   return {teacher,target,relation,localTeaching,globalTeaching,globalSupervision,globalLeadership,personalDuties,legalAvailable,available};
+   return {teacher,target,relation,localTeaching,globalTeaching,globalSupervision,personalDuties,legalAvailable,available};
   });
   const missingTargets=targetDetails.filter(item=>item.target==null).length;
   const basicNormTotal=targetDetails.reduce((sum,item)=>sum+summaryPlanNumber(item.target),0);
@@ -8252,18 +8245,18 @@ buildOperationalSchoolPlanData=function(input={}){
 
 formatTeachersReport=function(raw,ctx){
  const source=raw.teachers||[],rows=source.map(t=>{
-  const teaching=reportNumber(t.teaching_periods),supervision=reportNumber(t.supervision_periods),leadership=reportNumber(t.leadership_periods);
+  const teaching=reportNumber(t.teaching_periods),supervision=reportNumber(t.supervision_periods);
   return {teacherId:v91TeacherId(t),name:reportCellValue(t.full_name),civil:reportCellValue(t.civil_id),school:v91SchoolCell(t),workType:t.work_type==='paid'?'بالأجر':'ثابت',job:reportCellValue(t.job_title),
-   teaching,supervision,leadership,functionalTotal:teaching+supervision+leadership,target:workloadTargetLabel(t),
+   teaching,supervision,functionalTotal:teaching+supervision,target:workloadTargetLabel(t),
    deficit:isPaidTeacher(t)?'—':(t.deficit_periods==null?'—':reportNumber(t.deficit_periods)),surplus:isPaidTeacher(t)||t.surplus_periods==null?'—':reportNumber(t.surplus_periods),status:isPaidTeacher(t)?'حسب الحصص المسندة':reportCellValue(t.workload_status),
    _schoolId:v91ScopeSchoolId(t),_school:reportCellValue(t.scope_school_name||t.home_school_name),_stage:reportCellValue(t.scope_school_stage||t.home_school_stage),_status:isPaidTeacher(t)?'حسب الحصص المسندة':reportCellValue(t.workload_status),_search:[t.full_name,t.civil_id,t.scope_school_name,t.home_school_name,t.delegation_from_school_name,t.delegation_to_school_name,t.job_title].filter(Boolean).join(' ')};
  });
  const unique=new Map();source.forEach(t=>{const id=v91TeacherId(t);if(id&&!unique.has(id))unique.set(id,t)});
  const uniqueDef=[...unique.values()].reduce((n,t)=>n+(isPaidTeacher(t)?0:reportNumber(t.deficit_periods)),0);
  const sum=field=>rows.reduce((total,row)=>total+reportNumber(row[field]),0);
- return makeReportSchema({reportId:'teachers',title:'تقرير المعلمين',subtitle:'كل معلم يظهر داخل كل مدرسة يعمل بها. التدريس والإشراف والريادة محسوبة داخل المدرسة المعروضة، والنصاب المتبقي محسوب للمعلم مرة واحدة.',period:ctx.period,
+ return makeReportSchema({reportId:'teachers',title:'تقرير المعلمين',subtitle:'كل معلم يظهر داخل كل مدرسة يعمل بها. التدريس والإشراف محسوبان داخل المدرسة المعروضة، والنصاب المتبقي محسوب للمعلم مرة واحدة.',period:ctx.period,
   summary:[reportMetric('المعلمون الفريدون',unique.size),reportMetric('سجلات المدارس',rows.length),reportMetric('التدريس الفعلي',sum('teaching')),reportMetric('الإشراف',sum('supervision')),reportMetric('العجز الكلي الفريد',uniqueDef)],
-  columns:[reportColumn('name','المعلم',1.35),reportColumn('civil','الرقم المدني',1,{id:true,nowrap:true}),reportColumn('school','المدرسة / الانتداب',2.1),reportColumn('workType','النوع',.6),reportColumn('job','الدرجة',.8),reportColumn('teaching','تدريس',.55,{numeric:true}),reportColumn('supervision','إشراف',.48,{numeric:true}),reportColumn('leadership','ريادة',.48,{numeric:true}),reportColumn('functionalTotal','إجمالي المدرسة',.65,{numeric:true}),reportColumn('target','النصاب',.7),reportColumn('deficit','المتبقي الكلي',.6,{numeric:true}),reportColumn('status','الحالة',.65)],rows,
+  columns:[reportColumn('name','المعلم',1.35),reportColumn('civil','الرقم المدني',1,{id:true,nowrap:true}),reportColumn('school','المدرسة / الانتداب',2.1),reportColumn('workType','النوع',.6),reportColumn('job','الدرجة',.8),reportColumn('teaching','تدريس',.55,{numeric:true}),reportColumn('supervision','إشراف',.48,{numeric:true}),reportColumn('functionalTotal','إجمالي المدرسة',.65,{numeric:true}),reportColumn('target','النصاب',.7),reportColumn('deficit','المتبقي الكلي',.6,{numeric:true}),reportColumn('status','الحالة',.65)],rows,
   totals:[reportTotalsMetric('المعلمون الفريدون',unique.size),reportTotalsMetric('سجلات المدارس',rows.length),reportTotalsMetric('التدريس',sum('teaching')),reportTotalsMetric('الإشراف',sum('supervision'))],issuer:ctx.issuer});
 };
 
@@ -8340,7 +8333,7 @@ loadPaidShortageSchool=async function(schoolId){
   if(!planRow||!s)throw new Error('تعذر تكوين بيانات المدرسة للفترة الحالية.');if(!planRow.calculation_ready)throw new Error('بيانات الفصول أو حصص المواد غير مكتملة؛ لا يمكن توزيع العجز.');
   const detailByTeacher=new Map((planRow.teacher_capacity_details||[]).map(d=>[v91TeacherId(d.teacher),d])),alloc=new Map((ar.data||[]).map(x=>[String(x.teacher_id),x]));
   const eligible=scopes.filter(t=>v91ScopeSchoolId(t)===String(schoolId)&&!t.renewed_leave&&t.work_type!=='paid'&&String(t.home_school_id||'')===String(schoolId)).map(t=>{
-   const detail=detailByTeacher.get(v91TeacherId(t))||{},available=summaryPlanNumber(detail.available),raw=Math.max(summaryPlanNumber(detail.target)-summaryPlanNumber(detail.globalSupervision)-summaryPlanNumber(detail.globalLeadership),0);
+   const detail=detailByTeacher.get(v91TeacherId(t))||{},available=summaryPlanNumber(detail.available),raw=Math.max(summaryPlanNumber(detail.target)-summaryPlanNumber(detail.globalSupervision),0);
    return {...t,official_teaching_periods:summaryPlanNumber(t.teaching_periods),suggested_paid_periods:raw>0?Math.max(Math.ceil(raw/4)*4-raw,0):0};
   }).sort((a,b)=>String(a.full_name||'').localeCompare(String(b.full_name||''),'ar'));
   const rows=eligible.map(t=>{const a=alloc.get(v91TeacherId(t)),v=Number(a?.paid_periods||0),relation=v91SchoolRelationText(t);return `<tr><td><b>${esc(t.full_name)}</b>${relation?`<br><small>${esc(relation)}</small>`:''}<br><small>${esc(t.job_title||'')}</small></td><td>${t.weekly_target??'—'}</td><td>${t.supervision_periods||0}</td><td><b>${t.official_teaching_periods}</b></td><td>${t.suggested_paid_periods}</td><td><input class="paid-shortage-input" data-teacher-id="${v91TeacherId(t)}" type="number" min="0" max="24" step="1" value="${v}" style="width:74px;text-align:center" oninput="recalcPaidShortagePreview()"></td><td class="paid-total-cell" data-teacher-id="${v91TeacherId(t)}">${Number(t.official_teaching_periods)+v}</td></tr>`}).join('');
@@ -9131,7 +9124,7 @@ async function v110LoadSchoolDossier(schoolId,{force=false}={}){
  return cachedRead(`page:reports:school-dossier:v110:${userId}:${role}:${termId}:${schoolId}`,async signal=>{
   const [schoolResult,classesResult,workspaceResult,rulesResult,budgetResult]=await Promise.all([
    abortable(sb.from('schools').select('id,name,stage,school_type,gender_type,address,phone,class_count,status,approval_authority,supervisor_id,supervisors(id,full_name)').eq('id',schoolId).single(),signal),
-   abortable(sb.from('school_classes').select('id,school_id,stage,grade,class_name,science_periods,leader_teacher_id,grade_order,class_subject_requirements(weekly_periods,curriculum_subjects(subject_name))').eq('school_id',schoolId).eq('term_id',termId).order('grade_order').order('class_name'),signal),
+   abortable(sb.from('school_classes').select('id,school_id,stage,grade,class_name,science_periods,grade_order,class_subject_requirements(weekly_periods,curriculum_subjects(subject_name))').eq('school_id',schoolId).eq('term_id',termId).order('grade_order').order('class_name'),signal),
    abortable(sb.rpc('get_teacher_timetable_workspace',{p_school_id:schoolId,p_term_id:termId}),signal),
    abortable(sb.from('workload_rules').select(WORKLOAD_RULE_FIELDS).eq('active',true),signal),
    abortable(sb.from('school_budget_reference').select('school_id,source_row_no,source_notes,basic_periods,total_periods,total_classes,paid_periods_effective,validation_notes').eq('school_id',schoolId).eq('snapshot_key','oct_2026_preparatory_qous'),signal)
@@ -9162,7 +9155,7 @@ function v110TeacherFacts(t){
   ['الدرجة / الوظيفة',t.display_job],['النصاب القانوني',isPaidTeacher(t)?'حسب الحصص المسندة':v110Number(t.legal_quota)],
   ['تدريس وفق الملفات',v110Number(t.source_teaching)],['أجر إضافي وفق الملفات',v110Number(t.source_paid)],['إشراف وفق الملفات',v110Number(t.source_supervision)],
   ['تدريس مسند بالمدرسة',v110Number(t.scope_teaching_periods??t.teaching_periods)],['إشراف بالمدرسة',v110Number(t.scope_supervision_periods??t.supervision_periods)],
-  ['ريادة بالمدرسة',v110Number(t.scope_leadership_periods??t.leadership_periods)],['إجمالي محسوب بالمدرسة',v110Number(t.scope_total_counted_periods??t.total_counted_periods)],
+  ['إجمالي محسوب بالمدرسة',v110Number(t.scope_total_counted_periods??t.total_counted_periods)],
   ['المتبقي الكلي للمعلم',isPaidTeacher(t)?'—':v110Number(t.remaining_periods)],['تاريخ التعيين',t.appointment_date],['تاريخ استلام العمل',t.work_start_date],['تاريخ الحصول على الدرجة',t.grade_acquired_date],
   ['ملاحظات الملفات',t.source_entries.map(e=>e.leave_note||e.duty_note).filter(Boolean).join('؛ ')||'—'],
   ['البريد الإلكتروني',t.email],['المؤهل',[t.qualification,t.qualification_year].filter(Boolean).join(' ')||v103SourceJson(t.source_reference).qualification],['التخصص',t.specialty],['كود المعلم',t.teacher_code],['محل الإقامة',t.residence]];
@@ -9189,7 +9182,6 @@ function v110DossierMarkup(d){
  const id=esc(String(d.school.id)),schedule=v110ScheduleRows(d),periods=reportNumber(d.config.periods_per_day)||7;
  const classRows=d.classes.map(c=>[v110ClassName(c),v110ClassRequired(c),
   (c.class_subject_requirements||[]).map(r=>`${r.curriculum_subjects?.subject_name||'علوم'} (${r.weekly_periods})`).join('؛ ')||'—',
-  c.leader_teacher_id?v110TeacherName(d,c.leader_teacher_id):'غير مسند',
   d.assignments.filter(a=>String(a.class_id)===String(c.id)).map(a=>`${v110TeacherName(d,a.teacher_id)} — ${a.subject_name||'علوم'} (${a.weekly_periods})`).join('\n')||'لم يُسند معلم بعد']);
  const assignmentRows=d.assignments.map(a=>[v110TeacherName(d,a.teacher_id),v110ClassName(a),a.subject_name||'علوم',a.weekly_periods]);
  const referenceRows=d.references.map(e=>[e.display_name,e.source_raw,e.source_kind==='movement'?'كشف الندب الجزئي':'بيان الحصص',e.leave_note||e.duty_note||e.matching_reason||'—']);
@@ -9202,7 +9194,7 @@ function v110DossierMarkup(d){
   <section class="card"><h3>بيانات المدرسة</h3>${v110FactsMarkup(v110SchoolFacts(d))}${d.class_count>d.classes.length?'<div class="notice">عدد الفصول المعتمد أكبر من الفصول ذات البيانات التفصيلية؛ احتياج الحصص المعروض يخص الفصول المدخلة فقط.</div>':''}</section>
   <section class="card"><h3>المعلمون والأنصبة (${d.teachers.length})</h3><p class="muted">النصاب القانوني بحسب الدرجة؛ حصص الملفات مرجعية، والتدريس المسند محسوب من إسنادات الفصول في البرنامج.</p>
    <div class="v110-teachers">${d.teachers.map(t=>`<details class="v110-teacher"><summary><strong>${esc(t.full_name)}</strong><small>تدريس مسند: ${esc(v110Number(t.scope_teaching_periods??t.teaching_periods))} • النصاب: ${esc(isPaidTeacher(t)?'بالأجر':v110Number(t.legal_quota))}<br>عرض جميع بيانات المعلم</small></summary>${v110FactsMarkup(v110TeacherFacts(t))}</details>`).join('')||'<div class="notice">لا يوجد كادر معلمين متاح لهذه المدرسة.</div>'}</div></section>
-  <section class="card"><h3>الفصول (${d.classes.length})</h3>${classRows.length?v110Table(['الصف / الفصل','الحصص الأسبوعية','المواد المطلوبة','رائد الفصل','المعلمون المسندون'],classRows):'<div class="notice">لم تُدخل بيانات تفصيلية للفصول بعد.</div>'}</section>
+  <section class="card"><h3>الفصول (${d.classes.length})</h3>${classRows.length?v110Table(['الصف / الفصل','الحصص الأسبوعية','المواد المطلوبة','المعلمون المسندون'],classRows):'<div class="notice">لم تُدخل بيانات تفصيلية للفصول بعد.</div>'}</section>
   <section class="card"><h3>إسناد حصص الفصول</h3>${assignmentRows.length?v110Table(['المعلم','الصف / الفصل','المادة','الحصص الأسبوعية'],assignmentRows):'<div class="notice">لم تُدخل إسنادات حصص للفصول بعد.</div>'}</section>
   <section class="card"><h3>جدول المدرسة المسجل</h3><p class="muted">يعرض الجدول حصص المعلمين المحفوظة في المدرسة، مع الفصل والمادة واسم المعلم لكل حصة.</p>${timetable}</section>
   ${referenceRows.length||d.budgets.length?`<section class="card"><h3>بيان الحصص من الملفات المرفوعة</h3>${d.budgets.map(b=>`<div class="v110-reference-budget"><h4>أرقام بيان المدرسة المرفوع${b.source_row_no?' — الصف '+esc(b.source_row_no):''}</h4>${v110FactsMarkup(v110BudgetFacts(b))}</div>`).join('')}${referenceRows.length?v110Table(['المعلم','النصاب كما ورد','المصدر','ملاحظات'],referenceRows):''}</section>`:''}
@@ -9211,11 +9203,10 @@ function v110DossierMarkup(d){
 function v110ReportDetails(facts){return facts.map(([label,value])=>`${label}: ${v110Number(value)}`).join('؛ ')}
 /* v112: تقرير المدرسة الشامل — كل معلم يظهر اسمه مرة واحدة وتحته كل بياناته ونصابه وفصوله وجدوله، دون تكرار. */
 function v112TeacherGroups(d){
- const groups=new Map(),ensure=(id,name,teacher)=>{id=String(id||'');if(!groups.has(id))groups.set(id,{id,name:name||'معلم غير ظاهر في الكادر',teacher:teacher||null,assignments:[],slots:[],leads:[],refs:[]});return groups.get(id)};
+ const groups=new Map(),ensure=(id,name,teacher)=>{id=String(id||'');if(!groups.has(id))groups.set(id,{id,name:name||'معلم غير ظاهر في الكادر',teacher:teacher||null,assignments:[],slots:[],refs:[]});return groups.get(id)};
  d.teachers.forEach(t=>ensure(v110TeacherId(t),t.full_name,t));
  d.assignments.forEach(a=>ensure(a.teacher_id,v110TeacherName(d,a.teacher_id)).assignments.push(a));
  d.slots.forEach(s=>ensure(s.teacher_id,v110TeacherName(d,s.teacher_id)).slots.push(s));
- d.classes.forEach(c=>{if(c.leader_teacher_id)ensure(c.leader_teacher_id,v110TeacherName(d,c.leader_teacher_id)).leads.push(v110ClassName(c))});
  const unmatched=[];
  d.references.forEach(e=>{const g=groups.get(String(e.teacher_id||''));if(g&&g.teacher)g.refs.push(e);else unmatched.push(e)});
  return {groups:[...groups.values()],unmatched};
@@ -9233,13 +9224,12 @@ function v110SchoolDossierReport(d,ctx){
   add('المعلم',g.name,'',{_group:true,_groupTitle:`${i+1} — ${g.name}`,_search:g.name});
   if(t){
    const facts=v110TeacherFacts(t),raws=[...new Set(g.refs.map(e=>e.source_raw).filter(Boolean))];
-   own('بيانات المعلم',`${t.display_job||'—'} — ${isPaidTeacher(t)?'بالأجر':'ثابت'}`,v110ReportDetails([...facts.slice(0,5),...facts.slice(14)]));
+   own('بيانات المعلم',`${t.display_job||'—'} — ${isPaidTeacher(t)?'بالأجر':'ثابت'}`,v110ReportDetails([...facts.slice(0,5),...facts.slice(13)]));
    own('النصاب',raws.length?`كما ورد: ${raws.join('؛ ')}`:(isPaidTeacher(t)?'بالأجر':`النصاب القانوني: ${v110Number(t.legal_quota)}`),
-    [v110ReportDetails(facts.slice(5,14)),...g.refs.map(e=>`المصدر: ${sourceLabel(e)}؛ ${e.leave_note||e.duty_note||e.matching_reason||'وفق الملف المرفوع'}`)].join('\n'));
+    [v110ReportDetails(facts.slice(5,13)),...g.refs.map(e=>`المصدر: ${sourceLabel(e)}؛ ${e.leave_note||e.duty_note||e.matching_reason||'وفق الملف المرفوع'}`)].join('\n'));
   }else own('بيانات المعلم','غير ظاهر في الكادر','هذا المعلم مذكور في الإسنادات أو الجدول ولا يظهر ضمن كادر المدرسة المتاح لهذا الحساب.');
   const as=[...g.assignments].sort((a,b)=>(classOrder.get(String(a.class_id))??1e9)-(classOrder.get(String(b.class_id))??1e9));
   const lines=as.map(a=>`${v110ClassName(a)} — ${a.subject_name||'علوم'}: ${a.weekly_periods}`);
-  if(g.leads.length)lines.push(`رائد الفصل: ${g.leads.join('، ')}`);
   own('الفصول المسندة',as.length?`الفصول: ${new Set(as.map(a=>String(a.class_id))).size} — الحصص: ${as.reduce((n,a)=>n+reportNumber(a.weekly_periods),0)}`:'—',lines.join('\n')||'لم تُسند حصص لهذا المعلم بعد.');
   if(g.slots.length){
    const slotDays=[...new Set([...days.map(Number),...g.slots.map(s=>Number(s.weekday))])];
@@ -9253,7 +9243,7 @@ function v110SchoolDossierReport(d,ctx){
  if(!groups.length)add('المعلمون','الكادر','لا يوجد كادر معلمين متاح لهذه المدرسة.');
  for(const c of d.classes)add('الفصول',v110ClassName(c),v110ReportDetails([
   ['الحصص الأسبوعية',v110ClassRequired(c)],['المواد',(c.class_subject_requirements||[]).map(r=>`${r.curriculum_subjects?.subject_name||'علوم'} (${r.weekly_periods})`).join('؛ ')||'—'],
-  ['رائد الفصل',c.leader_teacher_id?'مسند':'غير مسند'],['الإسناد',d.assignments.some(a=>String(a.class_id)===String(c.id))?'مسند':'لم يُسند معلم بعد']]));
+  ['الإسناد',d.assignments.some(a=>String(a.class_id)===String(c.id))?'مسند':'لم يُسند معلم بعد']]));
  if(!d.classes.length)add('الفصول','البيانات التفصيلية','لم تُدخل بيانات تفصيلية للفصول بعد.');
  if(d.class_count>d.classes.length)add('الفصول','استكمال البيانات','عدد الفصول المعتمد أكبر من الفصول المفصلة؛ احتياج الحصص المعروض يخص الفصول المدخلة فقط.');
  if(!d.assignments.length)add('إسناد الحصص','الحالة','لم تُدخل إسنادات حصص للفصول بعد.');
