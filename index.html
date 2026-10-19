@@ -1,4 +1,5 @@
 <!doctype html>
+<!-- v129: شاشة المعلمين: فلتر «الإشراف» (له / بدون) وفلتر «المتبقي» (عليه متبقٍ / لا متبقٍ)، وينتقلان إلى تقرير المعلمين. -->
 <!-- v128: المدير يضيف ويحذف الفصول من شاشة المدرسة، ويلغي الانتداب (إنهاء الانتداب وإعادة ربط المعلم بمدرسته). -->
 <!-- v127: حذف الريادة من الواجهة بالكامل (حقل رائد الفصل وأعمدتها وحساباتها وتقاريرها). -->
 <!-- v126: حصتا الإشراف تدخلان في إجمالي نصاب المعلم ولا تُحتسبان زيادة ولا تُخصمان من حصص المدرسة -->
@@ -45,7 +46,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#152c43">
-<title>نظام توجيه العلوم — v128</title>
+<title>نظام توجيه العلوم — v129</title>
 <style>
 /* School dossier: stable readable layout on mobile and desktop. */
 .v110-dossier{display:grid;gap:14px;min-width:0}
@@ -5641,6 +5642,7 @@ function applyAutoTableFilters(tableId){
   total++;let ok=true;
   for(const c of controls){
    const q=filterNormalize(c.value);if(!q)continue;
+   if(c.dataset.filterPred){if(!v129PredMatch(c.dataset.filterPred,c.value,v129PredNum(filterCellText(cells[Number(c.dataset.filterCol)])))){ok=false;break}continue}
    if(c.dataset.filterType==='search'){
     if(!filterNormalize(cells.map(filterCellText).join(' ')).includes(q)){ok=false;break}
    }else{
@@ -5660,6 +5662,25 @@ function applyAutoTableFilters(tableId){
 function resetAutoTableFilters(tableId){
  document.querySelectorAll(`[data-filter-table="${tableId}"]`).forEach(x=>x.value='');
  applyAutoTableFilters(tableId);
+}
+
+/* v129: فلترا «الإشراف» و«المتبقي» في شاشة المعلمين (يصلحان للجدول وللتقرير). */
+function v129PredDefs(){return {
+ 'الإشراف':{kind:'supervision',header:'الإشراف',rowKey:'supervision',opts:['له إشراف','بدون إشراف']},
+ 'المتبقي':{kind:'remaining',header:'العجز',rowKey:'deficit',opts:['عليه متبقٍ (عجز)','لا متبقٍ']}
+}}
+function v129PredNum(v){if(typeof v==='number')return Number.isFinite(v)?v:null;const m=String(v??'').match(/\d+/);return m?Number(m[0]):null}
+function v129PredMatch(kind,value,n){
+ if(kind==='supervision'){const has=n!==null&&n>0;return value==='له إشراف'?has:value==='بدون إشراف'?!has:true}
+ if(value==='عليه متبقٍ (عجز)')return n!==null&&n>0;
+ if(value==='لا متبقٍ')return n===0;
+ return true;
+}
+function v129ReportPred(schema,row,f){
+ if(schema?.reportId!=='teachers')return null;
+ const def=v129PredDefs()[String(f?.label||'').trim()];
+ if(!def||!def.opts.includes(f.value))return null;
+ return v129PredMatch(def.kind,f.value,v129PredNum(row?.[def.rowKey]));
 }
 
 function buildAutoTableFilterBar(table,tableId,index){
@@ -5682,6 +5703,12 @@ function buildAutoTableFilterBar(table,tableId,index){
    options+=`<div class="auto-filter-field" title="${esc(h)}"><select aria-label="${esc(h)}" data-filter-table="${tableId}" data-filter-col="${col}" onchange="applyAutoTableFilters('${tableId}')"><option value="">${esc(h)}: الكل</option>${values.map(v=>`<option value="${esc(v)}">${esc(v)}</option>`).join('')}</select></div>`;
  });
 
+ if(currentPage==='teachers'){
+  Object.entries(v129PredDefs()).forEach(([label,def])=>{
+   const col=headers.indexOf(def.header);if(col<0)return;
+   options+=`<div class="auto-filter-field" title="${esc(label)}"><select aria-label="${esc(label)}" data-filter-table="${tableId}" data-filter-col="${col}" data-filter-pred="${def.kind}" onchange="applyAutoTableFilters('${tableId}')"><option value="">${esc(label)}: الكل</option>${def.opts.map(v=>`<option value="${esc(v)}">${esc(v)}</option>`).join('')}</select></div>`;
+  });
+ }
  const optionsRow=`<div class="auto-filter-options-row">${options}<button class="btn secondary auto-filter-reset" onclick="resetAutoTableFilters('${tableId}')" title="مسح التصفية">مسح</button><span class="auto-filter-count" id="${tableId}FilterCount">${rows.length}/${rows.length}</span></div>`;
  return `<div class="auto-filter-bar no-print" data-auto-filter-for="${tableId}">${searchRow}${optionsRow}</div>`
 }
@@ -7147,6 +7174,8 @@ function applyCurrentFiltersToReportSchema(schema,state){
  const rows=(schema.rows||[]).filter(row=>{
   if(q&&!reportRowSearchText(schema,row).includes(q))return false;
   for(const f of filters){
+   const pred=v129ReportPred(schema,row,f);
+   if(pred!==null){if(!pred)return false;continue}
    const actual=filterNormalize(reportRowValueByFilterLabel(schema,row,f.label));
    if(Array.isArray(f.values)){
     const allowed=f.values.map(filterNormalize).filter(Boolean);
