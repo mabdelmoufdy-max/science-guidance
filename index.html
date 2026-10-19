@@ -1,4 +1,5 @@
 <!doctype html>
+<!-- v133: تقرير «أنصبة المعلمين»: إصلاح الصفحة الأخيرة الفارغة؛ حين لا تلائم الإجماليات والاعتماد الصفحة الأخيرة تنتقل معهما آخر 3 صفوف من الجدول بدل صفحة تحتوي الإجماليات وحدها. تنسيق عرض فقط دون تغيير في الحساب أو قاعدة البيانات، وبقية التقارير دون تغيير. -->
 <!-- v132: شاشة المعلمين: زر «معاينة التقرير» يفتح تقرير «أنصبة المعلمين» مع نقل فلاتر الشاشة إليه، وتكبير وتوضيح سطر تفصيل الإجمالي في بطاقة المعلم. عرض فقط دون تغيير في الحساب أو قاعدة البيانات. -->
 <!-- v131: تقرير جديد «أنصبة المعلمين» في مركز التقارير: صف لكل معلم مرتبًا بمدرسته الأساسية (المدرسة الأساسية والمنتدب إليها وحصص كل منهما والإشراف والإجمالي والنصاب والعجز والزيادة)، ومعلم الأجر بالحصص المسندة فقط. عرض فقط دون تغيير في الحساب أو قاعدة البيانات. -->
 <!-- v130: شاشة المعلمين: المنتدب جزئيًا يظهر في بطاقته إجمالي المدرستين (حصصه هنا + حصصه في المدرسة الأخرى + الإشراف في مدرسته الأصلية) ليتطابق مع العجز المحسوب. عرض فقط، دون أي تغيير في الحساب أو قاعدة البيانات. -->
@@ -49,7 +50,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#152c43">
-<title>نظام توجيه العلوم — v132</title>
+<title>نظام توجيه العلوم — v133</title>
 <style>
 /* School dossier: stable readable layout on mobile and desktop. */
 .v110-dossier{display:grid;gap:14px;min-width:0}
@@ -6972,7 +6973,15 @@ function renderReportSchema(schema,sheet=document.getElementById('reportPreviewS
  schema.rows.forEach((row,index)=>{let tr=reportRowNode(schema,row,index);if(row&&row._group){held=tr;return}const hadHeader=!!held,unit=held?[held,tr]:[tr];held=null;unit.forEach(n=>sk.tbody.appendChild(n));if(reportBodyOverflows(pg.body)){unit.forEach(n=>n.remove());if(sk.tbody.children.length===0){unit.forEach(n=>{n.classList.add('report-row-dense');sk.tbody.appendChild(n)});if(reportBodyOverflows(pg.body))throw new Error(`السطر ${index+1} أكبر من صفحة A4 ولا يمكن اعتماده.`);return}pg=reportCreatePage(stack,schema,signature);sk=reportTableSkeleton(schema);pg.body.appendChild(sk.table);if(!hadHeader&&row&&row._ingroup){const cont=reportRowNode(schema,{_group:true,_groupTitle:row._ingroup+' (تابع)'},index);cont.removeAttribute('data-report-row-index');unit.unshift(cont)}unit.forEach(n=>sk.tbody.appendChild(n));if(reportBodyOverflows(pg.body)){unit.forEach(n=>n.classList.add('report-row-dense'));if(reportBodyOverflows(pg.body))throw new Error(`السطر ${index+1} أكبر من صفحة A4 ولا يمكن اعتماده.`)}}});
  if(held)sk.tbody.appendChild(held);
  if(!schema.rows.length){const empty=document.createElement('div');empty.className='report-empty-state';empty.textContent='لا توجد نتائج ضمن النطاق والفلاتر المحددة.';pg.body.appendChild(empty)}
- const tail=document.createElement('div');if(schema.totals.length)tail.appendChild(reportTotalsNode(schema.totals));tail.appendChild(reportApprovalNodeV32(schema));pg.body.appendChild(tail);if(reportBodyOverflows(pg.body)){tail.remove();pg=reportCreatePage(stack,schema,signature);pg.body.appendChild(tail);if(reportBodyOverflows(pg.body))throw new Error('منطقة الإجماليات والاعتماد لا تلائم صفحة A4.')}
+ const tail=document.createElement('div');if(schema.totals.length)tail.appendChild(reportTotalsNode(schema.totals));tail.appendChild(reportApprovalNodeV32(schema));pg.body.appendChild(tail);if(reportBodyOverflows(pg.body)){tail.remove();
+  /* v133: تقرير «أنصبة المعلمين» فقط — إن لم تلائم الإجماليات والاعتماد الصفحة الأخيرة، تنتقل معها آخر 3 صفوف من الجدول بدل أن تنفرد الإجماليات بصفحة فارغة. بقية التقارير على سلوكها السابق. */
+  let carried=[];if(schema.reportId==='teacherWorkload'){const kids=[...sk.tbody.children],want=Math.min(3,kids.length-1);if(want>0){const cand=kids.slice(-want);if(!cand.some(n=>n.classList.contains('report-group-row')))carried=cand}}
+  const prevTbody=sk.tbody;carried.forEach(n=>n.remove());
+  pg=reportCreatePage(stack,schema,signature);
+  if(carried.length){const sk2=reportTableSkeleton(schema);pg.body.appendChild(sk2.table);carried.forEach(n=>sk2.tbody.appendChild(n))}
+  pg.body.appendChild(tail);
+  if(reportBodyOverflows(pg.body)&&carried.length){tail.remove();carried.forEach(n=>prevTbody.appendChild(n));pg.body.innerHTML='';pg.body.appendChild(tail)}
+  if(reportBodyOverflows(pg.body))throw new Error('منطقة الإجماليات والاعتماد لا تلائم صفحة A4.')}
  const pages=[...stack.querySelectorAll('.report-a4-page')];pages.forEach((p,i)=>p.querySelector('.report-page-number').textContent=`صفحة ${i+1} من ${pages.length}`);return {signature,pages,stack};
 }
 function validateRenderedReport(schema,sheet=document.getElementById('reportPreviewSheet')){
