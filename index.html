@@ -1,4 +1,5 @@
 <!doctype html>
+<!-- v132: شاشة المعلمين: زر «معاينة التقرير» يفتح تقرير «أنصبة المعلمين» مع نقل فلاتر الشاشة إليه، وتكبير وتوضيح سطر تفصيل الإجمالي في بطاقة المعلم. عرض فقط دون تغيير في الحساب أو قاعدة البيانات. -->
 <!-- v131: تقرير جديد «أنصبة المعلمين» في مركز التقارير: صف لكل معلم مرتبًا بمدرسته الأساسية (المدرسة الأساسية والمنتدب إليها وحصص كل منهما والإشراف والإجمالي والنصاب والعجز والزيادة)، ومعلم الأجر بالحصص المسندة فقط. عرض فقط دون تغيير في الحساب أو قاعدة البيانات. -->
 <!-- v130: شاشة المعلمين: المنتدب جزئيًا يظهر في بطاقته إجمالي المدرستين (حصصه هنا + حصصه في المدرسة الأخرى + الإشراف في مدرسته الأصلية) ليتطابق مع العجز المحسوب. عرض فقط، دون أي تغيير في الحساب أو قاعدة البيانات. -->
 <!-- v129: شاشة المعلمين: فلتر «الإشراف» (له / بدون) وفلتر «المتبقي» (عليه متبقٍ / لا متبقٍ)، وينتقلان إلى تقرير المعلمين. -->
@@ -48,7 +49,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#152c43">
-<title>نظام توجيه العلوم — v131</title>
+<title>نظام توجيه العلوم — v132</title>
 <style>
 /* School dossier: stable readable layout on mobile and desktop. */
 .v110-dossier{display:grid;gap:14px;min-width:0}
@@ -88,7 +89,8 @@
 /* Generic page elements */
 .page-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin:8px 0 11px;padding:0 2px}.page-head h2{font-size:21px;margin:0 0 3px;line-height:1.35}.page-head p{font-size:11px;color:var(--muted);margin:0}.actions{display:flex;gap:6px;align-items:center;flex-wrap:wrap}.btn{display:inline-flex;align-items:center;justify-content:center;min-height:32px;border-radius:7px;border:1px solid #64788d;background:#fff;color:#25384a;padding:6px 10px;font-weight:700;font-size:11px;cursor:pointer}.btn.primary{background:var(--primary);border-color:var(--primary);color:#fff}.btn.secondary{background:#fff;color:#33495c}.btn.danger{background:#fff;border-color:#a04a4a;color:#8b3535}.btn.ok{background:#34495e;border-color:#34495e;color:#fff}.btn.block{width:100%}.btn:disabled{opacity:.42;cursor:not-allowed}.btn:hover:not(:disabled){filter:brightness(.98)}
 .grid4,.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:9px;margin-bottom:10px}.grid2{display:grid;grid-template-columns:1.15fr .85fr;gap:9px}.grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px}.card,.stat-card{background:#fff;border:1px solid var(--line);border-radius:9px;padding:11px;box-shadow:none;margin-bottom:9px}.card h3{font-size:13px;margin:0 0 8px}.card-title{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:8px}.card-title h3{margin:0}.stat-card{min-height:78px}.stat-label{font-size:10px;color:#66788c}.stat-value{font-size:26px;line-height:1.15;font-weight:800;margin-top:5px}.stat-foot{font-size:9px;color:var(--muted)}
-.table-wrap{overflow:auto;border:0;border-radius:0}.table{width:100%;border-collapse:collapse;background:#fff;font-size:11px;min-width:700px}.table th,.table td{border-bottom:1px solid var(--line-soft);padding:8px 7px;text-align:right;vertical-align:middle}.table th{background:var(--head);color:#33485e;font-size:10px;font-weight:700;white-space:nowrap}.table tbody tr:hover{background:#fbfcfd}.table tr:last-child td{border-bottom:0}.cell-sub{font-size:9px;color:#7d8c9a;margin-top:2px}.compact-select,.table select{min-height:30px;border:1px solid #bdc8d4;border-radius:7px;background:#fff;color:#455a6e;padding:4px 7px;font-size:10px;max-width:170px}
+.table-wrap{overflow:auto;border:0;border-radius:0}.table{width:100%;border-collapse:collapse;background:#fff;font-size:11px;min-width:700px}.table th,.table td{border-bottom:1px solid var(--line-soft);padding:8px 7px;text-align:right;vertical-align:middle}.table th{background:var(--head);color:#33485e;font-size:10px;font-weight:700;white-space:nowrap}.table tbody tr:hover{background:#fbfcfd}.table tr:last-child td{border-bottom:0}.cell-sub{font-size:9px;color:#7d8c9a;margin-top:2px}
+.cell-sub.v132-split{font-size:12.5px;color:#2b3a49;font-weight:600;line-height:1.55;margin-top:3px}.compact-select,.table select{min-height:30px;border:1px solid #bdc8d4;border-radius:7px;background:#fff;color:#455a6e;padding:4px 7px;font-size:10px;max-width:170px}
 .school-supervisor-display{display:flex;align-items:center;gap:7px;min-width:0}.school-supervisor-display b{line-height:1.5;overflow-wrap:anywhere}.school-supervisor-change{min-height:30px!important;padding:4px 8px!important;font-size:10px!important;white-space:nowrap;width:auto!important;min-width:auto!important}@media(max-width:700px){.school-supervisor-display{align-items:flex-start;flex-direction:column;gap:5px}.school-supervisor-change{min-height:32px!important;padding:4px 9px!important}}
 .badge{display:inline-block;padding:3px 7px;border-radius:12px;border:1px solid #a7b5c4;background:#f7fafc;color:#4e6172;font-size:9px;font-weight:700;white-space:nowrap}.badge.ok{background:#34495e;color:#fff;border-color:#34495e}.badge.warn{background:#fffaf0;color:#7b5b22;border-color:#d5c49f}.badge.danger{background:#fff8f8;color:#8b3535;border-color:#d7b0b0}.badge.info{background:#f7fafc;color:#486078;border-color:#aab8c5}.chip{display:inline-block;padding:3px 7px;border:1px solid #aeb9c5;border-radius:14px;background:#fff;font-size:9px;margin:2px}.notice{border:1px solid #cbd5e1;border-radius:8px;padding:9px;background:#f8fafc;color:#405568;font-size:11px;margin-bottom:9px}.notice.warn{background:#fffaf0;border-color:#d9c79f;color:#735823}.notice.ok{background:#f4f8f6;border-color:#b9cec2;color:#365a47}.notice.danger{background:#fff7f7;border-color:#d8b6b6;color:#823d3d}
 .progress{height:8px;background:#e4e9ee;border-radius:5px;overflow:hidden}.progress>span{display:block;height:100%;background:#496b88}.bar-row{display:grid;grid-template-columns:120px 1fr 48px;gap:8px;align-items:center;margin:8px 0;font-size:10px}.filters{display:grid;grid-template-columns:repeat(4,minmax(150px,1fr));gap:7px;margin-bottom:9px}.filters input,.filters select{min-height:32px;border:1px solid #bdc8d4;border-radius:7px;background:#fff;padding:5px 8px}.form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.form-grid.three{grid-template-columns:repeat(3,minmax(0,1fr))}.form-grid .field{margin:0}.field small{display:block;color:var(--muted);font-size:9px;margin-top:4px}.kpi-list{display:grid}.kpi-item{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--line-soft);font-size:11px}.kpi-item:last-child{border-bottom:0}.subject-box{margin:10px 0;padding:10px;border:1px solid var(--line);border-radius:8px;background:#f8fafc}.subject-box h4{margin:0 0 8px}.coverage-list{max-height:310px;overflow:auto;background:#f8fafc;border:1px solid var(--line);border-radius:8px;padding:10px;line-height:1.85;margin:10px 0}.teacher-summary{display:grid;grid-template-columns:120px 1fr;gap:14px}.avatar{width:95px;height:95px;border-radius:50%;background:#cbd5e1;display:grid;place-items:center;font-size:28px;font-weight:800;color:#41586d}.profile-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px}.profile-item{background:#fff;border:1px solid #d4dde5;border-radius:7px;padding:8px}.profile-item small{display:block;color:var(--muted);font-size:9px;margin-bottom:3px}
@@ -3429,7 +3431,7 @@ function v130SupervisionCell(t){
 function v130TotalCell(t){
  const bd=v130PartialBreakdown(t);
  if(!bd)return `<b>${t.total_counted_periods}</b>`;
- return `<b>${bd.total}</b><div class="cell-sub">هنا ${bd.here} + ${esc(bd.otherName)} ${bd.other}${bd.sup?` + إشراف ${bd.sup}`:''}</div>`;
+ return `<b>${bd.total}</b><div class="cell-sub v132-split">هنا ${bd.here} + ${esc(bd.otherName)} ${bd.other}${bd.sup?` + إشراف ${bd.sup}`:''}</div>`;
 }
 
 async function teachersPage({force=false}={}){
@@ -9709,10 +9711,34 @@ ReportAdapters.teacherWorkload={async load(ctx){
    target:paid?'—':workloadTargetLabel(t),deficit:workloadDeficitLabel(t),surplus:workloadSurplusLabel(t),
    _paid:paid,_delegated:list.some(r=>/^delegated_/.test(String(r.school_relation||''))),
    _status:paid?'حسب الحصص المسندة':reportCellValue(t.workload_status),...v103ScopeMeta(list),
-   _search:[t.full_name,homeName,delegName].filter(Boolean).join(' ')};
+   _civil:reportCellValue(t.civil_id),_job:reportCellValue(t.job_title),
+   _search:[t.full_name,t.civil_id,homeName,delegName].filter(Boolean).join(' ')};
  }).sort((a,b)=>String(a.home).localeCompare(String(b.home),'ar')||String(a.name).localeCompare(String(b.name),'ar')).map((r,i)=>({...r,index:i+1}));
  return v103BaseReport('teacherWorkload',ctx,[reportColumn('index','م',.3,{numeric:true}),reportColumn('name','المعلم',1.5),reportColumn('workType','النوع',.6),reportColumn('home','المدرسة الأساسية',1.45),reportColumn('deleg','المنتدب إليها',1.45),reportColumn('homePeriods','حصص الأساسية',.6,{numeric:true}),reportColumn('delegPeriods','حصص المنتدب إليها',.65,{numeric:true}),reportColumn('supervision','الإشراف',.5,{numeric:true}),reportColumn('total','الإجمالي',.55,{numeric:true}),reportColumn('target','النصاب',.65),reportColumn('deficit','العجز',.5,{numeric:true}),reportColumn('surplus','الزيادة',.5,{numeric:true})],rows,'الإجمالي = حصص الأساسية + حصص المنتدب إليها + الإشراف. العجز والزيادة من الإجمالي مقابل النصاب. معلم الأجر: الحصص المسندة فقط دون نصاب أو عجز أو زيادة.');
 }};
+
+/* v132: زر «معاينة التقرير» في شاشة المعلمين يفتح الآن تقرير «أنصبة المعلمين» المتفق عليه بدل تقرير المعلمين القديم،
+   وتنتقل إليه فلاتر الشاشة (بحث، مدرسة، مرحلة، حالة، إشراف، متبقٍ، نوع...). تقرير المعلمين القديم ما زال في مركز التقارير.
+   الفلتر بالمدرسة يشمل المدرسة الأساسية والمنتدب إليها. فلتر «التخصص» غير متاح في هذا التقرير فيُتجاهل. */
+REPORT_PAGE_ADAPTER_MAP.teachers='teacherWorkload';
+const v132BaseApplyFilters=applyCurrentFiltersToReportSchema;
+applyCurrentFiltersToReportSchema=function(schema,state){
+ if(schema.reportId!=='teacherWorkload'||!state?.active||state.sourcePage!=='teachers')return v132BaseApplyFilters(schema,state);
+ /* فلاتر المنظومة العامة (المدرسة، المرحلة، النوع، الحالة، البحث) تعالجها الدالة الأساسية؛ وهنا أعالج فقط
+    فلاتر الإشراف والمتبقي والدرجة الوظيفية، وأتجاهل فلتر «التخصص» لأنه غير موجود في هذا التقرير. */
+ const norm=filterNormalize,preds=v129PredDefs(),all=state.filters||[],own=[],rest=[];
+ all.forEach(f=>{
+  const label=String(f.label||'').trim(),pd=preds[label];
+  if(pd&&pd.opts.includes(f.value))own.push(row=>v129PredMatch(pd.kind,f.value,v129PredNum(row[pd.rowKey])));
+  else if(label==='الدرجة الوظيفية'){const v=norm(f.value);if(v)own.push(row=>norm(row._job)===v)}
+  else if(label==='التخصص')return;
+  else rest.push(f);
+ });
+ const pre={...schema,rows:(schema.rows||[]).filter(row=>own.every(fn=>fn(row)))};
+ const out=v132BaseApplyFilters(pre,{...state,filters:rest});
+ if(out.filterState)out.filterState={...out.filterState,filters:all.map(x=>({label:x.label,value:x.value,values:Array.isArray(x.values)?x.values:undefined}))};
+ return out;
+};
 
 </script>
 
