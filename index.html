@@ -1,4 +1,5 @@
 <!doctype html>
+<!-- v128: المدير يضيف ويحذف الفصول من شاشة المدرسة، ويلغي الانتداب (إنهاء الانتداب وإعادة ربط المعلم بمدرسته). -->
 <!-- v127: حذف الريادة من الواجهة بالكامل (حقل رائد الفصل وأعمدتها وحساباتها وتقاريرها). -->
 <!-- v126: حصتا الإشراف تدخلان في إجمالي نصاب المعلم ولا تُحتسبان زيادة ولا تُخصمان من حصص المدرسة -->
 <!-- v125: البيانات التكميلية (الهاتف، العنوان، مدير المدرسة) لا تُحسب نواقص ولا تظهر في التنبيهات؛ معلم الأجر لا تُطلب له درجة وظيفية ولا تاريخ تعيين. -->
@@ -44,7 +45,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#152c43">
-<title>نظام توجيه العلوم — v127</title>
+<title>نظام توجيه العلوم — v128</title>
 <style>
 /* School dossier: stable readable layout on mobile and desktop. */
 .v110-dossier{display:grid;gap:14px;min-width:0}
@@ -3436,7 +3437,8 @@ async function teachersPage({force=false}={}){
    const editBtn=ownTeacher?`<button class="btn secondary" onclick="editTeacherForm('${t.teacher_id}')">تعديل</button>`:'';
    const delegateBtn=canDelegate&&ownTeacher?`<button class="btn primary" title="فتح نموذج إضافة انتداب للمعلم" onclick="openTeacherDelegationForm('${t.teacher_id}')">إضافة انتداب</button>`:'';
    const delegatedBadge=!ownTeacher?`<span class="badge info">منتدب للمدرسة</span>`:'';
-   return `<td><div class="actions" style="gap:5px;flex-wrap:wrap">${editBtn}${delegateBtn}${delegatedBadge}</div></td>`;
+   const cancelDelegBtn=profile.role==='admin'&&String(t.school_relation||'').startsWith('delegated_')?`<button class="btn secondary" title="إنهاء الانتداب النشط وإعادة ربط المعلم بمدرسته الأصلية" onclick="adminCancelDelegationForm('${t.teacher_id}')">إلغاء الانتداب</button>`:'';
+   return `<td><div class="actions" style="gap:5px;flex-wrap:wrap">${editBtn}${delegateBtn}${cancelDelegBtn}${delegatedBadge}</div></td>`;
  };
  let specMap=new Map();
  try{const sp=await cachedRead(`page:teachers:specialty:${profile.id}:${profile.role}:${activeTerm?.id||'no-term'}`,async()=>({data:await v103ReadAll(()=>sb.from('teacher_records').select('id,specialty').eq('active',true).order('id')),error:null}),{ttl:30000,force});specMap=new Map((sp?.data||[]).filter(r=>r.specialty).map(r=>[String(r.id),r.specialty]));}catch(_e){}
@@ -3534,6 +3536,106 @@ async function saveTeacherDelegation(e,teacherId){
  }catch(err){
   moneySafeError(err);
   if(btn){btn.disabled=false;btn.textContent='تنفيذ الانتداب'}
+ }
+}
+
+/* v128: أدوات مدير النظام — حذف الفصول وإلغاء الانتداب (الإضافة تستخدم نموذج إضافة الفصول وتنفيذ الانتداب القائمين). */
+async function adminDeleteClassBlockers(classId){
+ const [{data:as,error:ae},{count:slots,error:se}]=await Promise.all([
+  sb.from('teaching_assignments').select('id').eq('class_id',classId),
+  sb.from('teacher_timetable_slots').select('id',{count:'exact',head:true}).eq('class_id',classId)
+ ]);
+ if(ae)throw ae;if(se)throw se;
+ return {assigned:(as||[]).length,slots:Number(slots||0)};
+}
+async function adminDeleteClass(classId,schoolId){
+ if(profile?.role!=='admin')return toast('حذف الفصول متاح لمدير النظام فقط');
+ try{
+  const {data:c,error}=await sb.from('school_classes').select('id,class_name,school_id,term_id').eq('id',classId).maybeSingle();
+  if(error)throw error;if(!c)throw new Error('الفصل غير موجود أو سبق حذفه');
+  const b=await adminDeleteClassBlockers(classId);
+  if(b.assigned||b.slots){
+   const why=[b.assigned?`${b.assigned} إسناد معلم`:'',b.slots?`${b.slots} حصة في جدول معلم`:''].filter(Boolean).join(' و');
+   return modal(`<h3>لا يمكن حذف الفصل</h3><div class="notice danger">على الفصل <b>${esc(c.class_name)}</b> ${why}. فُك الإسناد والجدول أولًا ثم احذف الفصل؛ حذفه الآن سيمسح إسناد المعلم معه.</div><div class="actions"><button type="button" class="btn secondary" onclick="closeModal()">إغلاق</button></div>`);
+  }
+  modal(`<h3>حذف الفصل</h3><div class="notice danger">سيُحذف الفصل <b>${esc(c.class_name)}</b> نهائيًا مع مواده المقررة، ولا يمكن التراجع. لا يوجد معلم مسند عليه.</div><div class="actions"><button type="button" class="btn danger" id="adminDeleteClassBtn" onclick="adminDeleteClassConfirmed('${c.id}','${c.school_id}')">تأكيد الحذف</button><button type="button" class="btn secondary" onclick="closeModal()">إلغاء</button></div>`);
+ }catch(err){moneySafeError(err)}
+}
+async function adminDeleteClassConfirmed(classId,schoolId){
+ if(profile?.role!=='admin')return toast('حذف الفصول متاح لمدير النظام فقط');
+ const btn=document.getElementById('adminDeleteClassBtn');if(btn){if(btn.disabled)return;btn.disabled=true;btn.textContent='جارٍ الحذف...'}
+ try{
+  const b=await adminDeleteClassBlockers(classId);
+  if(b.assigned||b.slots)throw new Error('أُسند معلم أو أُضيفت حصة جدول لهذا الفصل أثناء الحذف؛ لم يُحذف الفصل.');
+  const {data:del,error}=await sb.from('school_classes').delete().eq('id',classId).select('id');
+  if(error)throw error;if(!(del||[]).length)throw new Error('لم يُحذف الفصل (غير موجود أو غير مسموح).');
+  const {count,error:ce}=await sb.from('school_classes').select('id',{count:'exact',head:true}).eq('school_id',schoolId).eq('term_id',activeTerm.id);
+  if(ce)throw ce;
+  if(Number(count||0)>0){const {error:ue}=await sb.from('schools').update({class_count:Number(count)}).eq('id',schoolId);if(ue)throw ue}
+  closeModal();toast('تم حذف الفصل');
+  invalidateData('classes','assignments','dashboard','schools','hierarchy','page:reports','school:self');
+  await loadPage(true);
+ }catch(err){moneySafeError(err);if(btn){btn.disabled=false;btn.textContent='تأكيد الحذف'}}
+}
+async function adminCancelDelegationForm(teacherId){
+ if(profile?.role!=='admin')return toast('إلغاء الانتداب متاح لمدير النظام فقط');
+ try{
+  const [{data:t,error:te},{data:ds,error:de}]=await Promise.all([
+   sb.from('teacher_records').select('id,full_name,home_school_id').eq('id',teacherId).maybeSingle(),
+   sb.from('delegations').select('id,delegation_type,from_school_id,to_school_id,start_date,end_date').eq('teacher_id',teacherId).eq('active',true).order('start_date')
+  ]);
+  if(te)throw te;if(de)throw de;if(!t)throw new Error('المعلم غير موجود');
+  if(!(ds||[]).length)return modal(`<h3>إلغاء الانتداب</h3><div class="notice info"><b>${esc(t.full_name)}</b> ليس عليه انتداب نشط.</div><div class="actions"><button type="button" class="btn secondary" onclick="closeModal()">إغلاق</button></div>`);
+  const ids=[...new Set(ds.flatMap(d=>[d.from_school_id||t.home_school_id,d.to_school_id]).filter(Boolean))];
+  const {data:sc,error:se}=await sb.from('schools').select('id,name').in('id',ids);if(se)throw se;
+  const nm=new Map((sc||[]).map(x=>[String(x.id),x.name]));
+  modal(`<h3>إلغاء الانتداب</h3><div class="notice info"><b>${esc(t.full_name)}</b><br>الإلغاء ينهي الانتداب ويعيد ربط المعلم بمدرسته الأصلية، ولا يمسح بياناته. يُرفض الإلغاء إن كان للمعلم فصول مسندة في المدرسة المنتدب إليها.</div>${ds.map(d=>`<div class="card" style="margin-top:10px"><b>${d.delegation_type==='full'?'انتداب كلي':'انتداب جزئي'}</b> — ${esc(nm.get(String(d.from_school_id||t.home_school_id))||'—')} ← ${esc(nm.get(String(d.to_school_id))||'—')}<div class="cell-sub">من ${esc(d.start_date||'—')} ${d.end_date?'إلى '+esc(d.end_date):'(بلا تاريخ نهاية)'}</div><div class="actions" style="margin-top:8px"><button type="button" class="btn danger" onclick="adminCancelDelegation('${d.id}','${t.id}',this)">إلغاء هذا الانتداب</button></div></div>`).join('')}<div class="actions"><button type="button" class="btn secondary" onclick="closeModal()">إغلاق</button></div>`);
+ }catch(err){moneySafeError(err)}
+}
+async function adminCancelDelegation(delegationId,teacherId,btn){
+ if(profile?.role!=='admin')return toast('إلغاء الانتداب متاح لمدير النظام فقط');
+ if(btn){if(btn.disabled)return;btn.disabled=true;btn.textContent='جارٍ الإلغاء...'}
+ let delegationDone=false,snapshot=[];
+ const restore=async()=>{
+  try{
+   if(delegationDone)await sb.from('delegations').update({active:true}).eq('id',delegationId);
+   for(const r of snapshot)await sb.from('teacher_school_assignments').update({active:r.active,is_home_school:r.is_home_school}).eq('id',r.id);
+  }catch(_e){}
+ };
+ try{
+  const [{data:d,error:de},{data:t,error:te}]=await Promise.all([
+   sb.from('delegations').select('id,teacher_id,delegation_type,from_school_id,to_school_id,active').eq('id',delegationId).maybeSingle(),
+   sb.from('teacher_records').select('id,full_name,home_school_id').eq('id',teacherId).maybeSingle()
+  ]);
+  if(de)throw de;if(te)throw te;
+  if(!d||!d.active||String(d.teacher_id)!==String(teacherId))throw new Error('الانتداب غير موجود أو أُلغي سابقًا.');
+  const fromId=d.from_school_id||t?.home_school_id,toId=d.to_school_id;
+  if(!fromId||!toId)throw new Error('تعذر تحديد المدرسة الأصلية أو المنتدب إليها.');
+  const {data:cls,error:ce}=await sb.from('school_classes').select('id,class_name').eq('school_id',toId).eq('term_id',activeTerm.id);if(ce)throw ce;
+  const classIds=(cls||[]).map(c=>c.id);
+  if(classIds.length){
+   const {data:as,error:ae}=await sb.from('teaching_assignments').select('id,class_id').eq('teacher_id',teacherId).in('class_id',classIds);if(ae)throw ae;
+   if((as||[]).length){
+    const names=(as||[]).map(a=>(cls.find(c=>String(c.id)===String(a.class_id))||{}).class_name).filter(Boolean);
+    throw new Error(`للمعلم ${as.length} فصل مسند في المدرسة المنتدب إليها (${names.join('، ')}). فُك الإسناد أولًا ثم ألغِ الانتداب.`);
+   }
+  }
+  const {data:before,error:be}=await sb.from('teacher_school_assignments').select('id,school_id,is_home_school,active').eq('teacher_id',teacherId).eq('term_id',activeTerm.id).in('school_id',[fromId,toId]);if(be)throw be;
+  snapshot=before||[];
+  const {data:r1,error:e1}=await sb.from('delegations').update({active:false}).eq('id',delegationId).eq('active',true).select('id');
+  if(e1)throw e1;if(!(r1||[]).length)throw new Error('لم يُلغَ الانتداب (غير مسموح أو أُلغي سابقًا).');
+  delegationDone=true;
+  const {error:e2}=await sb.from('teacher_school_assignments').update({active:false}).eq('teacher_id',teacherId).eq('school_id',toId).eq('term_id',activeTerm.id);
+  if(e2)throw e2;
+  const {error:e3}=await sb.from('teacher_school_assignments').upsert({teacher_id:teacherId,school_id:fromId,academic_year_id:activeYear.id,term_id:activeTerm.id,is_home_school:true,active:true},{onConflict:'teacher_id,school_id,term_id'});
+  if(e3)throw e3;
+  closeModal();toast('تم إلغاء الانتداب وإعادة ربط المعلم بمدرسته الأصلية');
+  invalidateData('teachers','hierarchy','dashboard','assignments','page:reports','school:self','teacher:self');
+  await loadPage(true);
+ }catch(err){
+  await restore();
+  moneySafeError(err);
+  if(btn){btn.disabled=false;btn.textContent='إلغاء هذا الانتداب'}
  }
 }
 
@@ -9179,7 +9281,7 @@ function v110Table(headers,rows){
 }
 function v110FactsMarkup(facts){return `<dl class="v110-facts">${facts.map(([label,value])=>`<div><dt>${esc(label)}</dt><dd>${esc(v110Number(value))}</dd></div>`).join('')}</dl>`}
 function v110DossierMarkup(d){
- const id=esc(String(d.school.id)),schedule=v110ScheduleRows(d),periods=reportNumber(d.config.periods_per_day)||7;
+ const id=esc(String(d.school.id)),schedule=v110ScheduleRows(d),periods=reportNumber(d.config.periods_per_day)||7,isAdminV128=profile?.role==='admin';
  const classRows=d.classes.map(c=>[v110ClassName(c),v110ClassRequired(c),
   (c.class_subject_requirements||[]).map(r=>`${r.curriculum_subjects?.subject_name||'علوم'} (${r.weekly_periods})`).join('؛ ')||'—',
   d.assignments.filter(a=>String(a.class_id)===String(c.id)).map(a=>`${v110TeacherName(d,a.teacher_id)} — ${a.subject_name||'علوم'} (${a.weekly_periods})`).join('\n')||'لم يُسند معلم بعد']);
@@ -9189,12 +9291,13 @@ function v110DossierMarkup(d){
   :`<div class="notice">${d.can_manage?(reportNumber(d.config.revision)?'إعدادات الجدول محفوظة، ولم تُدخل حصص الجدول بعد.':'لم يُدخل جدول للمدرسة بعد.'):'لا توجد حصص جدول متاحة للعرض لهذا الحساب.'}</div>`;
  return `<div class="v110-dossier">
   <div class="page-head"><div><h2>${esc(d.school.name)}</h2><p>بيان المدرسة الشامل — ${esc([activeYear?.label,activeTerm?.name].filter(Boolean).join(' — '))}</p></div>
-   <div class="actions"><button class="btn primary" type="button" onclick="openSchoolReport('${id}')">تقرير المدرسة الشامل / طباعة</button><button class="btn secondary" type="button" onclick="loadPage(true)">تحديث البيانات</button><button class="btn secondary" type="button" onclick="v98SetSchool('')">كل المدارس</button></div></div>
+   <div class="actions">${isAdminV128?`<button class="btn primary add-class-action" type="button" data-action="add-class" data-school-id="${id}">+ إضافة فصل</button>`:''}<button class="btn primary" type="button" onclick="openSchoolReport('${id}')">تقرير المدرسة الشامل / طباعة</button><button class="btn secondary" type="button" onclick="loadPage(true)">تحديث البيانات</button><button class="btn secondary" type="button" onclick="v98SetSchool('')">كل المدارس</button></div></div>
   <div class="v111-school-kpis">${[['الفصول المسجلة',d.class_count],['الفصول المفصلة',d.classes.length],['المعلمون المسجلون',d.teachers.length],['حصص الفصول أسبوعيًا',d.required],['حصص مسندة',d.assigned],['حصص مجدولة',d.slots.length]].map(([label,value])=>`<div class="v111-school-kpi"><span>${esc(label)}</span><strong>${value}</strong></div>`).join('')}</div>
   <section class="card"><h3>بيانات المدرسة</h3>${v110FactsMarkup(v110SchoolFacts(d))}${d.class_count>d.classes.length?'<div class="notice">عدد الفصول المعتمد أكبر من الفصول ذات البيانات التفصيلية؛ احتياج الحصص المعروض يخص الفصول المدخلة فقط.</div>':''}</section>
   <section class="card"><h3>المعلمون والأنصبة (${d.teachers.length})</h3><p class="muted">النصاب القانوني بحسب الدرجة؛ حصص الملفات مرجعية، والتدريس المسند محسوب من إسنادات الفصول في البرنامج.</p>
-   <div class="v110-teachers">${d.teachers.map(t=>`<details class="v110-teacher"><summary><strong>${esc(t.full_name)}</strong><small>تدريس مسند: ${esc(v110Number(t.scope_teaching_periods??t.teaching_periods))} • النصاب: ${esc(isPaidTeacher(t)?'بالأجر':v110Number(t.legal_quota))}<br>عرض جميع بيانات المعلم</small></summary>${v110FactsMarkup(v110TeacherFacts(t))}</details>`).join('')||'<div class="notice">لا يوجد كادر معلمين متاح لهذه المدرسة.</div>'}</div></section>
+   <div class="v110-teachers">${d.teachers.map(t=>`<details class="v110-teacher"><summary><strong>${esc(t.full_name)}</strong><small>تدريس مسند: ${esc(v110Number(t.scope_teaching_periods??t.teaching_periods))} • النصاب: ${esc(isPaidTeacher(t)?'بالأجر':v110Number(t.legal_quota))}<br>عرض جميع بيانات المعلم</small></summary>${v110FactsMarkup(v110TeacherFacts(t))}${isAdminV128?`<div class="actions" style="margin-top:10px;flex-wrap:wrap"><button type="button" class="btn primary" onclick="openTeacherDelegationForm('${esc(v110TeacherId(t))}')">إضافة انتداب</button>${String(t.school_relation||'').startsWith('delegated_')?`<button type="button" class="btn secondary" onclick="adminCancelDelegationForm('${esc(v110TeacherId(t))}')">إلغاء الانتداب</button>`:''}</div>`:''}</details>`).join('')||'<div class="notice">لا يوجد كادر معلمين متاح لهذه المدرسة.</div>'}</div></section>
   <section class="card"><h3>الفصول (${d.classes.length})</h3>${classRows.length?v110Table(['الصف / الفصل','الحصص الأسبوعية','المواد المطلوبة','المعلمون المسندون'],classRows):'<div class="notice">لم تُدخل بيانات تفصيلية للفصول بعد.</div>'}</section>
+  ${isAdminV128?`<section class="card"><h3>إدارة الفصول (مدير النظام)</h3><p class="muted">الحذف متاح للفصل الذي لا يوجد عليه معلم مسند ولا حصص جدول. لتعديل حصص المواد استخدم شاشة الفصول.</p>${d.classes.length?`<div class="table-wrap"><table class="table"><thead><tr><th>الصف / الفصل</th><th>المعلمون المسندون</th><th></th></tr></thead><tbody>${d.classes.map(c=>{const n=d.assignments.filter(a=>String(a.class_id)===String(c.id)).length;return `<tr><td><b>${esc(v110ClassName(c))}</b></td><td>${n?n+' إسناد':'—'}</td><td>${n?'<span class="muted">مسند — فُك الإسناد أولًا</span>':`<button type="button" class="btn danger" onclick="adminDeleteClass('${esc(String(c.id))}','${id}')">حذف</button>`}</td></tr>`}).join('')}</tbody></table></div>`:'<div class="notice">لا توجد فصول مفصلة لهذه المدرسة.</div>'}</section>`:''}
   <section class="card"><h3>إسناد حصص الفصول</h3>${assignmentRows.length?v110Table(['المعلم','الصف / الفصل','المادة','الحصص الأسبوعية'],assignmentRows):'<div class="notice">لم تُدخل إسنادات حصص للفصول بعد.</div>'}</section>
   <section class="card"><h3>جدول المدرسة المسجل</h3><p class="muted">يعرض الجدول حصص المعلمين المحفوظة في المدرسة، مع الفصل والمادة واسم المعلم لكل حصة.</p>${timetable}</section>
   ${referenceRows.length||d.budgets.length?`<section class="card"><h3>بيان الحصص من الملفات المرفوعة</h3>${d.budgets.map(b=>`<div class="v110-reference-budget"><h4>أرقام بيان المدرسة المرفوع${b.source_row_no?' — الصف '+esc(b.source_row_no):''}</h4>${v110FactsMarkup(v110BudgetFacts(b))}</div>`).join('')}${referenceRows.length?v110Table(['المعلم','النصاب كما ورد','المصدر','ملاحظات'],referenceRows):''}</section>`:''}
