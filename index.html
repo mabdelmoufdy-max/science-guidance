@@ -1,4 +1,6 @@
 <!doctype html>
+<!-- v131: تقرير جديد «أنصبة المعلمين» في مركز التقارير: صف لكل معلم مرتبًا بمدرسته الأساسية (المدرسة الأساسية والمنتدب إليها وحصص كل منهما والإشراف والإجمالي والنصاب والعجز والزيادة)، ومعلم الأجر بالحصص المسندة فقط. عرض فقط دون تغيير في الحساب أو قاعدة البيانات. -->
+<!-- v130: شاشة المعلمين: المنتدب جزئيًا يظهر في بطاقته إجمالي المدرستين (حصصه هنا + حصصه في المدرسة الأخرى + الإشراف في مدرسته الأصلية) ليتطابق مع العجز المحسوب. عرض فقط، دون أي تغيير في الحساب أو قاعدة البيانات. -->
 <!-- v129: شاشة المعلمين: فلتر «الإشراف» (له / بدون) وفلتر «المتبقي» (عليه متبقٍ / لا متبقٍ)، وينتقلان إلى تقرير المعلمين. -->
 <!-- v128: المدير يضيف ويحذف الفصول من شاشة المدرسة، ويلغي الانتداب (إنهاء الانتداب وإعادة ربط المعلم بمدرسته). -->
 <!-- v127: حذف الريادة من الواجهة بالكامل (حقل رائد الفصل وأعمدتها وحساباتها وتقاريرها). -->
@@ -46,7 +48,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#152c43">
-<title>نظام توجيه العلوم — v129</title>
+<title>نظام توجيه العلوم — v131</title>
 <style>
 /* School dossier: stable readable layout on mobile and desktop. */
 .v110-dossier{display:grid;gap:14px;min-width:0}
@@ -3405,6 +3407,31 @@ function workloadTeachingTargetLabel(t){
  return `${target} تدريس${duties?` + ${duties} إشراف`:''} = ${total} (${deltaText})`;
 }
 
+/* v130: المنتدب جزئيًا. الدالة get_school_teacher_roster تعيد أصلًا إجمالي المدرستين (global_*)
+   ويُحسب العجز والزيادة منه، بينما كانت الشاشة تعرض أرقام المدرسة الحالية فقط.
+   عرض فقط: لا تغيير في قواعد الحساب ولا في قاعدة البيانات، ولا تُعرض تفاصيل فصول المدرسة الأخرى، أرقام مجمعة فقط. */
+function v130PartialBreakdown(t){
+ const rel=String(t?.school_relation||'');
+ if(rel!=='delegated_in_partial'&&rel!=='delegated_out_partial')return null;
+ if(isPaidTeacher(t)||t?.global_total_counted_periods==null)return null;
+ const n=v=>Number(v)||0;
+ const total=n(t.global_total_counted_periods),sup=n(t.global_supervision_periods);
+ const here=n(t.total_counted_periods)-n(t.supervision_periods);
+ const other=Math.max(total-sup-here,0);
+ const otherName=rel==='delegated_in_partial'?(t.delegation_from_school_name||t.home_school_name||'المدرسة الأخرى'):(t.delegation_to_school_name||'المدرسة الأخرى');
+ return {total,sup,here,other,otherName};
+}
+function v130SupervisionCell(t){
+ if(t.is_senior_teacher)return '<span class="badge ok">مشرف مادة +2</span>';
+ const bd=v130PartialBreakdown(t);
+ return bd&&bd.sup>0?`<span class="badge info">إشراف +${bd.sup} بالمدرسة الأصلية</span>`:'—';
+}
+function v130TotalCell(t){
+ const bd=v130PartialBreakdown(t);
+ if(!bd)return `<b>${t.total_counted_periods}</b>`;
+ return `<b>${bd.total}</b><div class="cell-sub">هنا ${bd.here} + ${esc(bd.otherName)} ${bd.other}${bd.sup?` + إشراف ${bd.sup}`:''}</div>`;
+}
+
 async function teachersPage({force=false}={}){
  let scopeSchool=null;
  const schoolScopedRole=['senior_teacher','school_manager','supervisor'].includes(profile.role);
@@ -3443,7 +3470,7 @@ async function teachersPage({force=false}={}){
  };
  let specMap=new Map();
  try{const sp=await cachedRead(`page:teachers:specialty:${profile.id}:${profile.role}:${activeTerm?.id||'no-term'}`,async()=>({data:await v103ReadAll(()=>sb.from('teacher_records').select('id,specialty').eq('active',true).order('id')),error:null}),{ttl:30000,force});specMap=new Map((sp?.data||[]).filter(r=>r.specialty).map(r=>[String(r.id),r.specialty]));}catch(_e){}
- return `<div class="page-head"><div><h2>${profile.role==='stage_coordinator'?'معلمو المرحلة':profile.role==='supervisor'?'معلمو مدارسي':profile.role==='teacher'?'بيانات المعلم':(['school_manager','senior_teacher'].includes(profile.role)?'معلمو المدرسة':'المعلمون')}</h2><p>تحدد الدرجة الوظيفية النصاب القانوني. ويُسند الإشراف تلقائيًا للأعلى درجة ثم الأقدم في تاريخ الدرجة ثم استلام العمل ثم التعيين. الرقم المدني ثابت.</p></div>${canAdd?`<button class="btn primary" onclick="${profile.role==='senior_teacher'?'seniorTeacherAddTeacherForm()':'teacherAccountForm()'}">+ إضافة معلم</button>`:''}</div>${scopeNotice}${canDelegate?`<div class="notice info"><b>صلاحية الانتداب المباشر مفعلة لدور ${esc(ROLE_LABELS[profile.role]||profile.role)}.</b> المعلم المنتدب إلى المدرسة يظهر ضمن كادرها ويمكن إسناد الفصول له، مع الاحتفاظ بمدرسته الأصلية كسجل أصلي.</div>`:''}<div class="card"><div class="table-wrap"><table class="table"><thead><tr><th>المعلم</th><th>الرقم المدني</th><th>المدرسة / حالة الانتداب</th><th>النوع</th><th>الدرجة الوظيفية</th><th>التخصص</th><th>الإشراف</th><th>الإجمالي</th><th>النصاب / الحد</th><th>العجز</th><th>الزيادة</th><th>الحالة</th>${canEdit?'<th>إدارة</th>':''}</tr></thead><tbody>${teachers.map(t=>`<tr><td><b>${esc(t.full_name)}</b>${String(t.school_relation||'').startsWith('delegated_in_')?'<div class="cell-sub">منتدب للمدرسة</div>':''}</td><td><b>${esc(t.civil_id)}</b></td><td>${relationLabel(t)}</td><td>${t.work_type==='paid'?'بالأجر':'ثابت'}</td><td>${esc(t.job_title||'')}</td><td>${esc(specMap.get(String(t.teacher_id))||'—')}</td><td>${t.is_senior_teacher?'<span class="badge ok">مشرف مادة +2</span>':'—'}</td><td><b>${t.total_counted_periods}</b></td><td>${esc(workloadTargetLabel(t))}</td><td>${workloadDeficitLabel(t)}</td><td>${workloadSurplusLabel(t)}</td><td>${workloadStatusBadge(t)}</td>${rowActions(t)}</tr>`).join('')||'<tr><td colspan="13">لا يوجد معلمون أو منتدبون إلى هذه المدرسة.</td></tr>'}</tbody></table></div></div>`;
+ return `<div class="page-head"><div><h2>${profile.role==='stage_coordinator'?'معلمو المرحلة':profile.role==='supervisor'?'معلمو مدارسي':profile.role==='teacher'?'بيانات المعلم':(['school_manager','senior_teacher'].includes(profile.role)?'معلمو المدرسة':'المعلمون')}</h2><p>تحدد الدرجة الوظيفية النصاب القانوني. ويُسند الإشراف تلقائيًا للأعلى درجة ثم الأقدم في تاريخ الدرجة ثم استلام العمل ثم التعيين. الرقم المدني ثابت.</p></div>${canAdd?`<button class="btn primary" onclick="${profile.role==='senior_teacher'?'seniorTeacherAddTeacherForm()':'teacherAccountForm()'}">+ إضافة معلم</button>`:''}</div>${scopeNotice}${canDelegate?`<div class="notice info"><b>صلاحية الانتداب المباشر مفعلة لدور ${esc(ROLE_LABELS[profile.role]||profile.role)}.</b> المعلم المنتدب إلى المدرسة يظهر ضمن كادرها ويمكن إسناد الفصول له، مع الاحتفاظ بمدرسته الأصلية كسجل أصلي.</div>`:''}<div class="card"><div class="table-wrap"><table class="table"><thead><tr><th>المعلم</th><th>الرقم المدني</th><th>المدرسة / حالة الانتداب</th><th>النوع</th><th>الدرجة الوظيفية</th><th>التخصص</th><th>الإشراف</th><th>الإجمالي</th><th>النصاب / الحد</th><th>العجز</th><th>الزيادة</th><th>الحالة</th>${canEdit?'<th>إدارة</th>':''}</tr></thead><tbody>${teachers.map(t=>`<tr><td><b>${esc(t.full_name)}</b>${String(t.school_relation||'').startsWith('delegated_in_')?'<div class="cell-sub">منتدب للمدرسة</div>':''}</td><td><b>${esc(t.civil_id)}</b></td><td>${relationLabel(t)}</td><td>${t.work_type==='paid'?'بالأجر':'ثابت'}</td><td>${esc(t.job_title||'')}</td><td>${esc(specMap.get(String(t.teacher_id))||'—')}</td><td>${v130SupervisionCell(t)}</td><td>${v130TotalCell(t)}</td><td>${esc(workloadTargetLabel(t))}</td><td>${workloadDeficitLabel(t)}</td><td>${workloadSurplusLabel(t)}</td><td>${workloadStatusBadge(t)}</td>${rowActions(t)}</tr>`).join('')||'<tr><td colspan="13">لا يوجد معلمون أو منتدبون إلى هذه المدرسة.</td></tr>'}</tbody></table></div></div>`;
 }
 
 async function editTeacherForm(id){
@@ -9643,6 +9670,49 @@ dashboardPage=async function(options={}){
  let base='';try{base=await v124BaseDashboard(options)}catch(_){}
  return board+base;
 };
+
+/* v131: تقرير «أنصبة المعلمين» — صف واحد لكل معلم مرتبًا بمدرسته الأساسية:
+   المدرسة الأساسية والمنتدب إليها وحصص كل منهما والإشراف والإجمالي والنصاب والعجز والزيادة.
+   يقرأ من بيانات التقارير المحمّلة أصلًا (global_* محسوبة في الدالة) دون أي تغيير في الحساب أو قاعدة البيانات،
+   وبنفس نطاق رؤية بقية تقارير الأغراض. معلم الأجر: الحصص المسندة فقط دون نصاب أو عجز أو زيادة. */
+V103_PURPOSE_REPORTS.push('teacherWorkload');
+Object.assign(STATISTICS_REPORTS,{
+ teacherWorkload:{title:'أنصبة المعلمين',subtitle:'المدرسة الأساسية والمنتدب إليها وحصص كل مدرسة والإشراف والعجز والزيادة',icon:'⚖',adapter:'teacherWorkload',filters:['stage','supervisor','school','status'],purpose:true,statusLabel:'حالة النصاب',statuses:['عجز','زيادة','مكتمل','ضمن الحد','بلغ الحد','تجاوز الحد','حسب الحصص المسندة'],note:'كل معلم يظهر مرة واحدة مرتبًا بمدرسته الأساسية. الإجمالي = حصص الأساسية + حصص المنتدب إليها + الإشراف، والعجز والزيادة محسوبان من هذا الإجمالي مقابل النصاب. معلم الأجر يظهر بالحصص المسندة فقط دون نصاب أو عجز أو زيادة. اختيار المدرسة يعرض من هي أساسية لهم أو منتدبون إليها.'}
+});
+const v131BaseRebuildMetrics=v103RebuildMetrics;
+v103RebuildMetrics=function(schema){
+ if(schema.reportId!=='teacherWorkload')return v131BaseRebuildMetrics(schema);
+ const rows=schema.rows||[],core=rows.filter(r=>!r._paid),num=v=>typeof v==='number'?v:0;
+ const values=[['عدد المعلمين',rows.length],['الأساسيون',core.length],['بالأجر',rows.length-core.length],['المنتدبون',rows.filter(r=>r._delegated).length],['إجمالي العجز (الأساسيون)',core.reduce((a,r)=>a+num(r.deficit),0)],['إجمالي الزيادة (الأساسيون)',core.reduce((a,r)=>a+num(r.surplus),0)]];
+ schema.summary=values.map(([k,v])=>reportMetric(k,v));schema.totals=values.map(([k,v])=>reportTotalsMetric(k,v));
+ return schema;
+};
+ReportAdapters.teacherWorkload={async load(ctx){
+ const data=await v91LoadReportsDataset(),groups=new Map();
+ for(const s of v103ScopeRows(data)){const id=v91TeacherId(s);if(!groups.has(id))groups.set(id,[]);groups.get(id).push(s)}
+ const num=reportNumber,here=r=>Math.max(num(r.total_counted_periods)-num(r.supervision_periods),0),sum=list=>list.reduce((a,r)=>a+here(r),0);
+ const rows=[...groups.values()].map(list=>{
+  const homeId=String(list[0].home_school_id||''),isHome=r=>homeId!==''&&String(v91ScopeSchoolId(r))===homeId;
+  const homeRows=list.filter(isHome),otherRows=list.filter(r=>!isHome(r));
+  const t=otherRows.find(r=>String(r.school_relation||'').startsWith('delegated_in_'))||homeRows[0]||list[0];
+  const paid=isPaidTeacher(t);
+  const total=num(t.global_total_counted_periods??t.total_counted_periods),sup=paid?0:num(t.global_supervision_periods??t.supervision_periods);
+  const rest=Math.max(total-sup,0);
+  const home=homeRows.length?sum(homeRows):Math.max(rest-(otherRows.length?sum(otherRows):0),0);
+  const other=otherRows.length?sum(otherRows):Math.max(rest-home,0);
+  const otherNames=v103Unique(otherRows.map(r=>r.scope_school_name));
+  const outRow=homeRows.find(r=>String(r.school_relation||'')==='delegated_out_partial');
+  const delegName=otherNames.length?otherNames.join('، '):(outRow?.delegation_to_school_name||(other>0?'مدرسة أخرى':''));
+  const homeName=t.home_school_name||homeRows[0]?.scope_school_name||t.delegation_from_school_name||'';
+  return {teacherId:v91TeacherId(t),name:reportCellValue(t.full_name),workType:paid?'بالأجر':'ثابت',home:reportCellValue(homeName),deleg:reportCellValue(delegName),
+   homePeriods:home,delegPeriods:(delegName||other>0)?other:'—',supervision:sup>0?sup:'—',total,
+   target:paid?'—':workloadTargetLabel(t),deficit:workloadDeficitLabel(t),surplus:workloadSurplusLabel(t),
+   _paid:paid,_delegated:list.some(r=>/^delegated_/.test(String(r.school_relation||''))),
+   _status:paid?'حسب الحصص المسندة':reportCellValue(t.workload_status),...v103ScopeMeta(list),
+   _search:[t.full_name,homeName,delegName].filter(Boolean).join(' ')};
+ }).sort((a,b)=>String(a.home).localeCompare(String(b.home),'ar')||String(a.name).localeCompare(String(b.name),'ar')).map((r,i)=>({...r,index:i+1}));
+ return v103BaseReport('teacherWorkload',ctx,[reportColumn('index','م',.3,{numeric:true}),reportColumn('name','المعلم',1.5),reportColumn('workType','النوع',.6),reportColumn('home','المدرسة الأساسية',1.45),reportColumn('deleg','المنتدب إليها',1.45),reportColumn('homePeriods','حصص الأساسية',.6,{numeric:true}),reportColumn('delegPeriods','حصص المنتدب إليها',.65,{numeric:true}),reportColumn('supervision','الإشراف',.5,{numeric:true}),reportColumn('total','الإجمالي',.55,{numeric:true}),reportColumn('target','النصاب',.65),reportColumn('deficit','العجز',.5,{numeric:true}),reportColumn('surplus','الزيادة',.5,{numeric:true})],rows,'الإجمالي = حصص الأساسية + حصص المنتدب إليها + الإشراف. العجز والزيادة من الإجمالي مقابل النصاب. معلم الأجر: الحصص المسندة فقط دون نصاب أو عجز أو زيادة.');
+}};
 
 </script>
 
