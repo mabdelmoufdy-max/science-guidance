@@ -1,4 +1,5 @@
 <!doctype html>
+<!-- v136: شاشة الموجهين: إلغاء عمود «المرحلة» من قائمة الموجهين (الاسم + الهاتف + الحساب فقط) مع بقاء المرحلة في تفاصيل الموجه؛ وتوضيح الخط على الهاتف في هذه الشاشة وفي الشريطين العلوي والسفلي ومسار التنقل. لا تغيير في البيانات ولا الصلاحيات. -->
 <!-- v135: شاشة الدخول: تجميل الجزء الأيمن (لوحة الدخول) فقط: خلفية متدرجة بزخارف خفيفة، بطاقة بحواف دائرية وظل وشريط علوي، أيقونة أعلى البطاقة، حقول أكبر بأيقونات، زر دخول متدرج. لا تغيير في منطق الدخول ولا في اللوحة اليسرى ولا في عرض الهاتف. -->
 <!-- v134: نسخة عرض للمسؤولين: وضوح الخط في شاشات البرنامج (الجداول والبطاقات والشارات والتنبيهات)، وألوان خفيفة للبطاقات والشارات، وشريط «ملخص الحصص والعجز» في الشاشة الرئيسية يعرض الحصص المطلوبة والعجز والزيادة والانتدابات الجزئية من محرك الخطة المعتمد نفسه (buildOperationalSchoolPlanData) دون أي قاعدة حساب جديدة. لا تغيير في قاعدة البيانات أو الصلاحيات أو تقارير A4. -->
 <!-- v133: تقرير «أنصبة المعلمين»: إصلاح الصفحة الأخيرة الفارغة؛ حين لا تلائم الإجماليات والاعتماد الصفحة الأخيرة تنتقل معهما آخر 3 صفوف من الجدول بدل صفحة تحتوي الإجماليات وحدها. تنسيق عرض فقط دون تغيير في الحساب أو قاعدة البيانات، وبقية التقارير دون تغيير. -->
@@ -52,7 +53,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#152c43">
-<title>نظام توجيه العلوم — v135</title>
+<title>نظام توجيه العلوم — v136</title>
 <style>
 /* School dossier: stable readable layout on mobile and desktop. */
 .v110-dossier{display:grid;gap:14px;min-width:0}
@@ -2736,6 +2737,36 @@ body{font-size:15px;line-height:1.7}
 .login-card .login-rule{font-size:12px;color:#5d6f82;line-height:1.9;padding-top:14px}
 }
 @media (prefers-reduced-motion:reduce){.login-card{animation:none}}
+
+/* v136: قائمة الموجهين بثلاثة أعمدة + وضوح الخط على الهاتف */
+.supervisor-compact-header.v136-3col,.supervisor-compact-row.v136-3col{grid-template-columns:minmax(0,1.7fr) minmax(112px,.9fr) auto !important}
+@media screen and (max-width:850px){
+.main .supervisor-compact-header.v136-3col,.main .supervisor-compact-row.v136-3col{grid-template-columns:minmax(0,1fr) 112px 68px !important;gap:8px !important}
+.main .supervisor-compact-header.v136-3col span:nth-child(2),.main .supervisor-compact-row.v136-3col .supervisor-compact-phone{text-align:right}
+.main .supervisor-compact-header.v136-3col span:nth-child(3){text-align:center}
+.main .supervisor-compact-header{font-size:13px !important;padding:8px 8px 3px !important;color:#1f3a55}
+.main .supervisor-compact-row{min-height:58px;padding:9px 10px}
+.main .supervisor-compact-name{font-size:15.5px !important;line-height:1.45;white-space:normal !important;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+.main .supervisor-compact-phone{font-size:14.5px !important;color:#1f4f78}
+.main .supervisor-account-pill{font-size:13px !important;min-width:62px !important;padding:6px 9px !important}
+.main .supervisor-account-pill.enabled{background:#e4f3ea;color:#1b5e3b}
+.main .supervisor-account-pill.missing{background:#fff1d4;color:#7a5410}
+.main .supervisor-summary-card span{font-size:13px !important;line-height:1.45 !important;color:#33475c;font-weight:700}
+.main .supervisor-summary-card b{font-size:24px !important}
+.main .supervisor-search-help{font-size:13px !important;color:#475a6e}
+.main .supervisor-search-count{font-size:13px !important}
+.main .supervisor-search-toolbar{grid-template-columns:minmax(0,1fr) auto !important}
+.main .supervisor-search-toolbar input{font-size:15px;min-height:46px}
+.main .supervisor-search-toolbar .btn{font-size:14px !important;min-width:96px !important;min-height:46px;padding-inline:12px !important}
+.main .page-head .actions .btn,.main .page-head>.btn{font-size:14px !important;min-height:42px}
+.nav-crumbs{font-size:13px !important;gap:5px !important;color:#4d6074 !important}
+.nav-crumb{font-size:13px !important}
+.nav-sep{font-size:12px !important}
+.topbar strong{font-size:15px !important}
+.topbar small{font-size:12.5px !important;color:#4d6074 !important}
+.mobile-action-bar .mobile-action-btn b{font-size:12px !important}
+.mobile-action-bar .mobile-action-btn .mi{font-size:21px}
+}
 </style>
 </head>
 <body>
@@ -3895,13 +3926,13 @@ async function supervisorsPage(){
   <div class="supervisor-search-sticky">
    <div class="supervisor-search-toolbar"><input id="supervisorDirectorySearch" type="search" autocomplete="off" oninput="scheduleSupervisorDirectoryFilter()" placeholder="ابدأ بكتابة اسم الموجه أو الرقم المدني أو الهاتف..."><button class="btn secondary" type="button" onclick="loadPage()">تحديث البيانات</button></div>
    <div class="supervisor-search-help"><span>البحث يعمل أثناء الكتابة دون الحاجة إلى الضغط على زر.</span><span class="supervisor-search-count" id="supervisorDirectoryCount">${rows.length} من ${rows.length}</span></div>
-   <div class="supervisor-compact-header" role="row" aria-label="عناوين بيانات الموجهين"><span role="columnheader">اسم الموجه</span><span role="columnheader">المرحلة</span><span role="columnheader">الهاتف</span><span role="columnheader">الحساب</span></div>
+   <div class="supervisor-compact-header v136-3col" role="row" aria-label="عناوين بيانات الموجهين"><span role="columnheader">اسم الموجه</span><span role="columnheader">الهاتف</span><span role="columnheader">الحساب</span></div>
   </div>
   <div class="supervisor-directory-details ${activeRow?'':'hidden'}" id="supervisorDirectoryDetails">${activeRow?supervisorDirectoryDetailsMarkup(activeRow):''}</div>
   <div class="supervisor-compact-list" role="table" aria-label="قائمة الموجهين">${rows.map(s=>{
    const name=supervisorDirectoryName(s),civil=supervisorDirectoryCivil(s),phone=supervisorDirectoryPhone(s),stages=supervisorDirectoryStages(s),coordinator=supervisorDirectoryIsCoordinator(s);
-   const search=[name,civil,phone,stages,s.job_title,s.employment_grade,s.assignment_status,coordinator?'منسق مرحلة':'موجه',s.profile_id?'حساب مفعل':'بدون حساب دخول'].join(' ');
-   return `<button type="button" role="row" class="supervisor-compact-row ${supervisorDirectoryActiveId===String(s.id)?'selected':''}" data-supervisor-id="${s.id}" data-search="${esc(search)}" onclick="openSupervisorDirectoryDetails('${s.id}')" aria-label="فتح بيانات الموجه ${esc(name)}"><span class="supervisor-compact-name" role="cell" title="${esc(name)}">${esc(name)}</span><span class="supervisor-compact-stage" role="cell" title="${esc(stages||'غير محددة')}">${esc(stages||'—')}</span><span class="supervisor-compact-phone" role="cell">${esc(phone||'—')}</span><span role="cell">${supervisorDirectoryAccountPill(s,true)}</span></button>`;
+   const search=[name,civil,phone,s.job_title,s.employment_grade,s.assignment_status,coordinator?'منسق مرحلة':'موجه',s.profile_id?'حساب مفعل':'بدون حساب دخول'].join(' ');
+   return `<button type="button" role="row" class="supervisor-compact-row v136-3col ${supervisorDirectoryActiveId===String(s.id)?'selected':''}" data-supervisor-id="${s.id}" data-search="${esc(search)}" onclick="openSupervisorDirectoryDetails('${s.id}')" aria-label="فتح بيانات الموجه ${esc(name)}"><span class="supervisor-compact-name" role="cell" title="${esc(name)}">${esc(name)}</span><span class="supervisor-compact-phone" role="cell">${esc(phone||'—')}</span><span role="cell">${supervisorDirectoryAccountPill(s,true)}</span></button>`;
   }).join('')}</div>
   <div class="supervisor-directory-empty ${rows.length?'hidden':''}" id="supervisorDirectoryEmpty">لا توجد نتائج مطابقة للبحث.</div>
   <div class="notice" style="margin-top:12px"><b>السجل الوظيفي للموجه مستقل عن حساب الدخول، والرقم المدني هو مفتاح الهوية.</b><br><span class="report-prepared-by">${esc(reportIssuerText())}</span></div>`;
