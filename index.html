@@ -1,4 +1,5 @@
 <!doctype html>
+<!-- v142: شاشة «معلمو مدارسي» للموجّه: أضيف خيار «المدرسة: الكل» في فلتر المدرسة؛ عند اختياره تُقرأ كشوف get_school_teacher_roster لكل مدارسه (ضمن المرحلة المختارة) وتُدمج في جدول واحد، ويظهر اسم مدرسة كل صف في عمود «المدرسة / حالة الانتداب»، والمنتدب جزئيًا يظهر في المدرستين. و«معاينة التقرير» (أنصبة المعلمين) في وضع «الكل» لا تُقيَّد بالمدرسة المحفوظة بل تشمل كل مدارس الموجّه. للموجّه فقط؛ مشرف المدرسة ومشرف المادة بلا تغيير. عرض فقط: لا تغيير في قواعد الحساب أو الصلاحيات أو قاعدة البيانات. -->
 <!-- v141: شاشات الدخول (الدخول / اختيار الدور / تغيير كلمة المرور): (1) عبارات اللوحة اليسرى صارت: «نظام واحد يربط المدرسة بالموجّه بالإدارة…» + «بيانات موثوقة… وصلاحيات منضبطة» + «اعتماد رسمي • تقارير A4 جاهزة • بيانات حيّة» بدل عبارات تعدد الأدوار؛ (2) ألوان الخلفيات والنصوص والأزرار مستوحاة من ألوان الشعار (كحلي عميق + ذهبي + كريمي). تعديل مظهر ونصوص فقط، لا تغيير في منطق الدخول أو الصلاحيات. -->
 <!-- v140: نفس الشعار صار يظهر أيضًا في شاشة «اختر طريقة الدخول» (اختيار الدور) وشاشة «تغيير كلمة المرور» بدل مربع «ع»؛ وحُذفت عبارة «نظام توجيه العلوم» من شاشة اختيار الدور. الشعار مضمّن مرة واحدة في ثابت BRAND_LOGO_SRC وتستخدمه الشاشات الثلاث. لا تغيير في منطق الدخول أو الصلاحيات. -->
 <!-- v139: شاشة الدخول: وضع شعار توجيه العلوم (إدارة قوص التعليمية) في الجزء الأيسر (اللوحة الكحلية) بدل مربع «ع»، مقصوصًا على شكل دائرة بخلفية شفافة وبلا حواف بيضاء، ومضمّنًا داخل الملف دون ملفات خارجية. اللوحة اليمنى ومنطق الدخول بلا تغيير. على الهاتف تُخفى اللوحة اليسرى كما كانت. -->
@@ -58,7 +59,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#152c43">
-<title>نظام توجيه العلوم — v141</title>
+<title>نظام توجيه العلوم — v142</title>
 <style>
 /* School dossier: stable readable layout on mobile and desktop. */
 .v110-dossier{display:grid;gap:14px;min-width:0}
@@ -3610,10 +3611,12 @@ function v130TotalCell(t){
 async function teachersPage({force=false}={}){
  let scopeSchool=null;
  const schoolScopedRole=['senior_teacher','school_manager','supervisor'].includes(profile.role);
- if(schoolScopedRole)scopeSchool=await mySchool();
+ const allSchools=v142SupervisorAllMode()?v97SchoolRows(await supervisorOwnedSchoolsV75()):null;
+ if(schoolScopedRole&&!allSchools)scopeSchool=await mySchool();
  const scopeSchoolId=scopeSchool?.id||null;
- const cacheKey=`page:teachers:${profile.id}:${profile.role}:${scopeSchoolId||'all'}:${activeTerm?.id||'no-term'}`;
+ const cacheKey=`page:teachers:${profile.id}:${profile.role}:${allSchools?`all:${allSchools.map(s=>s.id).join(',')}`:(scopeSchoolId||'all')}:${activeTerm?.id||'no-term'}`;
  const {data:teachersRaw,error}=await cachedRead(cacheKey,async signal=>{
+   if(allSchools)return await v142ReadSchoolRosters(allSchools,signal);
    if(schoolScopedRole){
      if(!scopeSchoolId||!activeTerm?.id)return {data:[],error:null};
      let q=sb.rpc('get_school_teacher_roster',{p_school_id:scopeSchoolId,p_term_id:activeTerm.id});
@@ -3624,15 +3627,16 @@ async function teachersPage({force=false}={}){
    return result.error?result:{data:v91ScopeRows(result.data),error:null}
  },{ttl:30000,force});
  if(error)return `<div class="error">${esc(error.message)}</div>`;
- const teachers=(Array.isArray(teachersRaw)?teachersRaw:[]).filter(t=>v97StageMatches(v97TeacherStage(t,scopeSchool))&&v98SchoolMatches(scopeSchool?.id||v91ScopeSchoolId(t)));
+ const teachers=(Array.isArray(teachersRaw)?teachersRaw:[]).filter(t=>v97StageMatches(v97TeacherStage(t,t._v142School||scopeSchool))&&v98SchoolMatches(scopeSchool?.id||v91ScopeSchoolId(t)));
  const canAdd=['supervisor','senior_teacher'].includes(profile.role),canEdit=['admin','first_supervisor','stage_coordinator','supervisor','senior_teacher'].includes(profile.role),canDelegate=['admin','first_supervisor','supervisor','senior_teacher'].includes(profile.role);
- const scopeNotice=schoolScopedRole?(scopeSchool?`<div class="notice info"><b>نطاق العرض: ${esc(scopeSchool.name)}</b> — يظهر معلمو المدرسة والمنتدبون إليها فقط، وتطبق قاعدة الإشراف بحسب مدرسة العمل الحالية.</div>`:`<div class="notice warn">لا توجد مدرسة مرتبطة بالحساب.</div>`):'';
+ const scopeNotice=allSchools?`<div class="notice info"><b>نطاق العرض: كل مدارسي (${allSchools.length})</b> — يظهر معلمو كل مدرسة والمنتدبون إليها، والمنتدب جزئيًا يظهر في المدرستين.</div>`:schoolScopedRole?(scopeSchool?`<div class="notice info"><b>نطاق العرض: ${esc(scopeSchool.name)}</b> — يظهر معلمو المدرسة والمنتدبون إليها فقط، وتطبق قاعدة الإشراف بحسب مدرسة العمل الحالية.</div>`:`<div class="notice warn">لا توجد مدرسة مرتبطة بالحساب.</div>`):'';
  const relationLabel=t=>{
    if(!schoolScopedRole){const relation=v91SchoolRelationText(t);return `${esc(t.scope_school_name||t.home_school_name||'—')}${relation?`<div class="cell-sub">${esc(relation)}</div>`:''}`;}
-   if(t.school_relation==='delegated_in_partial')return `${esc(scopeSchool?.name||'المدرسة')}<div class="cell-sub">منتدب من مدرسة ${esc(t.delegation_from_school_name||t.home_school_name||'أخرى')}</div>`;
-   if(t.school_relation==='delegated_in_full')return `${esc(scopeSchool?.name||'المدرسة')}<div class="cell-sub">منتدب كليًا من مدرسة ${esc(t.delegation_from_school_name||t.home_school_name||'أخرى')}</div>`;
-   if(t.school_relation==='delegated_out_partial')return `${esc(scopeSchool?.name||t.home_school_name||'المدرسة')}<div class="cell-sub">منتدب جزئيًا إلى ${esc(t.delegation_to_school_name||'مدرسة أخرى')}</div>`;
-   return esc(scopeSchool?.name||t.home_school_name||'—');
+   const sc=t._v142School||scopeSchool;
+   if(t.school_relation==='delegated_in_partial')return `${esc(sc?.name||'المدرسة')}<div class="cell-sub">منتدب من مدرسة ${esc(t.delegation_from_school_name||t.home_school_name||'أخرى')}</div>`;
+   if(t.school_relation==='delegated_in_full')return `${esc(sc?.name||'المدرسة')}<div class="cell-sub">منتدب كليًا من مدرسة ${esc(t.delegation_from_school_name||t.home_school_name||'أخرى')}</div>`;
+   if(t.school_relation==='delegated_out_partial')return `${esc(sc?.name||t.home_school_name||'المدرسة')}<div class="cell-sub">منتدب جزئيًا إلى ${esc(t.delegation_to_school_name||'مدرسة أخرى')}</div>`;
+   return esc(sc?.name||t.home_school_name||'—');
  };
  const rowActions=t=>{
    if(!canEdit)return '';
@@ -3645,7 +3649,7 @@ async function teachersPage({force=false}={}){
  };
  let specMap=new Map();
  try{const sp=await cachedRead(`page:teachers:specialty:${profile.id}:${profile.role}:${activeTerm?.id||'no-term'}`,async()=>({data:await v103ReadAll(()=>sb.from('teacher_records').select('id,specialty').eq('active',true).order('id')),error:null}),{ttl:30000,force});specMap=new Map((sp?.data||[]).filter(r=>r.specialty).map(r=>[String(r.id),r.specialty]));}catch(_e){}
- return `<div class="page-head"><div><h2>${profile.role==='stage_coordinator'?'معلمو المرحلة':profile.role==='supervisor'?'معلمو مدارسي':profile.role==='teacher'?'بيانات المعلم':(['school_manager','senior_teacher'].includes(profile.role)?'معلمو المدرسة':'المعلمون')}</h2><p>تحدد الدرجة الوظيفية النصاب القانوني. ويُسند الإشراف تلقائيًا للأعلى درجة ثم الأقدم في تاريخ الدرجة ثم استلام العمل ثم التعيين. الرقم المدني ثابت.</p></div>${canAdd?`<button class="btn primary" onclick="${profile.role==='senior_teacher'?'seniorTeacherAddTeacherForm()':'teacherAccountForm()'}">+ إضافة معلم</button>`:''}</div>${scopeNotice}${canDelegate?`<div class="notice info"><b>صلاحية الانتداب المباشر مفعلة لدور ${esc(ROLE_LABELS[profile.role]||profile.role)}.</b> المعلم المنتدب إلى المدرسة يظهر ضمن كادرها ويمكن إسناد الفصول له، مع الاحتفاظ بمدرسته الأصلية كسجل أصلي.</div>`:''}<div class="card"><div class="table-wrap"><table class="table"><thead><tr><th>المعلم</th><th>الرقم المدني</th><th>المدرسة / حالة الانتداب</th><th>النوع</th><th>الدرجة الوظيفية</th><th>التخصص</th><th>الإشراف</th><th>الإجمالي</th><th>النصاب / الحد</th><th>العجز</th><th>الزيادة</th><th>الحالة</th>${canEdit?'<th>إدارة</th>':''}</tr></thead><tbody>${teachers.map(t=>`<tr><td><b>${esc(t.full_name)}</b>${String(t.school_relation||'').startsWith('delegated_in_')?'<div class="cell-sub">منتدب للمدرسة</div>':''}</td><td><b>${esc(t.civil_id)}</b></td><td>${relationLabel(t)}</td><td>${t.work_type==='paid'?'بالأجر':'ثابت'}</td><td>${esc(t.job_title||'')}</td><td>${esc(specMap.get(String(t.teacher_id))||'—')}</td><td>${v130SupervisionCell(t)}</td><td>${v130TotalCell(t)}</td><td>${esc(workloadTargetLabel(t))}</td><td>${workloadDeficitLabel(t)}</td><td>${workloadSurplusLabel(t)}</td><td>${workloadStatusBadge(t)}</td>${rowActions(t)}</tr>`).join('')||'<tr><td colspan="13">لا يوجد معلمون أو منتدبون إلى هذه المدرسة.</td></tr>'}</tbody></table></div></div>`;
+ return `<div class="page-head"><div><h2>${profile.role==='stage_coordinator'?'معلمو المرحلة':profile.role==='supervisor'?'معلمو مدارسي':profile.role==='teacher'?'بيانات المعلم':(['school_manager','senior_teacher'].includes(profile.role)?'معلمو المدرسة':'المعلمون')}</h2><p>تحدد الدرجة الوظيفية النصاب القانوني. ويُسند الإشراف تلقائيًا للأعلى درجة ثم الأقدم في تاريخ الدرجة ثم استلام العمل ثم التعيين. الرقم المدني ثابت.</p></div>${canAdd?`<button class="btn primary" onclick="${profile.role==='senior_teacher'?'seniorTeacherAddTeacherForm()':'teacherAccountForm()'}">+ إضافة معلم</button>`:''}</div>${scopeNotice}${canDelegate?`<div class="notice info"><b>صلاحية الانتداب المباشر مفعلة لدور ${esc(ROLE_LABELS[profile.role]||profile.role)}.</b> المعلم المنتدب إلى المدرسة يظهر ضمن كادرها ويمكن إسناد الفصول له، مع الاحتفاظ بمدرسته الأصلية كسجل أصلي.</div>`:''}<div class="card"><div class="table-wrap"><table class="table"><thead><tr><th>المعلم</th><th>الرقم المدني</th><th>المدرسة / حالة الانتداب</th><th>النوع</th><th>الدرجة الوظيفية</th><th>التخصص</th><th>الإشراف</th><th>الإجمالي</th><th>النصاب / الحد</th><th>العجز</th><th>الزيادة</th><th>الحالة</th>${canEdit?'<th>إدارة</th>':''}</tr></thead><tbody>${teachers.map(t=>`<tr><td><b>${esc(t.full_name)}</b>${String(t.school_relation||'').startsWith('delegated_in_')?'<div class="cell-sub">منتدب للمدرسة</div>':''}</td><td><b>${esc(t.civil_id)}</b></td><td>${relationLabel(t)}</td><td>${t.work_type==='paid'?'بالأجر':'ثابت'}</td><td>${esc(t.job_title||'')}</td><td>${esc(specMap.get(String(t.teacher_id))||'—')}</td><td>${v130SupervisionCell(t)}</td><td>${v130TotalCell(t)}</td><td>${esc(workloadTargetLabel(t))}</td><td>${workloadDeficitLabel(t)}</td><td>${workloadSurplusLabel(t)}</td><td>${workloadStatusBadge(t)}</td>${rowActions(t)}</tr>`).join('')||`<tr><td colspan="13">لا يوجد معلمون أو منتدبون إلى ${allSchools?'مدارسك':'هذه المدرسة'}.</td></tr>`}</tbody></table></div></div>`;
 }
 
 async function editTeacherForm(id){
@@ -8894,7 +8898,7 @@ async function v97RenderPage(renderPage,options){
  if(stage&&page==='approval'&&['school_manager','senior_teacher'].includes(profile?.role)){
   const school=await mySchool();if(school&&!v97StageMatches(school.stage,stage))return '<div class="notice">لا توجد بيانات اعتماد ضمن المرحلة المختارة.</div>';
  }
- if(['classes','assignments'].includes(page)||(['teachers','approval'].includes(page)&&['supervisor','school_manager','senior_teacher'].includes(profile?.role)&&!(page==='approval'&&profile?.role==='supervisor'))){
+ if(['classes','assignments'].includes(page)||(['teachers','approval'].includes(page)&&['supervisor','school_manager','senior_teacher'].includes(profile?.role)&&!(page==='approval'&&profile?.role==='supervisor'))&&!v142SupervisorAllMode()){
   const school=await mySchool();v97DisplayedSchools.set(key,String(school?.id||'__none__'));
  }
  return renderPage(options);
@@ -8935,9 +8939,19 @@ const v98SchoolSelections=new Map(),v98SchoolDirectories=new Map();
 function v98School(){return v98SchoolFilterPages.has(currentPage)?v98SchoolSelections.get(v97StageKey())||'':''}
 function v98SchoolMatches(id){return !v98School()||String(id||'')===v98School()}
 function v98FilterSchoolRows(rows){return (rows||[]).filter(s=>v98SchoolMatches(s.id))}
+/* v142: «المدرسة: الكل» للموجّه في شاشة معلمو مدارسي. عرض فقط: دمج كشوف مدارسه كما تعيدها
+   get_school_teacher_roster، دون تغيير قواعد الحساب أو الصلاحيات. */
+const v142SupervisorAllKeys=new Set();
+function v142SupervisorAllMode(){return profile?.role==='supervisor'&&currentPage==='teachers'&&v142SupervisorAllKeys.has(v97StageKey())&&!v98School()}
+async function v142ReadSchoolRosters(schools,signal){
+ if(!activeTerm?.id||!schools.length)return {data:[],error:null};
+ const results=await Promise.all(schools.map(s=>abortable(sb.rpc('get_school_teacher_roster',{p_school_id:s.id,p_term_id:activeTerm.id}),signal)));
+ const failed=results.find(r=>r.error);if(failed)return {data:null,error:failed.error};
+ return {data:results.flatMap((r,i)=>(r.data||[]).map(t=>({...t,_v142School:schools[i]}))),error:null};
+}
 function v98SchoolOptions(){
  const rows=v97SchoolRows(v98SchoolDirectories.get(v97StageKey())||[]),selected=v98School();
- const singleSchool=currentPage==='teachers'&&['supervisor','school_manager','senior_teacher'].includes(profile?.role);
+ const singleSchool=currentPage==='teachers'&&['school_manager','senior_teacher'].includes(profile?.role);
  const first=singleSchool?'<option value="" disabled>اختر المدرسة</option>':'<option value="">المدرسة: الكل</option>';
  return first+rows.map(s=>`<option value="${esc(s.id)}" ${String(s.id)===selected?'selected':''}>${esc(s.name)}</option>`).join('');
 }
@@ -8963,7 +8977,7 @@ async function v98PrepareSchoolFilter(options={}){
  const choices=v97SchoolRows(rows),selected=v98SchoolSelections.get(key)||'';
  if(!choices.some(s=>String(s.id)===selected))v98SchoolSelections.delete(key);
  if(page==='schools'&&role==='supervisor'&&v98SchoolSelections.get(key))supervisorRememberSchoolV75(v98SchoolSelections.get(key));
- if(page==='teachers'&&['supervisor','school_manager','senior_teacher'].includes(role)){
+ if(page==='teachers'&&['supervisor','school_manager','senior_teacher'].includes(role)&&!(role==='supervisor'&&v142SupervisorAllKeys.has(key))){
   const remembered=role==='supervisor'?supervisorStoredSchoolIdV75():'';
   const school=choices.find(s=>String(s.id)===v98SchoolSelections.get(key))||choices.find(s=>String(s.id)===remembered)||choices[0];
   if(school){
@@ -8979,7 +8993,8 @@ async function v98SetSchool(value){
  value=String(value||'');
  const choices=v97SchoolRows(v98SchoolDirectories.get(v97StageKey())||[]);
  if(value&&!choices.some(s=>String(s.id)===value))return toast('اختر مدرسة من المرحلة والنطاق المتاحين.');
- if(!value&&currentPage==='teachers'&&['supervisor','school_manager','senior_teacher'].includes(profile?.role))return;
+ if(!value&&currentPage==='teachers'&&['school_manager','senior_teacher'].includes(profile?.role))return;
+ if(currentPage==='teachers'&&profile?.role==='supervisor'){if(value)v142SupervisorAllKeys.delete(v97StageKey());else v142SupervisorAllKeys.add(v97StageKey())}
  v98SchoolSelections.set(v97StageKey(),value);v97StageRevision++;
  if(['schools','teachers'].includes(currentPage)&&profile?.role==='supervisor'&&value)supervisorRememberSchoolV75(value);
  if(__activeReportSchema)closeReportPreview();
