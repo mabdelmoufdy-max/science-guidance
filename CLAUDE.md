@@ -40,6 +40,7 @@ https://mabdelmoufdy-max.github.io/science-guidance/
 - نسخ التجربة تُسلَّم باسم `Science_Guidance_vNNN_trial.html`؛ والمنشور يُرفع باسم `index.html` فقط.
 - الاختبار: Playwright (Chromium) مع `window.supabase` وهمي عبر اعتراض مسار مكتبة supabase-js، واستدعاء `renderLogin()` أو `renderShell()` مباشرة. بيانات حقيقية لا تُختبر دون حساب المستخدم.
 - التحقق من الموقع المنشور بعد النشر: `fetch(url,{cache:'no-store'})` (الكاش يعطي نسخة قديمة)، وبناء Pages يستغرق نحو 30–100 ثانية.
+- في جلسات Claude Code السحابية: شبكة البيئة تمنع `github.io` (curl يعطي `CONNECT tunnel failed, response 403`)، فلا تحاول فتح الموقع المنشور منها. تحقّق من النشر بحالة تشغيل «pages build and deployment» عبر أداة GitHub ‏`actions_list` ‏(`list_workflow_runs`): يجب أن يكون `head_sha` هو commit النشر و`conclusion: success`. ثم اطلب من المستخدم فتح الموقع بـ Ctrl+F5 والتأكد من رقم الإصدار في العنوان.
 
 ## الحالة الحالية (2026-10-20)
 
