@@ -1,4 +1,5 @@
 <!doctype html>
+<!-- v138: فلتر «المرحلة»: إضافة خيار «ابتدائي» (الكل / ابتدائي / إعدادي / ثانوي) في كل الشاشات التي تستخدم الفلتر نفسه، ما عدا شاشة الميزانية المرجعية لأنه لا توجد لها ميزانية ابتدائية. لا تغيير في بقية منطق التصفية. -->
 <!-- v137: توحيد الخط الصغير في كل شاشات التطبيق: كل حجم أقل من 11px صار 12px، وكل حجم من 11px إلى أقل من 12px صار 13px (وفي جدول الحصص 12px). مستثنى: تقارير A4 ومعاينتها والطباعة. تعديل أحجام الخط فقط. -->
 <!-- v136: شاشة الموجهين: إلغاء عمود «المرحلة» من قائمة الموجهين (الاسم + الهاتف + الحساب فقط) مع بقاء المرحلة في تفاصيل الموجه؛ وتوضيح الخط على الهاتف في هذه الشاشة وفي الشريطين العلوي والسفلي ومسار التنقل. لا تغيير في البيانات ولا الصلاحيات. -->
 <!-- v135: شاشة الدخول: تجميل الجزء الأيمن (لوحة الدخول) فقط: خلفية متدرجة بزخارف خفيفة، بطاقة بحواف دائرية وظل وشريط علوي، أيقونة أعلى البطاقة، حقول أكبر بأيقونات، زر دخول متدرج. لا تغيير في منطق الدخول ولا في اللوحة اليسرى ولا في عرض الهاتف. -->
@@ -54,7 +55,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#152c43">
-<title>نظام توجيه العلوم — v137</title>
+<title>نظام توجيه العلوم — v138</title>
 <style>
 /* School dossier: stable readable layout on mobile and desktop. */
 .v110-dossier{display:grid;gap:14px;min-width:0}
@@ -8800,7 +8801,7 @@ function v97FilterDataset(source,stage=v97Stage()){
   aug_ref:(!stage||stage==='إعدادي')?(source.aug_ref||[]).filter(r=>v98SchoolMatches(r.school_id)):[],oct_ref:(!stage||stage==='إعدادي')?(source.oct_ref||[]).filter(r=>v98SchoolMatches(r.school_id)):[]};
 }
 function v97StageOptions(selected=v97Stage()){
- return [['','المرحلة: الكل'],['إعدادي','إعدادي'],['ثانوي','ثانوي']].map(([value,label])=>`<option value="${value}" ${value===selected?'selected':''}>${label}</option>`).join('');
+ return [['','المرحلة: الكل'],...(currentPage==='budget'?[]:[['ابتدائي','ابتدائي']]),['إعدادي','إعدادي'],['ثانوي','ثانوي']].map(([value,label])=>`<option value="${value}" ${value===selected?'selected':''}>${label}</option>`).join('');
 }
 function v97InstallStageFilter(root){
  if(!v97StagePages.has(currentPage)||!root)return;
@@ -8819,7 +8820,7 @@ function v97InstallStageFilter(root){
 function v97BudgetStage(snapshot=budgetSnapshot){return SECONDARY_BUDGET_LABELS_V95[snapshot]?'ثانوي':(['oct_2026_preparatory_qous','aug_2026_preparatory_qous'].includes(snapshot)?'إعدادي':'')}
 async function v97SetStage(value){
  v111CloseSidebar();
- if(!['','إعدادي','ثانوي'].includes(value))return;
+ if(!['','ابتدائي','إعدادي','ثانوي'].includes(value)||(value==='ابتدائي'&&currentPage==='budget'))return;
  v97StageRevision++;
  v97StageSelections.set(v97StageKey(),value);
  v98SchoolSelections.delete(v97StageKey());
