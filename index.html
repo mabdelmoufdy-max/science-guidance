@@ -2,6 +2,7 @@
 <!-- v143: شاشة «فحص شاشة الموجّه» (لمدير النظام): أضيف تبويب «جدول المعلم» (teacherTimetable) إلى قائمة التبويبات المعروفة في فحص «تنقل شاشة الموجه»، فلم يعد يظهر إنذار كاذب «يحتاج مراجعة» بسبب التبويب الثالث عشر. لا تغيير آخر. -->
 <!-- v142: شاشة «معلمو مدارسي» للموجّه: أضيف خيار «المدرسة: الكل» في فلتر المدرسة؛ عند اختياره تُقرأ كشوف get_school_teacher_roster لكل مدارسه (ضمن المرحلة المختارة) وتُدمج في جدول واحد، ويظهر اسم مدرسة كل صف في عمود «المدرسة / حالة الانتداب»، والمنتدب جزئيًا يظهر في المدرستين. و«معاينة التقرير» (أنصبة المعلمين) في وضع «الكل» لا تُقيَّد بالمدرسة المحفوظة بل تشمل كل مدارس الموجّه. للموجّه فقط؛ مشرف المدرسة ومشرف المادة بلا تغيير. عرض فقط: لا تغيير في قواعد الحساب أو الصلاحيات أو قاعدة البيانات. -->
 <!-- v141: شاشات الدخول (الدخول / اختيار الدور / تغيير كلمة المرور): (1) عبارات اللوحة اليسرى صارت: «نظام واحد يربط المدرسة بالموجّه بالإدارة…» + «بيانات موثوقة… وصلاحيات منضبطة» + «اعتماد رسمي • تقارير A4 جاهزة • بيانات حيّة» بدل عبارات تعدد الأدوار؛ (2) ألوان الخلفيات والنصوص والأزرار مستوحاة من ألوان الشعار (كحلي عميق + ذهبي + كريمي). تعديل مظهر ونصوص فقط، لا تغيير في منطق الدخول أو الصلاحيات. -->
+<!-- v148: شاشة «التوزيع السريع للفصول»: بطاقة المنتدب جزئيًا (وارد أو خارج) تعرض سطر الانتداب: المدرسة الأخرى وحصصه فيها والإجمالي المحتسب في المدرستين؛ و«متبقي للتدريس» له يُحسب من المدرستين = النصاب − الإجمالي المحتسب (نفس remaining_periods في get_school_teacher_roster) ويتحدث مع الإسناد والتراجع. بقية المعلمين بلا تغيير. عرض فقط، لا تغيير في قاعدة البيانات أو قواعد الحساب. -->
 <!-- v147: توحيد التصميم (المرحلتان 2 و3): دمج وسوم style الثمانية في ورقة واحدة #appStyles وحذف التصريحات الميتة؛ حذف تصريحات المقاس/اللون القديمة لمكونات الأزرار والحقول والبطاقات والتنبيهات والشارات ورؤوس الجداول (عدا الدخول وتقارير A4 والطباعة وحالات الخطأ)، وتعريف كل مكون مرة واحدة في قسم «نظام التصميم الموحد» آخر الورقة بمتغيرات --ctl-h/--ctl-font/--radius/--card-pad. -->
 <!-- v146: توحيد التصميم (المرحلة 1): طبقة CSS موحّدة بألوان الشعار (كحلي/ذهبي) للأزرار والحقول والجداول والبطاقات والتنبيهات والشارات وعناوين الصفحات والنوافذ والقائمة الجانبية، والشعار بدل مربع «ع» في القائمة. ألوان وحواف وظلال وتركيز فقط — لا تغيير في المقاسات ولا في تقارير A4 (.report-a4-page). -->
 <!-- v145: زر «؟» في الشريط العلوي يفتح نافذة «المساعدة وما الجديد»: دليل سريع لشاشات الدور الحالي (من قائمة NAV) مع زر فتح لكل شاشة، وسجل مختصر بآخر الإصدارات. عرض فقط. -->
@@ -64,7 +65,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#152c43">
-<title>نظام توجيه العلوم — v147</title>
+<title>نظام توجيه العلوم — v148</title>
 <style id="appStyles">
 .v110-dossier{display:grid;min-width:0}
 .v110-dossier .card h3{margin:0 0 12px}
@@ -2408,6 +2409,8 @@ td .btn,.report-preview-toolbar .btn,.btn.btn-sm{min-height:var(--ctl-h-sm);padd
 .v145-help-item{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px;align-items:center;padding:8px 10px;border:1px solid var(--line-soft);border-radius:9px;background:#fff}
 .v145-help-item b{display:block;font-size:14px}.v145-help-item small{color:var(--muted);line-height:1.6}
 .v145-news{margin:0;padding-inline-start:18px;line-height:1.8}.v145-news li b{color:var(--primary-dark)}
+/* v148: سطر الانتداب الجزئي في بطاقة المعلم بشاشة التوزيع السريع */
+.v148-deleg-line{font-size:12.5px;line-height:1.6;margin:6px 0 8px;padding:6px 10px;border-radius:8px;background:#fbf5e6;border:1px solid #ecd9a8;color:#1f4274;font-weight:600}
 </style>
 </head>
 <body>
@@ -2733,6 +2736,7 @@ const V145_PAGE_HELP={
  myAssignments:'حصصك وفصولك في الفترة الحالية.'
 };
 const V145_NEWS=[
+ ['v148','شاشة توزيع الفصول: بطاقة المنتدب جزئيًا تعرض حصصه في المدرسة الأخرى، ويُحسب المتبقي له من المدرستين.'],
  ['v147','توحيد التصميم: مقاس واحد للأزرار والحقول والبطاقات في كل الشاشات، وملف تصميم واحد بدل الطبقات القديمة.'],
  ['v146','ألوان الشعار (كحلي وذهبي) في كل الشاشات، والشعار في القائمة الجانبية.'],
  ['v145','نافذة «المساعدة وما الجديد» من زر «؟» في الشريط العلوي.'],
@@ -7895,6 +7899,37 @@ const __v83BaseUxTeacherCardMarkup=uxTeacherCardMarkup;
 uxTeacherCardMarkup=function(teacher){
  if(!v83IsPartialIncomingDelegate(teacher))return __v83BaseUxTeacherCardMarkup(teacher);
  return __v83BaseUxTeacherCardMarkup({...teacher,is_senior_teacher:false,supervision_periods:0});
+};
+
+/* v148: بطاقة المنتدب جزئيًا في التوزيع السريع: حصصه في المدرسة الأخرى، والمتبقي من المدرستين
+   = النصاب − الإجمالي المحتسب (كما في remaining_periods بكشف get_school_teacher_roster). عرض فقط. */
+function v148PartialInfo(t){
+ const rel=String(t?.school_relation||'');
+ if((rel!=='delegated_in_partial'&&rel!=='delegated_out_partial')||isPaidTeacher(t)||t?.global_total_counted_periods==null)return null;
+ const n=v=>Number(v)||0;
+ if(t._v148BaseTeaching===undefined)t._v148BaseTeaching=n(t.teaching_periods);
+ const delta=n(t.teaching_periods)-t._v148BaseTeaching;
+ const other=Math.max(n(t.global_teaching_periods)-t._v148BaseTeaching,0);
+ const total=n(t.global_total_counted_periods)+delta,teaching=n(t.global_teaching_periods)+delta,sup=n(t.global_supervision_periods),lead=n(t.global_leadership_periods);
+ const remaining=t.weekly_target==null?'—':Math.max(n(t.weekly_target)-total,0);
+ const where=rel==='delegated_in_partial'?`منتدب جزئيًا من ${t.delegation_from_school_name||t.home_school_name||'مدرسة أخرى'}`:`منتدب جزئيًا إلى ${t.delegation_to_school_name||'مدرسة أخرى'}`;
+ const line=`${where} — حصصه هناك: ${other} — الإجمالي المحتسب في المدرستين: ${total}${lead?'':` (${teaching} تدريس${sup?` + ${sup} إشراف`:''})`}`;
+ return {remaining,line};
+}
+const __v148BaseUxTeacherCardMarkup=uxTeacherCardMarkup;
+uxTeacherCardMarkup=function(teacher){
+ const html=__v148BaseUxTeacherCardMarkup(teacher),info=v148PartialInfo(teacher);
+ if(!info)return html;
+ return html.replace(/(<b data-remaining>)[^<]*(<\/b>)/,`$1${info.remaining}$2`)
+  .replace('<div class="assignment-teacher-metrics">',`<div class="v148-deleg-line" data-v148-line>${esc(info.line)}</div><div class="assignment-teacher-metrics">`);
+};
+const __v148BaseUxUpdateAssignmentTeacherCard=uxUpdateAssignmentTeacherCard;
+uxUpdateAssignmentTeacherCard=function(tid){
+ __v148BaseUxUpdateAssignmentTeacherCard(tid);
+ const t=uxAssignmentCurrentTeacher(tid),card=document.getElementById(`teacherDrop_${tid}`),info=t&&card?v148PartialInfo(t):null;
+ if(!info)return;
+ const rem=card.querySelector('[data-remaining]'),line=card.querySelector('[data-v148-line]');
+ if(rem)rem.textContent=info.remaining;if(line)line.textContent=info.line;
 };
 
 function v83NormalizePartialDelegateRows(html){return html}
