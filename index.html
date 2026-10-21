@@ -1,4 +1,5 @@
 <!doctype html>
+<!-- v152: تثبيت التطبيق (PWA): manifest.webmanifest + أيقونتا 192/512 من الشعار + service-worker.js بسيط (بلا تخزين؛ الصفحة والبيانات من الشبكة دائمًا) + زر «⬇» في الشريط العلوي يظهر عندما يسمح المتصفح بالتثبيت. -->
 <!-- v143: شاشة «فحص شاشة الموجّه» (لمدير النظام): أضيف تبويب «جدول المعلم» (teacherTimetable) إلى قائمة التبويبات المعروفة في فحص «تنقل شاشة الموجه»، فلم يعد يظهر إنذار كاذب «يحتاج مراجعة» بسبب التبويب الثالث عشر. لا تغيير آخر. -->
 <!-- v142: شاشة «معلمو مدارسي» للموجّه: أضيف خيار «المدرسة: الكل» في فلتر المدرسة؛ عند اختياره تُقرأ كشوف get_school_teacher_roster لكل مدارسه (ضمن المرحلة المختارة) وتُدمج في جدول واحد، ويظهر اسم مدرسة كل صف في عمود «المدرسة / حالة الانتداب»، والمنتدب جزئيًا يظهر في المدرستين. و«معاينة التقرير» (أنصبة المعلمين) في وضع «الكل» لا تُقيَّد بالمدرسة المحفوظة بل تشمل كل مدارس الموجّه. للموجّه فقط؛ مشرف المدرسة ومشرف المادة بلا تغيير. عرض فقط: لا تغيير في قواعد الحساب أو الصلاحيات أو قاعدة البيانات. -->
 <!-- v141: شاشات الدخول (الدخول / اختيار الدور / تغيير كلمة المرور): (1) عبارات اللوحة اليسرى صارت: «نظام واحد يربط المدرسة بالموجّه بالإدارة…» + «بيانات موثوقة… وصلاحيات منضبطة» + «اعتماد رسمي • تقارير A4 جاهزة • بيانات حيّة» بدل عبارات تعدد الأدوار؛ (2) ألوان الخلفيات والنصوص والأزرار مستوحاة من ألوان الشعار (كحلي عميق + ذهبي + كريمي). تعديل مظهر ونصوص فقط، لا تغيير في منطق الدخول أو الصلاحيات. -->
@@ -68,7 +69,12 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#152c43">
-<title>نظام توجيه العلوم — v151</title>
+<title>نظام توجيه العلوم — v152</title>
+<link rel="manifest" href="./manifest.webmanifest">
+<link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png">
+<link rel="apple-touch-icon" href="./icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="توجيه العلوم">
 <style id="appStyles">
 .v110-dossier{display:grid;min-width:0}
 .v110-dossier .card h3{margin:0 0 12px}
@@ -2487,7 +2493,15 @@ const V145_PAGE_HELP={
  assignments:'توزيع المعلمين على الفصول وحساب الحصص.',
  myAssignments:'حصصك وفصولك في الفترة الحالية.'
 };
+// v152: تثبيت التطبيق
+window.v152InstallPrompt=null;
+function v152SyncInstallBtn(){document.querySelectorAll('.v152-install-btn').forEach(b=>b.hidden=!window.v152InstallPrompt)}
+async function v152Install(){const p=window.v152InstallPrompt;if(!p)return;window.v152InstallPrompt=null;v152SyncInstallBtn();try{p.prompt();await p.userChoice}catch(e){}}
+window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();window.v152InstallPrompt=e;v152SyncInstallBtn()});
+window.addEventListener('appinstalled',()=>{window.v152InstallPrompt=null;v152SyncInstallBtn()});
+if('serviceWorker' in navigator&&location.protocol!=='file:')window.addEventListener('load',()=>navigator.serviceWorker.register('./service-worker.js').catch(()=>{}));
 const V145_NEWS=[
+ ['v152','تثبيت التطبيق: يمكنك الآن تنزيل النظام على الهاتف أو الكمبيوتر من زر «⬇» أعلى الشاشة أو من قائمة المتصفح («تثبيت التطبيق» / «إضافة إلى الشاشة الرئيسية»).'],
  ['v151','الريادة التلقائية صارت لكل معلم دائم ينقص نصابه حصة واحدة (وليس لكبير المعلمين فقط).'],
  ['v150','حصة «الريادة»: تُحسب تلقائيًا لكبير المعلمين الناقص نصابه حصة واحدة، وتظهر في عمود مستقل في تقرير أنصبة المعلمين والتقرير المالي.'],
  ['v149','على الهاتف: الفلاتر في عمودين واضحين بلا تمرير جانبي، وأزرار أعلى الصفحة تملأ العرض، وإصلاح انزياح الصفحة للحسابات متعددة الأدوار («تبديل الدور» من القائمة الجانبية).'],
@@ -2514,7 +2528,7 @@ function renderShell(){
  const nav=NAV[profile.role]||NAV.teacher;if(!nav.some(x=>x[0]===currentPage))currentPage='dashboard';
  appNavApplyInitial();
  const switchBtn=userRoles.length>1?`<button class="text-btn role-switch-side" onclick="switchRole()">⇄ تبديل الدور</button>`:'';
- app.innerHTML=`<div class="app-shell"><aside id="appSidebar" aria-label="القائمة الرئيسية" class="sidebar ${sidebarOpen?'open':''}"><button class="v111-sidebar-close" type="button" onclick="v111CloseSidebar(true)">× إغلاق القائمة</button><div class="side-logo"><img class="mini side-brand-logo" src="${BRAND_LOGO_SRC}" width="40" height="40" alt="شعار توجيه العلوم"><div><strong>${profile.role==='senior_teacher'?(profile.school_name||'مدرستي'):'توجيه العلوم'}</strong><small>${esc(activeYear?.label||'')} • ${esc(activeTerm?.name||'')}</small></div></div><div class="nav">${nav.map(n=>`<button class="${currentPage===n[0]?'active':''}" data-page="${n[0]}" onclick="go('${n[0]}')"><span class="nav-icon">${n[2]}</span><span class="nav-label" data-short="${esc(mobileNavShort(n[1]))}">${n[1]}</span></button>`).join('')}</div><div class="side-footer"><div class="side-user"><strong>${esc(profile.full_name)}</strong><br>${esc(ROLE_LABELS[profile.role])}<br>${switchBtn}<br><button class="text-btn side-logout" onclick="logout()">تسجيل الخروج</button></div></div></aside><button class="v111-sidebar-backdrop no-print" type="button" tabindex="-1" aria-label="إغلاق القائمة" onclick="v111CloseSidebar(true)"></button><main class="main"><header class="topbar"><div class="topbar-right"><button class="icon-btn mobile-menu" onclick="toggleSidebar()">☰</button><div class="userchip"><span class="top-avatar"></span><div class="top-title"><strong>${esc(ROLE_LABELS[profile.role])}</strong><small>${esc(profile.full_name)}</small></div></div>${userRoles.length>1?`<button class="btn secondary role-switch-top" onclick="switchRole()">⇄ تبديل الدور</button>`:''}<button class="alert-bell v145-help-btn" type="button" onclick="v145OpenHelp()" title="المساعدة وما الجديد" aria-label="المساعدة وما الجديد">؟</button>${profile.role!=='teacher'?`<button class="alert-bell" type="button" onclick="go('alerts')" title="مركز التنبيهات" aria-label="مركز التنبيهات">🔔<span id="alertBellCount" class="alert-bell-count"></span></button>`:''}</div><div class="topbar-context">${esc(activeYear?.label||'')} - ${esc(activeTerm?.name||'')}</div></header><div id="appNavTrail" class="app-nav-strip no-print"></div><section id="content" class="content"><div class="card">جاري تحميل البيانات...</div></section></main><nav id="mobileActionBar" class="mobile-action-bar no-print" aria-label="الإجراءات السريعة"></nav></div>`;
+ app.innerHTML=`<div class="app-shell"><aside id="appSidebar" aria-label="القائمة الرئيسية" class="sidebar ${sidebarOpen?'open':''}"><button class="v111-sidebar-close" type="button" onclick="v111CloseSidebar(true)">× إغلاق القائمة</button><div class="side-logo"><img class="mini side-brand-logo" src="${BRAND_LOGO_SRC}" width="40" height="40" alt="شعار توجيه العلوم"><div><strong>${profile.role==='senior_teacher'?(profile.school_name||'مدرستي'):'توجيه العلوم'}</strong><small>${esc(activeYear?.label||'')} • ${esc(activeTerm?.name||'')}</small></div></div><div class="nav">${nav.map(n=>`<button class="${currentPage===n[0]?'active':''}" data-page="${n[0]}" onclick="go('${n[0]}')"><span class="nav-icon">${n[2]}</span><span class="nav-label" data-short="${esc(mobileNavShort(n[1]))}">${n[1]}</span></button>`).join('')}</div><div class="side-footer"><div class="side-user"><strong>${esc(profile.full_name)}</strong><br>${esc(ROLE_LABELS[profile.role])}<br>${switchBtn}<br><button class="text-btn side-logout" onclick="logout()">تسجيل الخروج</button></div></div></aside><button class="v111-sidebar-backdrop no-print" type="button" tabindex="-1" aria-label="إغلاق القائمة" onclick="v111CloseSidebar(true)"></button><main class="main"><header class="topbar"><div class="topbar-right"><button class="icon-btn mobile-menu" onclick="toggleSidebar()">☰</button><div class="userchip"><span class="top-avatar"></span><div class="top-title"><strong>${esc(ROLE_LABELS[profile.role])}</strong><small>${esc(profile.full_name)}</small></div></div>${userRoles.length>1?`<button class="btn secondary role-switch-top" onclick="switchRole()">⇄ تبديل الدور</button>`:''}<button class="alert-bell v152-install-btn" type="button" onclick="v152Install()" title="تثبيت التطبيق" aria-label="تثبيت التطبيق" ${window.v152InstallPrompt?'':'hidden'}>⬇</button><button class="alert-bell v145-help-btn" type="button" onclick="v145OpenHelp()" title="المساعدة وما الجديد" aria-label="المساعدة وما الجديد">؟</button>${profile.role!=='teacher'?`<button class="alert-bell" type="button" onclick="go('alerts')" title="مركز التنبيهات" aria-label="مركز التنبيهات">🔔<span id="alertBellCount" class="alert-bell-count"></span></button>`:''}</div><div class="topbar-context">${esc(activeYear?.label||'')} - ${esc(activeTerm?.name||'')}</div></header><div id="appNavTrail" class="app-nav-strip no-print"></div><section id="content" class="content"><div class="card">جاري تحميل البيانات...</div></section></main><nav id="mobileActionBar" class="mobile-action-bar no-print" aria-label="الإجراءات السريعة"></nav></div>`;
  v111SyncSidebar();
  appNavRenderStrip();
  loadPage().catch(moneySafeError);
