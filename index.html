@@ -1,4 +1,5 @@
 <!doctype html>
+<!-- v153: المعلم في إجازة مجددة يظهر في تقرير «أنصبة المعلمين» وأمام اسمه «إجازة» (النوع والنصاب) وبقية الأعمدة «—»؛ الحساب نفسه في قاعدة البيانات (migrations v153/v154: نصاب 0، لا عجز، لا إشراف). -->
 <!-- v152: تثبيت التطبيق (PWA): manifest.webmanifest + أيقونتا 192/512 من الشعار + service-worker.js بسيط (بلا تخزين؛ الصفحة والبيانات من الشبكة دائمًا) + زر «⬇» في الشريط العلوي يظهر عندما يسمح المتصفح بالتثبيت. -->
 <!-- v143: شاشة «فحص شاشة الموجّه» (لمدير النظام): أضيف تبويب «جدول المعلم» (teacherTimetable) إلى قائمة التبويبات المعروفة في فحص «تنقل شاشة الموجه»، فلم يعد يظهر إنذار كاذب «يحتاج مراجعة» بسبب التبويب الثالث عشر. لا تغيير آخر. -->
 <!-- v142: شاشة «معلمو مدارسي» للموجّه: أضيف خيار «المدرسة: الكل» في فلتر المدرسة؛ عند اختياره تُقرأ كشوف get_school_teacher_roster لكل مدارسه (ضمن المرحلة المختارة) وتُدمج في جدول واحد، ويظهر اسم مدرسة كل صف في عمود «المدرسة / حالة الانتداب»، والمنتدب جزئيًا يظهر في المدرستين. و«معاينة التقرير» (أنصبة المعلمين) في وضع «الكل» لا تُقيَّد بالمدرسة المحفوظة بل تشمل كل مدارس الموجّه. للموجّه فقط؛ مشرف المدرسة ومشرف المادة بلا تغيير. عرض فقط: لا تغيير في قواعد الحساب أو الصلاحيات أو قاعدة البيانات. -->
@@ -69,7 +70,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#152c43">
-<title>نظام توجيه العلوم — v152</title>
+<title>نظام توجيه العلوم — v153</title>
 <link rel="manifest" href="./manifest.webmanifest">
 <link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png">
 <link rel="apple-touch-icon" href="./icon-192.png">
@@ -2501,6 +2502,7 @@ window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();window.v152
 window.addEventListener('appinstalled',()=>{window.v152InstallPrompt=null;v152SyncInstallBtn()});
 if('serviceWorker' in navigator&&location.protocol!=='file:')window.addEventListener('load',()=>navigator.serviceWorker.register('./service-worker.js').catch(()=>{}));
 const V145_NEWS=[
+ ['v153','المعلمون في إجازة مجددة لا يُحسب عليهم عجز ولا نصاب، ويظهرون في التقارير وأمام أسمائهم «إجازة».'],
  ['v152','تثبيت التطبيق: يمكنك الآن تنزيل النظام على الهاتف أو الكمبيوتر من زر «⬇» أعلى الشاشة أو من قائمة المتصفح («تثبيت التطبيق» / «إضافة إلى الشاشة الرئيسية»).'],
  ['v151','الريادة التلقائية صارت لكل معلم دائم ينقص نصابه حصة واحدة (وليس لكبير المعلمين فقط).'],
  ['v150','حصة «الريادة»: تُحسب تلقائيًا لكبير المعلمين الناقص نصابه حصة واحدة، وتظهر في عمود مستقل في تقرير أنصبة المعلمين والتقرير المالي.'],
@@ -7780,7 +7782,7 @@ async function v86PartialDelegatesAtCurrentSchool(){
 
 function v86ApplyPartialDelegateRule(row,partial){
  if(isPaidTeacher(row))return {...row,weekly_target:null,workload_rule_type:'unrestricted',deficit_periods:null,surplus_periods:null,remaining_periods:null,workload_status:'حسب الحصص المسندة'};
- if(!partial)return row;
+ if(!partial||row?.workload_status==='إجازة')return row;
  const teaching=Number(row?.teaching_periods??partial?.teaching_periods??0)||0;
  const total=teaching;
  const target=Number(row?.weekly_target||0)||0;
@@ -9324,6 +9326,8 @@ ReportAdapters.teacherWorkload={async load(ctx){
   const outRow=homeRows.find(r=>String(r.school_relation||'')==='delegated_out_partial');
   const delegName=otherNames.length?otherNames.join('، '):(outRow?.delegation_to_school_name||(other>0?'مدرسة أخرى':''));
   const homeName=t.home_school_name||homeRows[0]?.scope_school_name||t.delegation_from_school_name||'';
+  const onLeave=t.workload_status==='إجازة';
+  if(onLeave)return {teacherId:v91TeacherId(t),name:reportCellValue(t.full_name),workType:'إجازة',home:reportCellValue(homeName),deleg:reportCellValue(delegName),homePeriods:'—',delegPeriods:'—',supervision:'—',leadership:'—',total:'—',target:'إجازة',deficit:'—',surplus:'—',_paid:false,_delegated:false,_status:'إجازة',...v103ScopeMeta(list),_civil:reportCellValue(t.civil_id),_job:reportCellValue(t.job_title),_search:[t.full_name,t.civil_id,homeName,delegName,'إجازة'].filter(Boolean).join(' ')};
   return {teacherId:v91TeacherId(t),name:reportCellValue(t.full_name),workType:paid?'بالأجر':'ثابت',home:reportCellValue(homeName),deleg:reportCellValue(delegName),
    homePeriods:home,delegPeriods:(delegName||other>0)?other:'—',supervision:sup>0?sup:'—',leadership:lead>0?lead:'—',total,
    target:paid?'—':workloadTargetLabel(t),deficit:workloadDeficitLabel(t),surplus:workloadSurplusLabel(t),
