@@ -2,6 +2,7 @@
 <!-- v143: شاشة «فحص شاشة الموجّه» (لمدير النظام): أضيف تبويب «جدول المعلم» (teacherTimetable) إلى قائمة التبويبات المعروفة في فحص «تنقل شاشة الموجه»، فلم يعد يظهر إنذار كاذب «يحتاج مراجعة» بسبب التبويب الثالث عشر. لا تغيير آخر. -->
 <!-- v142: شاشة «معلمو مدارسي» للموجّه: أضيف خيار «المدرسة: الكل» في فلتر المدرسة؛ عند اختياره تُقرأ كشوف get_school_teacher_roster لكل مدارسه (ضمن المرحلة المختارة) وتُدمج في جدول واحد، ويظهر اسم مدرسة كل صف في عمود «المدرسة / حالة الانتداب»، والمنتدب جزئيًا يظهر في المدرستين. و«معاينة التقرير» (أنصبة المعلمين) في وضع «الكل» لا تُقيَّد بالمدرسة المحفوظة بل تشمل كل مدارس الموجّه. للموجّه فقط؛ مشرف المدرسة ومشرف المادة بلا تغيير. عرض فقط: لا تغيير في قواعد الحساب أو الصلاحيات أو قاعدة البيانات. -->
 <!-- v141: شاشات الدخول (الدخول / اختيار الدور / تغيير كلمة المرور): (1) عبارات اللوحة اليسرى صارت: «نظام واحد يربط المدرسة بالموجّه بالإدارة…» + «بيانات موثوقة… وصلاحيات منضبطة» + «اعتماد رسمي • تقارير A4 جاهزة • بيانات حيّة» بدل عبارات تعدد الأدوار؛ (2) ألوان الخلفيات والنصوص والأزرار مستوحاة من ألوان الشعار (كحلي عميق + ذهبي + كريمي). تعديل مظهر ونصوص فقط، لا تغيير في منطق الدخول أو الصلاحيات. -->
+<!-- v149: عمود «الريادة» مستقل في تقرير «أنصبة المعلمين» والتقرير المالي. الريادة تُقرأ من leadership_periods (رائد الفصل + الريادة التلقائية لكبير المعلمين الناقص نصابه حصة، محسوبة في قاعدة البيانات)، وتُطرح من «حصص الأساسية» ومن النصاب المالي للتدريس مثل الإشراف (15 = 12 + إشراف 2 + ريادة 1). -->
 <!-- v148: إصلاح اتساع الصفحة على الهاتف لحسابات متعددة الأدوار: زر «تبديل الدور» العلوي كان يدفع الشريط العلوي خارج الشاشة (47px عند 360px) فتنزاح الصفحة كلها ويختفي شريط أزرار المعاينة السفلي. على ≤800px يُخفى الزر العلوي (موجود في القائمة الجانبية). + شريط الفلاتر وأزرار رأس الصفحة: حُذفت 179 قاعدة تخطيط قديمة متراكبة وعُرِّف كلٌّ منهما مرة واحدة في القسم الموحد (الفلاتر تلتف في عمودين على الهاتف بلا تمرير أفقي؛ الأزرار أعمدة متساوية تملأ العرض). -->
 <!-- v147: توحيد التصميم (المرحلتان 2 و3): دمج وسوم style الثمانية في ورقة واحدة #appStyles وحذف التصريحات الميتة؛ حذف تصريحات المقاس/اللون القديمة لمكونات الأزرار والحقول والبطاقات والتنبيهات والشارات ورؤوس الجداول (عدا الدخول وتقارير A4 والطباعة وحالات الخطأ)، وتعريف كل مكون مرة واحدة في قسم «نظام التصميم الموحد» آخر الورقة بمتغيرات --ctl-h/--ctl-font/--radius/--card-pad. -->
 <!-- v146: توحيد التصميم (المرحلة 1): طبقة CSS موحّدة بألوان الشعار (كحلي/ذهبي) للأزرار والحقول والجداول والبطاقات والتنبيهات والشارات وعناوين الصفحات والنوافذ والقائمة الجانبية، والشعار بدل مربع «ع» في القائمة. ألوان وحواف وظلال وتركيز فقط — لا تغيير في المقاسات ولا في تقارير A4 (.report-a4-page). -->
@@ -65,7 +66,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#152c43">
-<title>نظام توجيه العلوم — v148</title>
+<title>نظام توجيه العلوم — v149</title>
 <style id="appStyles">
 .v110-dossier{display:grid;min-width:0}
 .v110-dossier .card h3{margin:0 0 12px}
@@ -2483,6 +2484,7 @@ const V145_PAGE_HELP={
  myAssignments:'حصصك وفصولك في الفترة الحالية.'
 };
 const V145_NEWS=[
+ ['v149','حصة «الريادة»: تُحسب تلقائيًا لكبير المعلمين الناقص نصابه حصة واحدة، وتظهر في عمود مستقل في تقرير أنصبة المعلمين والتقرير المالي.'],
  ['v148','على الهاتف: الفلاتر في عمودين واضحين بلا تمرير جانبي، وأزرار أعلى الصفحة تملأ العرض، وإصلاح انزياح الصفحة للحسابات متعددة الأدوار («تبديل الدور» من القائمة الجانبية).'],
  ['v147','توحيد التصميم: مقاس واحد للأزرار والحقول والبطاقات في كل الشاشات، وملف تصميم واحد بدل الطبقات القديمة.'],
  ['v146','ألوان الشعار (كحلي وذهبي) في كل الشاشات، والشعار في القائمة الجانبية.'],
@@ -8545,7 +8547,7 @@ function v103RebuildMetrics(schema){
  if(schema.reportId==='teacherLeaves')values=[['المعلمون بإجازات مسجلة',unique(rows,'teacherId')],['بانتظار التجديد',count('status','بانتظار التجديد')],['إجازات مجددة',count('status','إجازة مجددة')],['عادوا للعمل',count('status','عاد للعمل')]];
  if(schema.reportId==='financialGuidance'){
   const seen=new Set(),counted=rows.filter(r=>{if(!r.counted||seen.has(r.teacherId))return false;seen.add(r.teacherId);return true});
-  values=[['المعلمون دون تكرار',unique(rows,'teacherId')],['سجلات المدارس',rows.length],['النصاب المالي للتدريس',sum(counted,'financial')],['الإشراف المالي',sum(counted,'supervision')],['الإجمالي المالي',sum(counted,'total')]];
+  values=[['المعلمون دون تكرار',unique(rows,'teacherId')],['سجلات المدارس',rows.length],['النصاب المالي للتدريس',sum(counted,'financial')],['الإشراف المالي',sum(counted,'supervision')],['الريادة',sum(counted,'leadership')],['الإجمالي المالي',sum(counted,'total')]];
  }
  if(values){schema.summary=values.map(([k,v])=>reportMetric(k,v));schema.totals=values.map(([k,v])=>reportTotalsMetric(k,v))}
  return schema;
@@ -8598,10 +8600,10 @@ ReportAdapters.financialGuidance={async load(ctx){
  const {data,annual}=await v103LoadAnnualRows(),financial=new Map(annual.filter(f=>f.work_type==='permanent').map(f=>[v91TeacherId(f),f])),scopes=v103ScopeRows(data),fullTargets=new Map();
  for(const s of scopes){if(s.delegation_type==='full'&&s.delegation_to_school_id)fullTargets.set(v91TeacherId(s),String(s.delegation_to_school_id));if(s.school_relation==='delegated_in_full')fullTargets.set(v91TeacherId(s),v91ScopeSchoolId(s))}
  const rows=scopes.filter(s=>!isPaidTeacher(s)&&financial.has(v91TeacherId(s))).map((s,i)=>{
-  const f=financial.get(v91TeacherId(s)),fullTarget=fullTargets.get(v91TeacherId(s)),counted=fullTarget?v91ScopeSchoolId(s)===fullTarget:s.school_relation!=='delegated_in_partial',legal=reportNumber(f.legal_quota),supervision=counted&&legal>0?reportNumber(s.supervision_periods):0,status=v103LeaveStatus(f);
-  return {index:i+1,teacherId:v91TeacherId(s),name:reportCellValue(f.full_name),school:v91SchoolCell(s),job:reportCellValue(f.job_title),status:counted?status:`${status} — يُحتسب ${fullTarget?'في الوجهة':'في الأصل'}`,legal:counted?legal:'—',financial:counted?Math.max(legal-supervision,0):'—',supervision:counted?supervision:'—',total:counted?legal:'—',counted,...v103ScopeMeta([s]),_status:status,_search:[f.full_name,f.civil_id,v91SchoolCell(s),f.job_title,f.leave_type,status].filter(Boolean).join(' ')};
+  const f=financial.get(v91TeacherId(s)),fullTarget=fullTargets.get(v91TeacherId(s)),counted=fullTarget?v91ScopeSchoolId(s)===fullTarget:s.school_relation!=='delegated_in_partial',legal=reportNumber(f.legal_quota),supervision=counted&&legal>0?reportNumber(s.supervision_periods):0,leadership=counted&&legal>0?reportNumber(s.leadership_periods):0,status=v103LeaveStatus(f);
+  return {index:i+1,teacherId:v91TeacherId(s),name:reportCellValue(f.full_name),school:v91SchoolCell(s),job:reportCellValue(f.job_title),status:counted?status:`${status} — يُحتسب ${fullTarget?'في الوجهة':'في الأصل'}`,legal:counted?legal:'—',financial:counted?Math.max(legal-supervision-leadership,0):'—',supervision:counted?supervision:'—',leadership:counted?leadership:'—',total:counted?legal:'—',counted,...v103ScopeMeta([s]),_status:status,_search:[f.full_name,f.civil_id,v91SchoolCell(s),f.job_title,f.leave_type,status].filter(Boolean).join(' ')};
  });
- return v103BaseReport('financialGuidance',ctx,[reportColumn('index','م',.3,{numeric:true}),reportColumn('name','المعلم',1.6),reportColumn('school','المدرسة / الانتداب',2),reportColumn('job','الدرجة',.85),reportColumn('status','الحالة',1.6),reportColumn('legal','النصاب القانوني',.8,{numeric:true}),reportColumn('financial','المالي للتدريس',.8,{numeric:true}),reportColumn('supervision','الإشراف المالي',.7,{numeric:true}),reportColumn('total','الإجمالي المالي',.8,{numeric:true})],rows,'الأنصبة حصص أسبوعية. المالي للتدريس = القانوني − الإشراف؛ الإجازة المجددة صفر ماليًا، وبانتظار التجديد يُحتسب ماليًا. الجزئي يُحتسب في الأصل فقط والكلي في الوجهة. صف الوجهة للجزئي للبيان فقط. معلم الأجر خارج حساب النصاب المالي.');
+ return v103BaseReport('financialGuidance',ctx,[reportColumn('index','م',.3,{numeric:true}),reportColumn('name','المعلم',1.6),reportColumn('school','المدرسة / الانتداب',2),reportColumn('job','الدرجة',.85),reportColumn('status','الحالة',1.6),reportColumn('legal','النصاب القانوني',.8,{numeric:true}),reportColumn('financial','المالي للتدريس',.8,{numeric:true}),reportColumn('supervision','الإشراف المالي',.7,{numeric:true}),reportColumn('leadership','الريادة',.6,{numeric:true}),reportColumn('total','الإجمالي المالي',.8,{numeric:true})],rows,'الأنصبة حصص أسبوعية. المالي للتدريس = القانوني − الإشراف − الريادة؛ الإجازة المجددة صفر ماليًا، وبانتظار التجديد يُحتسب ماليًا. الجزئي يُحتسب في الأصل فقط والكلي في الوجهة. صف الوجهة للجزئي للبيان فقط. معلم الأجر خارج حساب النصاب المالي.');
 }};
 
 const v103BaseFilteredMetrics=rebuildFilteredReportMetrics;
@@ -9244,7 +9246,7 @@ dashboardPage=async function(options={}){
    وبنفس نطاق رؤية بقية تقارير الأغراض. معلم الأجر: الحصص المسندة فقط دون نصاب أو عجز أو زيادة. */
 V103_PURPOSE_REPORTS.push('teacherWorkload');
 Object.assign(STATISTICS_REPORTS,{
- teacherWorkload:{title:'أنصبة المعلمين',subtitle:'المدرسة الأساسية والمنتدب إليها وحصص كل مدرسة والإشراف والعجز والزيادة',icon:'⚖',adapter:'teacherWorkload',filters:['stage','supervisor','school','status'],purpose:true,statusLabel:'حالة النصاب',statuses:['عجز','زيادة','مكتمل','ضمن الحد','بلغ الحد','تجاوز الحد','حسب الحصص المسندة'],note:'كل معلم يظهر مرة واحدة مرتبًا بمدرسته الأساسية. الإجمالي = حصص الأساسية + حصص المنتدب إليها + الإشراف، والعجز والزيادة محسوبان من هذا الإجمالي مقابل النصاب. معلم الأجر يظهر بالحصص المسندة فقط دون نصاب أو عجز أو زيادة. اختيار المدرسة يعرض من هي أساسية لهم أو منتدبون إليها.'}
+ teacherWorkload:{title:'أنصبة المعلمين',subtitle:'المدرسة الأساسية والمنتدب إليها وحصص كل مدرسة والإشراف والريادة والعجز والزيادة',icon:'⚖',adapter:'teacherWorkload',filters:['stage','supervisor','school','status'],purpose:true,statusLabel:'حالة النصاب',statuses:['عجز','زيادة','مكتمل','ضمن الحد','بلغ الحد','تجاوز الحد','حسب الحصص المسندة'],note:'كل معلم يظهر مرة واحدة مرتبًا بمدرسته الأساسية. الإجمالي = حصص الأساسية + حصص المنتدب إليها + الإشراف + الريادة، والعجز والزيادة محسوبان من هذا الإجمالي مقابل النصاب. معلم الأجر يظهر بالحصص المسندة فقط دون نصاب أو عجز أو زيادة. اختيار المدرسة يعرض من هي أساسية لهم أو منتدبون إليها.'}
 });
 const v131BaseRebuildMetrics=v103RebuildMetrics;
 v103RebuildMetrics=function(schema){
@@ -9257,14 +9259,14 @@ v103RebuildMetrics=function(schema){
 ReportAdapters.teacherWorkload={async load(ctx){
  const data=await v91LoadReportsDataset(),groups=new Map();
  for(const s of v103ScopeRows(data)){const id=v91TeacherId(s);if(!groups.has(id))groups.set(id,[]);groups.get(id).push(s)}
- const num=reportNumber,here=r=>Math.max(num(r.total_counted_periods)-num(r.supervision_periods),0),sum=list=>list.reduce((a,r)=>a+here(r),0);
+ const num=reportNumber,here=r=>Math.max(num(r.total_counted_periods)-num(r.supervision_periods)-num(r.leadership_periods),0),sum=list=>list.reduce((a,r)=>a+here(r),0);
  const rows=[...groups.values()].map(list=>{
   const homeId=String(list[0].home_school_id||''),isHome=r=>homeId!==''&&String(v91ScopeSchoolId(r))===homeId;
   const homeRows=list.filter(isHome),otherRows=list.filter(r=>!isHome(r));
   const t=otherRows.find(r=>String(r.school_relation||'').startsWith('delegated_in_'))||homeRows[0]||list[0];
   const paid=isPaidTeacher(t);
-  const total=num(t.global_total_counted_periods??t.total_counted_periods),sup=paid?0:num(t.global_supervision_periods??t.supervision_periods);
-  const rest=Math.max(total-sup,0);
+  const total=num(t.global_total_counted_periods??t.total_counted_periods),sup=paid?0:num(t.global_supervision_periods??t.supervision_periods),lead=num(t.global_leadership_periods??t.leadership_periods);
+  const rest=Math.max(total-sup-lead,0);
   const home=homeRows.length?sum(homeRows):Math.max(rest-(otherRows.length?sum(otherRows):0),0);
   const other=otherRows.length?sum(otherRows):Math.max(rest-home,0);
   const otherNames=v103Unique(otherRows.map(r=>r.scope_school_name));
@@ -9272,14 +9274,14 @@ ReportAdapters.teacherWorkload={async load(ctx){
   const delegName=otherNames.length?otherNames.join('، '):(outRow?.delegation_to_school_name||(other>0?'مدرسة أخرى':''));
   const homeName=t.home_school_name||homeRows[0]?.scope_school_name||t.delegation_from_school_name||'';
   return {teacherId:v91TeacherId(t),name:reportCellValue(t.full_name),workType:paid?'بالأجر':'ثابت',home:reportCellValue(homeName),deleg:reportCellValue(delegName),
-   homePeriods:home,delegPeriods:(delegName||other>0)?other:'—',supervision:sup>0?sup:'—',total,
+   homePeriods:home,delegPeriods:(delegName||other>0)?other:'—',supervision:sup>0?sup:'—',leadership:lead>0?lead:'—',total,
    target:paid?'—':workloadTargetLabel(t),deficit:workloadDeficitLabel(t),surplus:workloadSurplusLabel(t),
    _paid:paid,_delegated:list.some(r=>/^delegated_/.test(String(r.school_relation||''))),
    _status:paid?'حسب الحصص المسندة':reportCellValue(t.workload_status),...v103ScopeMeta(list),
    _civil:reportCellValue(t.civil_id),_job:reportCellValue(t.job_title),
    _search:[t.full_name,t.civil_id,homeName,delegName].filter(Boolean).join(' ')};
  }).sort((a,b)=>String(a.home).localeCompare(String(b.home),'ar')||String(a.name).localeCompare(String(b.name),'ar')).map((r,i)=>({...r,index:i+1}));
- return v103BaseReport('teacherWorkload',ctx,[reportColumn('index','م',.3,{numeric:true}),reportColumn('name','المعلم',1.5),reportColumn('workType','النوع',.6),reportColumn('home','المدرسة الأساسية',1.45),reportColumn('deleg','المنتدب إليها',1.45),reportColumn('homePeriods','حصص الأساسية',.6,{numeric:true}),reportColumn('delegPeriods','حصص المنتدب إليها',.65,{numeric:true}),reportColumn('supervision','الإشراف',.5,{numeric:true}),reportColumn('total','الإجمالي',.55,{numeric:true}),reportColumn('target','النصاب',.65),reportColumn('deficit','العجز',.5,{numeric:true}),reportColumn('surplus','الزيادة',.5,{numeric:true})],rows,'الإجمالي = حصص الأساسية + حصص المنتدب إليها + الإشراف. العجز والزيادة من الإجمالي مقابل النصاب. معلم الأجر: الحصص المسندة فقط دون نصاب أو عجز أو زيادة.');
+ return v103BaseReport('teacherWorkload',ctx,[reportColumn('index','م',.3,{numeric:true}),reportColumn('name','المعلم',1.5),reportColumn('workType','النوع',.6),reportColumn('home','المدرسة الأساسية',1.45),reportColumn('deleg','المنتدب إليها',1.45),reportColumn('homePeriods','حصص الأساسية',.6,{numeric:true}),reportColumn('delegPeriods','حصص المنتدب إليها',.65,{numeric:true}),reportColumn('supervision','الإشراف',.5,{numeric:true}),reportColumn('leadership','الريادة',.5,{numeric:true}),reportColumn('total','الإجمالي',.55,{numeric:true}),reportColumn('target','النصاب',.65),reportColumn('deficit','العجز',.5,{numeric:true}),reportColumn('surplus','الزيادة',.5,{numeric:true})],rows,'الإجمالي = حصص الأساسية + حصص المنتدب إليها + الإشراف + الريادة. العجز والزيادة من الإجمالي مقابل النصاب. معلم الأجر: الحصص المسندة فقط دون نصاب أو عجز أو زيادة.');
 }};
 
 /* v132: زر «معاينة التقرير» في شاشة المعلمين يفتح الآن تقرير «أنصبة المعلمين» المتفق عليه بدل تقرير المعلمين القديم،
