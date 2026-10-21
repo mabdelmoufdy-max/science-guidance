@@ -1,4 +1,5 @@
 <!doctype html>
+<!-- v153: + إصلاح انزياح الصفحة على الهاتف: الشريط العلوي صار أعرض من الشاشة بعد زر التثبيت (v152)، فسُمح لاسم المستخدم بالانكماش. -->
 <!-- v153: المعلم في إجازة مجددة يظهر في تقرير «أنصبة المعلمين» وأمام اسمه «إجازة» (النوع والنصاب) وبقية الأعمدة «—»؛ الحساب نفسه في قاعدة البيانات (migrations v153/v154: نصاب 0، لا عجز، لا إشراف). -->
 <!-- v152: تثبيت التطبيق (PWA): manifest.webmanifest + أيقونتا 192/512 من الشعار + service-worker.js بسيط (بلا تخزين؛ الصفحة والبيانات من الشبكة دائمًا) + زر «⬇» في الشريط العلوي يظهر عندما يسمح المتصفح بالتثبيت. -->
 <!-- v143: شاشة «فحص شاشة الموجّه» (لمدير النظام): أضيف تبويب «جدول المعلم» (teacherTimetable) إلى قائمة التبويبات المعروفة في فحص «تنقل شاشة الموجه»، فلم يعد يظهر إنذار كاذب «يحتاج مراجعة» بسبب التبويب الثالث عشر. لا تغيير آخر. -->
@@ -2170,6 +2171,8 @@ td .btn,.report-preview-toolbar .btn,.btn.btn-sm{min-height:var(--ctl-h-sm);padd
 @media(max-width:800px){.topbar .role-switch-top{display:none}}
 /* v148: سطر الانتداب الجزئي في بطاقة المعلم بشاشة التوزيع السريع */
 .v148-deleg-line{font-size:12.5px;line-height:1.6;margin:6px 0 8px;padding:6px 10px;border-radius:8px;background:#fbf5e6;border:1px solid #ecd9a8;color:#1f4274;font-weight:600}
+/* v153: الشريط العلوي لا يتجاوز عرض الهاتف بعد إضافة زر التثبيت (كان أعرض بـ21px فتنزاح الصفحة) */
+@media (max-width:800px){.topbar-right{min-width:0;max-width:100%}.topbar-right .userchip{min-width:0;flex:1 1 auto}.topbar-right .userchip>*{min-width:0}}
 </style>
 </head>
 <body>
