@@ -1,4 +1,5 @@
 <!doctype html>
+<!-- v159: شاشة اختيار الدور تعرض الأدوار بترتيب ثابت (مدير النظام، الموجه الأول، منسق المرحلة، الموجه، مدير المدرسة، مشرف المادة، المعلم)، فيأتي «منسق المرحلة» تحت «مدير النظام». تشمل v158. -->
 <!-- v158: لوحة قرارات المرحلة برسوم بيانية: شريط تغطية الحصص (فعلي/يُسد داخليًا/مقترح انتداب/أجر مسند/بلا تغطية)، أعلى 10 مدارس عجزًا، حالة الإرسال للاعتماد، عدالة الكادر، والموجهون (الاستكمال والإرسال)؛ الجداول في «عرض الجدول». + «الأجر المسند» يغطي ما بعد المقترح (عرض فقط؛ العجز قبل الأجر كما هو). تشمل v157. -->
 <!-- v157: حُذفت شاشة «الميزانية المرجعية» من قوائم كل الأدوار (المدير، الموجه الأول، منسق المرحلة، الموجه)، وفتح #/budget يحوّل إلى الرئيسية. البيانات باقية في قاعدة البيانات والكود باقٍ دون رابط. تشمل v156. -->
 <!-- v156: نافذة «الإجازات الطويلة والتقرير المالي»: بحث عن المعلم بالاسم أو الرقم القومي (حقل فوق القائمة يصفّيها، ونتيجة واحدة تُختار تلقائيًا). + «الرقم المدني» صار «الرقم القومي» في كل نصوص البرنامج والتقارير (الاستيراد يقبل العنوانين، ورسائل الخادم تُعرض بالاسم الجديد). تشمل v155. -->
@@ -75,7 +76,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#152c43">
-<title>نظام توجيه العلوم — v158</title>
+<title>نظام توجيه العلوم — v159</title>
 <link rel="manifest" href="./manifest.webmanifest">
 <link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png">
 <link rel="apple-touch-icon" href="./icon-192.png">
@@ -2489,7 +2490,8 @@ function go(p,options={}){
 function toggleSidebar(){sidebarOpen=!sidebarOpen;document.querySelector('.sidebar')?.classList.toggle('open',sidebarOpen)}
 
 function renderRolePicker(){
- const rows=userRoles.map(role=>`<button class="role-option ${role===activeRole?'selected':''}" onclick="selectRole('${role}')"><span class="role-option-icon">${role==='admin'?'⚙':role==='teacher'?'◉':'◆'}</span><span><b>${esc(ROLE_LABELS[role]||role)}</b><small>${role==='admin'?'إدارة النظام والصلاحيات والإعدادات':role==='teacher'?'بياناتك المهنية والحصص والفصول':'الدخول بصلاحيات هذا الدور'}</small></span><span class="role-arrow">‹</span></button>`).join('');
+ const roleOrder=Object.keys(ROLE_LABELS),rank=r=>{const i=roleOrder.indexOf(r);return i<0?99:i};
+ const rows=[...userRoles].sort((a,b)=>rank(a)-rank(b)).map(role=>`<button class="role-option ${role===activeRole?'selected':''}" onclick="selectRole('${role}')"><span class="role-option-icon">${role==='admin'?'⚙':role==='teacher'?'◉':'◆'}</span><span><b>${esc(ROLE_LABELS[role]||role)}</b><small>${role==='admin'?'إدارة النظام والصلاحيات والإعدادات':role==='teacher'?'بياناتك المهنية والحصص والفصول':'الدخول بصلاحيات هذا الدور'}</small></span><span class="role-arrow">‹</span></button>`).join('');
  app.innerHTML=`<div class="login-shell"><section class="login-brand"><div class="brand-box"><img class="brand-logo" src="${BRAND_LOGO_SRC}" width="340" height="340" alt="شعار توجيه العلوم — إدارة قوص التعليمية"><p>نظام واحد يربط المدرسة بالموجّه بالإدارة، ويضع كل مسؤول أمام نطاقه ومسؤولياته فقط.</p><div class="brand-placeholder"><span class="brand-placeholder-icon">⇄</span><strong>بيانات موثوقة… وصلاحيات منضبطة</strong><small>اعتماد رسمي <i>•</i> تقارير A4 جاهزة <i>•</i> بيانات حيّة</small></div></div></section><section class="login-panel"><div class="login-card role-picker-card"><h2>اختر طريقة الدخول</h2><p class="subtitle">مرحبًا ${esc(profile?.full_name||'')}. ستطبق الصلاحيات حسب الدور المختار فقط.</p><div class="role-picker-list">${rows}</div><button class="login-help" onclick="logout()">تسجيل الخروج</button></div></section></div>`;
 }
 
@@ -2539,6 +2541,7 @@ window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();window.v152
 window.addEventListener('appinstalled',()=>{window.v152InstallPrompt=null;v152SyncInstallBtn()});
 if('serviceWorker' in navigator&&location.protocol!=='file:')window.addEventListener('load',()=>navigator.serviceWorker.register('./service-worker.js').catch(()=>{}));
 const V145_NEWS=[
+ ['v159','في «تبديل الدور» صار «منسق المرحلة» تحت «مدير النظام» مباشرة.'],
  ['v158','لوحة منسق المرحلة صارت برسوم بيانية، وتعرض ما يغطيه الأجر المسند وما يبقى بلا تغطية.'],
  ['v157','حُذفت شاشة «الميزانية المرجعية» من القائمة لكل الأدوار.'],
  ['v156','البحث عن المعلم بالاسم أو الرقم القومي في نافذة الإجازات الطويلة، و«الرقم المدني» صار «الرقم القومي» في كل البرنامج.'],
