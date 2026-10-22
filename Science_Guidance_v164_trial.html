@@ -1,4 +1,5 @@
 <!doctype html>
+<!-- v164: شاشتا «التقارير» و«الإحصائيات»: صفحة التقرير تعرض الفلاتر وعدد النتائج فقط (بلا جدول ولا بطاقات مؤشرات)، وزر «عرض النتائج» صار «معاينة التقرير للطباعة» يفتح التقرير مباشرة في وضع الطباعة A4 بالفلاتر المختارة؛ وأُخفي الشريط السفلي (معاينة/طباعة/مشاركة) لأن نافذة المعاينة فيها هذه الأزرار. التعديل من شاشة «المعلمون». لا تغيير في التقارير أو أعمدتها. -->
 <!-- v163: شاشة «المعلمون» للأدوار متعددة المدارس (مدير النظام، المشرف الأول، منسق المرحلة، الموجّه): تبدأ فارغة عند كل دخول (المدرسة: الكل بلا قائمة)، وتظهر القائمة عند اختيار مدرسة أو الكتابة في البحث أو اختيار فلتر؛ تحت فلتري المرحلة والمدرسة زرّان بعرض الشاشة: «تصدير Excel» (المعلمون المطابقون للفلاتر الحالية) و«تقرير» (نفس معاينة تقرير أنصبة المعلمين)؛ وأُخفي زرا «استيراد Excel/CSV» و«معاينة التقرير» من رأس الشاشة. مدير المدرسة ومشرف المادة بلا تغيير. عرض فقط. -->
 <!-- v162: أداء: «بيانات التقارير» (get_reports_dataset، ~1.6MB) تُحمَّل عبر مُحمِّل واحد مشترك v162ReportsDatasetRaw بمفتاح واحد بدل مفاتيح مختلفة لكل شاشة (الجرس، المعلمون، التقارير، الإحصاءات، مساحة الموجّه، شجرة الموجهين)، فالطلبات المتزامنة تُدمج في طلب واحد، وأي تعديل بيانات يمسحه؛ وجرس التنبيهات ينتظر اكتمال الشاشة؛ والتحديث القسري لا يتكرر خلال 5 ثوانٍ. لا تغيير في البيانات أو الحساب. (مع تحسينات قاعدة البيانات v162: كشوف كل المدارس في تمريرة واحدة، وقواعد الصلاحيات، وعرض الميزانية.) -->
 <!-- v161: المدارس المربوطة (schools.aggregate_with_school_id — مثل «النصر ع بنات صباحي» مع «النصر ع بنات») تُجمع مدرسة واحدة في التقارير والإحصاءات ومصدر بيانات التقارير (v91LoadReportsDataset وصفحتا التقارير والإحصاءات): الفصول والمعلمون والكشوف تُنسب للمدرسة الأساسية، وحصص المعلمة في المدرستين تُجمع في صف واحد. الشاشات اليومية (الفصول، التوزيع، المعلمون، الاعتماد، التنبيهات) تبقى منفصلة لكل فترة. لا تغيير في قواعد الحساب. -->
@@ -80,7 +81,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#152c43">
-<title>نظام توجيه العلوم — v163</title>
+<title>نظام توجيه العلوم — v164</title>
 <link rel="manifest" href="./manifest.webmanifest">
 <link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png">
 <link rel="apple-touch-icon" href="./icon-192.png">
@@ -2217,6 +2218,8 @@ td .btn,.report-preview-toolbar .btn,.btn.btn-sm{min-height:var(--ctl-h-sm);padd
 .v163-actions .btn{width:100%}
 .v163-hint{margin:-2px 0 10px;font-size:13px;text-align:center}
 #content[data-v163-teachers="1"] .page-head [data-bulk-import],#content[data-v163-teachers="1"] .page-head .report-preview-open-btn{display:none!important}
+/* v164: إخفاء الشريط السفلي في صفحة التقرير (المعاينة فيها الطباعة والمشاركة) */
+.statistics-fixed-actions{display:none!important}
 </style>
 </head>
 <body>
@@ -2561,6 +2564,7 @@ window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();window.v152
 window.addEventListener('appinstalled',()=>{window.v152InstallPrompt=null;v152SyncInstallBtn()});
 if('serviceWorker' in navigator&&location.protocol!=='file:')window.addEventListener('load',()=>navigator.serviceWorker.register('./service-worker.js').catch(()=>{}));
 const V145_NEWS=[
+ ['v164','التقارير والإحصائيات: اختر الفلاتر ثم «معاينة التقرير للطباعة» مباشرة، مع عدد النتائج.'],
  ['v163','شاشة المعلمين تبدأ فارغة: اختر المدرسة أو ابحث، مع زرّي «تصدير Excel» و«تقرير» للفلاتر الحالية.'],
  ['v162','تسريع النظام: تحميل البيانات مرة واحدة بدل عدة مرات، وتسريع قاعدة البيانات في كل الشاشات.'],
  ['v161','المدرسة ذات الفترتين (صباحي ومسائي) تُدخل كمدرستين ولكل فترة مشرفتها، وتُجمع مدرسة واحدة في التقارير والإحصاءات.'],
@@ -9403,7 +9407,7 @@ async function v117RenderInlineResults(){
 function v117InjectResults(html){
  const marker='<div class="statistics-fixed-actions no-print">';
  if(!String(html).includes(marker))return html;
- return String(html).replace(marker,'<div class="actions v117-run"><button type="button" class="btn primary" onclick="v117RenderInlineResults()">عرض النتائج</button></div><div id="v117Results"></div>'+marker);
+ return String(html).replace(marker,'<div class="actions v117-run"><button type="button" class="btn primary" onclick="v164OpenPreview()">معاينة التقرير للطباعة</button></div><div id="v117Results"></div>'+marker);
 }
 function v117AutoRun(){let n=0;const tick=()=>{if(document.getElementById('v117Results')){v117RenderInlineResults();return}if(++n<40)requestAnimationFrame(tick)};requestAnimationFrame(tick)}
 const v117BaseV103Detail=v103Detail;
@@ -9468,6 +9472,18 @@ v117RenderInlineResults=async function(){
  table.innerHTML=`<thead><tr><th></th>${cols.map(c=>`<th>${c[1]}</th>`).join('')}</tr></thead><tbody>${rows.map(r=>`<tr><td>${v120CanEditTeacher(r)?`<button type="button" class="btn secondary v118-edit-btn" onclick="editTeacherForm('${esc(r.teacherId)}')">تعديل</button>`:'<small class="muted">منتدب</small>'}</td>${cols.map(c=>`<td>${esc(reportCellValue(r[c[0]]))}</td>`).join('')}</tr>`).join('')}</tbody>`;
  box.querySelectorAll('small.muted').forEach(s=>{if(s.textContent.includes('يعرض هذا الملخص'))s.remove()});
 };
+
+/* v164: صفحة التقرير تعرض الفلاتر وعدد النتائج فقط؛ الزر يفتح المعاينة للطباعة مباشرة. */
+v117RenderInlineResults=async function(){
+ await v120BaseInline();
+ const box=document.getElementById('v117Results');if(!box)return;
+ box.querySelectorAll('.v117-table-wrap,.v117-kpis').forEach(e=>e.remove());
+ box.querySelectorAll('small.muted').forEach(e=>{if(e.textContent.includes('يعرض هذا الملخص'))e.remove()});
+};
+function v164OpenPreview(){
+ const cfg=v117Cfg();if(!cfg)return toast('اختر التقرير أولًا.');
+ return cfg.purpose?v103RunReport('preview'):statisticsRunReport('preview');
+}
 
 /* v122: تقرير الانتداب يكمل اسم المدرسة الأخرى وحصص المعلم فيها من الدالة get_delegation_periods (للموجه فما فوق). */
 const v122BaseDelegations=ReportAdapters.teacherDelegations.load;
