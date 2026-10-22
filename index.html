@@ -1,4 +1,5 @@
 <!doctype html>
+<!-- v155: لوحة قرارات المرحلة لمنسق المرحلة (عرض فقط، في «لوحة منسق المرحلة»): مؤشرات المرحلة، «تحتاج قرارك»، أين العجز (ما يُسد داخليًا وما يحتاج تغطية من الخارج)، مقترح التغطية من الفائض (يُقترح الأحدث في التعيين، لا الأقدم ولا مشرف المادة)، عدالة توزيع الكادر، الموجهون (الاستكمال والاعتماد)، وتقارير A4 منها «تقرير الاجتماع». الحساب من محرك الخطة المعتمد دون تغيير قواعد. -->
 <!-- v153: + إصلاح انزياح الصفحة على الهاتف: الشريط العلوي صار أعرض من الشاشة بعد زر التثبيت (v152)، فسُمح لاسم المستخدم بالانكماش. -->
 <!-- v153: المعلم في إجازة مجددة يظهر في تقرير «أنصبة المعلمين» وأمام اسمه «إجازة» (النوع والنصاب) وبقية الأعمدة «—»؛ الحساب نفسه في قاعدة البيانات (migrations v153/v154: نصاب 0، لا عجز، لا إشراف). -->
 <!-- v152: تثبيت التطبيق (PWA): manifest.webmanifest + أيقونتا 192/512 من الشعار + service-worker.js بسيط (بلا تخزين؛ الصفحة والبيانات من الشبكة دائمًا) + زر «⬇» في الشريط العلوي يظهر عندما يسمح المتصفح بالتثبيت. -->
@@ -71,7 +72,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#152c43">
-<title>نظام توجيه العلوم — v153</title>
+<title>نظام توجيه العلوم — v155</title>
 <link rel="manifest" href="./manifest.webmanifest">
 <link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png">
 <link rel="apple-touch-icon" href="./icon-192.png">
@@ -2173,6 +2174,10 @@ td .btn,.report-preview-toolbar .btn,.btn.btn-sm{min-height:var(--ctl-h-sm);padd
 .v148-deleg-line{font-size:12.5px;line-height:1.6;margin:6px 0 8px;padding:6px 10px;border-radius:8px;background:#fbf5e6;border:1px solid #ecd9a8;color:#1f4274;font-weight:600}
 /* v153: الشريط العلوي لا يتجاوز عرض الهاتف بعد إضافة زر التثبيت (كان أعرض بـ21px فتنزاح الصفحة) */
 @media (max-width:800px){.topbar-right{min-width:0;max-width:100%}.topbar-right .userchip{min-width:0;flex:1 1 auto}.topbar-right .userchip>*{min-width:0}}
+/* v155: لوحة قرارات المرحلة */
+.v155-board .card-title{flex-wrap:wrap;gap:8px}
+.v155-board .v155-actions{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.v155-board .v124-kpi b{overflow-wrap:anywhere}
 </style>
 </head>
 <body>
@@ -2505,6 +2510,7 @@ window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();window.v152
 window.addEventListener('appinstalled',()=>{window.v152InstallPrompt=null;v152SyncInstallBtn()});
 if('serviceWorker' in navigator&&location.protocol!=='file:')window.addEventListener('load',()=>navigator.serviceWorker.register('./service-worker.js').catch(()=>{}));
 const V145_NEWS=[
+ ['v155','لمنسق المرحلة: «لوحة قرارات المرحلة» عند الدخول — أين العجز، وما يُسد داخل المدرسة، ومقترح تغطية من الفائض (يُنتدب الأحدث في التعيين)، ومتابعة الموجهين، وتقرير اجتماع A4.'],
  ['v153','المعلمون في إجازة مجددة لا يُحسب عليهم عجز ولا نصاب، ويظهرون في التقارير وأمام أسمائهم «إجازة».'],
  ['v152','تثبيت التطبيق: يمكنك الآن تنزيل النظام على الهاتف أو الكمبيوتر من زر «⬇» أعلى الشاشة أو من قائمة المتصفح («تثبيت التطبيق» / «إضافة إلى الشاشة الرئيسية»).'],
  ['v151','الريادة التلقائية صارت لكل معلم دائم ينقص نصابه حصة واحدة (وليس لكبير المعلمين فقط).'],
@@ -5368,7 +5374,7 @@ function enhanceCurrentPageFilters(){
  // باقي الصفحات: فلتر لكل جدول.
  const tables=[...root.querySelectorAll('table.table')];
  tables.forEach((table,i)=>{
-   if(table.classList.contains('v119-grade-table')||table.classList.contains('v124-load-table'))return;
+   if(table.classList.contains('v119-grade-table')||table.classList.contains('v124-load-table')||table.closest('.v155-board'))return;
    const tableId=table.id||`pageFilterTable_${currentPage}_${i+1}`;
    table.id=tableId;
    const wrap=table.closest('.table-wrap');
@@ -9415,6 +9421,125 @@ function v134ToneFor(label,value){
  };
  if(document.body)start();else document.addEventListener('DOMContentLoaded',start);
 })();
+
+/* v155: لوحة قرارات المرحلة (منسق المرحلة) — عرض فقط. الحساب من محرك الخطة المعتمد (buildOperationalSchoolPlanData) دون تغيير أي قاعدة. */
+let v155StageSel='',__v155Model=null;
+const V155_STATUS={approved:'معتمدة',pending_manager_approval:'بانتظار الاعتماد',returned_for_edit:'معادة للتعديل',in_progress:'جاري الإدخال',not_started:'لم تبدأ'};
+function v155Floor(n,stage){const u=planTeachingBlockUnit(stage),x=Math.max(reportNumber(n),0);return u>1?Math.floor(x/u)*u:Math.floor(x)}
+function v155Ceil(n,stage){const u=planTeachingBlockUnit(stage),x=Math.max(reportNumber(n),0);return u>1?Math.ceil(x/u)*u:Math.ceil(x)}
+function v155Pct(n){return Number.isFinite(n)?`${Math.round(n*100)}%`:'—'}
+function v155Date(v){return v?String(v).slice(0,10):'—'}
+async function v155LoadModel(force=false){
+ if(!activeTerm?.id)throw new Error('لا توجد فترة دراسية نشطة.');
+ const [data,subs]=await Promise.all([v91LoadReportsDataset({force}),cachedRead(`page:dashboard:v155:subs:${activeTerm.id}`,async signal=>{const {data,error}=await abortable(sb.from('school_submissions').select('school_id,status').eq('term_id',activeTerm.id),signal);if(error)throw error;return data||[]},{ttl:30000,force})]);
+ __v155Model=v155BuildModel(data,subs);return __v155Model;
+}
+function v155BuildModel(data,subs){
+ const h=data.hierarchy||{},all=h.schools||[],stages=['ابتدائي','إعدادي','ثانوي'].filter(x=>all.some(s=>s.stage===x));
+ if(!stages.includes(v155StageSel))v155StageSel=stages[0]||'';
+ const stage=v155StageSel,schools=all.filter(s=>s.stage===stage),ids=new Set(schools.map(s=>String(s.id)));
+ const sups=new Map((h.sups||[]).map(s=>[String(s.id),s.full_name])),recs=new Map((data.teacher_records||[]).map(t=>[v91TeacherId(t),t])),status=new Map((subs||[]).map(r=>[String(r.school_id),r.status]));
+ const scopes=v103ScopeRows(data).filter(r=>ids.has(v91ScopeSchoolId(r))),classes=(data.classes||[]).filter(c=>ids.has(String(c.school_id)));
+ const plan=buildOperationalSchoolPlanData({schools,classes,teachers:data.teacher_records||[],schoolTeacherRosters:scopes,rules:data.rules||[],assignments:data.assignments||[]});
+ const meta=new Map(schools.map(s=>[String(s.id),s]));
+ const rows=(plan.rows||[]).map(p=>{
+  const id=String(p.school_id),sc=meta.get(id)||{},ready=!!p.calculation_ready,deficit=ready?reportNumber(p.remaining_deficit):0,details=p.teacher_capacity_details||[];
+  const spareRaw=details.reduce((n,d)=>n+Math.max(reportNumber(d.available)-reportNumber(d.localTeaching),0),0);
+  const internal=ready?Math.min(deficit,spareRaw):0,need=ready?deficit-internal:0,spare=ready?v155Floor(spareRaw-internal,stage):0;
+  // الأحدث في التعيين هو من يُنتدب؛ لا يُقترح الأقدم ولا مشرف المادة. إن نقص تاريخ تعيين أحد معلمي المدرسة الثابتين لا يمكن تحديد الأحدث.
+  const home=details.filter(d=>['home','delegated_out_partial'].includes(d.relation)).map(d=>({d,rec:recs.get(v91TeacherId(d.teacher))||{}}));
+  const missingDates=home.filter(x=>!x.rec.appointment_date).length;
+  const movers=home.filter(x=>!x.d.teacher.is_senior_teacher&&!x.rec.is_senior_teacher&&reportNumber(x.d.target)>0&&String(x.d.teacher.workload_status||'')!=='إجازة').sort((a,b)=>String(b.rec.appointment_date||'').localeCompare(String(a.rec.appointment_date||'')));
+  const required=reportNumber(p.required_periods),actual=reportNumber(p.basic_capacity);
+  return {id,name:p.school_name,supervisorId:String(sc.supervisor_id||''),supervisor:sups.get(String(sc.supervisor_id||''))||'—',ready,classes:reportNumber(p.total_classes),required,actual,deficit,internal,need,spare,spareRaw,surplus:ready?reportNumber(p.surplus):0,paid:reportNumber(p.paid_assigned),permanent:reportNumber(p.permanent_teachers),status:status.get(id)||'not_started',missingDates,movers,capRatio:ready&&required>0?(actual+spareRaw)/required:null,proposed:0,after:need};
+ });
+ // مقترح التغطية: الأكبر احتياجًا أولًا، ومن كل مدرسة بها فائض يُعرض الأحدث تعيينًا ثم الذي يليه.
+ const offers=[];
+ rows.filter(r=>r.spare>0&&!r.missingDates).forEach(r=>{let left=r.spare;for(const x of r.movers){if(left<=0)break;const cap=v155Floor(x.d.available,stage),amt=Math.min(left,cap);if(amt<=0)continue;offers.push({from:r,teacher:x.d.teacher,rec:x.rec,amt,cap,used:false});left-=amt}});
+ const proposals=[];
+ rows.filter(r=>r.ready&&r.need>0).sort((a,b)=>b.need-a.need).forEach(r=>{
+  let left=r.need;
+  while(left>0){
+   const free=offers.filter(o=>!o.used&&o.from.id!==r.id);if(!free.length)break;
+   const want=v155Ceil(left,stage),same=o=>o.from.supervisorId===r.supervisorId?1:0;
+   const pick=free.filter(o=>o.amt>=want).sort((a,b)=>a.amt-b.amt||same(b)-same(a))[0]||free.sort((a,b)=>b.amt-a.amt||same(b)-same(a))[0];
+   const give=Math.min(pick.amt,want);pick.used=true;
+   proposals.push({to:r,from:pick.from,teacher:pick.teacher,rec:pick.rec,periods:give,full:give>=pick.cap});
+   r.proposed+=Math.min(give,left);left-=give;
+  }
+  r.after=Math.max(left,0);
+ });
+ const ready=rows.filter(r=>r.ready),sum=(list,k)=>list.reduce((n,r)=>n+reportNumber(r[k]),0);
+ // اتساق توزيع الكادر مع الاحتياج (R²): قرب طاقة الكادر في كل مدرسة من حصصها المطلوبة.
+ const pts=ready.filter(r=>r.required>0).map(r=>[r.required,r.actual+r.spareRaw]);let r2=null;
+ if(pts.length>=3){const n=pts.length,mx=pts.reduce((a,p)=>a+p[0],0)/n,my=pts.reduce((a,p)=>a+p[1],0)/n;let sxy=0,sxx=0,syy=0;pts.forEach(([x,y])=>{sxy+=(x-mx)*(y-my);sxx+=(x-mx)**2;syy+=(y-my)**2});r2=sxx>0&&syy>0?(sxy*sxy)/(sxx*syy):null}
+ const bands={low:ready.filter(r=>r.capRatio!=null&&r.capRatio<.9).length,ok:ready.filter(r=>r.capRatio!=null&&r.capRatio>=.9&&r.capRatio<=1.1).length,high:ready.filter(r=>r.capRatio!=null&&r.capRatio>1.1).length};
+ const supMap=new Map();rows.forEach(r=>{const k=r.supervisorId||'none';if(!supMap.has(k))supMap.set(k,{name:r.supervisor,rows:[]});supMap.get(k).rows.push(r)});
+ const supervisors=[...supMap.values()].map(g=>{const n=g.rows.length,c=s=>g.rows.filter(r=>r.status===s).length,readyN=g.rows.filter(r=>r.ready).length,sent=c('approved')+c('pending_manager_approval'),score=Math.min(readyN/n,sent/n);
+  return {name:g.name,schools:n,ready:readyN,approved:c('approved'),pending:c('pending_manager_approval'),returned:c('returned_for_edit'),notSent:n-sent-c('returned_for_edit'),deficit:sum(g.rows,'deficit'),need:sum(g.rows,'need'),score,tone:c('returned_for_edit')||score<.6?'danger':score<.9?'warn':'ok'}}).sort((a,b)=>a.score-b.score||b.need-a.need);
+ const teachers=new Set(scopes.map(v91TeacherId)),leave=new Set(scopes.filter(t=>String(t.workload_status||'')==='إجازة').map(v91TeacherId)),partial=new Set(scopes.filter(t=>String(t.school_relation||'').includes('partial')).map(v91TeacherId));
+ return {stage,stages,rows,ready,proposals,supervisors,r2,bands,teachers:teachers.size,leave:leave.size,partial:partial.size,
+  totals:{schools:rows.length,ready:ready.length,classes:sum(rows,'classes'),required:sum(ready,'required'),actual:sum(ready,'actual'),deficit:sum(ready,'deficit'),internal:sum(ready,'internal'),need:sum(ready,'need'),spare:sum(ready,'spare'),surplus:sum(ready,'surplus'),paid:sum(ready,'paid'),proposed:sum(ready,'proposed'),after:sum(ready,'after')}};
+}
+function v155Report(kind){return openReportById('v155Stage',{kind,filterState:{search:'',filters:[],active:false,sourcePage:currentPage,reportId:'v155Stage'}})}
+function v155SetStage(v){v155StageSel=String(v||'');loadPage(false)}
+async function v155StageBoard(force){
+ const m=await v155LoadModel(force),t=m.totals;
+ if(!m.rows.length)return `<div class="card v155-board"><h3>لوحة قرارات المرحلة</h3><div class="notice info">لا توجد مدارس ضمن مرحلتك في هذه الفترة.</div></div>`;
+ const kpis=[v124Kpi('المدارس المكتملة البيانات',`${t.ready} / ${t.schools}`,t.ready<t.schools?'warn':'ok'),v124Kpi('الفصول',t.classes),v124Kpi('الحصص المطلوبة',t.required),v124Kpi('التدريس الفعلي',t.actual),v124Kpi('العجز',t.deficit,t.deficit>0?'danger':'ok'),v124Kpi('عجز يُسد داخل المدارس',t.internal),v124Kpi('يحتاج تغطية من خارج المدرسة',t.need,t.need>0?'danger':'ok'),v124Kpi('فائض قابل للانتداب',t.spare,'ok')].join('');
+ const alerts=[],count=f=>m.rows.filter(f);
+ const needRows=count(r=>r.need>0),internalRows=count(r=>r.internal>0),returned=count(r=>r.status==='returned_for_edit'),incomplete=count(r=>!r.ready),noTeacher=count(r=>r.ready&&!r.permanent),seniority=count(r=>r.spare>0&&r.missingDates),notSent=count(r=>['not_started','in_progress'].includes(r.status));
+ if(needRows.length)alerts.push({tone:'danger',text:`${needRows.length} مدرسة تحتاج ${t.need} حصة من خارجها؛ مقترح التغطية يغطي ${t.proposed} حصة ويبقى ${t.after} (أجر أو قرار آخر).`,kind:'proposals',btn:'المقترح'});
+ if(returned.length)alerts.push({tone:'danger',text:`${returned.length} مدرسة ملفها معاد للتعديل.`,kind:'status',btn:'القائمة'});
+ if(noTeacher.length)alerts.push({tone:'danger',text:`${noTeacher.length} مدرسة بلا معلم ثابت أو منتدب.`,kind:'deficit',btn:'العجز'});
+ if(internalRows.length)alerts.push({tone:'warn',text:`${internalRows.length} مدرسة عجزها ${t.internal} حصة يُسد داخليًا بتوزيع الفصول على معلميها (لهم حصص متبقية).`,kind:'internal',btn:'القائمة'});
+ if(incomplete.length)alerts.push({tone:'warn',text:`${incomplete.length} مدرسة بياناتها غير مكتملة (الفصول أو حصص المواد)؛ لا يُحسب عجزها.`,kind:'incomplete',btn:'القائمة'});
+ if(seniority.length)alerts.push({tone:'warn',text:`${seniority.length} مدرسة بها فائض ولا يمكن تحديد الأحدث فيها لنقص تاريخ التعيين؛ استُبعدت من المقترح.`,kind:'seniority',btn:'القائمة'});
+ if(notSent.length)alerts.push({tone:'info',text:`${notSent.length} مدرسة لم ترسل بياناتها للاعتماد.`,kind:'status',btn:'القائمة'});
+ if(m.leave||m.partial)alerts.push({tone:'info',text:`في المرحلة ${m.teachers} معلم: ${m.leave} في إجازة، و${m.partial} منتدب جزئيًا.`,kind:'',btn:''});
+ const alertHtml=alerts.length?alerts.map(a=>`<div class="v124-alert ${a.tone}"><span>${esc(a.text)}</span>${a.kind?`<button type="button" class="btn secondary v118-edit-btn" onclick="v155Report('${a.kind}')">${a.btn}</button>`:''}</div>`).join(''):'<div class="notice ok">لا توجد قرارات معلقة في المرحلة الآن.</div>';
+ const top=m.ready.filter(r=>r.deficit>0).sort((a,b)=>b.need-a.need||b.deficit-a.deficit).slice(0,10);
+ const defRows=top.map(r=>`<tr><td><b>${esc(r.name)}</b><div class="cell-sub">${esc(r.supervisor)}</div></td><td>${r.required}</td><td>${r.actual}</td><td><b>${r.deficit}</b></td><td>${r.internal}</td><td>${r.need?`<span class="badge danger">${r.need}</span>`:'<span class="badge ok">0</span>'}</td></tr>`).join('');
+ const propRows=m.proposals.slice(0,10).map(p=>`<tr><td><b>${esc(p.teacher.full_name||p.rec.full_name||'—')}</b><div class="cell-sub">تعيين ${esc(v155Date(p.rec.appointment_date))}</div></td><td>${esc(p.from.name)}</td><td>${esc(p.to.name)}</td><td><b>${p.periods}</b></td><td>${p.full?'انتداب كلي':'انتداب جزئي'}</td></tr>`).join('');
+ const supRows=m.supervisors.map(s=>`<tr><td><b>${esc(s.name)}</b></td><td>${s.schools}</td><td>${s.ready}</td><td>${s.approved}</td><td>${s.pending}</td><td>${s.returned}</td><td>${s.need}</td><td><span class="badge ${s.tone}">${s.tone==='ok'?'منضبط':s.tone==='warn'?'يحتاج متابعة':'متأخر'} (${v155Pct(s.score)})</span></td></tr>`).join('');
+ const stageSel=m.stages.length>1?`<select aria-label="المرحلة" onchange="v155SetStage(this.value)">${m.stages.map(x=>`<option ${x===m.stage?'selected':''}>${esc(x)}</option>`).join('')}</select>`:'';
+ const table=(head,body,empty,cols)=>`<div class="table-wrap"><table class="table no-compact-directory"><thead><tr>${head.map(x=>`<th>${x}</th>`).join('')}</tr></thead><tbody>${body||`<tr><td colspan="${cols}">${empty}</td></tr>`}</tbody></table></div>`;
+ return `<div class="v155-board">
+ <div class="card"><div class="card-title"><div><h3>لوحة قرارات المرحلة — ${esc(m.stage)}</h3><p class="muted">${esc(activeTerm?.name||'')} · ${t.schools} مدرسة · ${m.supervisors.length} موجه · ${m.teachers} معلم</p></div><div class="v155-actions">${stageSel}<button type="button" class="btn primary" onclick="v155Report('meeting')">تقرير الاجتماع</button><button type="button" class="btn secondary" onclick="loadPage(true)">تحديث</button></div></div><div class="v124-kpis">${kpis}</div></div>
+ <div class="card"><div class="card-title"><h3>تحتاج قرارك</h3></div><div class="v124-alerts">${alertHtml}</div></div>
+ <div class="card"><div class="card-title"><h3>أين العجز؟</h3><button type="button" class="btn secondary v118-edit-btn" onclick="v155Report('deficit')">كل المدارس</button></div><p class="muted">العجز = المطلوب − التدريس الفعلي. «يُسد داخليًا» من الحصص المتبقية لمعلمي المدرسة نفسها، والباقي يحتاج تغطية من خارجها.</p>${table(['المدرسة','المطلوب','الفعلي','العجز','يُسد داخليًا','من الخارج'],defRows,'لا يوجد عجز في المدارس المكتملة البيانات.',6)}</div>
+ <div class="card"><div class="card-title"><h3>مقترح التغطية من الفائض</h3><button type="button" class="btn secondary v118-edit-btn" onclick="v155Report('proposals')">المقترح كاملًا</button></div><p class="muted">من كل مدرسة بها فائض يُقترح <b>الأحدث في التعيين</b> ولا يُقترح الأقدم ولا مشرف المادة، ويُعاد توزيع حصصه داخل مدرسته. المقترح للعرض؛ التنفيذ بقرار صاحب الصلاحية. يغطي <b>${t.proposed}</b> من ${t.need} حصة.</p>${table(['المعلم المقترح','من','إلى','الحصص','النوع'],propRows,'لا يوجد فائض قابل للانتداب أو لا يوجد احتياج.',5)}</div>
+ <div class="card"><div class="card-title"><h3>عدالة توزيع الكادر</h3></div><div class="v124-kpis">${v124Kpi('اتساق الكادر مع الاحتياج',m.r2==null?'—':v155Pct(m.r2),m.r2!=null&&m.r2<.8?'warn':'ok')}${v124Kpi('مدارس كادرها أقل من 90%',m.bands.low,m.bands.low?'danger':'ok')}${v124Kpi('مدارس متوازنة 90–110%',m.bands.ok,'ok')}${v124Kpi('مدارس كادرها أكثر من 110%',m.bands.high,m.bands.high?'warn':'ok')}</div><p class="muted">الكادر = التدريس الفعلي + الحصص المتبقية لمعلمي المدرسة، مقسومًا على المطلوب. الاتساق قرب 100% يعني أن عدد المعلمين في كل مدرسة يتناسب مع فصولها.</p></div>
+ <div class="card"><div class="card-title"><h3>الموجهون: الاستكمال والاعتماد</h3><button type="button" class="btn secondary v118-edit-btn" onclick="v155Report('supervisors')">طباعة</button></div>${table(['الموجه','المدارس','مكتملة','معتمدة','بانتظار الاعتماد','معادة','من الخارج','الحالة'],supRows,'لا يوجد موجهون.',8)}<p class="muted">الحالة = الأقل بين نسبة المدارس المكتملة البيانات ونسبة المدارس المرسلة للاعتماد: منضبط ≥ 90%، يحتاج متابعة ≥ 60%، متأخر أقل من ذلك أو عنده ملف معاد.</p></div>
+ </div>`;
+}
+ReportAdapters.v155Stage={async load(ctx,options={}){
+ const m=__v155Model||await v155LoadModel(),t=m.totals,kind=options.kind||'deficit',base={reportId:'v155Stage',period:ctx.period,issuer:ctx.issuer,totals:[]};
+ const schoolCols=[reportColumn('index','م',.3,{numeric:true}),reportColumn('school','المدرسة',2),reportColumn('supervisor','الموجه',1.3)];
+ const sr=(list,extra)=>list.map((r,i)=>({index:i+1,school:r.name,supervisor:r.supervisor,...extra(r)}));
+ if(kind==='proposals')return makeReportSchema({...base,title:`مقترح التغطية من الفائض — ${m.stage}`,subtitle:'من كل مدرسة بها فائض يُقترح الأحدث في التعيين (لا يُقترح الأقدم ولا مشرف المادة)، ويُعاد توزيع حصصه داخل مدرسته. مقترح للعرض؛ التنفيذ بقرار صاحب الصلاحية.',summary:[reportMetric('يحتاج تغطية من الخارج',t.need),reportMetric('يغطيه المقترح',t.proposed),reportMetric('يبقى بعد المقترح',t.after),reportMetric('عدد المقترحات',m.proposals.length)],columns:[reportColumn('index','م',.3,{numeric:true}),reportColumn('teacher','المعلم المقترح',1.8),reportColumn('appointment','تاريخ التعيين',.8),reportColumn('from','من مدرسة',1.6),reportColumn('to','إلى مدرسة',1.6),reportColumn('periods','الحصص',.5,{numeric:true}),reportColumn('type','النوع',.8)],rows:m.proposals.map((p,i)=>({index:i+1,teacher:p.teacher.full_name||p.rec.full_name||'—',appointment:v155Date(p.rec.appointment_date),from:p.from.name,to:p.to.name,periods:p.periods,type:p.full?'انتداب كلي':'انتداب جزئي'}))});
+ if(kind==='supervisors')return makeReportSchema({...base,title:`الموجهون: الاستكمال والاعتماد — ${m.stage}`,subtitle:'الحالة = الأقل بين نسبة المدارس المكتملة البيانات ونسبة المرسلة للاعتماد (منضبط ≥ 90%، يحتاج متابعة ≥ 60%).',summary:[reportMetric('الموجهون',m.supervisors.length),reportMetric('المدارس',t.schools)],columns:[reportColumn('index','م',.3,{numeric:true}),reportColumn('name','الموجه',1.8),reportColumn('schools','المدارس',.6,{numeric:true}),reportColumn('ready','مكتملة',.6,{numeric:true}),reportColumn('approved','معتمدة',.6,{numeric:true}),reportColumn('pending','بانتظار',.6,{numeric:true}),reportColumn('returned','معادة',.5,{numeric:true}),reportColumn('need','من الخارج',.6,{numeric:true}),reportColumn('state','الحالة',1)],rows:m.supervisors.map((s,i)=>({index:i+1,name:s.name,schools:s.schools,ready:s.ready,approved:s.approved,pending:s.pending,returned:s.returned,need:s.need,state:`${s.tone==='ok'?'منضبط':s.tone==='warn'?'يحتاج متابعة':'متأخر'} (${v155Pct(s.score)})`}))});
+ if(kind==='status')return makeReportSchema({...base,title:`حالة إرسال المدارس للاعتماد — ${m.stage}`,subtitle:'المدارس غير المعتمدة مرتبة: المعادة للتعديل أولًا ثم التي لم ترسل.',summary:[reportMetric('معادة للتعديل',m.rows.filter(r=>r.status==='returned_for_edit').length),reportMetric('لم ترسل',m.rows.filter(r=>['not_started','in_progress'].includes(r.status)).length)],columns:[...schoolCols,reportColumn('status','الحالة',1)],rows:sr(m.rows.filter(r=>r.status!=='approved').sort((a,b)=>(b.status==='returned_for_edit')-(a.status==='returned_for_edit')),r=>({status:V155_STATUS[r.status]||r.status}))});
+ if(kind==='incomplete')return makeReportSchema({...base,title:`مدارس بياناتها غير مكتملة — ${m.stage}`,subtitle:'لا يُحسب عجز هذه المدارس حتى تُدخل الفصول وحصص المواد.',summary:[reportMetric('المدارس',m.rows.filter(r=>!r.ready).length)],columns:[...schoolCols,reportColumn('classes','الفصول',.6,{numeric:true}),reportColumn('status','حالة الاعتماد',1)],rows:sr(m.rows.filter(r=>!r.ready),r=>({classes:r.classes,status:V155_STATUS[r.status]||r.status}))});
+ if(kind==='seniority')return makeReportSchema({...base,title:`مدارس بها فائض ويلزم استكمال تاريخ التعيين — ${m.stage}`,subtitle:'لا يمكن تحديد الأحدث في المدرسة لنقص تاريخ تعيين بعض معلميها الثابتين؛ لذلك استُبعدت من مقترح التغطية.',summary:[reportMetric('المدارس',m.rows.filter(r=>r.spare>0&&r.missingDates).length)],columns:[...schoolCols,reportColumn('spare','الفائض',.6,{numeric:true}),reportColumn('missing','معلمون بلا تاريخ تعيين',.9,{numeric:true})],rows:sr(m.rows.filter(r=>r.spare>0&&r.missingDates),r=>({spare:r.spare,missing:r.missingDates}))});
+ const deficitCols=[...schoolCols,reportColumn('required','المطلوب',.6,{numeric:true}),reportColumn('actual','الفعلي',.6,{numeric:true}),reportColumn('deficit','العجز',.55,{numeric:true}),reportColumn('internal','يُسد داخليًا',.7,{numeric:true}),reportColumn('need','من الخارج',.65,{numeric:true}),reportColumn('proposed','يغطيه المقترح',.75,{numeric:true}),reportColumn('paid','أجر مسند',.6,{numeric:true})];
+ const defRow=r=>({required:r.required,actual:r.actual,deficit:r.deficit,internal:r.internal,need:r.need,proposed:r.proposed,paid:r.paid});
+ if(kind==='internal')return makeReportSchema({...base,title:`عجز يُسد داخل المدارس — ${m.stage}`,subtitle:'معلمو هذه المدارس لهم حصص متبقية تكفي لسد عجزها (كله أو بعضه) بتوزيع الفصول عليهم دون انتداب.',summary:[reportMetric('المدارس',m.rows.filter(r=>r.internal>0).length),reportMetric('حصص تُسد داخليًا',t.internal)],columns:deficitCols,rows:sr(m.ready.filter(r=>r.internal>0).sort((a,b)=>b.internal-a.internal),defRow)});
+ const summary=[reportMetric('المدارس',`${t.ready} مكتملة / ${t.schools}`),reportMetric('الحصص المطلوبة',t.required),reportMetric('التدريس الفعلي',t.actual),reportMetric('العجز',t.deficit),reportMetric('يُسد داخليًا',t.internal),reportMetric('من خارج المدرسة',t.need),reportMetric('يغطيه المقترح',t.proposed),reportMetric('يبقى بعد المقترح',t.after),reportMetric('اتساق الكادر مع الاحتياج',m.r2==null?'—':v155Pct(m.r2))];
+ if(kind==='meeting'){
+  const sup=m.supervisors.filter(s=>s.tone!=='ok').map(s=>s.name).slice(0,5).join('، ');
+  const notes=[`يحتاج ${t.need} حصة تغطية من خارج المدارس، ويغطي مقترح الانتداب من الفائض ${t.proposed} حصة ويبقى ${t.after}.`,t.internal?`عجز ${t.internal} حصة يُسد داخل المدارس بتوزيع الفصول.`:'',t.schools-t.ready?`${t.schools-t.ready} مدرسة بياناتها غير مكتملة.`:'',sup?`موجهون يحتاجون متابعة: ${sup}.`:''].filter(Boolean).join(' ');
+  return makeReportSchema({...base,title:`تقرير اجتماع المرحلة — ${m.stage}`,subtitle:notes,summary,columns:deficitCols,rows:sr(m.ready.filter(r=>r.deficit>0).sort((a,b)=>b.need-a.need||b.deficit-a.deficit).slice(0,10),defRow)});
+ }
+ return makeReportSchema({...base,title:`العجز في مدارس المرحلة — ${m.stage}`,subtitle:'العجز = المطلوب − التدريس الفعلي (الثابت والمنتدب). «يُسد داخليًا» من الحصص المتبقية لمعلمي المدرسة. حصص الأجر لا تغيّر العجز.',summary,columns:deficitCols,rows:sr(m.ready.filter(r=>r.deficit>0).sort((a,b)=>b.need-a.need||b.deficit-a.deficit),defRow)});
+}};
+const v155BaseDashboard=dashboardPage;
+dashboardPage=async function(options={}){
+ if(profile?.role!=='stage_coordinator')return v155BaseDashboard(options);
+ let board='';try{board=await v155StageBoard(!!options.force)}catch(error){board=`<div class="notice danger">تعذر تحميل لوحة قرارات المرحلة: ${esc(error?.message||error)}</div>`}
+ let base='';try{base=await v155BaseDashboard(options)}catch(_){}
+ return board+base;
+};
 </script>
 
 <div id="reportPreviewOverlay" class="report-preview-overlay" role="dialog" aria-modal="true" aria-label="معاينة التقرير" aria-hidden="true">
