@@ -1,4 +1,5 @@
 <!doctype html>
+<!-- v161: قائمة دور المعلم: حُذفت «بيانات المعلم» و«تقاريري» و«جدولي الأسبوعي»؛ بيانات المعلم (v160) تظهر داخل «بياناتي»، والجدول الأسبوعي داخل «حصصي وفصولي» (العلَم __v161EmbedTimetable يسمح لـ teacherTimetablePage بالعمل خارج صفحته). -->
 <!-- v160: «بيانات المعلم» لدور المعلم: بيانات المعلم نفسه فقط — شخصية ووظيفية ونصابه في الفصل الحالي (تدريس/إشراف/ريادة/إجمالي/زيادة أو عجز) — مع طباعة/PDF/واتس عبر تقرير teacherSelf (رُقّمت v160 لأن v155–v159 مستخدمة). قاعدة البيانات (migration v155_teacher_role_sees_only_own_record) تمنع دور المعلم من رؤية بيانات زملائه. -->
 <!-- v159: شاشة اختيار الدور تعرض الأدوار بترتيب ثابت (مدير النظام، الموجه الأول، منسق المرحلة، الموجه، مدير المدرسة، مشرف المادة، المعلم)، فيأتي «منسق المرحلة» تحت «مدير النظام». تشمل v158. -->
 <!-- v158: لوحة قرارات المرحلة برسوم بيانية: شريط تغطية الحصص (فعلي/يُسد داخليًا/مقترح انتداب/أجر مسند/بلا تغطية)، أعلى 10 مدارس عجزًا، حالة الإرسال للاعتماد، عدالة الكادر، والموجهون (الاستكمال والإرسال)؛ الجداول في «عرض الجدول». + «الأجر المسند» يغطي ما بعد المقترح (عرض فقط؛ العجز قبل الأجر كما هو). تشمل v157. -->
@@ -77,7 +78,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#152c43">
-<title>نظام توجيه العلوم — v160</title>
+<title>نظام توجيه العلوم — v161</title>
 <link rel="manifest" href="./manifest.webmanifest">
 <link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png">
 <link rel="apple-touch-icon" href="./icon-192.png">
@@ -2542,6 +2543,7 @@ window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();window.v152
 window.addEventListener('appinstalled',()=>{window.v152InstallPrompt=null;v152SyncInstallBtn()});
 if('serviceWorker' in navigator&&location.protocol!=='file:')window.addEventListener('load',()=>navigator.serviceWorker.register('./service-worker.js').catch(()=>{}));
 const V145_NEWS=[
+ ['v161','للمعلم: بياناتك في «بياناتي»، وجدولك الأسبوعي داخل «حصصي وفصولي»، وحُذفت التبويبات المكررة.'],
  ['v160','للمعلم: شاشة «بيانات المعلم» تعرض بياناته هو فقط كاملة مع نصابه وطباعتها، ولم يعد يرى بيانات زملائه.'],
  ['v159','في «تبديل الدور» صار «منسق المرحلة» تحت «مدير النظام» مباشرة.'],
  ['v158','لوحة منسق المرحلة صارت برسوم بيانية، وتعرض ما يغطيه الأجر المسند وما يبقى بلا تغطية.'],
@@ -8530,7 +8532,7 @@ async function teacherTimetablePage({signal}={}){
  if(!schools.some(s=>s.id===v101SchoolId))v101SchoolId=schools[0].id;
  const selectedSchool=v101SchoolId;
  const {data,error}=await abortable(sb.rpc('get_teacher_timetable_workspace',{p_school_id:selectedSchool,p_term_id:activeTerm.id}),signal);if(error)throw error;
- if(context!==v101Context()||signal?.aborted||currentPage!=='teacherTimetable')return '';
+ if(context!==v101Context()||signal?.aborted||(currentPage!=='teacherTimetable'&&!window.__v161EmbedTimetable))return '';
  if(!data.can_manage)data.teachers=(data.teachers||[]).filter(t=>String(t.profile_id||'')===String(profile.id));
  v101Timetable={...data,school:schools.find(s=>s.id===selectedSchool),context};
  if(!data.teachers?.some(t=>String(t.teacher_id||t.id)===v101TeacherId))v101TeacherId=String(data.teachers?.[0]?.teacher_id||data.teachers?.[0]?.id||'');
@@ -9652,6 +9654,21 @@ function v156LeaveSearch(q){
 }
 const v156BaseLeaveEdit=financialLeaveEdit;
 financialLeaveEdit=function(teacherId){const s=document.getElementById('financialLeaveSearch');if(s?.value){s.value='';v156LeaveSearch('')}return v156BaseLeaveEdit(teacherId)};
+
+/* v161: قائمة دور المعلم المختصرة — بياناتي (+ بيانات المعلم) وحصصي وفصولي (+ الجدول الأسبوعي). */
+NAV.teacher=NAV.teacher.filter(n=>!['teachers','reports','teacherTimetable'].includes(n[0]));
+const __v161BaseDashboard=dashboardPage;
+dashboardPage=async function(options={}){
+ const base=await __v161BaseDashboard(options);if(profile?.role!=='teacher')return base;
+ let self='';try{self=await v160TeacherSelfPage(options)}catch(e){self=`<div class="notice danger">${esc(e?.message||'تعذر تحميل بيانات المعلم')}</div>`}
+ return base+self;
+};
+const __v161BaseMyAssignments=myAssignmentsPage;
+myAssignmentsPage=async function(options={}){
+ const base=await __v161BaseMyAssignments(options);if(profile?.role!=='teacher')return base;
+ let tt='';window.__v161EmbedTimetable=true;try{tt=await teacherTimetablePage(options)}catch(e){tt=`<div class="notice danger">${esc(e?.message||'تعذر تحميل الجدول الأسبوعي')}</div>`}finally{window.__v161EmbedTimetable=false}
+ return base+tt;
+};
 </script>
 
 <div id="reportPreviewOverlay" class="report-preview-overlay" role="dialog" aria-modal="true" aria-label="معاينة التقرير" aria-hidden="true">
