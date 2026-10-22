@@ -1,4 +1,5 @@
 <!doctype html>
+<!-- v155: «بيانات المعلم» لدور المعلم: بيانات المعلم نفسه فقط — شخصية ووظيفية ونصابه في الفصل الحالي (تدريس/إشراف/ريادة/إجمالي/زيادة أو عجز) — مع طباعة/PDF/واتس عبر تقرير teacherSelf. قاعدة البيانات (migration v155_teacher_role_sees_only_own_record) تمنع دور المعلم من رؤية بيانات زملائه. -->
 <!-- v153: + إصلاح انزياح الصفحة على الهاتف: الشريط العلوي صار أعرض من الشاشة بعد زر التثبيت (v152)، فسُمح لاسم المستخدم بالانكماش. -->
 <!-- v153: المعلم في إجازة مجددة يظهر في تقرير «أنصبة المعلمين» وأمام اسمه «إجازة» (النوع والنصاب) وبقية الأعمدة «—»؛ الحساب نفسه في قاعدة البيانات (migrations v153/v154: نصاب 0، لا عجز، لا إشراف). -->
 <!-- v152: تثبيت التطبيق (PWA): manifest.webmanifest + أيقونتا 192/512 من الشعار + service-worker.js بسيط (بلا تخزين؛ الصفحة والبيانات من الشبكة دائمًا) + زر «⬇» في الشريط العلوي يظهر عندما يسمح المتصفح بالتثبيت. -->
@@ -71,7 +72,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#152c43">
-<title>نظام توجيه العلوم — v153</title>
+<title>نظام توجيه العلوم — v155</title>
 <link rel="manifest" href="./manifest.webmanifest">
 <link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png">
 <link rel="apple-touch-icon" href="./icon-192.png">
@@ -2505,6 +2506,7 @@ window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();window.v152
 window.addEventListener('appinstalled',()=>{window.v152InstallPrompt=null;v152SyncInstallBtn()});
 if('serviceWorker' in navigator&&location.protocol!=='file:')window.addEventListener('load',()=>navigator.serviceWorker.register('./service-worker.js').catch(()=>{}));
 const V145_NEWS=[
+ ['v155','للمعلم: شاشة «بيانات المعلم» تعرض بياناته هو فقط كاملة مع نصابه وطباعتها، ولم يعد يرى بيانات زملائه.'],
  ['v153','المعلمون في إجازة مجددة لا يُحسب عليهم عجز ولا نصاب، ويظهرون في التقارير وأمام أسمائهم «إجازة».'],
  ['v152','تثبيت التطبيق: يمكنك الآن تنزيل النظام على الهاتف أو الكمبيوتر من زر «⬇» أعلى الشاشة أو من قائمة المتصفح («تثبيت التطبيق» / «إضافة إلى الشاشة الرئيسية»).'],
  ['v151','الريادة التلقائية صارت لكل معلم دائم ينقص نصابه حصة واحدة (وليس لكبير المعلمين فقط).'],
@@ -7828,6 +7830,47 @@ const __v86BaseTeachersPage=teachersPage;
 teachersPage=async function(options={}){
  return await __v86BaseTeachersPage(options);
 };
+/* v155: «بيانات المعلم» لدور المعلم — بيانات المعلم نفسه فقط (عرض وطباعة).
+   قاعدة البيانات تمنع دور المعلم من رؤية الزملاء (can_access_teacher + teacher_workload_summary). */
+const V155_TEACHER_FIELDS='id,full_name,civil_id,teacher_code,phone,job_title,grade_acquired_date,appointment_date,work_start_date,qualification,qualification_year,specialty,work_type,home_school_id';
+function v155Date(v){const m=String(v||'').match(/^(\d{4})-(\d{2})-(\d{2})/);return m?`${m[3]}/${m[2]}/${m[1]}`:(v?String(v):'—')}
+function v155Val(v){return v===null||v===undefined||String(v).trim()===''?'—':String(v)}
+async function v155LoadSelf(force=false){
+ return cachedRead(`page:teacherSelf:${profile.id}:${activeTerm?.id||'no-term'}`,async signal=>{
+  const [rec,ds]=await Promise.all([
+   abortable(sb.from('teacher_records').select(V155_TEACHER_FIELDS).eq('profile_id',profile.id).eq('active',true).limit(1).maybeSingle(),signal),
+   activeTerm?.id?abortable(sb.rpc('get_reports_dataset',{p_term_id:activeTerm.id}),signal):Promise.resolve({data:null,error:null})]);
+  if(rec.error)throw rec.error;if(ds.error)throw ds.error;
+  const t=rec.data,rows=t?v91ScopeRows(ds.data||{}).filter(r=>String(r.teacher_id||r.id)===String(t.id)):[];
+  return {data:{t,rows},error:null};
+ },{ttl:30000,force});
+}
+function v155Sections({t,rows}){
+ const home=rows.find(r=>r.is_home_school)||rows[0]||{},paid=String(t.work_type||home.work_type||'')==='paid';
+ const n=v=>Number(v)||0,target=home.weekly_target,total=n(home.global_total_counted_periods??home.total_counted_periods);
+ const surplus=n(home.surplus_periods),deficit=n(home.deficit_periods),status=v155Val(home.workload_status);
+ const statusText=paid?'حسب الحصص المسندة':status==='زيادة'&&surplus?`زيادة ${surplus} حصة`:status==='عجز'&&deficit?`عجز ${deficit} حصة`:status;
+ const schools=rows.length>1?rows.map(r=>`${r.scope_school_name}: ${n(r.teaching_periods)} حصة`).join(' — '):'';
+ return [
+  ['البيانات الشخصية',[['الاسم',t.full_name],['الرقم القومي',t.civil_id],['رقم الهاتف',t.phone],['المؤهل الدراسي',t.qualification],['سنة الحصول على المؤهل',t.qualification_year],['التخصص',t.specialty]]],
+  ['البيانات الوظيفية',[['المدرسة',home.home_school_name||home.scope_school_name],['نوع التعاقد',paid?'بالأجر':'ثابت'],['الدرجة الوظيفية',t.job_title],['تاريخ الحصول على الدرجة',v155Date(t.grade_acquired_date)],['تاريخ التعيين',v155Date(t.appointment_date)],['تاريخ استلام العمل',v155Date(t.work_start_date)],['كود المعلم',t.teacher_code]]],
+  ['النصاب — '+(activeTerm?.name||'الفصل الحالي'),[['النصاب القانوني',paid?'—':target],['حصص العلوم',n(home.global_teaching_periods??home.teaching_periods)],['الإشراف',paid?'—':n(home.global_supervision_periods??home.supervision_periods)],['الريادة',paid?'—':n(home.global_leadership_periods??home.leadership_periods)],['الإجمالي المحتسب',total],['الحالة',statusText],...(schools?[['التوزيع على المدارس',schools]]:[])]]
+ ];
+}
+async function v155TeacherSelfPage(options={}){
+ let res;try{res=await v155LoadSelf(!!options.force)}catch(error){return `<div class="notice danger">${esc(error?.message||'تعذر تحميل البيانات')}</div>`}
+ const d=res?.data;
+ if(!d?.t)return `<div class="page-head"><div><h2>بيانات المعلم</h2></div></div><div class="notice warn">لا يوجد سجل معلم مرتبط بحسابك. راجع مشرف المادة أو مدير المدرسة.</div>`;
+ const cards=v155Sections(d).map(([title,items])=>`<div class="card"><h3>${esc(title)}</h3><dl class="v110-facts">${items.map(([k,v])=>`<div><dt>${esc(k)}</dt><dd${k==='رقم الهاتف'||k==='الرقم القومي'?' dir="ltr" style="text-align:right"':''}>${esc(v155Val(v))}</dd></div>`).join('')}</dl></div>`).join('');
+ return `<div class="page-head"><div><h2>بيانات المعلم</h2><p>بياناتك أنت فقط، ونصابك في الفصل الحالي.</p></div><div class="actions"><button type="button" class="btn primary" onclick="openReportById('teacherSelf')">طباعة / PDF</button></div></div><div class="v110-dossier">${cards}</div>`;
+}
+ReportAdapters.teacherSelf={async load(ctx){
+ const res=await v155LoadSelf(),d=res?.data;if(!d?.t)throw new Error('لا يوجد سجل معلم مرتبط بحسابك.');
+ const rows=[];v155Sections(d).forEach(([section,items])=>items.forEach(([k,v])=>rows.push({index:rows.length+1,section,label:k,value:v155Val(v)})));
+ return makeReportSchema({reportId:'teacherSelf',title:'بيانات المعلم — '+v155Val(d.t.full_name),subtitle:'البيانات الشخصية والوظيفية والنصاب في الفصل الحالي',period:ctx.period,summary:[],columns:[reportColumn('section','القسم',1),reportColumn('label','البيان',1.3),reportColumn('value','القيمة',2.4)],rows,totals:[],issuer:ctx.issuer});
+}};
+const __v155BaseTeachersPage=teachersPage;
+teachersPage=async function(options={}){return profile?.role==='teacher'?v155TeacherSelfPage(options):__v155BaseTeachersPage(options)};
 const __v86BaseAssignmentsPage=assignmentsPage;
 assignmentsPage=async function(options={}){
  return await __v86BaseAssignmentsPage(options);
