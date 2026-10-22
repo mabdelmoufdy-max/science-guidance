@@ -1,4 +1,5 @@
 <!doctype html>
+<!-- v163: شاشة «المعلمون» للأدوار متعددة المدارس (مدير النظام، المشرف الأول، منسق المرحلة، الموجّه): تبدأ فارغة عند كل دخول (المدرسة: الكل بلا قائمة)، وتظهر القائمة عند اختيار مدرسة أو الكتابة في البحث أو اختيار فلتر؛ تحت فلتري المرحلة والمدرسة زرّان بعرض الشاشة: «تصدير Excel» (المعلمون المطابقون للفلاتر الحالية) و«تقرير» (نفس معاينة تقرير أنصبة المعلمين)؛ وأُخفي زرا «استيراد Excel/CSV» و«معاينة التقرير» من رأس الشاشة. مدير المدرسة ومشرف المادة بلا تغيير. عرض فقط. -->
 <!-- v162: أداء: «بيانات التقارير» (get_reports_dataset، ~1.6MB) تُحمَّل عبر مُحمِّل واحد مشترك v162ReportsDatasetRaw بمفتاح واحد بدل مفاتيح مختلفة لكل شاشة (الجرس، المعلمون، التقارير، الإحصاءات، مساحة الموجّه، شجرة الموجهين)، فالطلبات المتزامنة تُدمج في طلب واحد، وأي تعديل بيانات يمسحه؛ وجرس التنبيهات ينتظر اكتمال الشاشة؛ والتحديث القسري لا يتكرر خلال 5 ثوانٍ. لا تغيير في البيانات أو الحساب. (مع تحسينات قاعدة البيانات v162: كشوف كل المدارس في تمريرة واحدة، وقواعد الصلاحيات، وعرض الميزانية.) -->
 <!-- v161: المدارس المربوطة (schools.aggregate_with_school_id — مثل «النصر ع بنات صباحي» مع «النصر ع بنات») تُجمع مدرسة واحدة في التقارير والإحصاءات ومصدر بيانات التقارير (v91LoadReportsDataset وصفحتا التقارير والإحصاءات): الفصول والمعلمون والكشوف تُنسب للمدرسة الأساسية، وحصص المعلمة في المدرستين تُجمع في صف واحد. الشاشات اليومية (الفصول، التوزيع، المعلمون، الاعتماد، التنبيهات) تبقى منفصلة لكل فترة. لا تغيير في قواعد الحساب. -->
 <!-- v160: «بيانات المعلم» لدور المعلم: بيانات المعلم نفسه فقط — شخصية ووظيفية ونصابه في الفصل الحالي (تدريس/إشراف/ريادة/إجمالي/زيادة أو عجز) — مع طباعة/PDF/واتس عبر تقرير teacherSelf (رُقّمت v160 لأن v155–v159 مستخدمة). قاعدة البيانات (migration v155_teacher_role_sees_only_own_record) تمنع دور المعلم من رؤية بيانات زملائه. -->
@@ -79,7 +80,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#152c43">
-<title>نظام توجيه العلوم — v162</title>
+<title>نظام توجيه العلوم — v163</title>
 <link rel="manifest" href="./manifest.webmanifest">
 <link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png">
 <link rel="apple-touch-icon" href="./icon-192.png">
@@ -2211,6 +2212,11 @@ td .btn,.report-preview-toolbar .btn,.btn.btn-sm{min-height:var(--ctl-h-sm);padd
 .v158-details{margin-top:10px}
 .v158-details summary{cursor:pointer;font-size:13px;color:#1f4274;font-weight:700}
 @media(max-width:800px){.v158-row{grid-template-columns:minmax(0,1fr) 3em}.v158-row .v158-name{grid-column:1/-1}}
+/* v163: زرّا التصدير والتقرير في شاشة المعلمين، وإخفاء الاستيراد والمعاينة من رأسها */
+.v163-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:10px 0}
+.v163-actions .btn{width:100%}
+.v163-hint{margin:-2px 0 10px;font-size:13px;text-align:center}
+#content[data-v163-teachers="1"] .page-head [data-bulk-import],#content[data-v163-teachers="1"] .page-head .report-preview-open-btn{display:none!important}
 </style>
 </head>
 <body>
@@ -2555,6 +2561,7 @@ window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();window.v152
 window.addEventListener('appinstalled',()=>{window.v152InstallPrompt=null;v152SyncInstallBtn()});
 if('serviceWorker' in navigator&&location.protocol!=='file:')window.addEventListener('load',()=>navigator.serviceWorker.register('./service-worker.js').catch(()=>{}));
 const V145_NEWS=[
+ ['v163','شاشة المعلمين تبدأ فارغة: اختر المدرسة أو ابحث، مع زرّي «تصدير Excel» و«تقرير» للفلاتر الحالية.'],
  ['v162','تسريع النظام: تحميل البيانات مرة واحدة بدل عدة مرات، وتسريع قاعدة البيانات في كل الشاشات.'],
  ['v161','المدرسة ذات الفترتين (صباحي ومسائي) تُدخل كمدرستين ولكل فترة مشرفتها، وتُجمع مدرسة واحدة في التقارير والإحصاءات.'],
  ['v160','للمعلم: شاشة «بيانات المعلم» تعرض بياناته هو فقط كاملة مع نصابه وطباعتها، ولم يعد يرى بيانات زملائه.'],
@@ -5293,6 +5300,7 @@ function applyAutoTableFilters(tableId){
  const controls=[...document.querySelectorAll(`[data-filter-table="${tableId}"]`)];
  const state=VirtualTableStore.get(tableId);
  const rows=state?state.allRows:[...table.tBodies[0].rows];
+ const v163G=v163Gate(tableId,controls);
  let total=0,visible=0;const matched=[];
  rows.forEach(row=>{
   const cells=tableRowDataCells(row);
@@ -5307,6 +5315,7 @@ function applyAutoTableFilters(tableId){
     const col=Number(c.dataset.filterCol),txt=filterNormalize(filterCellText(cells[col]));if(!txt.includes(q)){ok=false;break}
    }
   }
+  row.dataset.v163Match=ok?'1':'0';if(ok&&v163G)ok=false;
   row.dataset.filterVisible=ok?'1':'0';
   if(state){if(ok)matched.push(row)}else row.style.display=ok?'':'none';
   if(ok)visible++;
@@ -5314,6 +5323,7 @@ function applyAutoTableFilters(tableId){
  if(state){state.filteredRows=matched;renderVirtualTableWindow(state,true)}
  syncMobileEntityCardsForTable(tableId);
  const counter=document.getElementById(`${tableId}FilterCount`);if(counter)counter.textContent=`${visible}/${total}`;
+ v163SyncHint(v163G);
  syncPreviewButtonFilterLabel();
 }
 
@@ -8598,6 +8608,63 @@ async function v98SetSchool(value){
  if(__activeReportSchema)closeReportPreview();
  __activeReportSchema=null;__activeReportSignature='';resetReportShareCache();
  try{await loadPage();if(currentPage==='schools'&&v98School()===value)window.scrollTo({top:0,left:0,behavior:'instant'})}catch(error){moneySafeError(error)}
+}
+
+/* v163: شاشة المعلمين للأدوار متعددة المدارس: تبدأ فارغة، وتظهر القائمة باختيار مدرسة أو بالبحث/التصفية؛
+   وزرّا «تصدير Excel» و«تقرير» يعملان على الفلاتر الحالية. عرض فقط. */
+function v163TeachersMode(){return currentPage==='teachers'&&!!profile&&!['school_manager','senior_teacher','teacher'].includes(profile.role)}
+function v163Gate(tableId,controls){
+ if(!v163TeachersMode()||v98School())return false;
+ if(tableId!==document.querySelector('#content table.table')?.id)return false;
+ return !(controls||[]).some(c=>filterNormalize(c.value));
+}
+function v163SyncHint(gate){const h=document.getElementById('v163Hint');if(h)h.hidden=!gate}
+let __v163LastPage='';
+const __v163BaseRenderPage=v97RenderPage;
+v97RenderPage=async function(renderPage,options){
+ if(v163TeachersMode()&&__v163LastPage!=='teachers'){
+  const key=v97StageKey();v98SchoolSelections.delete(key);
+  if(profile.role==='supervisor')v142SupervisorAllKeys.add(key);
+ }
+ __v163LastPage=currentPage;
+ return __v163BaseRenderPage(renderPage,options);
+};
+function v163InstallTeachersUi(){
+ const c=document.getElementById('content');if(!c)return;
+ if(!v163TeachersMode()){c.removeAttribute('data-v163-teachers');return}
+ c.setAttribute('data-v163-teachers','1');
+ if(c.querySelector('#v163Actions'))return;
+ const box=document.createElement('div');box.id='v163Actions';box.className='v163-actions no-print';
+ box.innerHTML='<button type="button" class="btn primary" onclick="v163ExportTeachers()">تصدير Excel</button><button type="button" class="btn primary" onclick="openReportPreview()">تقرير</button>';
+ const hint=document.createElement('div');hint.id='v163Hint';hint.className='muted v163-hint no-print';
+ hint.textContent='اختر المدرسة أو اكتب في البحث لعرض المعلمين. زرّا «تصدير Excel» و«تقرير» يعملان على الفلاتر الحالية حتى دون عرض القائمة.';
+ const bar=c.querySelector('#v97StageBar');if(bar)bar.after(box);else c.prepend(box);
+ box.after(hint);
+ const t=c.querySelector('table.table');if(t?.id)applyAutoTableFilters(t.id);else v163SyncHint(false);
+}
+const __v163BaseLoadPage=loadPage;
+loadPage=async function(force=false){
+ const result=await __v163BaseLoadPage(force);
+ try{v163InstallTeachersUi()}catch(_){}
+ return result;
+};
+function v163ExportTeachers(){
+ const t=document.querySelector('#content table.table');if(!t||!t.tBodies?.length)return toast('لا توجد بيانات للتصدير.');
+ const st=VirtualTableStore.get(t.id),all=st?st.allRows:[...t.tBodies[0].rows];
+ const rows=all.filter(r=>r.dataset.v163Match==='1'&&(c=>c.length&&!c.some(x=>x.hasAttribute('colspan')))(tableRowDataCells(r)));
+ if(!rows.length)return toast('لا يوجد معلمون مطابقون للفلاتر الحالية.');
+ const heads=[...(t.tHead?.rows?.[0]?.cells||[])].map(h=>h.textContent.trim());
+ const keep=heads.map((h,i)=>h&&h!=='إدارة'?i:-1).filter(i=>i>=0);
+ const out=[keep.map(i=>heads[i])];
+ const txt=cell=>{if(!cell)return '';if(cell.textContent.trim()==='—')return '—';const k=cell.cloneNode(true);k.querySelectorAll('.cell-sub,div,small,br').forEach(e=>e.before(' — '));return k.textContent.replace(/\s+/g,' ').replace(/^(\s*—\s*)+/,'').replace(/(\s*—\s*){2,}/g,' — ').trim()};
+ rows.forEach(r=>{const cells=tableRowDataCells(r);out.push(keep.map(i=>txt(cells[i])))});
+ out.push([]);out.push([reportIssuerText()]);
+ const csv='\ufeff'+out.map(r=>r.map(v=>`"${String(v??'').replaceAll('"','""')}"`).join(',')).join('\n');
+ const school=(v98SchoolDirectories.get(v97StageKey())||[]).find(x=>String(x.id)===v98School())?.name||'';
+ const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8'}));
+ a.download=`المعلمون${v97Stage()?' - '+v97Stage():''}${school?' - '+school:''}.csv`;document.body.appendChild(a);a.click();
+ setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},1000);
+ toast(`تم تصدير ${rows.length} معلم.`);
 }
 
 /* v102: individual and combined school timetable printing. */
