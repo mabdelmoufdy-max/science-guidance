@@ -1,5 +1,5 @@
 <!doctype html>
-<!-- v166: شاشة «جدول المعلم»: فلترة المرحلة ← المدرسة ← المعلم؛ وخيار «كل معلمي المدرسة» (يُختار تلقائيًا عند اختيار مدرسة لمن يدير الجداول) يعرض جداول كل المعلمين في جدول واحد: لكل يوم صفوف بأسماء المعلمين وأعمدة الحصص وفي الخانة الفصل (وحصص المدرسة الأخرى للمنتدب). اختيار معلم بعينه يعرض جدوله للتعديل كما كان. دور المعلم بلا تغيير. عرض فقط. -->
+<!-- v166: شاشة «جدول المعلم»: فلترة المرحلة ← المدرسة ← المعلم؛ وخيار «كل معلمي المدرسة» (يُختار تلقائيًا عند اختيار مدرسة لمن يدير الجداول) يعرض جداول كل المعلمين في جدول واحد: لكل يوم صفوف بأسماء المعلمين الذين لهم حصص في ذلك اليوم فقط، وعمود معلم عريض وأعمدة حصص ضيقة، وفي الخانة الفصل (وحصص المدرسة الأخرى للمنتدب). اختيار معلم بعينه يعرض جدوله للتعديل كما كان. دور المعلم بلا تغيير. عرض فقط. -->
 <!-- v165: دمج للنشر: v161–v164 من هذه المحادثة (تجميع المدارس المربوطة، تسريع تحميل البيانات، شاشة المعلمين تبدأ فارغة مع تصدير/تقرير، التقارير والإحصائيات بالفلاتر ثم المعاينة) + تعديل محادثة أخرى رقمه هناك v161: قائمة دور المعلم: حُذفت «بيانات المعلم» و«تقاريري» و«جدولي الأسبوعي»؛ بيانات المعلم (v160) داخل «بياناتي»، والجدول الأسبوعي داخل «حصصي وفصولي» (العلَم __v161EmbedTimetable). -->
 <!-- v164: شاشتا «التقارير» و«الإحصائيات»: صفحة التقرير تعرض الفلاتر وعدد النتائج فقط (بلا جدول ولا بطاقات مؤشرات)، وزر «عرض النتائج» صار «معاينة التقرير للطباعة» يفتح التقرير مباشرة في وضع الطباعة A4 بالفلاتر المختارة؛ وأُخفي الشريط السفلي (معاينة/طباعة/مشاركة) لأن نافذة المعاينة فيها هذه الأزرار. التعديل من شاشة «المعلمون». لا تغيير في التقارير أو أعمدتها. -->
 <!-- v163: شاشة «المعلمون» للأدوار متعددة المدارس (مدير النظام، المشرف الأول، منسق المرحلة، الموجّه): تبدأ فارغة عند كل دخول (المدرسة: الكل بلا قائمة)، وتظهر القائمة عند اختيار مدرسة أو الكتابة في البحث أو اختيار فلتر؛ تحت فلتري المرحلة والمدرسة زرّان بعرض الشاشة: «تصدير Excel» (المعلمون المطابقون للفلاتر الحالية) و«تقرير» (نفس معاينة تقرير أنصبة المعلمين)؛ وأُخفي زرا «استيراد Excel/CSV» و«معاينة التقرير» من رأس الشاشة. مدير المدرسة ومشرف المادة بلا تغيير. عرض فقط. -->
@@ -2223,7 +2223,10 @@ td .btn,.report-preview-toolbar .btn,.btn.btn-sm{min-height:var(--ctl-h-sm);padd
 /* v164: إخفاء الشريط السفلي في صفحة التقرير (المعاينة فيها الطباعة والمشاركة) */
 .statistics-fixed-actions{display:none!important}
 /* v166: الجدول المجمّع لمعلمي المدرسة */
-.v166-school-grid .v166-teacher{white-space:nowrap;text-align:start}
+.v166-school-grid tbody th.v166-teacher,.v166-school-grid thead th:nth-child(2){width:230px!important;min-width:230px!important;max-width:230px!important;right:58px!important;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-align:start}
+.v166-school-grid thead th:nth-child(2){position:sticky;top:0;z-index:3}
+.v166-school-grid td,.v166-school-grid thead th:nth-child(n+3){width:64px!important;min-width:64px!important;max-width:64px!important;text-align:center}
+.v166-school-grid td.v166-empty{width:auto!important;max-width:none!important;text-align:start}
 .v166-school-grid .v166-day{white-space:nowrap;vertical-align:middle}
 .v166-school-grid tr.v166-day-start>*{border-top:2px solid var(--primary,#1f4274)}
 </style>
@@ -8732,10 +8735,13 @@ function v166SchoolGrid(){
  const otherMap=new Set((ws.other_school_slots||[]).map(s=>`${s.teacher_id}:${s.weekday}:${s.period_number}`));
  const P=Number(ws.config.periods_per_day)||0;let body='',placed=0;
  const required=(ws.assignments||[]).filter(a=>teachers.some(t=>String(t.teacher_id||t.id)===String(a.teacher_id))).reduce((n,a)=>n+(Number(a.weekly_periods)||0),0);
+ const hasDay=(t,day)=>{const id=String(t.teacher_id||t.id);for(let p=1;p<=P;p++){const k=`${id}:${day}:${p}`;if(slotMap.has(k)||otherMap.has(k))return true}return false};
  for(const day of ws.config.operating_days){
-  teachers.forEach((t,i)=>{
+  const dayTeachers=teachers.filter(t=>hasDay(t,day));
+  if(!dayTeachers.length){body+=`<tr class="v166-day-start"><th scope="row" class="v166-day">${V101_DAY_NAMES[day]}</th><td colspan="${P+1}" class="v166-empty muted">لا توجد حصص مسجلة</td></tr>`;continue}
+  dayTeachers.forEach((t,i)=>{
    const id=String(t.teacher_id||t.id);
-   body+=`<tr class="${i===0?'v166-day-start':''}">${i===0?`<th scope="rowgroup" rowspan="${teachers.length}" class="v166-day">${V101_DAY_NAMES[day]}</th>`:''}<th scope="row" class="v166-teacher">${esc(t.full_name||'—')}${isPaidTeacher(t)?' <small class="muted">(بالأجر)</small>':''}</th>`;
+   body+=`<tr class="${i===0?'v166-day-start':''}">${i===0?`<th scope="rowgroup" rowspan="${dayTeachers.length}" class="v166-day">${V101_DAY_NAMES[day]}</th>`:''}<th scope="row" class="v166-teacher">${esc(t.full_name||'—')}${isPaidTeacher(t)?' <small class="muted">(بالأجر)</small>':''}</th>`;
    for(let p=1;p<=P;p++){
     const key=`${id}:${day}:${p}`,slot=slotMap.get(key),a=slot?assignments.get(slot.assignment_id):null;
     if(a)placed++;
