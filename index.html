@@ -1,4 +1,6 @@
 <!doctype html>
+<!-- v167: آلية الجدول المجمّع (v166) في كل عروض جدول المدرسة: (1) تقرير الطباعة «الجدول الأسبوعي لمعلمي المدرسة»: لكل يوم المعلمون الذين لهم حصص فيه فقط، والأعمدة اليوم ← المعلم (عريض) ← الحصص (ضيقة) والخانة الفصل مختصرًا، و«مدرسة أخرى» للمنتدب، ويوم بلا حصص سطر واحد؛ (2) «جدول المدرسة المسجل» في ملف المدرسة بنفس شكل جدول المعلم المجمّع بدل خانات بأسماء المعلمين. عرض فقط. -->
+<!-- v166: شاشة «جدول المعلم»: فلترة المرحلة ← المدرسة ← المعلم؛ وخيار «كل معلمي المدرسة» (يُختار تلقائيًا عند اختيار مدرسة لمن يدير الجداول) يعرض جداول كل المعلمين في جدول واحد: لكل يوم صفوف بأسماء المعلمين الذين لهم حصص في ذلك اليوم فقط، وعمود معلم عريض وأعمدة حصص ضيقة، وفي الخانة الفصل (وحصص المدرسة الأخرى للمنتدب). اختيار معلم بعينه يعرض جدوله للتعديل كما كان. دور المعلم بلا تغيير. عرض فقط. -->
 <!-- v165: دمج للنشر: v161–v164 من هذه المحادثة (تجميع المدارس المربوطة، تسريع تحميل البيانات، شاشة المعلمين تبدأ فارغة مع تصدير/تقرير، التقارير والإحصائيات بالفلاتر ثم المعاينة) + تعديل محادثة أخرى رقمه هناك v161: قائمة دور المعلم: حُذفت «بيانات المعلم» و«تقاريري» و«جدولي الأسبوعي»؛ بيانات المعلم (v160) داخل «بياناتي»، والجدول الأسبوعي داخل «حصصي وفصولي» (العلَم __v161EmbedTimetable). -->
 <!-- v164: شاشتا «التقارير» و«الإحصائيات»: صفحة التقرير تعرض الفلاتر وعدد النتائج فقط (بلا جدول ولا بطاقات مؤشرات)، وزر «عرض النتائج» صار «معاينة التقرير للطباعة» يفتح التقرير مباشرة في وضع الطباعة A4 بالفلاتر المختارة؛ وأُخفي الشريط السفلي (معاينة/طباعة/مشاركة) لأن نافذة المعاينة فيها هذه الأزرار. التعديل من شاشة «المعلمون». لا تغيير في التقارير أو أعمدتها. -->
 <!-- v163: شاشة «المعلمون» للأدوار متعددة المدارس (مدير النظام، المشرف الأول، منسق المرحلة، الموجّه): تبدأ فارغة عند كل دخول (المدرسة: الكل بلا قائمة)، وتظهر القائمة عند اختيار مدرسة أو الكتابة في البحث أو اختيار فلتر؛ تحت فلتري المرحلة والمدرسة زرّان بعرض الشاشة: «تصدير Excel» (المعلمون المطابقون للفلاتر الحالية) و«تقرير» (نفس معاينة تقرير أنصبة المعلمين)؛ وأُخفي زرا «استيراد Excel/CSV» و«معاينة التقرير» من رأس الشاشة. مدير المدرسة ومشرف المادة بلا تغيير. عرض فقط. -->
@@ -82,7 +84,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#152c43">
-<title>نظام توجيه العلوم — v165</title>
+<title>نظام توجيه العلوم — v167</title>
 <link rel="manifest" href="./manifest.webmanifest">
 <link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png">
 <link rel="apple-touch-icon" href="./icon-192.png">
@@ -2221,6 +2223,13 @@ td .btn,.report-preview-toolbar .btn,.btn.btn-sm{min-height:var(--ctl-h-sm);padd
 #content[data-v163-teachers="1"] .page-head [data-bulk-import],#content[data-v163-teachers="1"] .page-head .report-preview-open-btn{display:none!important}
 /* v164: إخفاء الشريط السفلي في صفحة التقرير (المعاينة فيها الطباعة والمشاركة) */
 .statistics-fixed-actions{display:none!important}
+/* v166: الجدول المجمّع لمعلمي المدرسة */
+.v166-school-grid tbody th.v166-teacher,.v166-school-grid thead th:nth-child(2){width:230px!important;min-width:230px!important;max-width:230px!important;right:58px!important;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-align:start}
+.v166-school-grid thead th:nth-child(2){position:sticky;top:0;z-index:3}
+.v166-school-grid td,.v166-school-grid thead th:nth-child(n+3){width:64px!important;min-width:64px!important;max-width:64px!important;text-align:center}
+.v166-school-grid td.v166-empty{width:auto!important;max-width:none!important;text-align:start}
+.v166-school-grid .v166-day{white-space:nowrap;vertical-align:middle}
+.v166-school-grid tr.v166-day-start>*{border-top:2px solid var(--primary,#1f4274)}
 </style>
 </head>
 <body>
@@ -2565,6 +2574,8 @@ window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();window.v152
 window.addEventListener('appinstalled',()=>{window.v152InstallPrompt=null;v152SyncInstallBtn()});
 if('serviceWorker' in navigator&&location.protocol!=='file:')window.addEventListener('load',()=>navigator.serviceWorker.register('./service-worker.js').catch(()=>{}));
 const V145_NEWS=[
+ ['v167','الجدول المجمّع (المعلم في أيام حصصه فقط) في طباعة جداول المعلمين وفي ملف المدرسة.'],
+ ['v166','جدول المعلم: فلترة بالمرحلة ثم المدرسة ثم المعلم، وعرض جداول كل معلمي المدرسة في جدول واحد.'],
  ['v165','للمعلم: بياناتك في «بياناتي»، وجدولك الأسبوعي داخل «حصصي وفصولي»، وحُذفت التبويبات المكررة.'],
  ['v164','التقارير والإحصائيات: اختر الفلاتر ثم «معاينة التقرير للطباعة» مباشرة، مع عدد النتائج.'],
  ['v163','شاشة المعلمين تبدأ فارغة: اختر المدرسة أو ابحث، مع زرّي «تصدير Excel» و«تقرير» للفلاتر الحالية.'],
@@ -8686,25 +8697,67 @@ async function teacherTimetablePage({signal}={}){
  if(!activeTerm?.id)return '<div class="notice">لا توجد فترة دراسية نشطة.</div>';
  const context=v101Context();
  const schoolsResult=await abortable(sb.from('schools').select('id,name,stage').order('name'),signal);if(schoolsResult.error)throw schoolsResult.error;
- const schools=schoolsResult.data||[];if(!schools.length)return '<div class="notice">لا توجد مدارس متاحة لعرض الجدول.</div>';
+ const allSchools=schoolsResult.data||[];if(!allSchools.length)return '<div class="notice">لا توجد مدارس متاحة لعرض الجدول.</div>';
+ const v166Stages=[...new Set(allSchools.map(s=>s.stage).filter(Boolean))];if(v166Stage&&!v166Stages.includes(v166Stage))v166Stage='';
+ const schools=v166Stage?allSchools.filter(s=>s.stage===v166Stage):allSchools;
  if(!schools.some(s=>s.id===v101SchoolId))v101SchoolId=schools[0].id;
  const selectedSchool=v101SchoolId;
  const {data,error}=await abortable(sb.rpc('get_teacher_timetable_workspace',{p_school_id:selectedSchool,p_term_id:activeTerm.id}),signal);if(error)throw error;
  if(context!==v101Context()||signal?.aborted||(currentPage!=='teacherTimetable'&&!window.__v161EmbedTimetable))return '';
  if(!data.can_manage)data.teachers=(data.teachers||[]).filter(t=>String(t.profile_id||'')===String(profile.id));
  v101Timetable={...data,school:schools.find(s=>s.id===selectedSchool),context};
- if(!data.teachers?.some(t=>String(t.teacher_id||t.id)===v101TeacherId))v101TeacherId=String(data.teachers?.[0]?.teacher_id||data.teachers?.[0]?.id||'');
+ const v166CanAll=!!data.can_manage&&(data.teachers||[]).length>1;
+ if(v101TeacherId==='__all__'&&!v166CanAll)v101TeacherId='';
+ if(v101TeacherId!=='__all__'&&!data.teachers?.some(t=>String(t.teacher_id||t.id)===v101TeacherId))v101TeacherId=v166CanAll?'__all__':String(data.teachers?.[0]?.teacher_id||data.teachers?.[0]?.id||'');
  v101SetDraft();v101SettingsDirty=false;
  const cfg=data.config,canManage=data.can_manage;
  return `<div class="page-head"><div><h2>${canManage?'جدول المعلم الأسبوعي':'جدولي الأسبوعي'}</h2><p>الأيام والحصص الفعلية من الفصول المسندة للمعلم خلال الأسبوع.</p></div><div class="actions">${v102CanPrintSchool()?'<button type="button" class="btn primary" onclick="v102PrintSchoolTimetable()">معاينة وطباعة معلمي المدرسة</button>':''}<button type="button" class="btn secondary" onclick="v101ReloadTimetable()">تحديث</button></div></div>
- <div class="card"><div class="form-grid"><div class="field"><label for="v101SchoolSelect">المدرسة</label><select id="v101SchoolSelect" onchange="v101ChangeSchool(this.value)">${schools.map(s=>`<option value="${s.id}" ${s.id===selectedSchool?'selected':''}>${esc(s.name)} — ${esc(s.stage)}</option>`).join('')}</select></div>
- <div class="field"><label for="v101TeacherSelect">المعلم</label><select id="v101TeacherSelect" onchange="v101ChangeTeacher(this.value)" ${!data.teachers?.length?'disabled':''}>${(data.teachers||[]).map(t=>`<option value="${t.teacher_id||t.id}" ${String(t.teacher_id||t.id)===v101TeacherId?'selected':''}>${esc(t.full_name)}${isPaidTeacher(t)?' (بالأجر)':''}</option>`).join('')||'<option>لا يوجد معلمون</option>'}</select></div></div></div>
+ <div class="card"><div class="form-grid">${v166Stages.length>1&&canManage?`<div class="field"><label for="v166StageSelect">المرحلة</label><select id="v166StageSelect" onchange="v166ChangeStage(this.value)"><option value="">الكل</option>${v166Stages.map(st=>`<option value="${esc(st)}" ${st===v166Stage?'selected':''}>${esc(st)}</option>`).join('')}</select></div>`:''}<div class="field"><label for="v101SchoolSelect">المدرسة</label><select id="v101SchoolSelect" onchange="v101ChangeSchool(this.value)">${schools.map(s=>`<option value="${s.id}" ${s.id===selectedSchool?'selected':''}>${esc(s.name)} — ${esc(s.stage)}</option>`).join('')}</select></div>
+ <div class="field"><label for="v101TeacherSelect">المعلم</label><select id="v101TeacherSelect" onchange="v101ChangeTeacher(this.value)" ${!data.teachers?.length?'disabled':''}>${v166CanAll?`<option value="__all__" ${v101TeacherId==='__all__'?'selected':''}>كل معلمي المدرسة (جدول مجمّع)</option>`:''}${(data.teachers||[]).map(t=>`<option value="${t.teacher_id||t.id}" ${String(t.teacher_id||t.id)===v101TeacherId?'selected':''}>${esc(t.full_name)}${isPaidTeacher(t)?' (بالأجر)':''}</option>`).join('')||'<option>لا يوجد معلمون</option>'}</select></div></div></div>
  <div class="card"><h3>أيام الدراسة وحصص المدرسة</h3><div class="form-grid"><div class="field"><label for="v101WeekMode">أيام الدراسة</label><select id="v101WeekMode" onchange="v101SettingsDirty=true" ${canManage?'':'disabled'}><option value="sunday" ${cfg.operating_days.includes(6)?'':'selected'}>من الأحد إلى الخميس</option><option value="saturday" ${cfg.operating_days.includes(6)?'selected':''}>من السبت إلى الخميس</option></select></div><div class="field"><label for="v101PeriodCount">عدد الحصص في اليوم</label><input id="v101PeriodCount" type="number" min="1" max="12" step="1" value="${cfg.periods_per_day}" oninput="v101SettingsDirty=true" ${canManage?'':'disabled'}></div></div>
  ${canManage?`<div class="actions"><button type="button" class="btn secondary" onclick="v101SaveSettings(this)">حفظ إعدادات المدرسة</button></div><small class="muted">تطبق الإعدادات على جميع معلمي المدرسة في الفصل الدراسي الحالي.</small>`:''}
  ${Number(cfg.revision)===0?'<div class="notice warn">إعدادات المدرسة لم تُحفظ بعد. المعروض مبدئيًا: الأحد إلى الخميس، ٧ حصص في اليوم.</div>':''}</div>
  <section id="v101TeacherArea">${v101TeacherArea()}</section>`;
 }
+/* v166: فلتر المرحلة، وجدول مجمّع لكل معلمي المدرسة (عرض فقط). */
+let v166Stage='';
+async function v166ChangeStage(value){
+ if(v101Saving)return;
+ if(!v101ConfirmDiscard()){const el=document.getElementById('v166StageSelect');if(el)el.value=v166Stage;return}
+ v166Stage=String(value||'');v101SchoolId='';v101TeacherId='';v101Dirty=false;v101SettingsDirty=false;
+ await v101ReloadTimetable(false);
+}
+function v166Short(a){const subj=a.subject_name&&a.subject_name!=='علوم'?' '+a.subject_name:'';return (a.class_name||v101AssignmentLabel(a))+subj}
+function v166SchoolGrid(){
+ const ws=v101Timetable;
+ const teachers=[...(ws.teachers||[])].sort((a,b)=>String(a.full_name||'').localeCompare(String(b.full_name||''),'ar'));
+ if(!teachers.length)return '<div class="notice warn">لا يوجد معلمون في كادر المدرسة.</div>';
+ const assignments=new Map((ws.assignments||[]).map(a=>[a.id,a]));
+ const slotMap=new Map((ws.slots||[]).map(s=>[`${s.teacher_id}:${s.weekday}:${s.period_number}`,s]));
+ const otherMap=new Set((ws.other_school_slots||[]).map(s=>`${s.teacher_id}:${s.weekday}:${s.period_number}`));
+ const P=Number(ws.config.periods_per_day)||0;let body='',placed=0;
+ const required=(ws.assignments||[]).filter(a=>teachers.some(t=>String(t.teacher_id||t.id)===String(a.teacher_id))).reduce((n,a)=>n+(Number(a.weekly_periods)||0),0);
+ const hasDay=(t,day)=>{const id=String(t.teacher_id||t.id);for(let p=1;p<=P;p++){const k=`${id}:${day}:${p}`;if(slotMap.has(k)||otherMap.has(k))return true}return false};
+ for(const day of ws.config.operating_days){
+  const dayTeachers=teachers.filter(t=>hasDay(t,day));
+  if(!dayTeachers.length){body+=`<tr class="v166-day-start"><th scope="row" class="v166-day">${V101_DAY_NAMES[day]}</th><td colspan="${P+1}" class="v166-empty muted">لا توجد حصص مسجلة</td></tr>`;continue}
+  dayTeachers.forEach((t,i)=>{
+   const id=String(t.teacher_id||t.id);
+   body+=`<tr class="${i===0?'v166-day-start':''}">${i===0?`<th scope="rowgroup" rowspan="${dayTeachers.length}" class="v166-day">${V101_DAY_NAMES[day]}</th>`:''}<th scope="row" class="v166-teacher">${esc(t.full_name||'—')}${isPaidTeacher(t)?' <small class="muted">(بالأجر)</small>':''}</th>`;
+   for(let p=1;p<=P;p++){
+    const key=`${id}:${day}:${p}`,slot=slotMap.get(key),a=slot?assignments.get(slot.assignment_id):null;
+    if(a)placed++;
+    body+=`<td>${a?esc(v166Short(a)):(otherMap.has(key)?'<small class="muted">مدرسة أخرى</small>':'')}</td>`;
+   }
+   body+='</tr>';
+  });
+ }
+ return `<div class="card"><div class="card-title"><div><h3>جداول معلمي المدرسة</h3><p class="muted">${esc(ws.school.name)} • ${esc(activeYear?.label||'')} • ${esc(activeTerm?.name||'')} • ${teachers.length} معلم</p></div><span class="badge ${placed>=required&&required>0?'ok':'info'}">في الجدول ${placed} من ${required} حصة</span></div>
+ <div class="v116-scroll-hint">اسحب الجدول يمينًا ويسارًا لعرض باقي الحصص ←</div><div class="v101-grid-scroll"><table class="v101-timetable v166-school-grid"><thead><tr><th scope="col">اليوم</th><th scope="col">المعلم</th>${Array.from({length:P},(_,i)=>`<th scope="col">الحصة ${i+1}</th>`).join('')}</tr></thead><tbody>${body}</tbody></table></div>
+ <div class="actions">${v102CanPrintSchool()?'<button type="button" class="btn primary" onclick="v102PrintSchoolTimetable()">معاينة وطباعة معلمي المدرسة</button>':''}</div><small class="muted">لتعديل جدول معلم اختره من قائمة «المعلم».</small></div>`;
+}
 function v101TeacherArea(){
+ if(v101TeacherId==='__all__'&&v101Timetable)return v166SchoolGrid();
  const ws=v101Timetable;if(!ws||!v101TeacherId)return '<div class="notice">لا يوجد معلم متاح لعرض الجدول.</div>';
  const editable=ws.can_manage&&Number(ws.config.revision)>0;
  const assignments=ws.assignments.filter(a=>a.teacher_id===v101TeacherId);
@@ -8776,19 +8829,25 @@ function v102SchoolTimetableReport(ctx){
  if(!teachers.length)throw new Error('لا يوجد معلمون في كادر المدرسة للطباعة');
  const ids=new Set(teachers.map(t=>String(t.teacher_id||t.id))),assignments=new Map((ws.assignments||[]).map(a=>[a.id,a]));
  const slots=(ws.slots||[]).filter(s=>ids.has(String(s.teacher_id))),slotMap=new Map(slots.map(s=>[`${s.teacher_id}:${s.weekday}:${s.period_number}`,s]));
- const columns=[reportColumn('teacher','المعلم',1.55),reportColumn('day','اليوم',.6)];
- for(let p=1;p<=ws.config.periods_per_day;p++)columns.push(reportColumn('p'+p,'الحصة '+p,1.2));
+ /* v167: لكل يوم المعلمون الذين لهم حصص فيه فقط؛ عمود معلم عريض وحصص ضيقة؛ الخانة الفصل مختصرًا. */
+ const P=Number(ws.config.periods_per_day)||0,otherSet=new Set((ws.other_school_slots||[]).filter(s=>ids.has(String(s.teacher_id))).map(s=>`${s.teacher_id}:${s.weekday}:${s.period_number}`));
+ const columns=[reportColumn('day','اليوم',.6),reportColumn('teacher','المعلم',2.3)];
+ for(let p=1;p<=P;p++)columns.push(reportColumn('p'+p,'الحصة '+p,.75));
  const rows=[];
- for(const day of ws.config.operating_days){for(const t of teachers){
-  const id=String(t.teacher_id||t.id),row={teacher:t.full_name||'—',day:V101_DAY_NAMES[day]};
-  for(let p=1;p<=ws.config.periods_per_day;p++){
-   const slot=slotMap.get(`${id}:${day}:${p}`),a=slot?assignments.get(slot.assignment_id):null;
-   row['p'+p]=a?v101AssignmentLabel(a):'—';
+ for(const day of ws.config.operating_days){
+  const dayTeachers=teachers.filter(t=>{const id=String(t.teacher_id||t.id);for(let p=1;p<=P;p++){const k=`${id}:${day}:${p}`;if(slotMap.has(k)||otherSet.has(k))return true}return false});
+  if(!dayTeachers.length){const row={day:V101_DAY_NAMES[day],teacher:'لا توجد حصص مسجلة'};for(let p=1;p<=P;p++)row['p'+p]='';rows.push(row);continue}
+  for(const t of dayTeachers){
+   const id=String(t.teacher_id||t.id),row={day:V101_DAY_NAMES[day],teacher:t.full_name||'—'};
+   for(let p=1;p<=P;p++){
+    const k=`${id}:${day}:${p}`,slot=slotMap.get(k),a=slot?assignments.get(slot.assignment_id):null;
+    row['p'+p]=a?v166Short(a):(otherSet.has(k)?'مدرسة أخرى':'');
+   }
+   rows.push(row);
   }
-  rows.push(row);
- }}
+ }
  const scheduled=new Set(slots.map(s=>s.teacher_id)).size,required=(ws.assignments||[]).filter(a=>ids.has(String(a.teacher_id))).reduce((n,a)=>n+Number(a.weekly_periods||0),0);
- return makeReportSchema({reportId:'schoolTeacherTimetable',title:'الجدول الأسبوعي لمعلمي المدرسة',subtitle:`${ws.school.name} — جميع معلمي كادر المدرسة — علامة (—) تعني عدم وجود حصة مسجلة في هذه المدرسة`,period:ctx.period,issuer:ctx.issuer,columns,rows,
+ return makeReportSchema({reportId:'schoolTeacherTimetable',title:'الجدول الأسبوعي لمعلمي المدرسة',subtitle:`${ws.school.name} — يظهر المعلم في الأيام التي له فيها حصص فقط — الخانة الفارغة: لا حصة مسجلة، و«مدرسة أخرى»: حصة المنتدب في مدرسته الأخرى`,period:ctx.period,issuer:ctx.issuer,columns,rows,
  summary:[reportMetric('معلمو المدرسة',teachers.length),reportMetric('معلمون بحصص مجدولة',scheduled),reportMetric('الحصص المجدولة',slots.length),reportMetric('حصص الإسناد',required),reportMetric('أيام الدراسة',ws.config.operating_days.length)],approval:{enabled:false}});
 }
 ReportAdapters.schoolTeacherTimetable={async load(ctx){return v102SchoolTimetableReport(ctx)}};
@@ -9192,6 +9251,24 @@ function v110SlotText(d,slot){
  const a=d.assignmentMap.get(String(slot.assignment_id));
  return `${v110ClassName(a)} — ${a.subject_name||'علوم'} — ${v110TeacherName(d,slot.teacher_id)}`;
 }
+/* v167: جدول المدرسة في ملف المدرسة بشكل الجدول المجمّع (المعلم في أيام حصصه فقط). */
+function v167DossierGrid(d){
+ const days=Array.isArray(d.config.operating_days)?d.config.operating_days:[0,1,2,3,4];
+ const P=Math.max(1,Math.min(12,reportNumber(d.config.periods_per_day)||7));
+ const slotMap=new Map(d.slots.map(s=>[`${s.teacher_id}:${Number(s.weekday)}:${Number(s.period_number)}`,s]));
+ const ids=[...new Set(d.slots.map(s=>String(s.teacher_id)))].sort((a,b)=>v110TeacherName(d,a).localeCompare(v110TeacherName(d,b),'ar'));
+ let body='';
+ for(const day of days){
+  const dayIds=ids.filter(id=>{for(let p=1;p<=P;p++)if(slotMap.has(`${id}:${Number(day)}:${p}`))return true;return false});
+  if(!dayIds.length){body+=`<tr class="v166-day-start"><th scope="row" class="v166-day">${esc(V101_DAY_NAMES[day]||String(day))}</th><td colspan="${P+1}" class="v166-empty muted">لا توجد حصص مسجلة</td></tr>`;continue}
+  dayIds.forEach((id,i)=>{
+   body+=`<tr class="${i===0?'v166-day-start':''}">${i===0?`<th scope="rowgroup" rowspan="${dayIds.length}" class="v166-day">${esc(V101_DAY_NAMES[day]||String(day))}</th>`:''}<th scope="row" class="v166-teacher">${esc(v110TeacherName(d,id))}</th>`;
+   for(let p=1;p<=P;p++){const s=slotMap.get(`${id}:${Number(day)}:${p}`),a=s?d.assignmentMap.get(String(s.assignment_id)):null;body+=`<td>${a?esc(v166Short(a)):''}</td>`}
+   body+='</tr>';
+  });
+ }
+ return `<div class="v116-scroll-hint">اسحب الجدول يمينًا ويسارًا لعرض باقي الحصص ←</div><div class="v101-grid-scroll"><table class="v101-timetable v166-school-grid"><thead><tr><th scope="col">اليوم</th><th scope="col">المعلم</th>${Array.from({length:P},(_,i)=>`<th scope="col">الحصة ${i+1}</th>`).join('')}</tr></thead><tbody>${body}</tbody></table></div>`;
+}
 function v110ScheduleRows(d){
  if(!d.slots.length)return [];
  const days=Array.isArray(d.config.operating_days)?d.config.operating_days:[0,1,2,3,4];
@@ -9213,7 +9290,7 @@ function v110DossierMarkup(d){
   d.assignments.filter(a=>String(a.class_id)===String(c.id)).map(a=>`${v110TeacherName(d,a.teacher_id)} — ${a.subject_name||'علوم'} (${a.weekly_periods})`).join('\n')||'لم يُسند معلم بعد']);
  const assignmentRows=d.assignments.map(a=>[v110TeacherName(d,a.teacher_id),v110ClassName(a),a.subject_name||'علوم',a.weekly_periods]);
  const referenceRows=d.references.map(e=>[e.display_name,e.source_raw,e.source_kind==='movement'?'كشف الندب الجزئي':'بيان الحصص',e.leave_note||e.duty_note||e.matching_reason||'—']);
- const timetable=schedule.length?v110Table(['اليوم',...Array.from({length:periods},(_,p)=>'الحصة '+(p+1))],schedule.map(r=>[r.day,...Array.from({length:periods},(_,p)=>r['p'+(p+1)])]))
+ const timetable=schedule.length?v167DossierGrid(d)
   :`<div class="notice">${d.can_manage?(reportNumber(d.config.revision)?'إعدادات الجدول محفوظة، ولم تُدخل حصص الجدول بعد.':'لم يُدخل جدول للمدرسة بعد.'):'لا توجد حصص جدول متاحة للعرض لهذا الحساب.'}</div>`;
  return `<div class="v110-dossier">
   <div class="page-head"><div><h2>${esc(d.school.name)}</h2><p>بيان المدرسة الشامل — ${esc([activeYear?.label,activeTerm?.name].filter(Boolean).join(' — '))}</p></div>
@@ -9225,7 +9302,7 @@ function v110DossierMarkup(d){
   <section class="card"><h3>الفصول (${d.classes.length})</h3>${classRows.length?v110Table(['الصف / الفصل','الحصص الأسبوعية','المواد المطلوبة','المعلمون المسندون'],classRows):'<div class="notice">لم تُدخل بيانات تفصيلية للفصول بعد.</div>'}</section>
   ${isAdminV128?`<section class="card"><h3>إدارة الفصول (مدير النظام)</h3><p class="muted">الحذف متاح للفصل الذي لا يوجد عليه معلم مسند ولا حصص جدول. لتعديل حصص المواد استخدم شاشة الفصول.</p>${d.classes.length?`<div class="table-wrap"><table class="table"><thead><tr><th>الصف / الفصل</th><th>المعلمون المسندون</th><th></th></tr></thead><tbody>${d.classes.map(c=>{const n=d.assignments.filter(a=>String(a.class_id)===String(c.id)).length;return `<tr><td><b>${esc(v110ClassName(c))}</b></td><td>${n?n+' إسناد':'—'}</td><td>${n?'<span class="muted">مسند — فُك الإسناد أولًا</span>':`<button type="button" class="btn danger" onclick="adminDeleteClass('${esc(String(c.id))}','${id}')">حذف</button>`}</td></tr>`}).join('')}</tbody></table></div>`:'<div class="notice">لا توجد فصول مفصلة لهذه المدرسة.</div>'}</section>`:''}
   <section class="card"><h3>إسناد حصص الفصول</h3>${assignmentRows.length?v110Table(['المعلم','الصف / الفصل','المادة','الحصص الأسبوعية'],assignmentRows):'<div class="notice">لم تُدخل إسنادات حصص للفصول بعد.</div>'}</section>
-  <section class="card"><h3>جدول المدرسة المسجل</h3><p class="muted">يعرض الجدول حصص المعلمين المحفوظة في المدرسة، مع الفصل والمادة واسم المعلم لكل حصة.</p>${timetable}</section>
+  <section class="card"><h3>جدول المدرسة المسجل</h3><p class="muted">لكل يوم المعلمون الذين لهم حصص فيه، وفي كل خانة الفصل.</p>${timetable}</section>
   ${referenceRows.length||d.budgets.length?`<section class="card"><h3>بيان الحصص من الملفات المرفوعة</h3>${d.budgets.map(b=>`<div class="v110-reference-budget"><h4>أرقام بيان المدرسة المرفوع${b.source_row_no?' — الصف '+esc(b.source_row_no):''}</h4>${v110FactsMarkup(v110BudgetFacts(b))}</div>`).join('')}${referenceRows.length?v110Table(['المعلم','النصاب كما ورد','المصدر','ملاحظات'],referenceRows):''}</section>`:''}
  </div>`;
 }
