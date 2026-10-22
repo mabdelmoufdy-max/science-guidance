@@ -1,4 +1,5 @@
 <!doctype html>
+<!-- v157: حُذفت شاشة «الميزانية المرجعية» من قوائم كل الأدوار (المدير، الموجه الأول، منسق المرحلة، الموجه)، وفتح #/budget يحوّل إلى الرئيسية. البيانات باقية في قاعدة البيانات والكود باقٍ دون رابط. تشمل v156. -->
 <!-- v156: نافذة «الإجازات الطويلة والتقرير المالي»: بحث عن المعلم بالاسم أو الرقم القومي (حقل فوق القائمة يصفّيها، ونتيجة واحدة تُختار تلقائيًا). + «الرقم المدني» صار «الرقم القومي» في كل نصوص البرنامج والتقارير (الاستيراد يقبل العنوانين، ورسائل الخادم تُعرض بالاسم الجديد). تشمل v155. -->
 <!-- v155: لوحة قرارات المرحلة لمنسق المرحلة (عرض فقط، في «لوحة منسق المرحلة»): مؤشرات المرحلة، «تحتاج قرارك»، أين العجز (ما يُسد داخليًا وما يحتاج تغطية من الخارج)، مقترح التغطية من الفائض (يُقترح الأحدث في التعيين، لا الأقدم ولا مشرف المادة)، عدالة توزيع الكادر، الموجهون (الاستكمال والاعتماد)، وتقارير A4 منها «تقرير الاجتماع». الحساب من محرك الخطة المعتمد دون تغيير قواعد. -->
 <!-- v153: + إصلاح انزياح الصفحة على الهاتف: الشريط العلوي صار أعرض من الشاشة بعد زر التثبيت (v152)، فسُمح لاسم المستخدم بالانكماش. -->
@@ -73,7 +74,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#152c43">
-<title>نظام توجيه العلوم — v156</title>
+<title>نظام توجيه العلوم — v157</title>
 <link rel="manifest" href="./manifest.webmanifest">
 <link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png">
 <link rel="apple-touch-icon" href="./icon-192.png">
@@ -2512,6 +2513,7 @@ window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();window.v152
 window.addEventListener('appinstalled',()=>{window.v152InstallPrompt=null;v152SyncInstallBtn()});
 if('serviceWorker' in navigator&&location.protocol!=='file:')window.addEventListener('load',()=>navigator.serviceWorker.register('./service-worker.js').catch(()=>{}));
 const V145_NEWS=[
+ ['v157','حُذفت شاشة «الميزانية المرجعية» من القائمة لكل الأدوار.'],
  ['v156','البحث عن المعلم بالاسم أو الرقم القومي في نافذة الإجازات الطويلة، و«الرقم المدني» صار «الرقم القومي» في كل البرنامج.'],
  ['v155','لمنسق المرحلة: «لوحة قرارات المرحلة» عند الدخول — أين العجز، وما يُسد داخل المدرسة، ومقترح تغطية من الفائض (يُنتدب الأحدث في التعيين)، ومتابعة الموجهين، وتقرير اجتماع A4.'],
  ['v153','المعلمون في إجازة مجددة لا يُحسب عليهم عجز ولا نصاب، ويظهرون في التقارير وأمام أسمائهم «إجازة».'],
@@ -2551,7 +2553,7 @@ function renderShell(){
 async function loadPage(force=false){
  const c=document.getElementById('content');if(!c)return;
  if(currentPage==='supervisorMap')currentPage='schools';
- if(currentPage==='studyPlans')currentPage='dashboard';
+ if(currentPage==='studyPlans'||currentPage==='budget')currentPage='dashboard';
  __pageLoadController?.abort();__pageLoadController=new AbortController();const local=__pageLoadController;
  const pages={teacherTimetable:teacherTimetablePage,dashboard:dashboardPage,users:usersPage,supervisors:supervisorsPage,schools:schoolsPage,incoming:incomingDataPage,teachers:teachersPage,classes:classesPage,assignments:assignmentsPage,approval:approvalPage,myAssignments:myAssignmentsPage,workload:workloadPage,budget:budgetPage,completion:dataCompletionPage,alerts:alertsPage,statistics:statisticsPage,reports:reportsPage,announcements:announcementsPage,supervisorHealth:supervisorHealthPage};
  const renderPage=pages[currentPage]||dashboardPage;
@@ -6200,10 +6202,10 @@ if(window.visualViewport)window.visualViewport.addEventListener('resize',()=>{if
 
 /* === الإصدار 2026.08.26.44: الخطط الدراسية + إزالة تكرار عناصر قائمة الموبايل === */
 const NAV={
- admin:[['dashboard','لوحة النظام','▦'],['alerts','التنبيهات','🔔'],['completion','استكمال البيانات','✎'],['users','الحسابات','◌'],['supervisors','الموجهون','◎'],['schools','المدارس','⌂'],['teachers','المعلمون','◉'],['approval','الاعتماد','✓'],['incoming','البيانات الواردة','⇩'],['workload','الأنصبة','Σ'],['budget','الميزانية المرجعية','◫'],['supervisorHealth','فحص شاشة الموجه','⌁'],['statistics','الإحصائيات','◫'],['reports','التقارير','▤']],
- first_supervisor:[['dashboard','لوحة الإدارة','▦'],['alerts','التنبيهات','🔔'],['completion','استكمال البيانات','✎'],['supervisors','الموجهون','◎'],['schools','المدارس','⌂'],['teachers','المعلمون','◉'],['budget','الميزانية المرجعية','◫'],['statistics','الإحصائيات','◫'],['reports','التقارير العامة','▤'],['announcements','الإعلانات','◈']],
- stage_coordinator:[['dashboard','لوحة منسق المرحلة','▦'],['alerts','التنبيهات','🔔'],['completion','استكمال البيانات','✎'],['supervisors','موجهو المرحلة','◎'],['schools','مدارس المرحلة','⌂'],['teachers','معلمو المرحلة','◉'],['budget','الميزانية المرجعية','◫'],['statistics','الإحصائيات','◫'],['reports','تقارير المرحلة','▤']],
- supervisor:[['dashboard','لوحة الموجه','▦'],['alerts','التنبيهات','🔔'],['completion','استكمال البيانات','✎'],['supervisors','بيانات الموجه','◎'],['schools','مدارسي','⌂'],['teachers','معلمو مدارسي','◉'],['approval','الاعتمادات','✓'],['budget','الميزانية المرجعية','◫'],['statistics','الإحصائيات','◫'],['reports','التقارير','▤']],
+ admin:[['dashboard','لوحة النظام','▦'],['alerts','التنبيهات','🔔'],['completion','استكمال البيانات','✎'],['users','الحسابات','◌'],['supervisors','الموجهون','◎'],['schools','المدارس','⌂'],['teachers','المعلمون','◉'],['approval','الاعتماد','✓'],['incoming','البيانات الواردة','⇩'],['workload','الأنصبة','Σ'],['supervisorHealth','فحص شاشة الموجه','⌁'],['statistics','الإحصائيات','◫'],['reports','التقارير','▤']],
+ first_supervisor:[['dashboard','لوحة الإدارة','▦'],['alerts','التنبيهات','🔔'],['completion','استكمال البيانات','✎'],['supervisors','الموجهون','◎'],['schools','المدارس','⌂'],['teachers','المعلمون','◉'],['statistics','الإحصائيات','◫'],['reports','التقارير العامة','▤'],['announcements','الإعلانات','◈']],
+ stage_coordinator:[['dashboard','لوحة منسق المرحلة','▦'],['alerts','التنبيهات','🔔'],['completion','استكمال البيانات','✎'],['supervisors','موجهو المرحلة','◎'],['schools','مدارس المرحلة','⌂'],['teachers','معلمو المرحلة','◉'],['statistics','الإحصائيات','◫'],['reports','تقارير المرحلة','▤']],
+ supervisor:[['dashboard','لوحة الموجه','▦'],['alerts','التنبيهات','🔔'],['completion','استكمال البيانات','✎'],['supervisors','بيانات الموجه','◎'],['schools','مدارسي','⌂'],['teachers','معلمو مدارسي','◉'],['approval','الاعتمادات','✓'],['statistics','الإحصائيات','◫'],['reports','التقارير','▤']],
  school_manager:[['dashboard','لوحة المدرسة','▦'],['alerts','التنبيهات','🔔'],['completion','استكمال البيانات','✎'],['supervisors','موجه المدرسة','◎'],['schools','بيانات المدرسة','⌂'],['teachers','معلمو المدرسة','◉'],['approval','اعتماد البيانات','✓'],['statistics','الإحصائيات','◫'],['reports','تقارير المدرسة','▤']],
  senior_teacher:[['dashboard','لوحة مشرف المادة','▦'],['alerts','التنبيهات','🔔'],['completion','استكمال البيانات','✎'],['supervisors','موجه المدرسة','◎'],['schools','بيانات المدرسة','⌂'],['teachers','إضافة وإدارة المعلمين','◉'],['classes','الفصول','▦'],['assignments','توزيع المعلمين على الفصول','Σ'],['approval','الإرسال للاعتماد','✓'],['statistics','الإحصائيات','◫'],['reports','تقارير المدرسة','▤']],
  teacher:[['dashboard','بياناتي','▦'],['supervisors','موجه المدرسة','◎'],['schools','بيانات المدرسة','⌂'],['teachers','بيانات المعلم','◉'],['myAssignments','حصصي وفصولي','Σ'],['reports','تقاريري','▤']]
@@ -7494,7 +7496,7 @@ mySchool=async function(){
 };
 
 NAV.supervisor=[
- ['dashboard','لوحة المشرف','▦'],['alerts','التنبيهات','🔔'],['completion','استكمال البيانات','✎'],['supervisors','بيانات المشرف','◎'],['schools','مدارسي','⌂'],['teachers','معلمو مدارسي','◉'],['classes','الفصول','▦'],['assignments','توزيع الفصول','Σ'],['approval','الحفظ والاعتماد','✓'],['budget','الميزانية المرجعية','◫'],['statistics','الإحصائيات','◫'],['reports','التقارير','▤']
+ ['dashboard','لوحة المشرف','▦'],['alerts','التنبيهات','🔔'],['completion','استكمال البيانات','✎'],['supervisors','بيانات المشرف','◎'],['schools','مدارسي','⌂'],['teachers','معلمو مدارسي','◉'],['classes','الفصول','▦'],['assignments','توزيع الفصول','Σ'],['approval','الحفظ والاعتماد','✓'],['statistics','الإحصائيات','◫'],['reports','التقارير','▤']
 ];
 
 function supervisorChooseSchoolV75(schoolId,target=currentPage){
