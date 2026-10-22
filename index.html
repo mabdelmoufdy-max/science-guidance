@@ -1,4 +1,9 @@
 <!doctype html>
+<!-- v165: دمج للنشر: v161–v164 من هذه المحادثة (تجميع المدارس المربوطة، تسريع تحميل البيانات، شاشة المعلمين تبدأ فارغة مع تصدير/تقرير، التقارير والإحصائيات بالفلاتر ثم المعاينة) + تعديل محادثة أخرى رقمه هناك v161: قائمة دور المعلم: حُذفت «بيانات المعلم» و«تقاريري» و«جدولي الأسبوعي»؛ بيانات المعلم (v160) داخل «بياناتي»، والجدول الأسبوعي داخل «حصصي وفصولي» (العلَم __v161EmbedTimetable). -->
+<!-- v164: شاشتا «التقارير» و«الإحصائيات»: صفحة التقرير تعرض الفلاتر وعدد النتائج فقط (بلا جدول ولا بطاقات مؤشرات)، وزر «عرض النتائج» صار «معاينة التقرير للطباعة» يفتح التقرير مباشرة في وضع الطباعة A4 بالفلاتر المختارة؛ وأُخفي الشريط السفلي (معاينة/طباعة/مشاركة) لأن نافذة المعاينة فيها هذه الأزرار. التعديل من شاشة «المعلمون». لا تغيير في التقارير أو أعمدتها. -->
+<!-- v163: شاشة «المعلمون» للأدوار متعددة المدارس (مدير النظام، المشرف الأول، منسق المرحلة، الموجّه): تبدأ فارغة عند كل دخول (المدرسة: الكل بلا قائمة)، وتظهر القائمة عند اختيار مدرسة أو الكتابة في البحث أو اختيار فلتر؛ تحت فلتري المرحلة والمدرسة زرّان بعرض الشاشة: «تصدير Excel» (المعلمون المطابقون للفلاتر الحالية) و«تقرير» (نفس معاينة تقرير أنصبة المعلمين)؛ وأُخفي زرا «استيراد Excel/CSV» و«معاينة التقرير» من رأس الشاشة. مدير المدرسة ومشرف المادة بلا تغيير. عرض فقط. -->
+<!-- v162: أداء: «بيانات التقارير» (get_reports_dataset، ~1.6MB) تُحمَّل عبر مُحمِّل واحد مشترك v162ReportsDatasetRaw بمفتاح واحد بدل مفاتيح مختلفة لكل شاشة (الجرس، المعلمون، التقارير، الإحصاءات، مساحة الموجّه، شجرة الموجهين)، فالطلبات المتزامنة تُدمج في طلب واحد، وأي تعديل بيانات يمسحه؛ وجرس التنبيهات ينتظر اكتمال الشاشة؛ والتحديث القسري لا يتكرر خلال 5 ثوانٍ. لا تغيير في البيانات أو الحساب. (مع تحسينات قاعدة البيانات v162: كشوف كل المدارس في تمريرة واحدة، وقواعد الصلاحيات، وعرض الميزانية.) -->
+<!-- v161: المدارس المربوطة (schools.aggregate_with_school_id — مثل «النصر ع بنات صباحي» مع «النصر ع بنات») تُجمع مدرسة واحدة في التقارير والإحصاءات ومصدر بيانات التقارير (v91LoadReportsDataset وصفحتا التقارير والإحصاءات): الفصول والمعلمون والكشوف تُنسب للمدرسة الأساسية، وحصص المعلمة في المدرستين تُجمع في صف واحد. الشاشات اليومية (الفصول، التوزيع، المعلمون، الاعتماد، التنبيهات) تبقى منفصلة لكل فترة. لا تغيير في قواعد الحساب. -->
 <!-- v160: «بيانات المعلم» لدور المعلم: بيانات المعلم نفسه فقط — شخصية ووظيفية ونصابه في الفصل الحالي (تدريس/إشراف/ريادة/إجمالي/زيادة أو عجز) — مع طباعة/PDF/واتس عبر تقرير teacherSelf (رُقّمت v160 لأن v155–v159 مستخدمة). قاعدة البيانات (migration v155_teacher_role_sees_only_own_record) تمنع دور المعلم من رؤية بيانات زملائه. -->
 <!-- v159: شاشة اختيار الدور تعرض الأدوار بترتيب ثابت (مدير النظام، الموجه الأول، منسق المرحلة، الموجه، مدير المدرسة، مشرف المادة، المعلم)، فيأتي «منسق المرحلة» تحت «مدير النظام». تشمل v158. -->
 <!-- v158: لوحة قرارات المرحلة برسوم بيانية: شريط تغطية الحصص (فعلي/يُسد داخليًا/مقترح انتداب/أجر مسند/بلا تغطية)، أعلى 10 مدارس عجزًا، حالة الإرسال للاعتماد، عدالة الكادر، والموجهون (الاستكمال والإرسال)؛ الجداول في «عرض الجدول». + «الأجر المسند» يغطي ما بعد المقترح (عرض فقط؛ العجز قبل الأجر كما هو). تشمل v157. -->
@@ -77,7 +82,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#152c43">
-<title>نظام توجيه العلوم — v160</title>
+<title>نظام توجيه العلوم — v165</title>
 <link rel="manifest" href="./manifest.webmanifest">
 <link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png">
 <link rel="apple-touch-icon" href="./icon-192.png">
@@ -2209,6 +2214,13 @@ td .btn,.report-preview-toolbar .btn,.btn.btn-sm{min-height:var(--ctl-h-sm);padd
 .v158-details{margin-top:10px}
 .v158-details summary{cursor:pointer;font-size:13px;color:#1f4274;font-weight:700}
 @media(max-width:800px){.v158-row{grid-template-columns:minmax(0,1fr) 3em}.v158-row .v158-name{grid-column:1/-1}}
+/* v163: زرّا التصدير والتقرير في شاشة المعلمين، وإخفاء الاستيراد والمعاينة من رأسها */
+.v163-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:10px 0}
+.v163-actions .btn{width:100%}
+.v163-hint{margin:-2px 0 10px;font-size:13px;text-align:center}
+#content[data-v163-teachers="1"] .page-head [data-bulk-import],#content[data-v163-teachers="1"] .page-head .report-preview-open-btn{display:none!important}
+/* v164: إخفاء الشريط السفلي في صفحة التقرير (المعاينة فيها الطباعة والمشاركة) */
+.statistics-fixed-actions{display:none!important}
 </style>
 </head>
 <body>
@@ -2250,6 +2262,17 @@ function abortable(builder,signal){return signal&&typeof builder?.abortSignal===
 function cachedRead(key,loader,options){return AppDataStore.get(key,loader,options)}
 
 function invalidateData(...domains){AppDataStore.invalidate(...domains)}
+/* v162: مُحمِّل واحد مشترك لبيانات التقارير؛ أي إبطال للبيانات يمسحه أيضًا. */
+let __v162DatasetAt=0;
+function v162ReportsDatasetRaw({force=false}={}){
+ if(!activeTerm?.id)return Promise.resolve({data:null,error:new Error('لا توجد فترة دراسية نشطة.')});
+ if(force&&Date.now()-__v162DatasetAt<5000)force=false;
+ return AppDataStore.get(`v162:reports-dataset:${activeTerm.id}`,async signal=>{
+  const r=await abortable(sb.rpc('get_reports_dataset',{p_term_id:activeTerm.id}),signal);
+  if(!r.error)__v162DatasetAt=Date.now();
+  return r;
+ },{ttl:30000,force});
+}
 
 async function refreshCurrentPage({invalidate=[]}={}){
  if(invalidate.length){invalidateData(...invalidate);invalidateData('alerts')}
@@ -2276,7 +2299,7 @@ async function loadSmartAlerts({force=false}={}){
  if(!profile||!activeTerm)return [];
  const key=`alerts:dataset:${activeTerm.id}`;
  return cachedRead(key,async signal=>{
-  const q=abortable(sb.rpc('get_reports_dataset',{p_term_id:activeTerm.id}),signal);const r=await q;if(r.error)throw r.error;
+  const r=await v162ReportsDatasetRaw({force});if(r.error)throw r.error;
   const sr=await sb.from('school_submissions').select('id,school_id,status,submitted_at,updated_at,return_reason').eq('term_id',activeTerm.id);if(sr.error)throw sr.error;
   const ds=r.data||{},h=ds.hierarchy||{};
   const schools=Array.isArray(h.schools)?h.schools:[],scopeTeachers=v91ScopeRows(ds),teachers=v91UniqueGlobalTeachers(scopeTeachers,Array.isArray(h.teachers)?h.teachers:(Array.isArray(ds.teacher_records)?ds.teacher_records:[])),sups=Array.isArray(h.sups)?h.sups:[];
@@ -2485,7 +2508,7 @@ function go(p,options={}){
  appNavRenderStrip();
  const c=document.getElementById('content');if(!c)return renderShell();
  c.innerHTML='<div class="card">جاري تحميل البيانات...</div>';
- loadPage().catch(moneySafeError);refreshAlertBadge().catch(()=>{});
+ loadPage().catch(moneySafeError).finally(()=>refreshAlertBadge().catch(()=>{}));
  requestAnimationFrame(()=>refreshMobileActionBar(document.getElementById('content')));
 }
 function toggleSidebar(){sidebarOpen=!sidebarOpen;document.querySelector('.sidebar')?.classList.toggle('open',sidebarOpen)}
@@ -2542,6 +2565,11 @@ window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();window.v152
 window.addEventListener('appinstalled',()=>{window.v152InstallPrompt=null;v152SyncInstallBtn()});
 if('serviceWorker' in navigator&&location.protocol!=='file:')window.addEventListener('load',()=>navigator.serviceWorker.register('./service-worker.js').catch(()=>{}));
 const V145_NEWS=[
+ ['v165','للمعلم: بياناتك في «بياناتي»، وجدولك الأسبوعي داخل «حصصي وفصولي»، وحُذفت التبويبات المكررة.'],
+ ['v164','التقارير والإحصائيات: اختر الفلاتر ثم «معاينة التقرير للطباعة» مباشرة، مع عدد النتائج.'],
+ ['v163','شاشة المعلمين تبدأ فارغة: اختر المدرسة أو ابحث، مع زرّي «تصدير Excel» و«تقرير» للفلاتر الحالية.'],
+ ['v162','تسريع النظام: تحميل البيانات مرة واحدة بدل عدة مرات، وتسريع قاعدة البيانات في كل الشاشات.'],
+ ['v161','المدرسة ذات الفترتين (صباحي ومسائي) تُدخل كمدرستين ولكل فترة مشرفتها، وتُجمع مدرسة واحدة في التقارير والإحصاءات.'],
  ['v160','للمعلم: شاشة «بيانات المعلم» تعرض بياناته هو فقط كاملة مع نصابه وطباعتها، ولم يعد يرى بيانات زملائه.'],
  ['v159','في «تبديل الدور» صار «منسق المرحلة» تحت «مدير النظام» مباشرة.'],
  ['v158','لوحة منسق المرحلة صارت برسوم بيانية، وتعرض ما يغطيه الأجر المسند وما يبقى بلا تغطية.'],
@@ -2618,7 +2646,7 @@ async function supervisorWorkspacePage({force=false}={}){
  try{
   const key=`supervisor:workspace:${activeTerm?.id||'none'}`;
   const data=await cachedRead(key,async signal=>{
-   const q=abortable(sb.rpc('get_reports_dataset',{p_term_id:activeTerm.id}),signal);const r=await q;if(r.error)throw r.error;
+   const r=await v162ReportsDatasetRaw({force});if(r.error)throw r.error;
    const h=r.data?.hierarchy||{};
    const submissionsRes=await sb.from('school_submissions').select('id,school_id,status,submitted_at,updated_at,return_reason,row_version,submitted_by,approved_by,approved_at').eq('term_id',activeTerm.id);
    if(submissionsRes.error)throw submissionsRes.error;
@@ -3061,8 +3089,7 @@ async function teachersPage({force=false}={}){
      let q=sb.rpc('get_school_teacher_roster',{p_school_id:scopeSchoolId,p_term_id:activeTerm.id});
      q=abortable(q,signal);return await q;
    }
-   let q=sb.rpc('get_reports_dataset',{p_term_id:activeTerm.id});
-   q=abortable(q,signal);const result=await q;
+   const result=await v162ReportsDatasetRaw({force});
    return result.error?result:{data:v91ScopeRows(result.data),error:null}
  },{ttl:30000,force});
  if(error)return `<div class="error">${esc(error.message)}</div>`;
@@ -4718,7 +4745,7 @@ function statisticsReportDetail(cfg,data){
 }
 async function statisticsPage({force=false}={}){
  try{
-  const {data:sourceData,error}=await cachedRead(`page:reports:dataset:${activeTerm.id}`,async signal=>{const q=abortable(sb.rpc('get_reports_dataset',{p_term_id:activeTerm.id}),signal);return await q;},{ttl:45000,force});
+  const {data:sourceData,error}=await cachedRead(`page:reports:dataset:${activeTerm.id}`,async signal=>{return await v161AggregateResult(await v162ReportsDatasetRaw({force}));},{ttl:45000,force});
   if(error)throw error;
   const data=v97FilterDataset(sourceData);
   if(statisticsSelectedReport){const cfg=STATISTICS_REPORTS[statisticsSelectedReport];if(cfg)return statisticsReportDetail(cfg,data);statisticsSelectedReport='';}
@@ -4743,8 +4770,7 @@ async function reportsPage({force=false}={}){
  const v96PageEpoch=v96SessionEpoch;
  try{
   const {data:sourceData,error}=await cachedRead(`page:reports:dataset:${activeTerm.id}`,async signal=>{
-    const q=abortable(sb.rpc('get_reports_dataset',{p_term_id:activeTerm.id}),signal);
-    return await q;
+    return await v161AggregateResult(await v162ReportsDatasetRaw({force}));
   },{ttl:45000,force});
   if(error)throw error;
   const data=v97FilterDataset(sourceData);
@@ -5280,6 +5306,7 @@ function applyAutoTableFilters(tableId){
  const controls=[...document.querySelectorAll(`[data-filter-table="${tableId}"]`)];
  const state=VirtualTableStore.get(tableId);
  const rows=state?state.allRows:[...table.tBodies[0].rows];
+ const v163G=v163Gate(tableId,controls);
  let total=0,visible=0;const matched=[];
  rows.forEach(row=>{
   const cells=tableRowDataCells(row);
@@ -5294,6 +5321,7 @@ function applyAutoTableFilters(tableId){
     const col=Number(c.dataset.filterCol),txt=filterNormalize(filterCellText(cells[col]));if(!txt.includes(q)){ok=false;break}
    }
   }
+  row.dataset.v163Match=ok?'1':'0';if(ok&&v163G)ok=false;
   row.dataset.filterVisible=ok?'1':'0';
   if(state){if(ok)matched.push(row)}else row.style.display=ok?'':'none';
   if(ok)visible++;
@@ -5301,6 +5329,7 @@ function applyAutoTableFilters(tableId){
  if(state){state.filteredRows=matched;renderVirtualTableWindow(state,true)}
  syncMobileEntityCardsForTable(tableId);
  const counter=document.getElementById(`${tableId}FilterCount`);if(counter)counter.textContent=`${visible}/${total}`;
+ v163SyncHint(v163G);
  syncPreviewButtonFilterLabel();
 }
 
@@ -5997,6 +6026,8 @@ const AppDataStore=(()=>{
  function stats(){return {cache:cache.size,inflight:inflight.size}}
  return {get,invalidate,clear,stats};
 })();
+/* v162: أي إبطال للبيانات يمسح بيانات التقارير المشتركة أيضًا. */
+{const __v162Invalidate=AppDataStore.invalidate;AppDataStore.invalidate=function(...patterns){__v162Invalidate(...patterns);if(patterns.length){__v162Invalidate('v162:reports-dataset');__v162DatasetAt=0}}}
 
 
 
@@ -8008,11 +8039,83 @@ function v91JobRank(title){
  return ({'كبير معلمين':6,'معلم خبير':5,'معلم أول (أ)':4,'معلم أول':3,'معلم':2,'معلم مساعد':1})[key]||0;
 }
 function v91DateRank(value){return value?String(value):'9999-12-31'}
+/* v161: تجميع المدارس المربوطة (المدرسة الفرعية/الفترة → الأساسية) في بيانات التقارير والإحصاءات فقط. */
+const V161_SCHOOL_KEYS=[['school_id',null],['home_school_id','home_school_name'],['scope_school_id','scope_school_name'],['delegation_from_school_id','delegation_from_school_name'],['delegation_to_school_id','delegation_to_school_name'],['from_school_id',null],['to_school_id',null]];
+const V161_SUM_KEYS=['teaching_periods','leadership_periods','supervision_periods','total_counted_periods','scope_teaching_periods','scope_leadership_periods','scope_supervision_periods','scope_total_counted_periods'];
+async function v161AggregateLinks(){
+ try{
+  return await cachedRead('v161:aggregate-links',async signal=>{
+   const r=await abortable(sb.from('schools').select('id,aggregate_with_school_id').not('aggregate_with_school_id','is',null),signal);
+   return r.error?new Map():new Map((r.data||[]).map(x=>[String(x.id),String(x.aggregate_with_school_id)]));
+  },{ttl:300000});
+ }catch(_){return new Map()}
+}
+function v161RemapRow(row,links,names){
+ if(!row||typeof row!=='object'||Array.isArray(row))return row;
+ let out=row;
+ for(const [k,nk] of V161_SCHOOL_KEYS){
+  const id=row[k]==null?'':String(row[k]);
+  if(id&&links.has(id)){
+   if(out===row)out={...row};
+   const p=links.get(id);out[k]=p;
+   if(nk&&names.has(p))out[nk]=names.get(p);
+  }
+ }
+ return out;
+}
+function v161MergeRosters(rows){
+ const map=new Map(),order=[];
+ for(const r of rows||[]){
+  const key=`${String(r?.teacher_id||r?.id||'')}:${String(r?.scope_school_id||'')}`;
+  if(!map.has(key)){map.set(key,r);order.push(key);continue}
+  const a=map.get(key),m={...a};
+  for(const k of V161_SUM_KEYS)if(a[k]!=null||r[k]!=null)m[k]=(Number(a[k])||0)+(Number(r[k])||0);
+  m.is_senior_teacher=!!(a.is_senior_teacher||r.is_senior_teacher);
+  if('scope_is_senior_teacher' in a||'scope_is_senior_teacher' in r)m.scope_is_senior_teacher=!!(a.scope_is_senior_teacher||r.scope_is_senior_teacher);
+  map.set(key,m);
+ }
+ return order.map(key=>{
+  const r=map.get(key),internal=r.delegation_from_school_id&&r.delegation_to_school_id&&String(r.delegation_from_school_id)===String(r.delegation_to_school_id);
+  if(!internal)return r;
+  return {...r,school_relation:String(r.home_school_id||'')===String(r.scope_school_id||'')?'home':r.school_relation,is_home_school:String(r.home_school_id||'')===String(r.scope_school_id||''),delegation_type:null,delegation_from_school_id:null,delegation_to_school_id:null,delegation_from_school_name:null,delegation_to_school_name:null};
+ });
+}
+function v161MergeSchools(list,links){
+ if(!Array.isArray(list))return list;
+ const extra=new Map();
+ list.forEach(x=>{const id=String(x?.id||'');if(links.has(id)){const p=links.get(id);extra.set(p,(extra.get(p)||0)+(Number(x.class_count)||0))}});
+ return list.filter(x=>!links.has(String(x?.id||''))).map(x=>extra.has(String(x.id))?{...x,class_count:(Number(x.class_count)||0)+extra.get(String(x.id))}:x);
+}
+function v161ApplyLinks(data,links){
+ if(!data||typeof data!=='object'||!links?.size)return data;
+ const allSchools=data.hierarchy?.schools||data.schools||[];
+ const names=new Map((allSchools||[]).map(x=>[String(x.id),x.name]));
+ const remapList=list=>Array.isArray(list)?list.map(r=>v161RemapRow(r,links,names)):list;
+ const out={};
+ for(const [k,v] of Object.entries(data)){
+  if(k==='hierarchy'&&v&&typeof v==='object'){
+   const h={};for(const [hk,hv] of Object.entries(v))h[hk]=hk==='schools'?v161MergeSchools(hv,links):remapList(hv);
+   out[k]=h;
+  }else if(k==='schools')out[k]=v161MergeSchools(v,links);
+  else if(k==='school_teacher_rosters')out[k]=v161MergeRosters(remapList(v));
+  else out[k]=remapList(v);
+ }
+ return out;
+}
+async function v161AggregateDataset(data){
+ const links=await v161AggregateLinks();
+ return v161ApplyLinks(data,links);
+}
+async function v161AggregateResult(result){
+ if(!result||result.error||!result.data)return result;
+ return {...result,data:await v161AggregateDataset(result.data)};
+}
+
 async function v91LoadReportsDataset({force=false}={}){
  if(!activeTerm?.id)throw new Error('لا توجد فترة دراسية نشطة.');
  return cachedRead(`page:reports:dataset:v91:${activeTerm.id}`,async signal=>{
-  const q=abortable(sb.rpc('get_reports_dataset',{p_term_id:activeTerm.id}),signal),{data,error}=await q;
-  if(error)throw error;return data||{};
+  const {data,error}=await v162ReportsDatasetRaw({force});
+  if(error)throw error;return await v161AggregateDataset(data||{});
  },{ttl:30000,force});
 }
 
@@ -8249,7 +8352,7 @@ supervisorHealthPage=async function(){
 };
 
 loadSupervisorHierarchy=async function({force=false}={}){
- return cachedRead(`hierarchy:v91:${activeTerm?.id||'none'}`,async signal=>{const q=abortable(sb.rpc('get_reports_dataset',{p_term_id:activeTerm.id}),signal),{data,error}=await q;if(error)throw error;const h=data?.hierarchy||{},sups=Array.isArray(h.sups)?h.sups:[],schools=Array.isArray(h.schools)?h.schools:[],scopes=v91ScopeRows(data),teachers=v91UniqueGlobalTeachers(scopes,h.teachers||[]),bySchool={},bySup={};(scopes.length?scopes:teachers).forEach(t=>{const id=scopes.length?v91ScopeSchoolId(t):String(t.home_school_id||'');if(id)(bySchool[id] ||= []).push(t)});schools.forEach(sc=>{const k=sc.supervisor_id||'__unassigned__';(bySup[k] ||= []).push(sc)});return {sups,schools,teachers,bySchool,bySup}}, {ttl:45000,force});
+ return cachedRead(`hierarchy:v91:${activeTerm?.id||'none'}`,async signal=>{const {data,error}=await v162ReportsDatasetRaw({force});if(error)throw error;const h=data?.hierarchy||{},sups=Array.isArray(h.sups)?h.sups:[],schools=Array.isArray(h.schools)?h.schools:[],scopes=v91ScopeRows(data),teachers=v91UniqueGlobalTeachers(scopes,h.teachers||[]),bySchool={},bySup={};(scopes.length?scopes:teachers).forEach(t=>{const id=scopes.length?v91ScopeSchoolId(t):String(t.home_school_id||'');if(id)(bySchool[id] ||= []).push(t)});schools.forEach(sc=>{const k=sc.supervisor_id||'__unassigned__';(bySup[k] ||= []).push(sc)});return {sups,schools,teachers,bySchool,bySup}}, {ttl:45000,force});
 };
 
 const __v84BaseLoadPage=loadPage;
@@ -8513,6 +8616,63 @@ async function v98SetSchool(value){
  try{await loadPage();if(currentPage==='schools'&&v98School()===value)window.scrollTo({top:0,left:0,behavior:'instant'})}catch(error){moneySafeError(error)}
 }
 
+/* v163: شاشة المعلمين للأدوار متعددة المدارس: تبدأ فارغة، وتظهر القائمة باختيار مدرسة أو بالبحث/التصفية؛
+   وزرّا «تصدير Excel» و«تقرير» يعملان على الفلاتر الحالية. عرض فقط. */
+function v163TeachersMode(){return currentPage==='teachers'&&!!profile&&!['school_manager','senior_teacher','teacher'].includes(profile.role)}
+function v163Gate(tableId,controls){
+ if(!v163TeachersMode()||v98School())return false;
+ if(tableId!==document.querySelector('#content table.table')?.id)return false;
+ return !(controls||[]).some(c=>filterNormalize(c.value));
+}
+function v163SyncHint(gate){const h=document.getElementById('v163Hint');if(h)h.hidden=!gate}
+let __v163LastPage='';
+const __v163BaseRenderPage=v97RenderPage;
+v97RenderPage=async function(renderPage,options){
+ if(v163TeachersMode()&&__v163LastPage!=='teachers'){
+  const key=v97StageKey();v98SchoolSelections.delete(key);
+  if(profile.role==='supervisor')v142SupervisorAllKeys.add(key);
+ }
+ __v163LastPage=currentPage;
+ return __v163BaseRenderPage(renderPage,options);
+};
+function v163InstallTeachersUi(){
+ const c=document.getElementById('content');if(!c)return;
+ if(!v163TeachersMode()){c.removeAttribute('data-v163-teachers');return}
+ c.setAttribute('data-v163-teachers','1');
+ if(c.querySelector('#v163Actions'))return;
+ const box=document.createElement('div');box.id='v163Actions';box.className='v163-actions no-print';
+ box.innerHTML='<button type="button" class="btn primary" onclick="v163ExportTeachers()">تصدير Excel</button><button type="button" class="btn primary" onclick="openReportPreview()">تقرير</button>';
+ const hint=document.createElement('div');hint.id='v163Hint';hint.className='muted v163-hint no-print';
+ hint.textContent='اختر المدرسة أو اكتب في البحث لعرض المعلمين. زرّا «تصدير Excel» و«تقرير» يعملان على الفلاتر الحالية حتى دون عرض القائمة.';
+ const bar=c.querySelector('#v97StageBar');if(bar)bar.after(box);else c.prepend(box);
+ box.after(hint);
+ const t=c.querySelector('table.table');if(t?.id)applyAutoTableFilters(t.id);else v163SyncHint(false);
+}
+const __v163BaseLoadPage=loadPage;
+loadPage=async function(force=false){
+ const result=await __v163BaseLoadPage(force);
+ try{v163InstallTeachersUi()}catch(_){}
+ return result;
+};
+function v163ExportTeachers(){
+ const t=document.querySelector('#content table.table');if(!t||!t.tBodies?.length)return toast('لا توجد بيانات للتصدير.');
+ const st=VirtualTableStore.get(t.id),all=st?st.allRows:[...t.tBodies[0].rows];
+ const rows=all.filter(r=>r.dataset.v163Match==='1'&&(c=>c.length&&!c.some(x=>x.hasAttribute('colspan')))(tableRowDataCells(r)));
+ if(!rows.length)return toast('لا يوجد معلمون مطابقون للفلاتر الحالية.');
+ const heads=[...(t.tHead?.rows?.[0]?.cells||[])].map(h=>h.textContent.trim());
+ const keep=heads.map((h,i)=>h&&h!=='إدارة'?i:-1).filter(i=>i>=0);
+ const out=[keep.map(i=>heads[i])];
+ const txt=cell=>{if(!cell)return '';if(cell.textContent.trim()==='—')return '—';const k=cell.cloneNode(true);k.querySelectorAll('.cell-sub,div,small,br').forEach(e=>e.before(' — '));return k.textContent.replace(/\s+/g,' ').replace(/^(\s*—\s*)+/,'').replace(/(\s*—\s*){2,}/g,' — ').trim()};
+ rows.forEach(r=>{const cells=tableRowDataCells(r);out.push(keep.map(i=>txt(cells[i])))});
+ out.push([]);out.push([reportIssuerText()]);
+ const csv='\ufeff'+out.map(r=>r.map(v=>`"${String(v??'').replaceAll('"','""')}"`).join(',')).join('\n');
+ const school=(v98SchoolDirectories.get(v97StageKey())||[]).find(x=>String(x.id)===v98School())?.name||'';
+ const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8'}));
+ a.download=`المعلمون${v97Stage()?' - '+v97Stage():''}${school?' - '+school:''}.csv`;document.body.appendChild(a);a.click();
+ setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},1000);
+ toast(`تم تصدير ${rows.length} معلم.`);
+}
+
 /* v102: individual and combined school timetable printing. */
 const V101_DAY_NAMES={0:'الأحد',1:'الاثنين',2:'الثلاثاء',3:'الأربعاء',4:'الخميس',6:'السبت'};
 let v101Timetable=null,v101SchoolId='',v101TeacherId='',v101Draft=new Map(),v101Dirty=false,v101SettingsDirty=false,v101Saving=false;
@@ -8530,7 +8690,7 @@ async function teacherTimetablePage({signal}={}){
  if(!schools.some(s=>s.id===v101SchoolId))v101SchoolId=schools[0].id;
  const selectedSchool=v101SchoolId;
  const {data,error}=await abortable(sb.rpc('get_teacher_timetable_workspace',{p_school_id:selectedSchool,p_term_id:activeTerm.id}),signal);if(error)throw error;
- if(context!==v101Context()||signal?.aborted||currentPage!=='teacherTimetable')return '';
+ if(context!==v101Context()||signal?.aborted||(currentPage!=='teacherTimetable'&&!window.__v161EmbedTimetable))return '';
  if(!data.can_manage)data.teachers=(data.teachers||[]).filter(t=>String(t.profile_id||'')===String(profile.id));
  v101Timetable={...data,school:schools.find(s=>s.id===selectedSchool),context};
  if(!data.teachers?.some(t=>String(t.teacher_id||t.id)===v101TeacherId))v101TeacherId=String(data.teachers?.[0]?.teacher_id||data.teachers?.[0]?.id||'');
@@ -8723,7 +8883,8 @@ async function v103LoadAnnualRows(){
  if(!activeYear?.id)throw new Error('لا يوجد عام دراسي محدد.');
  const yearId=activeYear.id;
  const [data,annual]=await Promise.all([v91LoadReportsDataset(),v103ReadAll(()=>sb.from('teacher_financial_guidance').select('teacher_id,civil_id,full_name,work_type,job_title,home_school_id,school_name,stage,academic_year_id,leave_type,leave_status,leave_status_source,decision_number,decision_date,effective_from,effective_to,legal_quota').eq('academic_year_id',yearId).order('teacher_id'))]);
- return {data,annual};
+ const links=await v161AggregateLinks(),names=new Map((data?.hierarchy?.schools||[]).map(x=>[String(x.id),x.name]));
+ return {data,annual:links.size?(annual||[]).map(r=>{const o=v161RemapRow(r,links,names);return o!==r&&names.has(String(o.home_school_id))?{...o,school_name:names.get(String(o.home_school_id))}:o}):annual};
 }
 function v103LeaveStatus(row){return financialLeaveStatusText(row,false)}
 ReportAdapters.teacherLeaves={async load(ctx){
@@ -9248,7 +9409,7 @@ async function v117RenderInlineResults(){
 function v117InjectResults(html){
  const marker='<div class="statistics-fixed-actions no-print">';
  if(!String(html).includes(marker))return html;
- return String(html).replace(marker,'<div class="actions v117-run"><button type="button" class="btn primary" onclick="v117RenderInlineResults()">عرض النتائج</button></div><div id="v117Results"></div>'+marker);
+ return String(html).replace(marker,'<div class="actions v117-run"><button type="button" class="btn primary" onclick="v164OpenPreview()">معاينة التقرير للطباعة</button></div><div id="v117Results"></div>'+marker);
 }
 function v117AutoRun(){let n=0;const tick=()=>{if(document.getElementById('v117Results')){v117RenderInlineResults();return}if(++n<40)requestAnimationFrame(tick)};requestAnimationFrame(tick)}
 const v117BaseV103Detail=v103Detail;
@@ -9313,6 +9474,18 @@ v117RenderInlineResults=async function(){
  table.innerHTML=`<thead><tr><th></th>${cols.map(c=>`<th>${c[1]}</th>`).join('')}</tr></thead><tbody>${rows.map(r=>`<tr><td>${v120CanEditTeacher(r)?`<button type="button" class="btn secondary v118-edit-btn" onclick="editTeacherForm('${esc(r.teacherId)}')">تعديل</button>`:'<small class="muted">منتدب</small>'}</td>${cols.map(c=>`<td>${esc(reportCellValue(r[c[0]]))}</td>`).join('')}</tr>`).join('')}</tbody>`;
  box.querySelectorAll('small.muted').forEach(s=>{if(s.textContent.includes('يعرض هذا الملخص'))s.remove()});
 };
+
+/* v164: صفحة التقرير تعرض الفلاتر وعدد النتائج فقط؛ الزر يفتح المعاينة للطباعة مباشرة. */
+v117RenderInlineResults=async function(){
+ await v120BaseInline();
+ const box=document.getElementById('v117Results');if(!box)return;
+ box.querySelectorAll('.v117-table-wrap,.v117-kpis').forEach(e=>e.remove());
+ box.querySelectorAll('small.muted').forEach(e=>{if(e.textContent.includes('يعرض هذا الملخص'))e.remove()});
+};
+function v164OpenPreview(){
+ const cfg=v117Cfg();if(!cfg)return toast('اختر التقرير أولًا.');
+ return cfg.purpose?v103RunReport('preview'):statisticsRunReport('preview');
+}
 
 /* v122: تقرير الانتداب يكمل اسم المدرسة الأخرى وحصص المعلم فيها من الدالة get_delegation_periods (للموجه فما فوق). */
 const v122BaseDelegations=ReportAdapters.teacherDelegations.load;
@@ -9652,6 +9825,21 @@ function v156LeaveSearch(q){
 }
 const v156BaseLeaveEdit=financialLeaveEdit;
 financialLeaveEdit=function(teacherId){const s=document.getElementById('financialLeaveSearch');if(s?.value){s.value='';v156LeaveSearch('')}return v156BaseLeaveEdit(teacherId)};
+
+/* v165 (من v161 في محادثة أخرى): قائمة دور المعلم المختصرة — بياناتي (+ بيانات المعلم) وحصصي وفصولي (+ الجدول الأسبوعي). */
+NAV.teacher=NAV.teacher.filter(n=>!['teachers','reports','teacherTimetable'].includes(n[0]));
+const __v161BaseDashboard=dashboardPage;
+dashboardPage=async function(options={}){
+ const base=await __v161BaseDashboard(options);if(profile?.role!=='teacher')return base;
+ let self='';try{self=await v160TeacherSelfPage(options)}catch(e){self=`<div class="notice danger">${esc(e?.message||'تعذر تحميل بيانات المعلم')}</div>`}
+ return base+self;
+};
+const __v161BaseMyAssignments=myAssignmentsPage;
+myAssignmentsPage=async function(options={}){
+ const base=await __v161BaseMyAssignments(options);if(profile?.role!=='teacher')return base;
+ let tt='';window.__v161EmbedTimetable=true;try{tt=await teacherTimetablePage(options)}catch(e){tt=`<div class="notice danger">${esc(e?.message||'تعذر تحميل الجدول الأسبوعي')}</div>`}finally{window.__v161EmbedTimetable=false}
+ return base+tt;
+};
 </script>
 
 <div id="reportPreviewOverlay" class="report-preview-overlay" role="dialog" aria-modal="true" aria-label="معاينة التقرير" aria-hidden="true">
