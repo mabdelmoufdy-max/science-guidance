@@ -1,4 +1,5 @@
 <!doctype html>
+<!-- v158: لوحة قرارات المرحلة برسوم بيانية: شريط تغطية الحصص (فعلي/يُسد داخليًا/مقترح انتداب/أجر مسند/بلا تغطية)، أعلى 10 مدارس عجزًا، حالة الإرسال للاعتماد، عدالة الكادر، والموجهون (الاستكمال والإرسال)؛ الجداول في «عرض الجدول». + «الأجر المسند» يغطي ما بعد المقترح (عرض فقط؛ العجز قبل الأجر كما هو). تشمل v157. -->
 <!-- v157: حُذفت شاشة «الميزانية المرجعية» من قوائم كل الأدوار (المدير، الموجه الأول، منسق المرحلة، الموجه)، وفتح #/budget يحوّل إلى الرئيسية. البيانات باقية في قاعدة البيانات والكود باقٍ دون رابط. تشمل v156. -->
 <!-- v156: نافذة «الإجازات الطويلة والتقرير المالي»: بحث عن المعلم بالاسم أو الرقم القومي (حقل فوق القائمة يصفّيها، ونتيجة واحدة تُختار تلقائيًا). + «الرقم المدني» صار «الرقم القومي» في كل نصوص البرنامج والتقارير (الاستيراد يقبل العنوانين، ورسائل الخادم تُعرض بالاسم الجديد). تشمل v155. -->
 <!-- v155: لوحة قرارات المرحلة لمنسق المرحلة (عرض فقط، في «لوحة منسق المرحلة»): مؤشرات المرحلة، «تحتاج قرارك»، أين العجز (ما يُسد داخليًا وما يحتاج تغطية من الخارج)، مقترح التغطية من الفائض (يُقترح الأحدث في التعيين، لا الأقدم ولا مشرف المادة)، عدالة توزيع الكادر، الموجهون (الاستكمال والاعتماد)، وتقارير A4 منها «تقرير الاجتماع». الحساب من محرك الخطة المعتمد دون تغيير قواعد. -->
@@ -74,7 +75,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#152c43">
-<title>نظام توجيه العلوم — v157</title>
+<title>نظام توجيه العلوم — v158</title>
 <link rel="manifest" href="./manifest.webmanifest">
 <link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png">
 <link rel="apple-touch-icon" href="./icon-192.png">
@@ -2181,6 +2182,31 @@ td .btn,.report-preview-toolbar .btn,.btn.btn-sm{min-height:var(--ctl-h-sm);padd
 .v155-board .v155-actions{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
 .v155-board .v124-kpi b{overflow-wrap:anywhere}
 .v156-leave-search+select{margin-top:6px}
+/* v158: رسوم لوحة قرارات المرحلة */
+.v158-chart{margin-top:12px}
+.v158-chart h4{margin:0 0 8px;font-size:14px}
+.v158-bar{display:flex;gap:2px;height:14px;border-radius:4px;overflow:hidden;background:#fff}
+.v158-big .v158-bar{height:24px}
+.v158-seg{min-width:3px;height:100%}
+.v158-legend{display:flex;flex-wrap:wrap;gap:6px 14px;margin-top:8px;font-size:13px;color:#334155}
+.v158-key{display:inline-flex;align-items:center;gap:6px}
+.v158-key i{width:10px;height:10px;border-radius:3px;display:inline-block;flex:none}
+.v158-key small{color:#64748b}
+.v158-rows{display:flex;flex-direction:column;gap:10px}
+.v158-row{display:grid;grid-template-columns:minmax(120px,30%) minmax(0,1fr) 3.5em;gap:10px;align-items:center}
+.v158-name{display:flex;flex-direction:column;min-width:0}
+.v158-name b{font-size:13px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.v158-name small{font-size:12px;color:#64748b}
+.v158-track{background:#f1f5f9;border-radius:4px;min-width:0}
+.v158-val{font-size:13px;text-align:left}
+.v158-pair{display:flex;flex-direction:column;gap:4px;min-width:0}
+.v158-meter{display:flex;align-items:center;gap:6px}
+.v158-m-track{flex:1;display:block;height:8px;border-radius:4px;background:#f1f5f9;overflow:hidden}
+.v158-m-track span{display:block;height:100%;border-radius:4px}
+.v158-meter small{font-size:12px;color:#64748b;min-width:3em}
+.v158-details{margin-top:10px}
+.v158-details summary{cursor:pointer;font-size:13px;color:#1f4274;font-weight:700}
+@media(max-width:800px){.v158-row{grid-template-columns:minmax(0,1fr) 3em}.v158-row .v158-name{grid-column:1/-1}}
 </style>
 </head>
 <body>
@@ -2513,6 +2539,7 @@ window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();window.v152
 window.addEventListener('appinstalled',()=>{window.v152InstallPrompt=null;v152SyncInstallBtn()});
 if('serviceWorker' in navigator&&location.protocol!=='file:')window.addEventListener('load',()=>navigator.serviceWorker.register('./service-worker.js').catch(()=>{}));
 const V145_NEWS=[
+ ['v158','لوحة منسق المرحلة صارت برسوم بيانية، وتعرض ما يغطيه الأجر المسند وما يبقى بلا تغطية.'],
  ['v157','حُذفت شاشة «الميزانية المرجعية» من القائمة لكل الأدوار.'],
  ['v156','البحث عن المعلم بالاسم أو الرقم القومي في نافذة الإجازات الطويلة، و«الرقم المدني» صار «الرقم القومي» في كل البرنامج.'],
  ['v155','لمنسق المرحلة: «لوحة قرارات المرحلة» عند الدخول — أين العجز، وما يُسد داخل المدرسة، ومقترح تغطية من الفائض (يُنتدب الأحدث في التعيين)، ومتابعة الموجهين، وتقرير اجتماع A4.'],
@@ -9474,6 +9501,8 @@ function v155BuildModel(data,subs){
   }
   r.after=Math.max(left,0);
  });
+ // v158: الأجر المسند يغطي ما يبقى بعد المقترح (عرض فقط؛ العجز نفسه قبل الأجر كما هو معتمد).
+ rows.forEach(r=>{const rest=Math.max(r.need-r.proposed,0);r.paidCov=Math.min(r.paid,rest);r.uncovered=rest-r.paidCov;r.covered=Math.min(r.actual,r.required)});
  const ready=rows.filter(r=>r.ready),sum=(list,k)=>list.reduce((n,r)=>n+reportNumber(r[k]),0);
  // اتساق توزيع الكادر مع الاحتياج (R²): قرب طاقة الكادر في كل مدرسة من حصصها المطلوبة.
  const pts=ready.filter(r=>r.required>0).map(r=>[r.required,r.actual+r.spareRaw]);let r2=null;
@@ -9484,8 +9513,13 @@ function v155BuildModel(data,subs){
   return {name:g.name,schools:n,ready:readyN,approved:c('approved'),pending:c('pending_manager_approval'),returned:c('returned_for_edit'),notSent:n-sent-c('returned_for_edit'),deficit:sum(g.rows,'deficit'),need:sum(g.rows,'need'),score,tone:c('returned_for_edit')||score<.6?'danger':score<.9?'warn':'ok'}}).sort((a,b)=>a.score-b.score||b.need-a.need);
  const teachers=new Set(scopes.map(v91TeacherId)),leave=new Set(scopes.filter(t=>String(t.workload_status||'')==='إجازة').map(v91TeacherId)),partial=new Set(scopes.filter(t=>String(t.school_relation||'').includes('partial')).map(v91TeacherId));
  return {stage,stages,rows,ready,proposals,supervisors,r2,bands,teachers:teachers.size,leave:leave.size,partial:partial.size,
-  totals:{schools:rows.length,ready:ready.length,classes:sum(rows,'classes'),required:sum(ready,'required'),actual:sum(ready,'actual'),deficit:sum(ready,'deficit'),internal:sum(ready,'internal'),need:sum(ready,'need'),spare:sum(ready,'spare'),surplus:sum(ready,'surplus'),paid:sum(ready,'paid'),proposed:sum(ready,'proposed'),after:sum(ready,'after')}};
+  totals:{schools:rows.length,ready:ready.length,classes:sum(rows,'classes'),required:sum(ready,'required'),actual:sum(ready,'actual'),deficit:sum(ready,'deficit'),internal:sum(ready,'internal'),need:sum(ready,'need'),spare:sum(ready,'spare'),surplus:sum(ready,'surplus'),paid:sum(ready,'paid'),proposed:sum(ready,'proposed'),after:sum(ready,'after'),paidCov:sum(ready,'paidCov'),uncovered:sum(ready,'uncovered'),covered:sum(ready,'covered')}};
 }
+/* v158: رسوم اللوحة (HTML/CSS بلا مكتبات). الألوان متحقق منها لعمى الألوان؛ كل لون له اسم ورقم في المفتاح. */
+const V158_C={actual:'#2a78d6',internal:'#1baf7a',proposed:'#6250d6',paid:'#eda100',uncovered:'#d03b3b'};
+function v158Bar(parts,total,width=100){const t=Math.max(reportNumber(total),0);return `<div class="v158-bar" style="width:${Math.max(Math.min(width,100),0).toFixed(1)}%">${parts.filter(p=>reportNumber(p.value)>0).map(p=>`<span class="v158-seg" style="flex:${reportNumber(p.value)} 1 0;background:${p.color}" title="${esc(p.label)}: ${reportNumber(p.value)}${t?` (${v155Pct(reportNumber(p.value)/t)})`:''}"></span>`).join('')}</div>`}
+function v158Legend(parts,total){return `<div class="v158-legend">${parts.map(p=>`<span class="v158-key"><i style="background:${p.color}"></i>${esc(p.label)}${p.value==null||!total?'':` <b>${reportNumber(p.value)}</b> <small>${v155Pct(reportNumber(p.value)/total)}</small>`}</span>`).join('')}</div>`}
+function v158Meter(label,ratio,color){const r=Math.max(Math.min(reportNumber(ratio),1),0);return `<div class="v158-meter" title="${esc(label)}: ${v155Pct(r)}"><span class="v158-m-track"><span style="width:${(r*100).toFixed(1)}%;background:${color}"></span></span><small>${v155Pct(r)}</small></div>`}
 function v155Report(kind){return openReportById('v155Stage',{kind,filterState:{search:'',filters:[],active:false,sourcePage:currentPage,reportId:'v155Stage'}})}
 function v155SetStage(v){v155StageSel=String(v||'');loadPage(false)}
 async function v155StageBoard(force){
@@ -9494,7 +9528,7 @@ async function v155StageBoard(force){
  const kpis=[v124Kpi('المدارس المكتملة البيانات',`${t.ready} / ${t.schools}`,t.ready<t.schools?'warn':'ok'),v124Kpi('الفصول',t.classes),v124Kpi('الحصص المطلوبة',t.required),v124Kpi('التدريس الفعلي',t.actual),v124Kpi('العجز',t.deficit,t.deficit>0?'danger':'ok'),v124Kpi('عجز يُسد داخل المدارس',t.internal),v124Kpi('يحتاج تغطية من خارج المدرسة',t.need,t.need>0?'danger':'ok'),v124Kpi('فائض قابل للانتداب',t.spare,'ok')].join('');
  const alerts=[],count=f=>m.rows.filter(f);
  const needRows=count(r=>r.need>0),internalRows=count(r=>r.internal>0),returned=count(r=>r.status==='returned_for_edit'),incomplete=count(r=>!r.ready),noTeacher=count(r=>r.ready&&!r.permanent),seniority=count(r=>r.spare>0&&r.missingDates),notSent=count(r=>['not_started','in_progress'].includes(r.status));
- if(needRows.length)alerts.push({tone:'danger',text:`${needRows.length} مدرسة تحتاج ${t.need} حصة من خارجها؛ مقترح التغطية يغطي ${t.proposed} حصة ويبقى ${t.after} (أجر أو قرار آخر).`,kind:'proposals',btn:'المقترح'});
+ if(needRows.length)alerts.push({tone:'danger',text:`${needRows.length} مدرسة تحتاج ${t.need} حصة من خارجها: مقترح الانتداب يغطي ${t.proposed}، والأجر المسند ${t.paidCov}، ويبقى ${t.uncovered} بلا تغطية.`,kind:'proposals',btn:'المقترح'});
  if(returned.length)alerts.push({tone:'danger',text:`${returned.length} مدرسة ملفها معاد للتعديل.`,kind:'status',btn:'القائمة'});
  if(noTeacher.length)alerts.push({tone:'danger',text:`${noTeacher.length} مدرسة بلا معلم ثابت أو منتدب.`,kind:'deficit',btn:'العجز'});
  if(internalRows.length)alerts.push({tone:'warn',text:`${internalRows.length} مدرسة عجزها ${t.internal} حصة يُسد داخليًا بتوزيع الفصول على معلميها (لهم حصص متبقية).`,kind:'internal',btn:'القائمة'});
@@ -9509,31 +9543,43 @@ async function v155StageBoard(force){
  const supRows=m.supervisors.map(s=>`<tr><td><b>${esc(s.name)}</b></td><td>${s.schools}</td><td>${s.ready}</td><td>${s.approved}</td><td>${s.pending}</td><td>${s.returned}</td><td>${s.need}</td><td><span class="badge ${s.tone}">${s.tone==='ok'?'منضبط':s.tone==='warn'?'يحتاج متابعة':'متأخر'} (${v155Pct(s.score)})</span></td></tr>`).join('');
  const stageSel=m.stages.length>1?`<select aria-label="المرحلة" onchange="v155SetStage(this.value)">${m.stages.map(x=>`<option ${x===m.stage?'selected':''}>${esc(x)}</option>`).join('')}</select>`:'';
  const table=(head,body,empty,cols)=>`<div class="table-wrap"><table class="table no-compact-directory"><thead><tr>${head.map(x=>`<th>${x}</th>`).join('')}</tr></thead><tbody>${body||`<tr><td colspan="${cols}">${empty}</td></tr>`}</tbody></table></div>`;
+ const C=V158_C,cov=[{label:'تدريس فعلي',value:t.covered,color:C.actual},{label:'يُسد داخل المدارس',value:t.internal,color:C.internal},{label:'مقترح انتداب',value:t.proposed,color:C.proposed},{label:'أجر مسند',value:t.paidCov,color:C.paid},{label:'بلا تغطية',value:t.uncovered,color:C.uncovered}];
+ const defParts=r=>[{label:'يُسد داخليًا',value:r.internal,color:C.internal},{label:'مقترح انتداب',value:r.proposed,color:C.proposed},{label:'أجر مسند',value:r.paidCov,color:C.paid},{label:'بلا تغطية',value:r.uncovered,color:C.uncovered}];
+ const maxDef=Math.max(1,...top.map(r=>r.deficit));
+ const schoolChart=top.map(r=>`<div class="v158-row"><div class="v158-name"><b title="${esc(r.name)}">${esc(r.name)}</b><small>${esc(r.supervisor)}</small></div><div class="v158-track">${v158Bar(defParts(r),r.deficit,r.deficit/maxDef*100)}</div><b class="v158-val">${r.deficit}</b></div>`).join('');
+ const isNotSent=x=>!['approved','pending_manager_approval','returned_for_edit'].includes(x.status);
+ const st=[{label:'معتمدة',value:m.rows.filter(r=>r.status==='approved').length,color:'#0ca30c'},{label:'بانتظار الاعتماد',value:m.rows.filter(r=>r.status==='pending_manager_approval').length,color:'#fab219'},{label:'معادة للتعديل',value:m.rows.filter(r=>r.status==='returned_for_edit').length,color:'#d03b3b'},{label:'لم ترسل',value:m.rows.filter(isNotSent).length,color:'#a8a7a1'}];
+ const eq=[{label:'كادر أقل من 90%',value:m.bands.low,color:'#e34948'},{label:'متوازن 90–110%',value:m.bands.ok,color:'#c3c2b7'},{label:'كادر أكثر من 110%',value:m.bands.high,color:'#2a78d6'}],eqMax=Math.max(1,...eq.map(x=>x.value));
+ const eqChart=eq.map(x=>`<div class="v158-row"><div class="v158-name"><b>${esc(x.label)}</b></div><div class="v158-track">${v158Bar([x],x.value,x.value/eqMax*100)}</div><b class="v158-val">${x.value}</b></div>`).join('');
+ const supChart=m.supervisors.map(s=>`<div class="v158-row"><div class="v158-name"><b title="${esc(s.name)}">${esc(s.name)}</b><small>${s.schools} مدرسة · <span class="badge ${s.tone}">${s.tone==='ok'?'منضبط':s.tone==='warn'?'يحتاج متابعة':'متأخر'}</span></small></div><div class="v158-pair">${v158Meter('الاستكمال',s.schools?s.ready/s.schools:0,C.actual)}${v158Meter('الإرسال للاعتماد',s.schools?(s.approved+s.pending)/s.schools:0,C.internal)}</div><b class="v158-val">${v155Pct(s.score)}</b></div>`).join('');
+ const details=(label,html)=>`<details class="v158-details"><summary>${label}</summary>${html}</details>`;
  return `<div class="v155-board">
- <div class="card"><div class="card-title"><div><h3>لوحة قرارات المرحلة — ${esc(m.stage)}</h3><p class="muted">${esc(activeTerm?.name||'')} · ${t.schools} مدرسة · ${m.supervisors.length} موجه · ${m.teachers} معلم</p></div><div class="v155-actions">${stageSel}<button type="button" class="btn primary" onclick="v155Report('meeting')">تقرير الاجتماع</button><button type="button" class="btn secondary" onclick="loadPage(true)">تحديث</button></div></div><div class="v124-kpis">${kpis}</div></div>
+ <div class="card"><div class="card-title"><div><h3>لوحة قرارات المرحلة — ${esc(m.stage)}</h3><p class="muted">${esc(activeTerm?.name||'')} · ${t.schools} مدرسة · ${m.supervisors.length} موجه · ${m.teachers} معلم</p></div><div class="v155-actions">${stageSel}<button type="button" class="btn primary" onclick="v155Report('meeting')">تقرير الاجتماع</button><button type="button" class="btn secondary" onclick="loadPage(true)">تحديث</button></div></div><div class="v124-kpis">${kpis}</div>
+  <div class="v158-chart v158-big" role="img" aria-label="تغطية ${t.required} حصة مطلوبة: ${cov.map(p=>`${p.label} ${p.value}`).join('، ')}"><h4>تغطية الحصص المطلوبة (${t.required} حصة في المدارس المكتملة البيانات)</h4>${v158Bar(cov,t.required)}${v158Legend(cov,t.required)}</div></div>
  <div class="card"><div class="card-title"><h3>تحتاج قرارك</h3></div><div class="v124-alerts">${alertHtml}</div></div>
- <div class="card"><div class="card-title"><h3>أين العجز؟</h3><button type="button" class="btn secondary v118-edit-btn" onclick="v155Report('deficit')">كل المدارس</button></div><p class="muted">العجز = المطلوب − التدريس الفعلي. «يُسد داخليًا» من الحصص المتبقية لمعلمي المدرسة نفسها، والباقي يحتاج تغطية من خارجها.</p>${table(['المدرسة','المطلوب','الفعلي','العجز','يُسد داخليًا','من الخارج'],defRows,'لا يوجد عجز في المدارس المكتملة البيانات.',6)}</div>
+ <div class="card"><div class="card-title"><h3>أين العجز؟ — أعلى ${top.length} مدارس</h3><button type="button" class="btn secondary v118-edit-btn" onclick="v155Report('deficit')">كل المدارس</button></div><p class="muted">طول العمود = عجز المدرسة (المطلوب − التدريس الفعلي)، والألوان توضح كيف يُغطّى.</p>${top.length?`${v158Legend(defParts({internal:0,proposed:0,paidCov:0,uncovered:0}),0)}<div class="v158-rows v158-chart">${schoolChart}</div>`:'<div class="notice ok">لا يوجد عجز في المدارس المكتملة البيانات.</div>'}${top.length?details('عرض الجدول',table(['المدرسة','المطلوب','الفعلي','العجز','يُسد داخليًا','من الخارج'],defRows,'',6)):''}</div>
  <div class="card"><div class="card-title"><h3>مقترح التغطية من الفائض</h3><button type="button" class="btn secondary v118-edit-btn" onclick="v155Report('proposals')">المقترح كاملًا</button></div><p class="muted">من كل مدرسة بها فائض يُقترح <b>الأحدث في التعيين</b> ولا يُقترح الأقدم ولا مشرف المادة، ويُعاد توزيع حصصه داخل مدرسته. المقترح للعرض؛ التنفيذ بقرار صاحب الصلاحية. يغطي <b>${t.proposed}</b> من ${t.need} حصة.</p>${table(['المعلم المقترح','من','إلى','الحصص','النوع'],propRows,'لا يوجد فائض قابل للانتداب أو لا يوجد احتياج.',5)}</div>
- <div class="card"><div class="card-title"><h3>عدالة توزيع الكادر</h3></div><div class="v124-kpis">${v124Kpi('اتساق الكادر مع الاحتياج',m.r2==null?'—':v155Pct(m.r2),m.r2!=null&&m.r2<.8?'warn':'ok')}${v124Kpi('مدارس كادرها أقل من 90%',m.bands.low,m.bands.low?'danger':'ok')}${v124Kpi('مدارس متوازنة 90–110%',m.bands.ok,'ok')}${v124Kpi('مدارس كادرها أكثر من 110%',m.bands.high,m.bands.high?'warn':'ok')}</div><p class="muted">الكادر = التدريس الفعلي + الحصص المتبقية لمعلمي المدرسة، مقسومًا على المطلوب. الاتساق قرب 100% يعني أن عدد المعلمين في كل مدرسة يتناسب مع فصولها.</p></div>
- <div class="card"><div class="card-title"><h3>الموجهون: الاستكمال والاعتماد</h3><button type="button" class="btn secondary v118-edit-btn" onclick="v155Report('supervisors')">طباعة</button></div>${table(['الموجه','المدارس','مكتملة','معتمدة','بانتظار الاعتماد','معادة','من الخارج','الحالة'],supRows,'لا يوجد موجهون.',8)}<p class="muted">الحالة = الأقل بين نسبة المدارس المكتملة البيانات ونسبة المدارس المرسلة للاعتماد: منضبط ≥ 90%، يحتاج متابعة ≥ 60%، متأخر أقل من ذلك أو عنده ملف معاد.</p></div>
+ <div class="card"><div class="card-title"><h3>حالة الإرسال للاعتماد</h3><button type="button" class="btn secondary v118-edit-btn" onclick="v155Report('status')">القائمة</button></div><div class="v158-chart" role="img" aria-label="${st.map(p=>`${p.label} ${p.value}`).join('، ')}">${v158Bar(st,t.schools)}${v158Legend(st,t.schools)}</div></div>
+ <div class="card"><div class="card-title"><h3>عدالة توزيع الكادر</h3></div><div class="v124-kpis">${v124Kpi('اتساق الكادر مع الاحتياج',m.r2==null?'—':v155Pct(m.r2),m.r2!=null&&m.r2<.8?'warn':'ok')}</div><div class="v158-rows v158-chart" role="img" aria-label="${eq.map(p=>`${p.label} ${p.value}`).join('، ')}">${eqChart}</div><p class="muted">الكادر = التدريس الفعلي + الحصص المتبقية لمعلمي المدرسة، مقسومًا على المطلوب. الاتساق قرب 100% يعني أن عدد المعلمين في كل مدرسة يتناسب مع فصولها.</p></div>
+ <div class="card"><div class="card-title"><h3>الموجهون: الاستكمال والاعتماد</h3><button type="button" class="btn secondary v118-edit-btn" onclick="v155Report('supervisors')">طباعة</button></div>${v158Legend([{label:'الاستكمال',value:null,color:C.actual},{label:'الإرسال للاعتماد',value:null,color:C.internal}],0)}<div class="v158-rows v158-chart">${supChart||'<div class="muted">لا يوجد موجهون.</div>'}</div>${details('عرض الجدول',table(['الموجه','المدارس','مكتملة','معتمدة','بانتظار الاعتماد','معادة','من الخارج','الحالة'],supRows,'لا يوجد موجهون.',8))}<p class="muted">الحالة = الأقل بين نسبة المدارس المكتملة البيانات ونسبة المدارس المرسلة للاعتماد: منضبط ≥ 90%، يحتاج متابعة ≥ 60%، متأخر أقل من ذلك أو عنده ملف معاد.</p></div>
  </div>`;
 }
 ReportAdapters.v155Stage={async load(ctx,options={}){
  const m=__v155Model||await v155LoadModel(),t=m.totals,kind=options.kind||'deficit',base={reportId:'v155Stage',period:ctx.period,issuer:ctx.issuer,totals:[]};
  const schoolCols=[reportColumn('index','م',.3,{numeric:true}),reportColumn('school','المدرسة',2),reportColumn('supervisor','الموجه',1.3)];
  const sr=(list,extra)=>list.map((r,i)=>({index:i+1,school:r.name,supervisor:r.supervisor,...extra(r)}));
- if(kind==='proposals')return makeReportSchema({...base,title:`مقترح التغطية من الفائض — ${m.stage}`,subtitle:'من كل مدرسة بها فائض يُقترح الأحدث في التعيين (لا يُقترح الأقدم ولا مشرف المادة)، ويُعاد توزيع حصصه داخل مدرسته. مقترح للعرض؛ التنفيذ بقرار صاحب الصلاحية.',summary:[reportMetric('يحتاج تغطية من الخارج',t.need),reportMetric('يغطيه المقترح',t.proposed),reportMetric('يبقى بعد المقترح',t.after),reportMetric('عدد المقترحات',m.proposals.length)],columns:[reportColumn('index','م',.3,{numeric:true}),reportColumn('teacher','المعلم المقترح',1.8),reportColumn('appointment','تاريخ التعيين',.8),reportColumn('from','من مدرسة',1.6),reportColumn('to','إلى مدرسة',1.6),reportColumn('periods','الحصص',.5,{numeric:true}),reportColumn('type','النوع',.8)],rows:m.proposals.map((p,i)=>({index:i+1,teacher:p.teacher.full_name||p.rec.full_name||'—',appointment:v155Date(p.rec.appointment_date),from:p.from.name,to:p.to.name,periods:p.periods,type:p.full?'انتداب كلي':'انتداب جزئي'}))});
+ if(kind==='proposals')return makeReportSchema({...base,title:`مقترح التغطية من الفائض — ${m.stage}`,subtitle:'من كل مدرسة بها فائض يُقترح الأحدث في التعيين (لا يُقترح الأقدم ولا مشرف المادة)، ويُعاد توزيع حصصه داخل مدرسته. مقترح للعرض؛ التنفيذ بقرار صاحب الصلاحية.',summary:[reportMetric('يحتاج تغطية من الخارج',t.need),reportMetric('يغطيه المقترح',t.proposed),reportMetric('يغطيه الأجر المسند',t.paidCov),reportMetric('بلا تغطية',t.uncovered),reportMetric('عدد المقترحات',m.proposals.length)],columns:[reportColumn('index','م',.3,{numeric:true}),reportColumn('teacher','المعلم المقترح',1.8),reportColumn('appointment','تاريخ التعيين',.8),reportColumn('from','من مدرسة',1.6),reportColumn('to','إلى مدرسة',1.6),reportColumn('periods','الحصص',.5,{numeric:true}),reportColumn('type','النوع',.8)],rows:m.proposals.map((p,i)=>({index:i+1,teacher:p.teacher.full_name||p.rec.full_name||'—',appointment:v155Date(p.rec.appointment_date),from:p.from.name,to:p.to.name,periods:p.periods,type:p.full?'انتداب كلي':'انتداب جزئي'}))});
  if(kind==='supervisors')return makeReportSchema({...base,title:`الموجهون: الاستكمال والاعتماد — ${m.stage}`,subtitle:'الحالة = الأقل بين نسبة المدارس المكتملة البيانات ونسبة المرسلة للاعتماد (منضبط ≥ 90%، يحتاج متابعة ≥ 60%).',summary:[reportMetric('الموجهون',m.supervisors.length),reportMetric('المدارس',t.schools)],columns:[reportColumn('index','م',.3,{numeric:true}),reportColumn('name','الموجه',1.8),reportColumn('schools','المدارس',.6,{numeric:true}),reportColumn('ready','مكتملة',.6,{numeric:true}),reportColumn('approved','معتمدة',.6,{numeric:true}),reportColumn('pending','بانتظار',.6,{numeric:true}),reportColumn('returned','معادة',.5,{numeric:true}),reportColumn('need','من الخارج',.6,{numeric:true}),reportColumn('state','الحالة',1)],rows:m.supervisors.map((s,i)=>({index:i+1,name:s.name,schools:s.schools,ready:s.ready,approved:s.approved,pending:s.pending,returned:s.returned,need:s.need,state:`${s.tone==='ok'?'منضبط':s.tone==='warn'?'يحتاج متابعة':'متأخر'} (${v155Pct(s.score)})`}))});
  if(kind==='status')return makeReportSchema({...base,title:`حالة إرسال المدارس للاعتماد — ${m.stage}`,subtitle:'المدارس غير المعتمدة مرتبة: المعادة للتعديل أولًا ثم التي لم ترسل.',summary:[reportMetric('معادة للتعديل',m.rows.filter(r=>r.status==='returned_for_edit').length),reportMetric('لم ترسل',m.rows.filter(r=>['not_started','in_progress'].includes(r.status)).length)],columns:[...schoolCols,reportColumn('status','الحالة',1)],rows:sr(m.rows.filter(r=>r.status!=='approved').sort((a,b)=>(b.status==='returned_for_edit')-(a.status==='returned_for_edit')),r=>({status:V155_STATUS[r.status]||r.status}))});
  if(kind==='incomplete')return makeReportSchema({...base,title:`مدارس بياناتها غير مكتملة — ${m.stage}`,subtitle:'لا يُحسب عجز هذه المدارس حتى تُدخل الفصول وحصص المواد.',summary:[reportMetric('المدارس',m.rows.filter(r=>!r.ready).length)],columns:[...schoolCols,reportColumn('classes','الفصول',.6,{numeric:true}),reportColumn('status','حالة الاعتماد',1)],rows:sr(m.rows.filter(r=>!r.ready),r=>({classes:r.classes,status:V155_STATUS[r.status]||r.status}))});
  if(kind==='seniority')return makeReportSchema({...base,title:`مدارس بها فائض ويلزم استكمال تاريخ التعيين — ${m.stage}`,subtitle:'لا يمكن تحديد الأحدث في المدرسة لنقص تاريخ تعيين بعض معلميها الثابتين؛ لذلك استُبعدت من مقترح التغطية.',summary:[reportMetric('المدارس',m.rows.filter(r=>r.spare>0&&r.missingDates).length)],columns:[...schoolCols,reportColumn('spare','الفائض',.6,{numeric:true}),reportColumn('missing','معلمون بلا تاريخ تعيين',.9,{numeric:true})],rows:sr(m.rows.filter(r=>r.spare>0&&r.missingDates),r=>({spare:r.spare,missing:r.missingDates}))});
- const deficitCols=[...schoolCols,reportColumn('required','المطلوب',.6,{numeric:true}),reportColumn('actual','الفعلي',.6,{numeric:true}),reportColumn('deficit','العجز',.55,{numeric:true}),reportColumn('internal','يُسد داخليًا',.7,{numeric:true}),reportColumn('need','من الخارج',.65,{numeric:true}),reportColumn('proposed','يغطيه المقترح',.75,{numeric:true}),reportColumn('paid','أجر مسند',.6,{numeric:true})];
- const defRow=r=>({required:r.required,actual:r.actual,deficit:r.deficit,internal:r.internal,need:r.need,proposed:r.proposed,paid:r.paid});
+ const deficitCols=[...schoolCols,reportColumn('required','المطلوب',.6,{numeric:true}),reportColumn('actual','الفعلي',.6,{numeric:true}),reportColumn('deficit','العجز',.55,{numeric:true}),reportColumn('internal','يُسد داخليًا',.7,{numeric:true}),reportColumn('need','من الخارج',.65,{numeric:true}),reportColumn('proposed','يغطيه المقترح',.75,{numeric:true}),reportColumn('paid','أجر مسند',.6,{numeric:true}),reportColumn('uncovered','بلا تغطية',.65,{numeric:true})];
+ const defRow=r=>({required:r.required,actual:r.actual,deficit:r.deficit,internal:r.internal,need:r.need,proposed:r.proposed,paid:r.paid,uncovered:r.uncovered});
  if(kind==='internal')return makeReportSchema({...base,title:`عجز يُسد داخل المدارس — ${m.stage}`,subtitle:'معلمو هذه المدارس لهم حصص متبقية تكفي لسد عجزها (كله أو بعضه) بتوزيع الفصول عليهم دون انتداب.',summary:[reportMetric('المدارس',m.rows.filter(r=>r.internal>0).length),reportMetric('حصص تُسد داخليًا',t.internal)],columns:deficitCols,rows:sr(m.ready.filter(r=>r.internal>0).sort((a,b)=>b.internal-a.internal),defRow)});
- const summary=[reportMetric('المدارس',`${t.ready} مكتملة / ${t.schools}`),reportMetric('الحصص المطلوبة',t.required),reportMetric('التدريس الفعلي',t.actual),reportMetric('العجز',t.deficit),reportMetric('يُسد داخليًا',t.internal),reportMetric('من خارج المدرسة',t.need),reportMetric('يغطيه المقترح',t.proposed),reportMetric('يبقى بعد المقترح',t.after),reportMetric('اتساق الكادر مع الاحتياج',m.r2==null?'—':v155Pct(m.r2))];
+ const summary=[reportMetric('المدارس',`${t.ready} مكتملة / ${t.schools}`),reportMetric('الحصص المطلوبة',t.required),reportMetric('التدريس الفعلي',t.actual),reportMetric('العجز',t.deficit),reportMetric('يُسد داخليًا',t.internal),reportMetric('من خارج المدرسة',t.need),reportMetric('يغطيه المقترح',t.proposed),reportMetric('يغطيه الأجر المسند',t.paidCov),reportMetric('بلا تغطية',t.uncovered),reportMetric('اتساق الكادر مع الاحتياج',m.r2==null?'—':v155Pct(m.r2))];
  if(kind==='meeting'){
   const sup=m.supervisors.filter(s=>s.tone!=='ok').map(s=>s.name).slice(0,5).join('، ');
-  const notes=[`يحتاج ${t.need} حصة تغطية من خارج المدارس، ويغطي مقترح الانتداب من الفائض ${t.proposed} حصة ويبقى ${t.after}.`,t.internal?`عجز ${t.internal} حصة يُسد داخل المدارس بتوزيع الفصول.`:'',t.schools-t.ready?`${t.schools-t.ready} مدرسة بياناتها غير مكتملة.`:'',sup?`موجهون يحتاجون متابعة: ${sup}.`:''].filter(Boolean).join(' ');
+  const notes=[`يحتاج ${t.need} حصة تغطية من خارج المدارس: يغطي مقترح الانتداب من الفائض ${t.proposed}، والأجر المسند ${t.paidCov}، ويبقى ${t.uncovered} بلا تغطية.`,t.internal?`عجز ${t.internal} حصة يُسد داخل المدارس بتوزيع الفصول.`:'',t.schools-t.ready?`${t.schools-t.ready} مدرسة بياناتها غير مكتملة.`:'',sup?`موجهون يحتاجون متابعة: ${sup}.`:''].filter(Boolean).join(' ');
   return makeReportSchema({...base,title:`تقرير اجتماع المرحلة — ${m.stage}`,subtitle:notes,summary,columns:deficitCols,rows:sr(m.ready.filter(r=>r.deficit>0).sort((a,b)=>b.need-a.need||b.deficit-a.deficit).slice(0,10),defRow)});
  }
  return makeReportSchema({...base,title:`العجز في مدارس المرحلة — ${m.stage}`,subtitle:'العجز = المطلوب − التدريس الفعلي (الثابت والمنتدب). «يُسد داخليًا» من الحصص المتبقية لمعلمي المدرسة. حصص الأجر لا تغيّر العجز.',summary,columns:deficitCols,rows:sr(m.ready.filter(r=>r.deficit>0).sort((a,b)=>b.need-a.need||b.deficit-a.deficit),defRow)});
