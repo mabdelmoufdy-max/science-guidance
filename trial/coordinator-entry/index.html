@@ -3,13 +3,13 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>إدخال بيانات المنسق — v172</title>
+<title>إدخال بيانات المنسق — v172.1</title>
+<!-- v172.1: الصفحة تعمل أيضًا داخل بوابة بيانات المعلمين (teachers-data-portal.vercel.app/coordinator/ عبر rewrite): روابط الشعار مطلقة، رابط «‹ بوابة البيانات» خارج GitHub، وتسجيل service worker على GitHub فقط. -->
 <!-- v172: المرحلة 3 — إسناد الفصول من بطاقة المعلم (assign_class_atomic: الفصل كاملًا بحصصه المقررة) والتراجع (حذف مباشر تمنعه سياسة القاعدة بعد الاعتماد النهائي)؛ لا إسناد لمن في إجازة؛ تنبيه عند تجاوز النصاب (يُحتسب زيادة). -->
 <!-- v171: المرحلة 2 — بطاقات المعلمين لكل مدرسة (من get_school_teacher_roster): كل البيانات والنصاب والفصول المسندة، التعديل (save_teacher_record_atomic + الحقول الإضافية)، وإضافة معلم ناقص (insert + teacher_school_assignments). تاريخا الدرجة واستلام العمل يُدخلان عند الإضافة فقط (صلاحية العمود في القاعدة). حالة المدرسة تشمل نقص بيانات معلميها وتعديلهم بعد الاعتماد. -->
 <!-- v170.1: الحساب الذي له دور مدير النظام يدخل به أولًا (حساب المالك له دور منسق بلا مدارس فكانت القائمة فارغة). -->
 <!-- v170: رابط مستقل لمنسق المرحلة: دخول بالرقم القومي وكلمة المرور، قائمة مدارس المرحلة، بطاقة بيانات المدرسة (عرض/تعديل/اعتماد المنسق) مع إضافة/حذف الفصول. المرحلة 2: بطاقات المعلمين. -->
-<link rel="manifest" href="../../manifest.webmanifest">
-<link rel="icon" href="../../icon-192.png">
+<link rel="icon" href="https://mabdelmoufdy-max.github.io/science-guidance/icon-192.png">
 <meta name="theme-color" content="#0f214d">
 <style>
 :root{
@@ -45,6 +45,7 @@ label{display:block;font-size:13px;color:var(--muted);margin-bottom:5px;font-wei
 .login-card h1{font-size:19px;text-align:center;margin:0 0 4px;color:var(--navy)}
 .login-card p{text-align:center;color:var(--muted);margin:0 0 18px;font-size:14px}
 .login-card .btn{width:100%;margin-top:6px}
+.portal-back{display:inline-block;color:var(--primary);text-decoration:none;font-size:14px;margin-bottom:8px}
 .err{color:var(--bad);font-size:14px;min-height:20px;margin-top:8px;text-align:center}
 
 /* shell */
@@ -130,6 +131,7 @@ table.cls td{border-bottom:1px solid var(--line);padding:8px;vertical-align:midd
 const SUPABASE_URL='https://xehjwzszhsaqdqmcatum.supabase.co';
 const SUPABASE_KEY='sb_publishable_HdMyWXaXjvbXuL1Ir0CSxw__IRWxYjk';
 let activeRole='';
+const IN_GH=/github\.io$/.test(location.hostname);
 const sb=supabase.createClient(SUPABASE_URL,SUPABASE_KEY,{global:{fetch:(input,init={})=>{const h=new Headers(init.headers||{});if(activeRole)h.set('x-app-role',activeRole);return fetch(input,{...init,headers:h})}},auth:{persistSession:true,autoRefreshToken:true}});
 
 const ROLE_LABEL={stage_coordinator:'منسق المرحلة',admin:'مدير النظام',first_supervisor:'الموجه الأول'};
@@ -153,7 +155,8 @@ async function all(build){let out=[];for(let from=0;;from+=1000){const d=await q
 /* ---------- الدخول ---------- */
 function renderLogin(msg){
  $('app').innerHTML=`<div class="login-wrap"><form class="login-card" id="loginForm">
-  <img src="../../icon-192.png" alt="">
+  <img src="https://mabdelmoufdy-max.github.io/science-guidance/icon-192.png" alt="">
+  ${IN_GH?'':'<a href="/" class="portal-back">‹ بوابة البيانات</a>'}
   <h1>إدخال ومراجعة بيانات المدارس</h1><p>منسق المرحلة — نظام توجيه العلوم</p>
   <div class="field"><label for="civil">الرقم القومي</label><input id="civil" inputmode="numeric" autocomplete="username" placeholder="14 رقمًا" required></div>
   <div class="field"><label for="pw">كلمة المرور</label><input id="pw" type="password" autocomplete="current-password" required></div>
@@ -167,7 +170,7 @@ function renderLogin(msg){
 }
 function renderChangePassword(){
  $('app').innerHTML=`<div class="login-wrap"><form class="login-card" id="pwForm">
-  <img src="../../icon-192.png" alt=""><h1>تغيير كلمة المرور</h1><p>كلمة المرور الحالية مؤقتة؛ اختر كلمة مرور جديدة (8 أحرف على الأقل).</p>
+  <img src="https://mabdelmoufdy-max.github.io/science-guidance/icon-192.png" alt=""><h1>تغيير كلمة المرور</h1><p>كلمة المرور الحالية مؤقتة؛ اختر كلمة مرور جديدة (8 أحرف على الأقل).</p>
   <div class="field"><label for="p1">كلمة المرور الجديدة</label><input id="p1" type="password" autocomplete="new-password" minlength="8" required></div>
   <div class="field"><label for="p2">تأكيد كلمة المرور</label><input id="p2" type="password" autocomplete="new-password" minlength="8" required></div>
   <button class="btn primary" id="pwBtn">حفظ والمتابعة</button><div class="err" id="pwErr"></div></form></div>`;
@@ -228,7 +231,7 @@ const stageSchools=()=>S.schools.filter(s=>!S.stage||s.stage===S.stage);
 /* ---------- الواجهة ---------- */
 function renderShell(){
  const stages=[...new Set(S.schools.map(s=>s.stage))];
- $('app').innerHTML=`<header class="topbar"><img src="../../icon-192.png" alt=""><div class="t"><b>إدخال ومراجعة البيانات</b><small>${esc(ROLE_LABEL[activeRole])}${S.stage?' — '+esc(S.stage):''} • ${esc(S.year.label||'')}</small></div>
+ $('app').innerHTML=`<header class="topbar"><img src="https://mabdelmoufdy-max.github.io/science-guidance/icon-192.png" alt=""><div class="t"><b>إدخال ومراجعة البيانات</b><small>${esc(ROLE_LABEL[activeRole])}${S.stage?' — '+esc(S.stage):''} • ${esc(S.year.label||'')}</small></div>
   <span class="who" style="font-size:13px">${esc(S.me.full_name)}</span><button class="btn" onclick="logout()">خروج</button></header>
   <div class="layout"><aside class="side"><div class="side-head">
    ${stages.length>1?`<div class="field"><label for="stageSel">المرحلة</label><select id="stageSel">${stages.map(x=>`<option ${x===S.stage?'selected':''}>${esc(x)}</option>`).join('')}</select></div>`:''}
@@ -495,7 +498,7 @@ function approve(s){
 
 sb.auth.onAuthStateChange(ev=>{if(ev==='SIGNED_OUT')renderLogin()});
 boot();
-if('serviceWorker' in navigator)navigator.serviceWorker.register('../../service-worker.js').catch(()=>{});
+if(IN_GH&&'serviceWorker' in navigator)navigator.serviceWorker.register('../../service-worker.js').catch(()=>{});
 </script>
 </body>
 </html>

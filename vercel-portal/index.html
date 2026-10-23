@@ -1,0 +1,1095 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<meta name="referrer" content="no-referrer">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; connect-src https://xehjwzszhsaqdqmcatum.supabase.co; img-src data:; base-uri 'none'; form-action 'none'">
+<title>بوابة بيانات المعلمين</title>
+<style>
+:root{--primary:#2563eb;--primary-d:#1d4ed8;--bg:#f1f5f9;--card:#fff;--text:#1e293b;--muted:#64748b;--border:#e2e8f0;--err:#dc2626;--ok:#16a34a;--warn-bg:#fffbeb;--warn-bd:#fcd34d;--warn-tx:#92400e;--soft:#eff6ff;--soft-bd:#bfdbfe}
+*{box-sizing:border-box;font-family:system-ui,-apple-system,"Segoe UI",Tahoma,sans-serif}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--text);line-height:1.6;font-size:16px}
+.wrap{max-width:640px;margin:0 auto;padding:14px}
+.card{background:var(--card);border-radius:14px;box-shadow:0 1px 3px rgba(0,0,0,.08);padding:20px}
+h1{font-size:1.35rem;margin:0 0 4px;color:var(--primary);text-align:center}
+h2{font-size:1.1rem;margin:0 0 12px}
+.sub{color:var(--muted);text-align:center;margin:0 0 16px;font-size:.93rem}
+.ribbon{background:#fef3c7;color:#92400e;text-align:center;font-size:.82rem;padding:4px 8px;border-radius:8px;margin-bottom:10px}
+.top{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;min-height:36px}
+.link{background:none;border:0;color:var(--primary);font-size:.95rem;cursor:pointer;padding:6px 4px}
+button{font-size:1rem;font-weight:700;border:0;border-radius:10px;padding:13px 16px;cursor:pointer;min-height:48px}
+button:disabled{opacity:.55;cursor:not-allowed}
+.btn{background:var(--primary);color:#fff;width:100%}
+.btn:hover:not(:disabled){background:var(--primary-d)}
+.btn2{background:var(--border);color:var(--text);width:100%}
+.btn-ok{background:var(--ok);color:#fff;width:100%}
+.row{display:flex;gap:10px;margin-top:18px}
+.row>button{flex:1}
+.roles{display:grid;gap:10px}
+.role{display:flex;align-items:center;gap:12px;background:#fff;border:2px solid var(--border);text-align:right;width:100%;padding:14px}
+.role:hover:not(:disabled){border-color:var(--primary);background:var(--soft)}
+.role .ic{font-size:1.6rem}
+.role small{display:block;color:var(--muted);font-weight:400;font-size:.85rem}
+.role.soon{opacity:.6}
+.tabs{display:flex;gap:8px;margin-bottom:16px}
+.tab{flex:1;background:var(--border);color:var(--text);padding:10px;font-size:.95rem}
+.tab.on{background:var(--primary);color:#fff}
+.fg{margin-bottom:14px}
+label{display:block;font-weight:600;margin-bottom:5px;font-size:.95rem}
+.req::after{content:" *";color:var(--err)}
+input[type=text],input[type=tel],input[type=email],input[type=date],select{width:100%;padding:12px;border:1px solid #cbd5e1;border-radius:10px;font-size:16px;background:#fff;color:var(--text)}
+input:focus,select:focus,button:focus-visible{outline:none;box-shadow:0 0 0 3px rgba(37,99,235,.25);border-color:var(--primary)}
+input[readonly]{background:#f1f5f9;color:var(--muted)}
+.invalid{border-color:var(--err)!important}
+.ferr{color:var(--err);font-size:.85rem;margin-top:4px;display:none}
+.ferr.on{display:block}
+.hint{color:var(--ok);font-size:.82rem;margin-top:3px;min-height:1px}
+.note{background:var(--soft);border:1px solid var(--soft-bd);color:#1e40af;padding:10px 12px;border-radius:10px;font-size:.9rem;margin-bottom:14px}
+.warn{background:var(--warn-bg);border:1px solid var(--warn-bd);color:var(--warn-tx);padding:10px 12px;border-radius:10px;font-size:.9rem;margin-bottom:14px}
+.err{background:#fef2f2;border:1px solid #fecaca;color:#991b1b;padding:10px 12px;border-radius:10px;font-size:.92rem;margin:12px 0;display:none}
+.err.on{display:block}
+.steps{display:flex;justify-content:space-between;margin:0 0 18px;position:relative}
+.steps::before{content:"";position:absolute;top:50%;right:0;left:0;height:2px;background:var(--border);transform:translateY(-50%)}
+.st{position:relative;z-index:1;width:34px;height:34px;border-radius:50%;background:#fff;border:2px solid var(--border);display:flex;align-items:center;justify-content:center;font-weight:700;color:var(--muted);font-size:.9rem}
+.st.on{background:var(--primary);border-color:var(--primary);color:#fff}
+.st.done{background:var(--ok);border-color:var(--ok);color:#fff}
+.stlabel{text-align:center;color:var(--muted);font-size:.85rem;margin:-8px 0 14px}
+.kv{display:grid;grid-template-columns:1fr;gap:0;border:1px solid var(--border);border-radius:12px;overflow:hidden;margin:12px 0}
+.kv>div{display:flex;justify-content:space-between;gap:10px;padding:10px 12px;border-bottom:1px solid var(--border);align-items:flex-start}
+.kv>div:last-child{border-bottom:0}
+.kv .k{color:var(--muted);font-size:.9rem;white-space:nowrap}
+.kv .v{font-weight:600;text-align:left;word-break:break-word}
+.kv .miss{background:var(--warn-bg)}
+.tag{display:inline-block;font-size:.72rem;font-weight:700;border-radius:999px;padding:1px 8px;margin-inline-start:6px;vertical-align:middle}
+.tag.m{background:#fde68a;color:#92400e}
+.tag.c{background:#dbeafe;color:#1e40af}
+.old{display:block;color:var(--muted);font-weight:400;font-size:.8rem;text-decoration:line-through}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin:6px 0 14px}
+.chip{background:#fff;border:2px solid var(--border);color:var(--text);padding:8px 14px;min-height:44px;font-size:.95rem;border-radius:999px}
+.chip[aria-pressed=true]{background:var(--primary);border-color:var(--primary);color:#fff}
+.grade{font-weight:700;margin:14px 0 2px;color:#334155}
+.list{border:1px solid var(--border);border-radius:12px;max-height:300px;overflow:auto;margin:8px 0}
+.list button{display:block;width:100%;text-align:right;background:#fff;border-bottom:1px solid var(--border);border-radius:0;font-weight:500;min-height:46px}
+.list button:hover{background:var(--soft)}
+.list .empty{padding:14px;color:var(--muted);text-align:center}
+.picked{background:#f0fdf4;border:1px solid #bbf7d0;border-radius:12px;padding:10px 12px;margin:8px 0;display:flex;justify-content:space-between;gap:8px;align-items:center}
+.sel{display:flex;gap:8px;align-items:center;padding:8px 0;border-bottom:1px dashed var(--border)}
+.sel .nm{flex:1;font-size:.92rem}
+.sel select{width:auto;padding:6px 8px}
+.sel .x{background:none;color:var(--err);padding:4px 8px;min-height:36px}
+.total{font-weight:700;margin-top:10px}
+details{border:1px solid var(--border);border-radius:12px;padding:8px 12px;margin-bottom:14px}
+summary{cursor:pointer;font-weight:600;padding:4px 0}
+.ok-screen{text-align:center;padding:20px 6px}
+.ok-ic{font-size:3.4rem;color:var(--ok)}
+.refno{display:inline-block;font-family:monospace;font-size:1.4rem;letter-spacing:2px;background:var(--border);padding:8px 18px;border-radius:10px;margin:10px 0;direction:ltr}
+.ltr{direction:ltr;unicode-bidi:embed;display:inline-block}
+.spin{display:inline-block;width:16px;height:16px;border:3px solid #fff5;border-top-color:#fff;border-radius:50%;animation:sp .8s linear infinite;vertical-align:middle;margin-inline-end:6px}
+@keyframes sp{to{transform:rotate(360deg)}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div id="ribbon"></div>
+  <div id="app"></div>
+</div>
+<noscript><div class="wrap"><div class="card">يلزم تفعيل JavaScript لاستخدام هذه الصفحة.</div></div></noscript>
+<script>
+(function () {
+  'use strict';
+  var CFG = {
+    url: 'https://xehjwzszhsaqdqmcatum.supabase.co',
+    key: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhlaGp3enN6aHNhcWRxbWNhdHVtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODczOTYzMzUsImV4cCI6MjEwMjk3MjMzNX0.CLWnKZhLvgkhEpmeYQPJHEdQVG1T7kV5taI7pB1vfyA',
+    paid: 'https://paid-teachers-form.vercel.app',
+    trial: false
+  };
+  var AR = '٠١٢٣٤٥٦٧٨٩', PE = '۰۱۲۳۴۵۶۷۸۹';
+  var STAGES = [
+    { k: 'primary', t: 'ابتدائي' }, { k: 'prep', t: 'إعدادي' },
+    { k: 'sec_general', t: 'ثانوي عام' }, { k: 'sec_industrial', t: 'ثانوي صناعي' }
+  ];
+  var JOBS = ['معلم مساعد', 'معلم', 'معلم أول', 'معلم أول (أ)', 'كبير معلمين', 'معلم خبير'];
+  var QUALS = ['بكالوريوس علوم وتربية', 'بكالوريوس تربية', 'بكالوريوس علوم', 'بكالوريوس علوم + دبلومة تربوية', 'بكالوريوس تربية + دبلومة'];
+  var LBL = {
+    full_name: 'الاسم', civil_id: 'الرقم المدني', phone: 'التليفون', email: 'البريد الإلكتروني', residence: 'محل الإقامة',
+    job_title: 'الدرجة الوظيفية', specialty: 'التخصص', qualification: 'المؤهل', qualification_year: 'سنة المؤهل',
+    appointment_date: 'تاريخ التعيين', grade_acquired_date: 'تاريخ الحصول على الدرجة', work_start_date: 'تاريخ استلام العمل', work_type: 'نوع العمل'
+  };
+  var PKEYS = ['full_name', 'phone', 'email', 'residence', 'job_title', 'specialty', 'qualification', 'qualification_year', 'appointment_date', 'grade_acquired_date', 'work_start_date'];
+  var DIAC = new RegExp('[' + String.fromCharCode(0x64B) + '-' + String.fromCharCode(0x652) + String.fromCharCode(0x670) + String.fromCharCode(0x640) + ']', 'g');
+
+  /* ---------- أدوات ---------- */
+  function toLatin(s) {
+    s = String(s == null ? '' : s); var o = '';
+    for (var i = 0; i < s.length; i++) { var c = s.charAt(i), j = AR.indexOf(c); if (j < 0) j = PE.indexOf(c); o += j < 0 ? c : j; }
+    return o;
+  }
+  function digits(s) { return toLatin(s).replace(/[^0-9]/g, ''); }
+  function normPhone(s) {
+    var d = digits(s);
+    if (d.indexOf('0020') === 0) d = d.slice(4); else if (d.length >= 12 && d.indexOf('20') === 0) d = d.slice(2);
+    if (d.length === 10 && d.charAt(0) === '1') d = '0' + d;
+    return d.slice(0, 11);
+  }
+  function clean(s) { return String(s == null ? '' : s).replace(/\s+/g, ' ').trim(); }
+  function arNorm(s) {
+    return toLatin(s).replace(DIAC, '').replace(/[أإآٱ]/g, 'ا').replace(/ى/g, 'ي').replace(/ة/g, 'ه').replace(/\s+/g, ' ').trim().toLowerCase();
+  }
+  function fmtDate(iso) { var m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(iso || ''); return m ? m[3] + '/' + m[2] + '/' + m[1] : (iso || ''); }
+  function stageTitle(k) { for (var i = 0; i < STAGES.length; i++) if (STAGES[i].k === k) return STAGES[i].t; return ''; }
+  function plural(n, one, two, many) { return n === 1 ? one : n === 2 ? two : n + ' ' + many; }
+  function perLabel(n) { return plural(n, 'حصة واحدة', 'حصتان', 'حصص'); }
+  function hashKey(s) { var x = 5381; for (var i = 0; i < s.length; i++) x = ((x << 5) + x + s.charCodeAt(i)) | 0; return (x >>> 0).toString(16); }
+
+  function h(tag, a) {
+    var e = document.createElement(tag), val, kids = Array.prototype.slice.call(arguments, 2);
+    if (a) for (var k in a) {
+      var v = a[k]; if (v == null || v === false) continue;
+      if (k === 'class') e.className = v;
+      else if (k === 'text') e.textContent = v;
+      else if (k === 'value') val = v;
+      else if (k.slice(0, 2) === 'on') e.addEventListener(k.slice(2), v);
+      else e.setAttribute(k, v === true ? '' : v);
+    }
+    (function add(list) {
+      list.forEach(function (c) {
+        if (c == null || c === false) return;
+        if (Array.isArray(c)) return add(c);
+        e.appendChild(c.nodeType ? c : document.createTextNode(String(c)));
+      });
+    })(kids);
+    if (val !== undefined) e.value = val;
+    return e;
+  }
+
+  async function rpc(fn, args) {
+    var ctl = new AbortController(), t = setTimeout(function () { ctl.abort(); }, 25000), r, j = null;
+    try {
+      r = await fetch(CFG.url + '/rest/v1/rpc/' + fn, {
+        method: 'POST', signal: ctl.signal,
+        headers: { apikey: CFG.key, Authorization: 'Bearer ' + CFG.key, 'Content-Type': 'application/json' },
+        body: JSON.stringify(args || {})
+      });
+      try { j = await r.json(); } catch (e) { j = null; }
+    } catch (e) { throw { net: true }; } finally { clearTimeout(t); }
+    if (!r.ok) throw { net: false, http: r.status };
+    return j;
+  }
+
+  function reasonMsg(r) {
+    var f = LBL[r.field] || (r.field === 'school_id' ? 'المدرسة' : r.field === 'classes' ? 'الفصول' : r.field === 'deleg_classes' ? 'فصول الانتداب' : '');
+    switch (r.reason) {
+      case 'bad_civil': return 'الرقم المدني يجب أن يكون 14 رقمًا.';
+      case 'bad_phone': return 'اكتب رقم الهاتف كاملًا (11 رقمًا يبدأ بـ 01).';
+      case 'no_match': return 'البيانات غير مطابقة. تأكد من الرقم المدني ومن رقم هاتفك المسجّل ' + (r.sup ? 'وكود المعلم في سجل المعلمين. هذه الصفحة لمشرف المدرسة (أقدم معلم أساسي) فقط.' : 'لدى المدرسة.') +
+        (r.remaining > 0 ? ' متبقي لك ' + plural(r.remaining, 'محاولة واحدة', 'محاولتان', 'محاولات') + '.' : ' كانت هذه آخر محاولة، وسيتوقف الدخول مؤقتًا.');
+      case 'locked': return 'تم إيقاف الدخول مؤقتًا بسبب محاولات خاطئة متكررة. حاول بعد ' + (r.minutes || 15) + ' دقيقة.';
+      case 'busy': return 'الخدمة مشغولة الآن، حاول بعد قليل.';
+      case 'closed': return 'فترة تعديل البيانات مغلقة حاليًا.';
+      case 'exists': return isSup() ? 'هذا الرقم المدني مسجّل بالفعل في النظام. إن كان معلمًا في مدرستك فابحث عنه في القائمة، وإن كان في مدرسة أخرى فتواصل مع إدارة التوجيه.'
+        : 'هذا الرقم المدني مسجّل بالفعل. ارجع واختر «معلم مسجّل في النظام».';
+      case 'forbidden': return 'هذا الإجراء غير متاح لك على هذا المعلم أو هذه المدرسة.';
+      case 'no_change': return 'لا توجد تعديلات لإرسالها. غيّر بيانًا أو فصلًا أولًا.';
+      case 'no_term': return 'لا يوجد فصل دراسي نشط حاليًا.';
+      case 'invalid': return 'راجع الحقل: ' + (f || 'غير معروف') + '.';
+      default: return 'تعذّر تنفيذ الطلب. حاول مرة أخرى.';
+    }
+  }
+  function errMsg(e) {
+    if (e && e.reason !== undefined) return reasonMsg(e);
+    if (e && e.net) return 'تعذّر الاتصال بالخادم. تأكد من الإنترنت وحاول مرة أخرى.';
+    if (e && e.http === 404) return 'الخدمة غير جاهزة بعد. أبلغ الإدارة.';
+    return 'حدث خطأ غير متوقع. حاول مرة أخرى.';
+  }
+
+  /* ---------- الحالة ---------- */
+  var S = {};
+  function reset() {
+    S = { view: 'launcher', status: S.status || null, schools: S.schools || null, cache: S.cache || {}, auth: null, lookup: null,
+      mode: 'registered', person: {}, base: {}, baseSel: new Map(), sel: new Map(), school: null, stageKey: null, q: '', step: 1,
+      busy: false, limited: false, closed: false, sup: null, supVisitor: false, sstep: 0, sstepKeys: [], dsel: {}, dbase: {} };
+  }
+  reset();
+
+  var root = document.getElementById('app');
+  function render() {
+    var v = VIEWS[S.view]();
+    root.replaceChildren(v);
+    window.scrollTo(0, 0);
+  }
+  function go(v) { S.view = v; render(); }
+  function errbox() { return h('div', { class: 'err', role: 'alert', 'aria-live': 'assertive' }); }
+  function showErr(box, msg) { box.textContent = msg; box.classList.add('on'); }
+  function hideErr(box) { box.textContent = ''; box.classList.remove('on'); }
+  function btnBusy(b, on, txt) {
+    b.disabled = on;
+    if (on) { b.textContent = ''; b.appendChild(h('span', { class: 'spin' })); b.appendChild(document.createTextNode(txt || 'لحظة...')); }
+    else b.textContent = b.getAttribute('data-label') || b.textContent;
+  }
+  function mkBtn(cls, label, onclick, extra) {
+    var b = h('button', Object.assign({ type: 'button', class: cls, 'data-label': label, onclick: onclick }, extra || {}), label);
+    return b;
+  }
+
+  /* ---------- المسودة (على الجهاز) ---------- */
+  function isSup() { return S.mode === 'sup_edit' || S.mode === 'sup_new'; }
+  function dkey() {
+    if (isSup()) return 'tp2:' + hashKey(S.sup.auth.civil + ':' + S.sup.school.id);
+    return 'tp1:' + (S.mode === 'registered' && S.auth ? hashKey(S.auth.civil) : 'new');
+  }
+  function saveDraft() {
+    if (S.mode === 'sup_edit') return;
+    clearTimeout(S._dt);
+    S._dt = setTimeout(function () {
+      try {
+        localStorage.setItem(dkey(), JSON.stringify({ v: 1, ts: Date.now(), person: S.person, stage: S.stageKey,
+          school: S.school ? S.school.id : null, sel: Array.from(S.sel.entries()), step: isSup() ? S.sstep : S.step,
+          dsel: isSup() ? null : Object.keys(S.dsel).reduce(function (o, k) { o[k] = Array.from(S.dsel[k].entries()); return o; }, {}) }));
+      } catch (e) { /* التخزين غير متاح */ }
+    }, 350);
+  }
+  function loadDraft(key) {
+    try { var d = JSON.parse(localStorage.getItem(key)); if (d && d.v === 1 && Date.now() - d.ts < 30 * 864e5) return d; } catch (e) { }
+    return null;
+  }
+  function dropDraft(key) { try { localStorage.removeItem(key); } catch (e) { } }
+
+  /* ---------- بيانات مساعدة ---------- */
+  async function loadSchools() {
+    if (S.schools) return S.schools;
+    S.schools = await rpc('teacher_portal_schools');
+    return S.schools;
+  }
+  async function loadClasses(id) {
+    if (S.cache[id]) return S.cache[id];
+    var r = await rpc('teacher_portal_classes', { p_school_id: id });
+    S.cache[id] = r || [];
+    return S.cache[id];
+  }
+  function schoolById(id) {
+    var l = S.schools || []; for (var i = 0; i < l.length; i++) if (l[i].id === id) return l[i]; return null;
+  }
+  function classById(id) {
+    var l = S.cache[S.school && S.school.id] || []; for (var i = 0; i < l.length; i++) if (l[i].id === id) return l[i]; return null;
+  }
+  function pv(k) { return clean(S.person[k]); }
+  function totalPeriods() { var t = 0; S.sel.forEach(function (p) { t += p; }); return t; }
+  function isPermanent() { return S.lookup && S.lookup.teacher && S.lookup.teacher.work_type === 'permanent'; }
+
+  /* ---------- الانتداب (فصول المدارس المنتدب إليها) ---------- */
+  function delegs() { return (S.mode === 'registered' && S.lookup && S.lookup.delegations) || []; }
+  function hasDeleg() { return !S.limited && delegs().length > 0; }
+  function stepCount() { return hasDeleg() ? 5 : 4; }
+  function stepKey(i) { var k = ['person', 'school', 'classes']; if (hasDeleg()) k.push('deleg'); k.push('review'); return k[i - 1]; }
+  var STEP_N = { person: 'بياناتك', school: 'المدرسة', classes: 'الفصول', deleg: 'فصول الانتداب', review: 'المراجعة' };
+  function dTypeLabel(d) { return d.type === 'full' ? 'انتداب كلي' : 'انتداب جزئي'; }
+  function dSel(id) { return S.dsel[id] || (S.dsel[id] = new Map()); }
+  function dClass(d, id) { var l = d.classes || []; for (var i = 0; i < l.length; i++) if (l[i].id === id) return l[i]; return null; }
+  function dLines(d) {
+    var out = []; dSel(d.school_id).forEach(function (p, id) { var c = dClass(d, id); out.push((c ? c.label : 'فصل غير معروف') + ' · ' + perLabel(p)); });
+    return out;
+  }
+  function dTotal() { var t = 0; delegs().forEach(function (d) { dSel(d.school_id).forEach(function (p) { t += p; }); }); return t; }
+  function dChanged(d) {
+    var a = Array.from(dSel(d.school_id).entries()).sort(), b = Array.from((S.dbase[d.school_id] || new Map()).entries()).sort();
+    return JSON.stringify(a) !== JSON.stringify(b);
+  }
+
+  /* ---------- الشاشات ---------- */
+  var VIEWS = {};
+
+  VIEWS.launcher = function () {
+    var st = S.status;
+    function role(ic, t, s, fn, soon) {
+      return h('button', { type: 'button', class: 'role' + (soon ? ' soon' : ''), disabled: !!soon, onclick: fn },
+        h('span', { class: 'ic' }, ic), h('span', null, t, h('small', null, s)));
+    }
+    return h('div', { class: 'card' },
+      h('h1', null, 'بوابة بيانات المعلمين'),
+      h('p', { class: 'sub' }, st && st.year ? 'العام الدراسي ' + st.year + (st.term ? ' — ' + st.term : '') : 'اختر صفتك للمتابعة'),
+      st && st.editing_open === false ? h('div', { class: 'warn', id: 'closed-banner' }, 'فترة تعديل البيانات مغلقة حاليًا.' + (st.note ? ' ' + st.note : '')) : null,
+      S.statusErr ? h('div', { class: 'warn' }, 'تعذّر الاتصال بالخادم. ', h('button', { type: 'button', class: 'link', onclick: boot }, 'إعادة المحاولة')) : null,
+      h('div', { class: 'roles' },
+        role('👨‍🏫', 'معلم', 'راجع بياناتك وحدّثها، أو سجّل كمعلم جديد', function () { S.mode = 'registered'; go('gate'); }),
+        role('🏫', 'مشرف مدرسة', 'اعرض معلمي مدرستك، وعدّل بياناتهم وفصولهم، وأضف معلمًا جديدًا', function () { go('supgate'); }),
+        role('📝', 'معلم بالأجر — تقديم طلب', 'نموذج التقدم للتعاقد', function () { window.location.href = CFG.paid; }),
+        role('🧭', 'منسق المرحلة', 'راجع بيانات مدارس مرحلتك وفصولها ومعلميها، وأسند الفصول واعتمد البيانات', function () { window.location.href = '/coordinator/'; })
+      ));
+  };
+
+  VIEWS.gate = function () {
+    var isNew = S.mode === 'new';
+    var civil = h('input', { type: 'tel', id: 'g_civil', inputmode: 'numeric', maxlength: '20', autocomplete: 'off', dir: 'ltr' });
+    var phone = h('input', { type: 'tel', id: 'g_phone', inputmode: 'numeric', maxlength: '20', autocomplete: 'off', dir: 'ltr' });
+    var hintC = h('div', { class: 'hint' }), hintP = h('div', { class: 'hint' }), box = errbox();
+    bindDigits(civil, 14, hintC); bindPhone(phone, hintP);
+    var go1 = mkBtn('btn', 'متابعة', null, { type: 'submit' });
+    var form = h('form', { novalidate: true, onsubmit: async function (ev) {
+      ev.preventDefault(); hideErr(box);
+      var c = digits(civil.value), p = normPhone(phone.value);
+      if (c.length !== 14) { showErr(box, reasonMsg({ reason: 'bad_civil' })); civil.focus(); return; }
+      if (p.length < 10) { showErr(box, reasonMsg({ reason: 'bad_phone' })); phone.focus(); return; }
+      btnBusy(go1, true, 'جارٍ التحقق...');
+      try {
+        var r = await rpc('teacher_portal_lookup', { p_civil: c, p_phone: p });
+        if (!r || r.ok !== true) { showErr(box, reasonMsg(r || {})); btnBusy(go1, false); return; }
+        await enterRegistered(r, c, p);
+      } catch (e) { showErr(box, errMsg(e)); btnBusy(go1, false); }
+    } },
+      h('p', { class: 'sub', style: 'text-align:right' }, 'اكتب الرقم المدني ورقم هاتفك المسجّل لدى المدرسة، وسنعرض عليك بياناتك لتراجعها دون إعادة كتابتها.'),
+      h('div', { class: 'fg' }, h('label', { for: 'g_civil' }, 'الرقم المدني (القومي)'), civil, hintC),
+      h('div', { class: 'fg' }, h('label', { for: 'g_phone' }, 'رقم الهاتف'), phone, hintP),
+      box, go1);
+    var newBox = h('div', null,
+      h('div', { class: 'note' }, 'ستسجّل بياناتك ومدرستك وفصولك، ثم يراجعها المشرف ويعتمدها.'),
+      mkBtn('btn', 'ابدأ التسجيل', async function () {
+        if (S.status && S.status.editing_open === false) return;
+        await startNew();
+      }));
+    return h('div', { class: 'card' },
+      topbar('معلم'),
+      h('div', { class: 'tabs' },
+        h('button', { type: 'button', class: 'tab' + (isNew ? '' : ' on'), id: 'tab-reg', onclick: function () { S.mode = 'registered'; render(); } }, 'معلم مسجّل في النظام'),
+        h('button', { type: 'button', class: 'tab' + (isNew ? ' on' : ''), id: 'tab-new', onclick: function () { S.mode = 'new'; render(); } }, 'معلم جديد')),
+      S.status && S.status.editing_open === false ? h('div', { class: 'warn' }, 'فترة تعديل البيانات مغلقة حاليًا.') : null,
+      isNew ? newBox : form);
+  };
+
+  function topbar(title) {
+    return h('div', { class: 'top' },
+      h('button', { type: 'button', class: 'link', id: 'back-home', onclick: function () { var s = S.status, sc = S.schools, ca = S.cache; reset(); S.status = s; S.schools = sc; S.cache = ca; go('launcher'); } }, '‹ الرئيسية'),
+      h('strong', null, title || ''));
+  }
+
+  function bindDigits(inp, max, hint) {
+    inp.addEventListener('input', function () {
+      var raw = inp.value, d = digits(raw).slice(0, max);
+      if (d !== raw) { inp.value = d; if (hint && /[٠-٩۰-۹]/.test(raw)) hint.textContent = '✓ تم تحويل الأرقام تلقائيًا'; }
+      else if (hint) hint.textContent = '';
+    });
+  }
+  function bindPhone(inp, hint) {
+    inp.addEventListener('input', function () {
+      var raw = inp.value, d = normPhone(raw), plain = digits(raw);
+      if (d !== raw) inp.value = d;
+      if (hint) hint.textContent = (d !== plain.slice(0, 11) || /[٠-٩۰-۹]/.test(raw)) ? '✓ تم ضبط الرقم تلقائيًا' : '';
+    });
+  }
+
+  async function enterRegistered(r, c, p) {
+    S.auth = { civil: c, phone: p }; S.lookup = r; S.mode = 'registered'; S.limited = !!r.limited;
+    S.closed = r.editing_open === false;
+    var t = r.teacher || {};
+    S.base = {}; S.person = {};
+    PKEYS.forEach(function (k) { var v = t[k] == null ? '' : String(t[k]); S.base[k] = v; S.person[k] = v; });
+    S.school = r.school ? { id: r.school.id, name: r.school.name, stage_key: r.school.stage_key } : null;
+    S.baseSchoolId = S.school ? S.school.id : null;
+    S.stageKey = S.school ? S.school.stage_key : null;
+    S.baseSel = new Map((r.classes || []).map(function (x) { return [x.class_id, x.periods]; }));
+    S.sel = new Map(S.baseSel);
+    S.dbase = {}; S.dsel = {};
+    (r.delegations || []).forEach(function (d) {
+      var m = new Map((d.selected || []).map(function (x) { return [x.class_id, x.periods]; }));
+      S.dbase[d.school_id] = m; S.dsel[d.school_id] = new Map(m);
+    });
+    S.step = 1; S.draft = loadDraft(dkey());
+    try { await loadSchools(); if (S.school) await loadClasses(S.school.id); } catch (e) { /* تُعاد المحاولة عند الحاجة */ }
+    go(S.limited ? 'flow' : 'confirm');
+  }
+  async function startNew() {
+    S.auth = null; S.lookup = null; S.mode = 'new'; S.limited = false; S.closed = false;
+    S.base = {}; S.person = { work_type: '' }; PKEYS.forEach(function (k) { S.person[k] = ''; }); S.person.civil_id = '';
+    S.school = null; S.stageKey = null; S.baseSel = new Map(); S.sel = new Map(); S.step = 1; S.dbase = {}; S.dsel = {};
+    S.draft = loadDraft(dkey()); go('flow');
+  }
+
+  /* ---------- بطاقة التأكيد ---------- */
+  function missingList() {
+    var m = [];
+    if (!pv('phone')) m.push('phone');
+    if (!pv('qualification')) m.push('qualification');
+    if (!pv('specialty')) m.push('specialty');
+    if (!S.school) m.push('school');
+    if (S.sel.size === 0) m.push('classes');
+    if (hasDeleg() && delegs().some(function (d) { return dSel(d.school_id).size === 0; })) m.push('deleg');
+    return m;
+  }
+  function kvRow(label, value, miss, tag) {
+    return h('div', { class: miss ? 'miss' : null }, h('span', { class: 'k' }, label),
+      h('span', { class: 'v' }, value || (miss ? 'غير مسجّل' : '—'), miss ? h('span', { class: 'tag m' }, 'ناقص') : null, tag || null));
+  }
+  function classNames() {
+    var out = []; S.sel.forEach(function (p, id) { var c = classById(id); out.push(c ? c.label : 'فصل غير معروف'); });
+    return out;
+  }
+  function classLines() {
+    var out = []; S.sel.forEach(function (p, id) { var c = classById(id); out.push((c ? c.label : 'فصل غير معروف') + ' · ' + perLabel(p)); });
+    return out;
+  }
+
+  VIEWS.confirm = function () {
+    var miss = missingList(), box = errbox();
+    var rows = [kvRow('الاسم', pv('full_name')), kvRow('الرقم المدني', null)];
+    rows[1] = h('div', null, h('span', { class: 'k' }, 'الرقم المدني'), h('span', { class: 'v' }, h('span', { class: 'ltr' }, '••••••••••' + S.auth.civil.slice(-4))));
+    var tcode = S.lookup && S.lookup.teacher ? clean(S.lookup.teacher.teacher_code) : '';
+    rows.push(kvRow('كود المعلم', tcode ? h('span', { class: 'ltr', id: 'v-code' }, tcode) : 'غير مسجّل'));
+    var wtk = S.lookup && S.lookup.teacher ? S.lookup.teacher.work_type : '';
+    if (wtk) rows.push(kvRow('نوع العمل', wtk === 'permanent' ? 'معيّن (دائم)' : wtk === 'paid' ? 'بالأجر (عقد)' : String(wtk)));
+    rows.push(kvRow('المدرسة', S.school ? S.school.name : '', miss.indexOf('school') >= 0));
+    rows.push(kvRow('التليفون', pv('phone') ? pv('phone') : '', miss.indexOf('phone') >= 0));
+    rows.push(kvRow('البريد الإلكتروني', pv('email'), !pv('email')));
+    rows.push(kvRow('المؤهل', pv('qualification'), miss.indexOf('qualification') >= 0));
+    rows.push(kvRow('التخصص', pv('specialty'), miss.indexOf('specialty') >= 0));
+    if (pv('qualification_year')) rows.push(kvRow('سنة المؤهل', pv('qualification_year')));
+    if (pv('residence')) rows.push(kvRow('محل الإقامة', pv('residence')));
+    var perm = isPermanent();
+    if (perm || pv('job_title')) rows.push(kvRow('الدرجة الوظيفية', pv('job_title') || 'غير مسجّل'));
+    ['appointment_date', 'grade_acquired_date', 'work_start_date'].forEach(function (k) {
+      if (perm || pv(k)) rows.push(kvRow(LBL[k], pv(k) ? h('span', { class: 'ltr', id: 'v-' + k }, fmtDate(pv(k))) : 'غير مسجّل'));
+    });
+    var cn = classLines();
+    rows.push(h('div', { class: miss.indexOf('classes') >= 0 ? 'miss' : null }, h('span', { class: 'k' }, 'الفصول'),
+      h('span', { class: 'v' }, cn.length ? cn.map(function (x) { return h('div', null, x); }) : 'لم تُسجَّل فصول', miss.indexOf('classes') >= 0 ? h('span', { class: 'tag m' }, 'ناقص') : null)));
+    if (S.sel.size) rows.push(kvRow('إجمالي حصصي الأسبوعية', h('span', { id: 'v-total' }, String(totalPeriods()))));
+    var dnames = delegs().map(function (d) { return d.school_name; });
+    var oc = ((S.lookup && S.lookup.other_classes) || []).filter(function (x) { return dnames.indexOf(x.school) < 0; }), ocBy = {}, ocOrder = [];
+    oc.forEach(function (x) { if (!ocBy[x.school]) { ocBy[x.school] = []; ocOrder.push(x.school); } ocBy[x.school].push(x); });
+    delegs().forEach(function (d) {
+      var ln = dLines(d), empty = ln.length === 0;
+      rows.push(h('div', { class: 'oc deleg' + (empty ? ' miss' : ''), 'data-deleg': d.school_id }, h('span', { class: 'k' }, dTypeLabel(d)),
+        h('span', { class: 'v' }, h('div', null, d.school_name),
+          empty ? 'لم تُسجَّل فصول في هذه المدرسة' : ln.map(function (x) { return h('div', null, x); }),
+          empty ? h('span', { class: 'tag m' }, 'ناقص') : null)));
+    });
+    if (hasDeleg() && dTotal() > 0) rows.push(kvRow('إجمالي حصصي مع الانتداب', h('span', { id: 'v-total-all' }, String(totalPeriods() + dTotal()))));
+    ocOrder.forEach(function (sn) {
+      rows.push(h('div', { class: 'oc' }, h('span', { class: 'k' }, 'انتداب / إعارة'),
+        h('span', { class: 'v' }, h('div', null, sn), ocBy[sn].map(function (x) { return h('div', null, x.label + ' · ' + perLabel(x.periods)); }))));
+    });
+    var otherN = hasDeleg() ? oc.length : (S.lookup.other_schools_classes || 0);
+    var disabled = S.closed;
+    var primary;
+    if (miss.length === 0) {
+      primary = mkBtn('btn-ok', '✓ بياناتي صحيحة', async function (ev) {
+        hideErr(box); var b = ev.currentTarget; btnBusy(b, true, 'جارٍ الإرسال...');
+        try { await doSubmit(true, box); } catch (e) { showErr(box, errMsg(e)); }
+        if (document.body.contains(b)) btnBusy(b, false);
+      }, { id: 'btn-confirm', disabled: disabled });
+    } else {
+      primary = mkBtn('btn', 'إكمال البيانات الناقصة', function () { S.step = (miss.length === 1 && miss[0] === 'deleg') ? stepCount() - 1 : 1; go('flow'); }, { id: 'btn-complete', disabled: disabled });
+    }
+    var second = mkBtn('btn2', miss.length === 0 ? 'تعديل بياناتي' : 'تعديل بيانات أخرى', function () { S.step = 1; go('flow'); }, { id: 'btn-edit', disabled: disabled });
+    var d = S.draft;
+    return h('div', { class: 'card' }, topbar('بياناتك'),
+      h('h2', null, 'أهلًا ' + (pv('full_name').split(' ')[0] || '')),
+      h('p', { class: 'sub', style: 'text-align:right' }, 'راجع بياناتك المسجّلة. إن كانت صحيحة اضغط «بياناتي صحيحة»، وإلا عدّلها أو أكمل الناقص.'),
+      S.closed ? h('div', { class: 'warn', id: 'closed-banner' }, 'فترة تعديل البيانات مغلقة حاليًا، يمكنك المراجعة فقط.') : null,
+      S.lookup.pending ? h('div', { class: 'note', id: 'pending-note' }, 'لديك طلب سابق قيد المراجعة (رقم ' + S.lookup.pending.ref + '). أي إرسال جديد يحلّ محله.') : null,
+      otherN > 0 ? h('div', { class: 'note' }, 'لديك ' + otherN + ' فصل في مدرسة أخرى (انتداب/إعارة)؛ تُدار من المشرف ولا تتغير من هنا.') : null,
+      d ? h('div', { class: 'warn', id: 'draft-note' }, 'لديك مسودة غير مرسلة محفوظة على هذا الجهاز. ',
+        h('button', { type: 'button', class: 'link', id: 'draft-restore', onclick: function () { restoreDraft(d); S.draft = null; S.step = Math.min(d.step || 1, stepCount()); go('flow'); } }, 'متابعة المسودة'), ' · ',
+        h('button', { type: 'button', class: 'link', id: 'draft-drop', onclick: function () { dropDraft(dkey()); S.draft = null; render(); } }, 'تجاهلها')) : null,
+      h('div', { class: 'kv' }, rows), box, primary, h('div', { style: 'height:10px' }), second);
+  };
+
+  function restoreDraft(d) {
+    Object.keys(d.person || {}).forEach(function (k) { S.person[k] = d.person[k]; });
+    if (!isSup()) { S.stageKey = d.stage || null; S.school = d.school ? (schoolById(d.school) || null) : null; }
+    S.sel = new Map(d.sel || []);
+    if (!isSup() && d.dsel) Object.keys(S.dsel).forEach(function (k) { if (d.dsel[k]) S.dsel[k] = new Map(d.dsel[k]); });
+  }
+
+  /* ---------- الإرسال ---------- */
+  function buildPayload(confirmOnly) {
+    var person = {};
+    if (!confirmOnly) {
+      PKEYS.forEach(function (k) { var v = pv(k); if (v) person[k] = v; });
+      if (S.mode === 'new' && S.person.work_type) person.work_type = S.person.work_type;
+    }
+    var pl = { person: person, school_id: S.school ? S.school.id : null,
+      classes: Array.from(S.sel.entries()).map(function (e) { return { class_id: e[0], periods: e[1] }; }) };
+    if (!confirmOnly && hasDeleg()) {
+      var dc = [];
+      delegs().forEach(function (d) {
+        if (dChanged(d)) dc.push({ school_id: d.school_id, classes: Array.from(dSel(d.school_id).entries()).map(function (e) { return { class_id: e[0], periods: e[1] }; }) });
+      });
+      if (dc.length) pl.deleg_classes = dc;
+    }
+    return pl;
+  }
+  async function doSubmit(confirmOnly, box) {
+    if (S.busy) return; S.busy = true;
+    try {
+      var payload = buildPayload(confirmOnly), args;
+      if (S.mode === 'new') args = { p_civil: digits(S.person.civil_id), p_phone: pv('phone'), p_kind: 'new', p_payload: payload };
+      else args = { p_civil: S.auth.civil, p_phone: S.auth.phone, p_kind: 'update', p_payload: payload };
+      var r = await rpc('teacher_portal_submit', args);
+      if (!r || r.ok !== true) { showErr(box, reasonMsg(r || {})); return; }
+      dropDraft(dkey()); S.result = r; go('done');
+    } finally { S.busy = false; }
+  }
+
+  VIEWS.done = function () {
+    var r = S.result || {};
+    return h('div', { class: 'card' }, h('div', { class: 'ok-screen' },
+      h('div', { class: 'ok-ic' }, '✓'),
+      h('h2', null, r.unchanged ? 'تم تأكيد بياناتك' : 'تم إرسال بياناتك'),
+      h('p', null, r.unchanged ? 'شكرًا لك، سُجّل تأكيدك على صحة بياناتك.' : 'ستراجعها إدارة التوجيه وتظهر في البرنامج بعد اعتمادها.'),
+      h('div', { class: 'refno', id: 'refno' }, r.ref || ''),
+      h('p', { class: 'sub' }, 'احتفظ برقم الطلب. يمكنك الدخول مرة أخرى وإرسال تعديل جديد قبل الاعتماد.'),
+      mkBtn('btn2', 'العودة للرئيسية', function () { var s = S.status, sc = S.schools, ca = S.cache; reset(); S.status = s; S.schools = sc; S.cache = ca; go('launcher'); }, { id: 'btn-home' })));
+  };
+
+  /* ---------- شاشة التعبئة (4 خطوات) ---------- */
+
+  VIEWS.flow = function () {
+    var wrap = h('div', { class: 'card' });
+    wrap.appendChild(topbar(S.mode === 'new' ? 'تسجيل معلم جديد' : 'تعديل البيانات'));
+    var steps = h('div', { class: 'steps' });
+    for (var i = 1; i <= stepCount(); i++) steps.appendChild(h('div', { class: 'st' + (i === S.step ? ' on' : i < S.step ? ' done' : ''), id: 'st' + i }, i < S.step ? '✓' : String(i)));
+    wrap.appendChild(steps);
+    wrap.appendChild(h('div', { class: 'stlabel', id: 'stlabel' }, STEP_N[stepKey(S.step)]));
+    if (S.mode === 'registered' && S.limited && S.step === 1) wrap.appendChild(h('div', { class: 'warn', id: 'limited-note' }, 'لا يوجد رقم هاتف مسجّل لك في النظام، لذلك لا نعرض بياناتك. اكتب بياناتك كاملة وسيراجعها المشرف قبل اعتمادها.'));
+    if (S.closed) wrap.appendChild(h('div', { class: 'warn', id: 'closed-banner' }, 'فترة تعديل البيانات مغلقة حاليًا.'));
+    if (S.draft && S.step === 1) {
+      var d = S.draft;
+      wrap.appendChild(h('div', { class: 'warn', id: 'draft-note' }, 'لديك مسودة غير مرسلة محفوظة على هذا الجهاز. ',
+        h('button', { type: 'button', class: 'link', id: 'draft-restore', onclick: function () { restoreDraft(d); S.draft = null; S.step = Math.min(d.step || 1, stepCount()); render(); } }, 'متابعة المسودة'), ' · ',
+        h('button', { type: 'button', class: 'link', id: 'draft-drop', onclick: function () { dropDraft(dkey()); S.draft = null; render(); } }, 'تجاهلها')));
+    }
+    var body = h('div', { id: 'stepbody' });
+    wrap.appendChild(body);
+    var box = errbox(); wrap.appendChild(box);
+    var nav = h('div', { class: 'row' });
+    if (S.step > 1) nav.appendChild(mkBtn('btn2', 'السابق', function () { S.step--; saveDraft(); render(); }, { id: 'btn-prev' }));
+    if (S.step < stepCount()) nav.appendChild(mkBtn('btn', 'التالي', async function () { hideErr(box); if (await stepOk(S.step, box)) { S.step++; saveDraft(); render(); } }, { id: 'btn-next' }));
+    else nav.appendChild(mkBtn('btn-ok', S.mode === 'new' ? 'إرسال التسجيل' : 'إرسال التعديلات', async function (ev) {
+      hideErr(box);
+      if (S.closed) { showErr(box, reasonMsg({ reason: 'closed' })); return; }
+      if (S.sel.size === 0 && !S._noClassOk) { showErr(box, 'لم تختر أي فصل. إن كنت لا تدرّس أي فصل الآن اضغط «إرسال» مرة أخرى للتأكيد.'); S._noClassOk = true; return; }
+      var b = ev.currentTarget; btnBusy(b, true, 'جارٍ الإرسال...');
+      try { await doSubmit(false, box); } catch (e) { showErr(box, errMsg(e)); }
+      if (document.body.contains(b)) btnBusy(b, false);
+    }, { id: 'btn-submit' }));
+    wrap.appendChild(nav);
+    wrap.appendChild(h('p', { class: 'sub', style: 'margin-top:12px;font-size:.8rem' }, 'تُحفظ مسودتك تلقائيًا على هذا الجهاز.'));
+    ({ person: renderStep1, school: renderStep2, classes: renderStep3, deleg: renderStepDeleg, review: renderStep4 })[stepKey(S.step)](body, box);
+    return wrap;
+  };
+
+  function fg(label, control, id, req, hint) {
+    return h('div', { class: 'fg' }, h('label', { for: id, class: req ? 'req' : null }, label), control, hint || null, h('div', { class: 'ferr', id: 'err_' + id }));
+  }
+  function textInput(k, extra) {
+    var el = h('input', Object.assign({ type: 'text', id: 'f_' + k, value: S.person[k] || '', autocomplete: 'off' }, extra || {}));
+    el.addEventListener('input', function () { S.person[k] = el.value; el.classList.remove('invalid'); saveDraft(); });
+    el.addEventListener('blur', function () { var v = clean(el.value); if (v !== el.value) { el.value = v; S.person[k] = v; } });
+    return el;
+  }
+  function setInvalid(id, msg) {
+    var el = document.getElementById(id), er = document.getElementById('err_' + id);
+    if (el) { el.classList.add('invalid'); try { el.focus(); } catch (e) { } }
+    if (er) { er.textContent = msg; er.classList.add('on'); }
+  }
+  function clearInvalid() {
+    Array.prototype.forEach.call(document.querySelectorAll('.invalid'), function (e) { e.classList.remove('invalid'); });
+    Array.prototype.forEach.call(document.querySelectorAll('.ferr.on'), function (e) { e.classList.remove('on'); e.textContent = ''; });
+  }
+
+  function renderStep1(body) {
+    var isNew = S.mode === 'new' || S.mode === 'sup_new';
+    body.appendChild(fg('الاسم الكامل (رباعي)', textInput('full_name'), 'f_full_name', true));
+    if (isNew) {
+      var ci = h('input', { type: 'tel', id: 'f_civil_id', inputmode: 'numeric', maxlength: '20', autocomplete: 'off', dir: 'ltr', value: S.person.civil_id || '' });
+      var hc = h('div', { class: 'hint' }); bindDigits(ci, 14, hc);
+      ci.addEventListener('input', function () { S.person.civil_id = ci.value; ci.classList.remove('invalid'); saveDraft(); });
+      body.appendChild(fg('الرقم المدني (القومي)', ci, 'f_civil_id', true, hc));
+    } else {
+      body.appendChild(h('div', { class: 'fg' }, h('label', null, 'الرقم المدني'), h('input', { type: 'text', readonly: true, dir: 'ltr', value: '••••••••••' + (S.mode === 'sup_edit' ? S.sup.t.civil_last4 : S.auth.civil.slice(-4)), 'aria-readonly': 'true' })));
+    }
+    var ph = h('input', { type: 'tel', id: 'f_phone', inputmode: 'numeric', maxlength: '20', autocomplete: 'off', dir: 'ltr', value: S.person.phone || '' });
+    var hp = h('div', { class: 'hint' }); bindPhone(ph, hp);
+    ph.addEventListener('input', function () { S.person.phone = ph.value; ph.classList.remove('invalid'); saveDraft(); });
+    body.appendChild(fg('رقم الهاتف', ph, 'f_phone', S.mode !== 'sup_edit', hp));
+    var em = h('input', { type: 'email', id: 'f_email', autocomplete: 'off', dir: 'ltr', value: S.person.email || '' });
+    em.addEventListener('input', function () { var v = em.value.replace(/\s+/g, '').toLowerCase(); if (v !== em.value) em.value = v; S.person.email = v; em.classList.remove('invalid'); saveDraft(); });
+    body.appendChild(fg('البريد الإلكتروني (اختياري)', em, 'f_email', false));
+    if (isNew) {
+      body.appendChild(h('div', { class: 'fg' }, h('label', { class: 'req' }, 'نوع العمل'),
+        h('div', { class: 'chips', role: 'group', 'aria-label': 'نوع العمل' },
+          [['permanent', 'معيّن (دائم)'], ['paid', 'بالأجر (عقد)']].map(function (o) {
+            return h('button', { type: 'button', class: 'chip', 'data-wt': o[0], 'aria-pressed': S.person.work_type === o[0] ? 'true' : 'false', onclick: function (ev) {
+              S.person.work_type = o[0]; saveDraft();
+              Array.prototype.forEach.call(ev.currentTarget.parentNode.children, function (c) { c.setAttribute('aria-pressed', c === ev.currentTarget ? 'true' : 'false'); });
+              var er = document.getElementById('err_wt'); if (er) { er.classList.remove('on'); er.textContent = ''; }
+            } }, o[1]);
+          })), h('div', { class: 'ferr', id: 'err_wt' })));
+    }
+    var jobs = JOBS.slice(); if (S.person.job_title && jobs.indexOf(S.person.job_title) < 0) jobs.push(S.person.job_title);
+    var js = h('select', { id: 'f_job_title' }, h('option', { value: '' }, '— اختر —'), jobs.map(function (j) { return h('option', { value: j }, j); }));
+    js.value = S.person.job_title || '';
+    js.addEventListener('change', function () { S.person.job_title = js.value; saveDraft(); });
+    body.appendChild(fg('الدرجة الوظيفية', js, 'f_job_title', false));
+    body.appendChild(fg('التخصص', textInput('specialty', { placeholder: 'مثال: علوم – أحياء' }), 'f_specialty', false));
+    var ql = textInput('qualification', { list: 'dl_qual', placeholder: 'اختر من القائمة أو اكتب' });
+    body.appendChild(fg('المؤهل', ql, 'f_qualification', false));
+    body.appendChild(h('datalist', { id: 'dl_qual' }, QUALS.map(function (q) { return h('option', { value: q }); })));
+    var qy = h('input', { type: 'tel', id: 'f_qualification_year', inputmode: 'numeric', maxlength: '8', autocomplete: 'off', dir: 'ltr', value: S.person.qualification_year || '' });
+    bindDigits(qy, 4, null);
+    qy.addEventListener('input', function () { S.person.qualification_year = qy.value; qy.classList.remove('invalid'); saveDraft(); });
+    body.appendChild(fg('سنة الحصول على المؤهل', qy, 'f_qualification_year', false));
+    body.appendChild(fg('محل الإقامة', textInput('residence'), 'f_residence', false));
+    var anyDate = S.person.appointment_date || S.person.grade_acquired_date || S.person.work_start_date;
+    var det = h('details', { id: 'dates-box', open: !!anyDate || isPermanent() }, h('summary', null, 'بيانات وظيفية (اختياري)'));
+    ['appointment_date', 'grade_acquired_date', 'work_start_date'].forEach(function (k) {
+      var di = h('input', { type: 'date', id: 'f_' + k, value: S.person[k] || '', dir: 'ltr' });
+      di.addEventListener('change', function () { S.person[k] = di.value; di.classList.remove('invalid'); saveDraft(); });
+      det.appendChild(fg(LBL[k], di, 'f_' + k, false));
+    });
+    body.appendChild(det);
+  }
+
+  async function stepOk(step, box) {
+    clearInvalid();
+    if (step === 1) {
+      var name = pv('full_name');
+      if (name.length < 6 || name.split(' ').length < 2) { setInvalid('f_full_name', 'اكتب الاسم الكامل.'); return false; }
+      if ((S.mode === 'new' || S.mode === 'sup_new') && digits(S.person.civil_id).length !== 14) { setInvalid('f_civil_id', 'الرقم المدني يجب أن يكون 14 رقمًا.'); return false; }
+      var ph = normPhone(S.person.phone);
+      var okPhone = /^01[0125][0-9]{8}$/.test(ph) || (S.mode === 'registered' && ph !== '' && ph === normPhone(S.base.phone)) || (S.mode === 'sup_edit' && ph === '');
+      if (!okPhone) { setInvalid('f_phone', 'اكتب رقم الهاتف كاملًا (11 رقمًا يبدأ بـ 01).'); return false; }
+      S.person.phone = ph;
+      var em = pv('email');
+      if (em && !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(em)) { setInvalid('f_email', 'البريد الإلكتروني غير صحيح.'); return false; }
+      if ((S.mode === 'new' || S.mode === 'sup_new') && !S.person.work_type) { var er = document.getElementById('err_wt'); er.textContent = 'اختر نوع العمل.'; er.classList.add('on'); return false; }
+      var qy = pv('qualification_year');
+      if (qy && (!/^[0-9]{4}$/.test(qy) || +qy < 1960 || +qy > new Date().getFullYear())) { setInvalid('f_qualification_year', 'اكتب سنة صحيحة من 4 أرقام.'); return false; }
+      var dts = ['appointment_date', 'grade_acquired_date', 'work_start_date'];
+      for (var i = 0; i < dts.length; i++) {
+        var v = pv(dts[i]); if (!v) continue;
+        var t = Date.parse(v);
+        if (isNaN(t) || t < Date.parse('1970-01-01') || t > Date.now() + 366 * 864e5) { setInvalid('f_' + dts[i], 'تاريخ غير صحيح.'); return false; }
+      }
+    }
+    if (step === 2 && !S.school) { showErr(box, 'اختر مدرستك أولًا.'); return false; }
+    return true;
+  }
+
+  /* الخطوة 2: المدرسة */
+  function renderStep2(body, box) {
+    var chips = h('div', { class: 'chips', role: 'group', 'aria-label': 'المرحلة' });
+    var picked = h('div', { id: 'picked' }), list = h('div', { class: 'list', id: 'school-list', role: 'listbox' });
+    var q = h('input', { type: 'text', id: 'school-q', placeholder: 'ابحث باسم المدرسة', autocomplete: 'off', value: S.q || '' });
+    function drawPicked() {
+      picked.replaceChildren();
+      if (S.school) picked.appendChild(h('div', { class: 'picked', id: 'picked-card' },
+        h('span', null, '✓ ', h('strong', null, S.school.name)),
+        h('button', { type: 'button', class: 'link', onclick: function () { S.school = null; S.sel = new Map(); saveDraft(); drawPicked(); drawList(); } }, 'تغيير')));
+    }
+    function drawChips() {
+      chips.replaceChildren();
+      STAGES.forEach(function (s) {
+        chips.appendChild(h('button', { type: 'button', class: 'chip', 'data-stage': s.k, 'aria-pressed': S.stageKey === s.k ? 'true' : 'false', onclick: function () {
+          if (S.school && S.school.stage_key !== s.k) { S.school = null; S.sel = new Map(); }
+          S.stageKey = s.k; saveDraft(); drawChips(); drawPicked(); drawList();
+        } }, s.t));
+      });
+    }
+    function drawList() {
+      list.replaceChildren();
+      if (S.school) { list.style.display = 'none'; q.style.display = 'none'; return; }
+      list.style.display = ''; q.style.display = '';
+      if (!S.stageKey) { list.appendChild(h('div', { class: 'empty' }, 'اختر المرحلة أولًا')); return; }
+      if (!S.schools) { list.appendChild(h('div', { class: 'empty' }, 'جارٍ تحميل المدارس...')); return; }
+      var toks = arNorm(S.q).split(' ').filter(Boolean);
+      var res = S.schools.filter(function (s) {
+        if (s.stage_key !== S.stageKey) return false;
+        var n = arNorm(s.name); return toks.every(function (t) { return n.indexOf(t) >= 0; });
+      });
+      if (!res.length) { list.appendChild(h('div', { class: 'empty' }, 'لا توجد مدرسة بهذا الاسم في هذه المرحلة')); return; }
+      res.forEach(function (s) {
+        list.appendChild(h('button', { type: 'button', role: 'option', 'data-school': s.id, onclick: function () {
+          S.school = { id: s.id, name: s.name, stage_key: s.stage_key }; S.q = ''; q.value = '';
+          if (S.school.id !== S.baseSchoolId && S.mode === 'registered') S.sel = new Map(); else if (S.mode === 'registered') S.sel = new Map(S.sel.size ? S.sel : S.baseSel);
+          saveDraft(); drawPicked(); drawList();
+        } }, s.name));
+      });
+    }
+    q.addEventListener('input', function () { S.q = q.value; drawList(); });
+    body.appendChild(h('div', { class: 'fg' }, h('label', null, 'المرحلة التي تعمل بها'), chips));
+    body.appendChild(picked); body.appendChild(q); body.appendChild(list);
+    drawChips(); drawPicked(); drawList();
+    if (!S.schools) loadSchools().then(function () { drawList(); }).catch(function (e) { showErr(box, errMsg(e)); });
+  }
+
+  /* الخطوة 3: الفصول */
+  function renderStep3(body, box) {
+    if (!S.school) {
+      body.appendChild(h('div', { class: 'warn' }, 'اختر المدرسة أولًا ثم ارجع لاختيار الفصول.'));
+      body.appendChild(mkBtn('btn2', 'اختيار المدرسة', function () { S.step = 2; render(); }));
+      return;
+    }
+    var holder = h('div', { id: 'classes-holder' }, h('div', { class: 'sub' }, 'جارٍ تحميل فصول المدرسة...'));
+    body.appendChild(h('div', { class: 'note' }, isSup() ? 'اضغط على الفصول التي يدرّس لها المعلم مادة العلوم في ' + S.school.name + '.'
+      : 'اضغط على الفصول التي تدرّس لها مادة العلوم، من فصول ' + S.school.name + '.'));
+    body.appendChild(holder);
+    loadClasses(S.school.id).then(function (list) {
+      holder.replaceChildren();
+      if (!list.length) { holder.appendChild(h('div', { class: 'warn' }, 'لا توجد فصول مسجّلة لهذه المدرسة بعد. يمكنك المتابعة وسيضيفها المشرف.')); return; }
+      var known = {}; list.forEach(function (c) { known[c.id] = c; });
+      Array.from(S.sel.keys()).forEach(function (id) { if (!known[id]) S.sel.delete(id); });
+      var grid = h('div', { id: 'grid' }), sum = h('div', { id: 'sum' });
+      function draw() {
+        grid.replaceChildren();
+        var groups = [], idx = {};
+        list.forEach(function (c) { if (!(c.grade_label in idx)) { idx[c.grade_label] = groups.length; groups.push({ t: c.grade_label, items: [] }); } groups[idx[c.grade_label]].items.push(c); });
+        groups.forEach(function (g) {
+          grid.appendChild(h('div', { class: 'grade' }, g.t));
+          grid.appendChild(h('div', { class: 'chips' }, g.items.map(function (c) {
+            var on = S.sel.has(c.id);
+            return h('button', { type: 'button', class: 'chip', 'data-class': c.id, 'aria-pressed': on ? 'true' : 'false', onclick: function () {
+              if (S.sel.has(c.id)) S.sel.delete(c.id); else S.sel.set(c.id, S.baseSel.get(c.id) || c.periods);
+              S._noClassOk = false; saveDraft(); draw();
+            } }, (on ? '✓ ' : '') + c.class_label);
+          })));
+        });
+        sum.replaceChildren();
+        sum.appendChild(h('h2', { style: 'margin-top:18px' }, (isSup() ? 'فصول المعلم (' : 'فصولي (') + S.sel.size + ')'));
+        if (!S.sel.size) sum.appendChild(h('div', { class: 'sub', style: 'text-align:right' }, (isSup() ? 'لم تُختر أي فصل بعد.' : 'لم تختر أي فصل بعد.')));
+        list.forEach(function (c) {
+          if (!S.sel.has(c.id)) return;
+          var row = h('div', { class: 'sel', 'data-sel': c.id }, h('span', { class: 'nm' }, c.label));
+          if (c.periods > 1) {
+            var sl = h('select', { 'aria-label': 'عدد الحصص' }, Array.from({ length: c.periods }, function (_, i) { return h('option', { value: String(i + 1) }, perLabel(i + 1)); }));
+            sl.value = String(S.sel.get(c.id)); sl.addEventListener('change', function () { S.sel.set(c.id, +sl.value); saveDraft(); draw(); });
+            row.appendChild(sl);
+          } else row.appendChild(h('span', { class: 'sub', style: 'margin:0' }, '1 حصة'));
+          row.appendChild(h('button', { type: 'button', class: 'x', 'aria-label': 'إزالة', onclick: function () { S.sel.delete(c.id); saveDraft(); draw(); } }, '✕'));
+          sum.appendChild(row);
+          if (isSup()) {
+            var tot = (c.assigned || 0) - (S.baseSel.get(c.id) || 0) + S.sel.get(c.id);
+            if (tot > c.periods) sum.appendChild(h('div', { class: 'warn over', 'data-over': c.id, style: 'margin:4px 0 8px;font-size:.82rem' },
+              '⚠ مجموع الحصص المُسندة لهذا الفصل ' + tot + ' والمقرر ' + c.periods + '. تنبيه فقط، ويمكنك المتابعة.'));
+          }
+        });
+        if (S.sel.size) sum.appendChild(h('div', { class: 'total', id: 'total' }, 'إجمالي الحصص الأسبوعية: ' + totalPeriods()));
+      }
+      holder.appendChild(grid); holder.appendChild(sum); draw();
+    }).catch(function (e) { holder.replaceChildren(); showErr(box, errMsg(e)); });
+  }
+
+  /* خطوة فصول الانتداب (للمعلم المنتدب فقط): اختيار فصوله في كل مدرسة منتدب إليها */
+  function renderStepDeleg(body, box) {
+    body.appendChild(h('div', { class: 'note', id: 'deleg-intro' }, 'أنت منتدب إلى ' + (delegs().length > 1 ? 'المدارس التالية' : 'المدرسة التالية') +
+      '. اضغط على الفصول التي تدرّس لها مادة العلوم هناك. لا يُطبَّق شيء قبل اعتماد الإدارة، ويمكنك المتابعة دون اختيار إن لم تدرّس فيها.'));
+    var totEl = h('div', { class: 'total', id: 'total-all' });
+    function updAll() { totEl.textContent = 'إجمالي حصصي (الأصلية + الانتداب): ' + (totalPeriods() + dTotal()); }
+    delegs().forEach(function (d) {
+      var sel = dSel(d.school_id), list = d.classes || [], sec = h('div', { class: 'deleg-sec', 'data-deleg': d.school_id });
+      sec.appendChild(h('h2', { style: 'margin-top:14px' }, d.school_name));
+      sec.appendChild(h('div', { class: 'sub', style: 'text-align:right' }, dTypeLabel(d)));
+      body.appendChild(sec);
+      if (!list.length) { sec.appendChild(h('div', { class: 'warn' }, 'لا توجد فصول علوم مسجّلة لهذه المدرسة بعد. يمكنك المتابعة وسيضيفها المشرف.')); return; }
+      var known = {}; list.forEach(function (c) { known[c.id] = c; });
+      Array.from(sel.keys()).forEach(function (id) { if (!known[id]) sel.delete(id); });
+      var grid = h('div', { class: 'dgrid' }), sum = h('div', { class: 'dsum' });
+      function draw() {
+        grid.replaceChildren();
+        var groups = [], idx = {};
+        list.forEach(function (c) { if (!(c.grade_label in idx)) { idx[c.grade_label] = groups.length; groups.push({ t: c.grade_label, items: [] }); } groups[idx[c.grade_label]].items.push(c); });
+        groups.forEach(function (g) {
+          grid.appendChild(h('div', { class: 'grade' }, g.t));
+          grid.appendChild(h('div', { class: 'chips' }, g.items.map(function (c) {
+            var on = sel.has(c.id);
+            return h('button', { type: 'button', class: 'chip', 'data-dclass': c.id, 'aria-pressed': on ? 'true' : 'false', onclick: function () {
+              if (sel.has(c.id)) sel.delete(c.id); else sel.set(c.id, (S.dbase[d.school_id] && S.dbase[d.school_id].get(c.id)) || c.periods);
+              saveDraft(); draw();
+            } }, (on ? '✓ ' : '') + c.class_label);
+          })));
+        });
+        sum.replaceChildren();
+        sum.appendChild(h('div', { class: 'sub', style: 'text-align:right;margin-top:10px' }, 'فصولي في هذه المدرسة (' + sel.size + ')'));
+        list.forEach(function (c) {
+          if (!sel.has(c.id)) return;
+          var row = h('div', { class: 'sel', 'data-dsel': c.id }, h('span', { class: 'nm' }, c.label));
+          if (c.periods > 1) {
+            var sl = h('select', { 'aria-label': 'عدد الحصص' }, Array.from({ length: c.periods }, function (_, i) { return h('option', { value: String(i + 1) }, perLabel(i + 1)); }));
+            sl.value = String(sel.get(c.id)); sl.addEventListener('change', function () { sel.set(c.id, +sl.value); saveDraft(); draw(); });
+            row.appendChild(sl);
+          } else row.appendChild(h('span', { class: 'sub', style: 'margin:0' }, '1 حصة'));
+          row.appendChild(h('button', { type: 'button', class: 'x', 'aria-label': 'إزالة', onclick: function () { sel.delete(c.id); saveDraft(); draw(); } }, '✕'));
+          sum.appendChild(row);
+        });
+        var tt = 0; sel.forEach(function (p) { tt += p; });
+        if (sel.size) sum.appendChild(h('div', { class: 'total', 'data-dtotal': d.school_id }, 'حصصي في هذه المدرسة: ' + tt));
+        updAll();
+      }
+      sec.appendChild(grid); sec.appendChild(sum); draw();
+    });
+    updAll(); body.appendChild(totEl);
+  }
+
+  /* الخطوة الأخيرة: المراجعة */
+  function renderStep4(body, box) {
+    var isNew = S.mode === 'new' || S.mode === 'sup_new', rows = [];
+    function row(k, label, val, old) {
+      var changed = !isNew && clean(val) !== clean(old);
+      rows.push(h('div', null, h('span', { class: 'k' }, label),
+        h('span', { class: 'v' }, val || '—', changed ? h('span', { class: 'tag c' }, 'عُدّل') : null,
+          changed && clean(old) ? h('span', { class: 'old' }, old) : null)));
+    }
+    var wt = S.person.work_type === 'permanent' ? 'معيّن (دائم)' : S.person.work_type === 'paid' ? 'بالأجر (عقد)' : '';
+    if (S.supVisitor) rows.push(h('div', null, h('span', { class: 'k' }, 'المعلم'), h('span', { class: 'v' }, S.sup.t.full_name)));
+    else row('full_name', 'الاسم', pv('full_name'), S.base.full_name);
+    if (isNew) rows.push(h('div', null, h('span', { class: 'k' }, 'الرقم المدني'), h('span', { class: 'v' }, h('span', { class: 'ltr' }, digits(S.person.civil_id)))), h('div', null, h('span', { class: 'k' }, 'نوع العمل'), h('span', { class: 'v' }, wt || '—')));
+    if (!S.supVisitor) {
+      row('phone', 'التليفون', pv('phone'), S.base.phone);
+      row('email', 'البريد', pv('email'), S.base.email);
+      row('job_title', 'الدرجة', pv('job_title'), S.base.job_title);
+      row('specialty', 'التخصص', pv('specialty'), S.base.specialty);
+      row('qualification', 'المؤهل', pv('qualification'), S.base.qualification);
+      row('qualification_year', 'سنة المؤهل', pv('qualification_year'), S.base.qualification_year);
+      row('residence', 'محل الإقامة', pv('residence'), S.base.residence);
+      ['appointment_date', 'grade_acquired_date', 'work_start_date'].forEach(function (k) { if (pv(k) || S.base[k]) row(k, LBL[k], fmtDate(pv(k)), fmtDate(S.base[k])); });
+    }
+    var schoolChanged = !isNew && S.school && S.school.id !== S.baseSchoolId;
+    rows.push(h('div', null, h('span', { class: 'k' }, 'المدرسة'), h('span', { class: 'v' }, S.school ? S.school.name : '—', schoolChanged ? h('span', { class: 'tag c' }, 'عُدّلت') : null)));
+    var cn = classNames();
+    var clsChanged = !isNew && JSON.stringify(Array.from(S.sel.entries()).sort()) !== JSON.stringify(Array.from(S.baseSel.entries()).sort());
+    rows.push(h('div', null, h('span', { class: 'k' }, 'الفصول'), h('span', { class: 'v', id: 'rev-classes' },
+      cn.length ? cn.map(function (x) { return h('div', null, x); }) : 'لا فصول', clsChanged ? h('span', { class: 'tag c' }, 'عُدّلت') : null)));
+    if (S.sel.size) rows.push(h('div', null, h('span', { class: 'k' }, 'إجمالي الحصص'), h('span', { class: 'v' }, String(totalPeriods()))));
+    if (!isSup() && hasDeleg()) {
+      delegs().forEach(function (d) {
+        var ln = dLines(d);
+        rows.push(h('div', { class: 'rev-deleg', 'data-deleg': d.school_id }, h('span', { class: 'k' }, 'فصول الانتداب'),
+          h('span', { class: 'v' }, h('div', null, d.school_name + ' (' + dTypeLabel(d) + ')'),
+            ln.length ? ln.map(function (x) { return h('div', null, x); }) : 'لا فصول', dChanged(d) ? h('span', { class: 'tag c' }, 'عُدّلت') : null)));
+      });
+      if (dTotal() > 0) rows.push(h('div', null, h('span', { class: 'k' }, 'إجمالي الحصص مع الانتداب'), h('span', { class: 'v', id: 'rev-total-all' }, String(totalPeriods() + dTotal()))));
+    }
+    body.appendChild(h('div', { class: 'note' }, isSup() ? 'راجع ما ستُرسله (المعدَّل عليه موضَّح). لا يُطبَّق شيء قبل اعتماد الإدارة.'
+      : isNew ? 'راجع بياناتك ثم اضغط «إرسال التسجيل».' : 'راجع تعديلاتك (المعدَّل عليه موضَّح)، ثم اضغط «إرسال التعديلات».'));
+    body.appendChild(h('div', { class: 'kv', id: 'review' }, rows));
+  }
+
+  /* ---------- مشرف المدرسة (المرحلة 2) ---------- */
+  var SUP_T = { person: 'بيانات المعلم', classes: 'الفصول', review: 'المراجعة' };
+  function goHome() { var s = S.status, sc = S.schools, ca = S.cache; reset(); S.status = s; S.schools = sc; S.cache = ca; go('launcher'); }
+  function suptop(title, backLabel, backFn) {
+    return h('div', { class: 'top' }, h('button', { type: 'button', class: 'link', id: 'sup-back', onclick: backFn }, backLabel), h('strong', null, title || ''));
+  }
+  function closedBanner() { return S.closed ? h('div', { class: 'warn', id: 'closed-banner' }, 'فترة تعديل البيانات مغلقة حاليًا، يمكنك المراجعة فقط.') : null; }
+  function wtLabel(w) { return w === 'permanent' ? 'معيّن (دائم)' : w === 'paid' ? 'بالأجر (عقد)' : ''; }
+  function supTotal(t) { var n = 0; (t.classes || []).forEach(function (c) { n += c.periods; }); return n; }
+
+  async function openSchool(id) {
+    var r = await rpc('teacher_portal_sup_school', { p_civil: S.sup.auth.civil, p_phone: S.sup.auth.phone, p_school_id: id, p_code: S.sup.auth.code });
+    if (!r || r.ok !== true) throw (r || { reason: 'x' });
+    S.sup.school = r.school; S.sup.classes = r.classes || []; S.sup.teachers = r.teachers || []; S.sup.q = ''; S.sup.t = null;
+    S.cache[r.school.id] = S.sup.classes; S.closed = r.editing_open === false; S.mode = 'sup';
+    go('supschool');
+  }
+
+  VIEWS.supgate = function () {
+    var civil = h('input', { type: 'tel', id: 'sg_civil', inputmode: 'numeric', maxlength: '20', autocomplete: 'off', dir: 'ltr' });
+    var phone = h('input', { type: 'tel', id: 'sg_phone', inputmode: 'numeric', maxlength: '20', autocomplete: 'off', dir: 'ltr' });
+    var code = h('input', { type: 'tel', id: 'sg_code', inputmode: 'numeric', maxlength: '12', autocomplete: 'off', dir: 'ltr' });
+    var hintC = h('div', { class: 'hint' }), hintP = h('div', { class: 'hint' }), hintK = h('div', { class: 'hint' }), box = errbox();
+    bindDigits(civil, 14, hintC); bindPhone(phone, hintP); bindDigits(code, 12, hintK);
+    var btn = mkBtn('btn', 'دخول', null, { type: 'submit', id: 'sg_go' });
+    var form = h('form', { novalidate: true, onsubmit: async function (ev) {
+      ev.preventDefault(); hideErr(box);
+      var c = digits(civil.value), p = normPhone(phone.value), k = digits(code.value);
+      if (c.length !== 14) { showErr(box, reasonMsg({ reason: 'bad_civil' })); civil.focus(); return; }
+      if (p.length < 10) { showErr(box, reasonMsg({ reason: 'bad_phone' })); phone.focus(); return; }
+      btnBusy(btn, true, 'جارٍ التحقق...');
+      try {
+        var r = await rpc('teacher_portal_sup_login', { p_civil: c, p_phone: p, p_code: k });
+        if (!r || r.ok !== true) { r = r || {}; r.sup = true; showErr(box, reasonMsg(r)); btnBusy(btn, false); return; }
+        S.sup = { auth: { civil: c, phone: p, code: k }, name: r.name || '', schools: r.schools || [], school: null, classes: [], teachers: [], t: null, q: '' };
+        S.closed = r.editing_open === false;
+        if (S.sup.schools.length === 1) await openSchool(S.sup.schools[0].id); else go('supschools');
+      } catch (e) { showErr(box, errMsg(e)); btnBusy(btn, false); }
+    } },
+      h('p', { class: 'sub', style: 'text-align:right' }, 'اكتب رقمك المدني ورقم هاتفك المسجّل وكود المعلم الخاص بك في سجل المعلمين، وسنعرض لك معلمي مدرستك (لمشرف المدرسة: أقدم معلم أساسي).'),
+      h('div', { class: 'fg' }, h('label', { for: 'sg_civil' }, 'الرقم المدني (القومي)'), civil, hintC),
+      h('div', { class: 'fg' }, h('label', { for: 'sg_phone' }, 'رقم الهاتف'), phone, hintP),
+      h('div', { class: 'fg' }, h('label', { for: 'sg_code' }, 'كود المعلم'), code, hintK,
+        h('div', { class: 'hint', id: 'sg_code_note', style: 'color:var(--muted)' }, 'الكود المسجّل لك في سجل المعلمين. إن لم يكن لك كود مسجّل اتركه فارغًا.')), box, btn);
+    return h('div', { class: 'card' }, suptop('مشرف مدرسة', '‹ الرئيسية', goHome), form);
+  };
+
+  VIEWS.supschools = function () {
+    var list = S.sup.schools, box = errbox();
+    return h('div', { class: 'card' }, suptop('مدارسك', '‹ الرئيسية', goHome),
+      h('h2', null, 'أهلًا ' + (clean(S.sup.name).split(' ')[0] || '')),
+      closedBanner(),
+      list.length ? h('p', { class: 'sub', style: 'text-align:right' }, 'اختر المدرسة لعرض معلميها.') : null,
+      list.length ? h('div', { class: 'list', id: 'sup-schools', style: 'max-height:none' }, list.map(function (s) {
+        return h('button', { type: 'button', 'data-school': s.id, onclick: async function (ev) {
+          hideErr(box); var b = ev.currentTarget; b.disabled = true;
+          try { await openSchool(s.id); } catch (e) { showErr(box, errMsg(e)); b.disabled = false; }
+        } }, h('span', null, s.name), h('small', { style: 'display:block;color:var(--muted);font-weight:400' }, [stageTitle(s.stage_key), s.teachers + ' معلم'].filter(Boolean).join(' · ')));
+      })) : h('div', { class: 'warn', id: 'no-schools' }, 'لا توجد مدارس مسندة إليك في النظام. تواصل مع إدارة التوجيه.'), box);
+  };
+
+  VIEWS.supschool = function () {
+    var sup = S.sup, sch = sup.school;
+    var listEl = h('div', { class: 'list', id: 'sup-teachers', style: 'max-height:none' });
+    var q = h('input', { type: 'text', id: 'sup-q', placeholder: 'ابحث باسم المعلم أو كوده', autocomplete: 'off', value: sup.q || '' });
+    function draw() {
+      listEl.replaceChildren();
+      var toks = arNorm(sup.q).split(' ').filter(Boolean);
+      var res = sup.teachers.filter(function (t) {
+        var n = arNorm(t.full_name + ' ' + (t.teacher_code || '') + ' ' + (t.civil_last4 || ''));
+        return toks.every(function (tk) { return n.indexOf(tk) >= 0; });
+      });
+      if (!res.length) { listEl.appendChild(h('div', { class: 'empty' }, sup.teachers.length ? 'لا يوجد معلم بهذا الاسم' : 'لا يوجد معلمون في هذه المدرسة بعد')); return; }
+      res.forEach(function (t) {
+        var tot = supTotal(t);
+        listEl.appendChild(h('button', { type: 'button', 'data-teacher': t.id, onclick: function () { sup.t = t; go('supteacher'); } },
+          h('span', null, t.full_name),
+          t.is_home ? null : h('span', { class: 'tag c' }, 'منتدب'),
+          t.pending ? h('span', { class: 'tag m' }, 'طلبك قيد المراجعة') : null,
+          t.teacher_pending ? h('span', { class: 'tag c' }, 'طلب من المعلم') : null,
+          h('small', { style: 'display:block;color:var(--muted);font-weight:400' }, tot ? plural(t.classes.length, 'فصل واحد', 'فصلان', 'فصول') + ' · ' + perLabel(tot) + ' أسبوعيًا' : 'بدون فصول مسندة')));
+      });
+    }
+    q.addEventListener('input', function () { sup.q = q.value; draw(); });
+    draw();
+    return h('div', { class: 'card' },
+      suptop(sch.name, sup.schools.length > 1 ? '‹ المدارس' : '‹ الرئيسية', sup.schools.length > 1 ? function () { go('supschools'); } : goHome),
+      h('p', { class: 'sub', style: 'text-align:right' }, stageTitle(sch.stage_key) + ' · ' + sup.teachers.length + ' معلم'),
+      closedBanner(),
+      mkBtn('btn', '＋ إضافة معلم جديد', function () { supStart(null); }, { id: 'sup-add', disabled: S.closed }),
+      h('div', { style: 'height:10px' }), q, listEl);
+  };
+
+  VIEWS.supteacher = function () {
+    var t = S.sup.t, rows = [];
+    rows.push(kvRow('الاسم', t.full_name));
+    rows.push(h('div', null, h('span', { class: 'k' }, 'الرقم المدني'), h('span', { class: 'v' }, h('span', { class: 'ltr' }, '••••••••••' + t.civil_last4))));
+    rows.push(kvRow('كود المعلم', t.teacher_code ? h('span', { class: 'ltr', id: 'v-code' }, t.teacher_code) : 'غير مسجّل'));
+    if (t.work_type) rows.push(kvRow('نوع العمل', wtLabel(t.work_type) || String(t.work_type)));
+    if (t.job_title) rows.push(kvRow('الدرجة الوظيفية', t.job_title));
+    if (t.is_home) {
+      rows.push(kvRow('التليفون', t.phone, !t.phone));
+      rows.push(kvRow('البريد الإلكتروني', t.email));
+      rows.push(kvRow('المؤهل', t.qualification));
+      rows.push(kvRow('التخصص', t.specialty));
+    }
+    var cl = (t.classes || []).map(function (c) { var k = S.sup.classes.filter(function (z) { return z.id === c.class_id; })[0]; return (k ? k.label : 'فصل غير معروف') + ' · ' + perLabel(c.periods); });
+    rows.push(h('div', null, h('span', { class: 'k' }, 'الفصول'), h('span', { class: 'v' }, cl.length ? cl.map(function (x) { return h('div', null, x); }) : 'لا فصول مسندة')));
+    if (cl.length) rows.push(kvRow('إجمالي الحصص', h('span', { id: 'v-total' }, String(supTotal(t)))));
+    return h('div', { class: 'card' },
+      suptop('بيانات المعلم', '‹ المعلمون', function () { go('supschool'); }),
+      closedBanner(),
+      t.is_home ? null : h('div', { class: 'note', id: 'visitor-note' }, 'هذا المعلم منتدب إلى مدرستك؛ مدرسته الأصلية في مدرسة أخرى. يمكنك تعديل فصوله في ' + S.sup.school.name + ' فقط.'),
+      t.pending ? h('div', { class: 'note', id: 'pending-note' }, 'لديك طلب سابق لهذا المعلم قيد المراجعة. أي إرسال جديد يحلّ محله.') : null,
+      t.teacher_pending ? h('div', { class: 'note', id: 'tpending-note' }, 'أرسل المعلم نفسه طلب تعديل قيد المراجعة.') : null,
+      h('div', { class: 'kv' }, rows),
+      t.is_home ? mkBtn('btn', 'تعديل بيانات المعلم', function () { supStart(t, 'person'); }, { id: 'sup-edit-person', disabled: S.closed }) : null,
+      t.is_home ? h('div', { style: 'height:10px' }) : null,
+      mkBtn(t.is_home ? 'btn2' : 'btn', 'إسناد / تعديل الفصول', function () { supStart(t, 'classes'); }, { id: 'sup-edit-classes', disabled: S.closed }));
+  };
+
+  function supStart(t, startKey) {
+    var sch = S.sup.school;
+    S.mode = t ? 'sup_edit' : 'sup_new'; S.sup.t = t; S.supVisitor = !!t && !t.is_home;
+    S.school = { id: sch.id, name: sch.name, stage_key: sch.stage_key }; S.baseSchoolId = sch.id; S.stageKey = sch.stage_key;
+    S.base = {}; S.person = {};
+    PKEYS.forEach(function (k) { var v = t && t[k] != null ? String(t[k]) : ''; S.base[k] = v; S.person[k] = v; });
+    if (!t) { S.person.work_type = ''; S.person.civil_id = ''; }
+    S.lookup = t ? { teacher: { work_type: t.work_type } } : null;
+    S.baseSel = new Map((t ? t.classes : []).map(function (x) { return [x.class_id, x.periods]; }));
+    S.sel = new Map(S.baseSel);
+    S.sstepKeys = S.supVisitor ? ['classes', 'review'] : ['person', 'classes', 'review'];
+    S.sstep = Math.max(0, S.sstepKeys.indexOf(startKey || S.sstepKeys[0]));
+    S.draft = t ? null : loadDraft(dkey());
+    go('supflow');
+  }
+
+  VIEWS.supflow = function () {
+    var keys = S.sstepKeys, key = keys[S.sstep], n = keys.length, isNew = S.mode === 'sup_new';
+    var wrap = h('div', { class: 'card' });
+    wrap.appendChild(suptop(isNew ? 'إضافة معلم جديد' : S.sup.t.full_name, '‹ إلغاء', function () { go(isNew ? 'supschool' : 'supteacher'); }));
+    var steps = h('div', { class: 'steps' });
+    for (var i = 0; i < n; i++) steps.appendChild(h('div', { class: 'st' + (i === S.sstep ? ' on' : i < S.sstep ? ' done' : ''), id: 'st' + (i + 1) }, i < S.sstep ? '✓' : String(i + 1)));
+    wrap.appendChild(steps);
+    wrap.appendChild(h('div', { class: 'stlabel', id: 'stlabel' }, SUP_T[key]));
+    if (S.supVisitor && S.sstep === 0) wrap.appendChild(h('div', { class: 'note', id: 'visitor-note' }, 'هذا المعلم منتدب إلى مدرستك، فيمكنك تعديل فصوله في ' + S.school.name + ' فقط.'));
+    if (S.closed) wrap.appendChild(closedBanner());
+    if (S.draft && S.sstep === 0) {
+      var d = S.draft;
+      wrap.appendChild(h('div', { class: 'warn', id: 'draft-note' }, 'لديك مسودة غير مرسلة لمعلم جديد محفوظة على هذا الجهاز. ',
+        h('button', { type: 'button', class: 'link', id: 'draft-restore', onclick: function () { restoreDraft(d); S.draft = null; S.sstep = Math.min(d.step || 0, n - 1); render(); } }, 'متابعة المسودة'), ' · ',
+        h('button', { type: 'button', class: 'link', id: 'draft-drop', onclick: function () { dropDraft(dkey()); S.draft = null; render(); } }, 'تجاهلها')));
+    }
+    var body = h('div', { id: 'stepbody' }), box = errbox();
+    wrap.appendChild(body); wrap.appendChild(box);
+    var nav = h('div', { class: 'row' });
+    if (S.sstep > 0) nav.appendChild(mkBtn('btn2', 'السابق', function () { S.sstep--; saveDraft(); render(); }, { id: 'btn-prev' }));
+    if (S.sstep < n - 1) nav.appendChild(mkBtn('btn', 'التالي', async function () {
+      hideErr(box); if (key !== 'person' || await stepOk(1, box)) { S.sstep++; saveDraft(); render(); }
+    }, { id: 'btn-next' }));
+    else nav.appendChild(mkBtn('btn-ok', 'إرسال للاعتماد', async function (ev) {
+      hideErr(box);
+      if (S.closed) { showErr(box, reasonMsg({ reason: 'closed' })); return; }
+      var b = ev.currentTarget; btnBusy(b, true, 'جارٍ الإرسال...');
+      try { await doSupSubmit(box); } catch (e) { showErr(box, errMsg(e)); }
+      if (document.body.contains(b)) btnBusy(b, false);
+    }, { id: 'btn-submit' }));
+    wrap.appendChild(nav);
+    if (isNew) wrap.appendChild(h('p', { class: 'sub', style: 'margin-top:12px;font-size:.8rem' }, 'تُحفظ المسودة تلقائيًا على هذا الجهاز.'));
+    ({ person: renderStep1, classes: renderStep3, review: renderStep4 })[key](body, box);
+    return wrap;
+  };
+
+  async function doSupSubmit(box) {
+    if (S.busy) return; S.busy = true;
+    try {
+      var isNew = S.mode === 'sup_new', pl = buildPayload(false), person = S.supVisitor ? {} : pl.person;
+      if (isNew) { person.work_type = S.person.work_type; person.civil_id = digits(S.person.civil_id); }
+      var r = await rpc('teacher_portal_sup_submit', {
+        p_civil: S.sup.auth.civil, p_phone: S.sup.auth.phone, p_code: S.sup.auth.code, p_kind: isNew ? 'new' : 'update',
+        p_teacher_id: isNew ? null : S.sup.t.id, p_school_id: S.sup.school.id,
+        p_payload: { person: person, classes: pl.classes } });
+      if (!r || r.ok !== true) { r = r || {}; r.sup = true; showErr(box, reasonMsg(r)); return; }
+      if (isNew) dropDraft(dkey());
+      S.result = r; S.supName = isNew ? pv('full_name') : S.sup.t.full_name; go('supdone');
+    } finally { S.busy = false; }
+  }
+
+  VIEWS.supdone = function () {
+    var r = S.result || {}, box = errbox();
+    return h('div', { class: 'card' }, h('div', { class: 'ok-screen' },
+      h('div', { class: 'ok-ic' }, '✓'),
+      h('h2', null, r.kind === 'new' ? 'تم إرسال طلب إضافة المعلم' : 'تم إرسال التعديلات'),
+      h('p', null, (S.supName ? S.supName + ' — ' : '') + 'ستراجعها إدارة التوجيه وتظهر في البرنامج بعد اعتمادها.'),
+      h('div', { class: 'refno', id: 'refno' }, r.ref || ''),
+      box,
+      mkBtn('btn', 'العودة لمعلمي المدرسة', async function (ev) {
+        hideErr(box); var b = ev.currentTarget; btnBusy(b, true, 'لحظة...');
+        try { await openSchool(S.sup.school.id); } catch (e) { showErr(box, errMsg(e)); btnBusy(b, false); }
+      }, { id: 'btn-back-school' }),
+      h('div', { style: 'height:10px' }),
+      mkBtn('btn2', 'الرئيسية', goHome, { id: 'btn-home' })));
+  };
+
+  /* ---------- التشغيل ---------- */
+  async function boot() {
+    S.statusErr = false;
+    try { S.status = await rpc('teacher_portal_status'); } catch (e) { S.statusErr = true; }
+    if (S.view === 'launcher') render();
+  }
+  if (CFG.trial) document.getElementById('ribbon').appendChild(h('div', { class: 'ribbon' }, 'نسخة تجريبية — لا تُعتمد البيانات إلا بعد مراجعة الإدارة'));
+  render();
+  boot();
+})();
+</script>
+</body>
+</html>
