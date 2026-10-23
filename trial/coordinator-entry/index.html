@@ -3,7 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>إدخال بيانات المنسق — v171</title>
+<title>إدخال بيانات المنسق — v172</title>
+<!-- v172: المرحلة 3 — إسناد الفصول من بطاقة المعلم (assign_class_atomic: الفصل كاملًا بحصصه المقررة) والتراجع (حذف مباشر تمنعه سياسة القاعدة بعد الاعتماد النهائي)؛ لا إسناد لمن في إجازة؛ تنبيه عند تجاوز النصاب (يُحتسب زيادة). -->
 <!-- v171: المرحلة 2 — بطاقات المعلمين لكل مدرسة (من get_school_teacher_roster): كل البيانات والنصاب والفصول المسندة، التعديل (save_teacher_record_atomic + الحقول الإضافية)، وإضافة معلم ناقص (insert + teacher_school_assignments). تاريخا الدرجة واستلام العمل يُدخلان عند الإضافة فقط (صلاحية العمود في القاعدة). حالة المدرسة تشمل نقص بيانات معلميها وتعديلهم بعد الاعتماد. -->
 <!-- v170.1: الحساب الذي له دور مدير النظام يدخل به أولًا (حساب المالك له دور منسق بلا مدارس فكانت القائمة فارغة). -->
 <!-- v170: رابط مستقل لمنسق المرحلة: دخول بالرقم القومي وكلمة المرور، قائمة مدارس المرحلة، بطاقة بيانات المدرسة (عرض/تعديل/اعتماد المنسق) مع إضافة/حذف الفصول. المرحلة 2: بطاقات المعلمين. -->
@@ -101,6 +102,9 @@ table.cls td{border-bottom:1px solid var(--line);padding:8px;vertical-align:midd
 .tcls{margin-top:10px;display:flex;flex-wrap:wrap;gap:6px;align-items:center}
 .tcls span{font-size:13px;background:var(--info-bg);color:var(--info);border-radius:8px;padding:3px 8px}
 .tcls span.ext{background:var(--warn-bg);color:var(--warn)}
+.tcls .x{border:0;background:none;color:var(--bad);font-weight:700;cursor:pointer;padding:0 0 0 2px;font-size:15px;line-height:1}
+.assign-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;align-items:center}
+.assign-row select{flex:1;min-width:200px}
 .sub{font-size:12px;color:var(--muted);font-weight:400}
 .toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);background:var(--navy);color:#fff;padding:11px 18px;border-radius:10px;z-index:50;max-width:calc(100% - 32px);font-size:14px;box-shadow:0 6px 20px rgba(0,0,0,.25)}
 .toast.bad{background:var(--bad)}
@@ -131,7 +135,7 @@ const sb=supabase.createClient(SUPABASE_URL,SUPABASE_KEY,{global:{fetch:(input,i
 const ROLE_LABEL={stage_coordinator:'منسق المرحلة',admin:'مدير النظام',first_supervisor:'الموجه الأول'};
 const GRADES={'ابتدائي':[['الرابع',4],['الخامس',5],['السادس',6]],'إعدادي':[['الأول',1],['الثاني',2],['الثالث',3]],'ثانوي':[['الأول',1],['الثاني',2],['الثالث',3]]};
 const TYPES={'إعدادي':[['','عام'],['مهني','مهني'],['تربية خاصة','تربية خاصة']],'ثانوي':[['ثانوي عام','ثانوي عام'],['ثانوي صناعي','ثانوي صناعي']],'ابتدائي':[['','عام']]};
-const S={me:null,year:null,term:null,schools:[],classes:[],approvals:{},sups:{},supStages:null,managers:{},assigned:new Set(),teachers:[],roster:null,trec:{},tassign:{},tEdit:null,tMissOnly:false,sel:null,edit:false,q:'',filter:'all',stage:'',busy:false};
+const S={me:null,year:null,term:null,schools:[],classes:[],approvals:{},sups:{},supStages:null,managers:{},assigned:new Set(),teachers:[],roster:null,trec:{},tassign:{},tEdit:null,tAssign:null,reqs:[],classTa:[],tMissOnly:false,sel:null,edit:false,q:'',filter:'all',stage:'',busy:false};
 
 const $=id=>document.getElementById(id);
 const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -249,7 +253,7 @@ function renderList(){
  $('slist').querySelectorAll('.sitem').forEach(b=>b.onclick=()=>openSchool(b.dataset.id));
 }
 async function openSchool(id){
- S.sel=id;S.edit=false;S.assigned=new Set();S.roster=null;S.tEdit=null;document.body.classList.add('detail');renderList();renderMain();window.scrollTo(0,0);
+ S.sel=id;S.edit=false;S.assigned=new Set();S.roster=null;S.tEdit=null;S.tAssign=null;document.body.classList.add('detail');renderList();renderMain();window.scrollTo(0,0);
  loadTeachers(id);
  const ids=classesOf(id).map(c=>c.id);
  if(ids.length)try{(await q(sb.from('teaching_assignments').select('class_id').in('class_id',ids))).forEach(r=>S.assigned.add(r.class_id));if(S.sel===id)renderMain()}catch(e){}
@@ -259,10 +263,13 @@ async function loadTeachers(id){
   const ro=await q(sb.rpc('get_school_teacher_roster',{p_school_id:id,p_term_id:S.term.id}));
   const rows=Array.isArray(ro)?ro:[],ids=[...new Set(rows.map(r=>r.teacher_id||r.id))];
   const [recs,tas]=await Promise.all([ids.length?q(sb.from('teacher_records').select(T_FIELDS).in('id',ids)):[],
-   ids.length?q(sb.from('teaching_assignments').select('teacher_id,weekly_periods,class_id,school_classes(class_name,school_id)').in('teacher_id',ids).eq('term_id',S.term.id)):[]]);
+   ids.length?q(sb.from('teaching_assignments').select('id,teacher_id,weekly_periods,class_id,subject_id,school_classes(class_name,school_id),curriculum_subjects(subject_name)').in('teacher_id',ids).eq('term_id',S.term.id)):[]]);
+  const cids=classesOf(id).map(c=>c.id);
+  const [reqs,cta]=cids.length?await Promise.all([q(sb.from('class_subject_requirements').select('class_id,subject_id,weekly_periods,curriculum_subjects(subject_name,sort_order)').in('class_id',cids)),
+   q(sb.from('teaching_assignments').select('id,class_id,subject_id,teacher_id').in('class_id',cids).eq('term_id',S.term.id))]):[[],[]];
   if(S.sel!==id)return;
   S.trec=Object.fromEntries((recs||[]).map(r=>[r.id,r]));S.tassign={};(tas||[]).forEach(a=>(S.tassign[a.teacher_id]=S.tassign[a.teacher_id]||[]).push(a));
-  S.roster=rows;
+  S.roster=rows;S.reqs=(reqs||[]).filter(r=>Number(r.weekly_periods)>0);S.classTa=cta||[];S.assigned=new Set(S.classTa.map(a=>a.class_id));
   (recs||[]).forEach(r=>{const i=S.teachers.findIndex(t=>t.id===r.id);if(i>=0)Object.assign(S.teachers[i],r);else if(r.active)S.teachers.push(r)});
  }catch(e){if(S.sel===id)S.roster={error:errText(e)}}
  if(S.sel===id){renderMain();renderList()}
@@ -323,6 +330,11 @@ function relationOf(r){const rel=String(r.school_relation||'');
  if(/_in(_|$)/.test(rel))return {t:`منتدب ${/partial/.test(rel)?'جزئيًا ':''}من ${r.delegation_from_school_name||schoolName(r.home_school_id)}`,c:'b-info'};
  if(/_out(_|$)/.test(rel))return {t:`منتدب ${/partial/.test(rel)?'جزئيًا ':''}إلى ${r.delegation_to_school_name||''}`,c:'b-info'};
  return null}
+function openSlots(s){
+ const taken=new Set(S.classTa.map(a=>a.class_id+'|'+a.subject_id)),byId=Object.fromEntries(classesOf(s.id).map(c=>[c.id,c]));
+ return S.reqs.filter(r=>byId[r.class_id]&&!taken.has(r.class_id+'|'+r.subject_id)).map(r=>({...r,cls:byId[r.class_id]}))
+  .sort((a,b)=>String(a.cls.class_name).localeCompare(String(b.cls.class_name),'ar',{numeric:true})||(a.curriculum_subjects?.sort_order||0)-(b.curriculum_subjects?.sort_order||0));
+}
 function teachersCard(s){
  if(S.roster===null)return `<div class="card-head"><h2>المعلمون</h2></div><div class="loading" style="padding:16px">جارٍ تحميل المعلمين…</div>`;
  if(S.roster.error)return `<div class="card-head"><h2>المعلمون</h2></div><div class="notice n-bad">${esc(S.roster.error)}</div><div class="actions"><button class="btn" id="tReload">إعادة التحميل</button></div>`;
@@ -331,6 +343,7 @@ function teachersCard(s){
  const badN=rows.filter(x=>x.miss.length).length;
  const shown=rows.filter(x=>!S.tMissOnly||x.miss.length||S.tEdit===x.t.id).sort((a,b)=>(a.r.school_relation==='home'?0:1)-(b.r.school_relation==='home'?0:1)||String(a.t.full_name).localeCompare(String(b.t.full_name),'ar'));
  return `<div class="card-head"><h2>المعلمون (${rows.length})</h2>${badN?`<span class="badge b-bad">${badN} بيانات ناقصة</span>`:rows.length?'<span class="badge b-ok">البيانات مكتملة</span>':''}</div>
+  ${(()=>{const o=openSlots(s),p=o.reduce((a,r)=>a+Number(r.weekly_periods||0),0);return o.length?`<div class="notice n-warn" style="margin-bottom:10px">فصول غير مسندة: <b>${o.length}</b> (${p} حصة) — ${o.slice(0,12).map(r=>esc(r.cls.class_name)).join('، ')}${o.length>12?'…':''}. أسندها من زر «إسناد فصل» في بطاقة المعلم.</div>`:(S.reqs.length?'<div class="notice n-info" style="margin-bottom:10px">كل الفصول مسندة.</div>':'')})()}
   <div class="actions" style="margin:0 0 12px"><button class="btn gold" id="tNew" ${S.tEdit?'disabled':''}>+ إضافة معلم ناقص</button>${badN?`<button class="chip ${S.tMissOnly?'on':''}" id="tMissOnly" style="height:42px">الناقص فقط (${badN})</button>`:''}</div>
   ${S.tEdit==='new'?`<div class="tcard ed"><div class="thead"><b>إضافة معلم إلى ${esc(s.name)}</b></div>${teacherForm(s,null)}</div>`:''}
   ${shown.map(x=>teacherCard(s,x)).join('')||(rows.length?'<div class="empty">لا يوجد معلمون ببيانات ناقصة</div>':'<div class="notice n-warn">لا يوجد معلمون مسجلون لهذه المدرسة. أضفهم بزر «إضافة معلم ناقص».</div>')}`;
@@ -346,9 +359,33 @@ function teacherCard(s,{r,t,miss}){
  return `<div class="tcard ${miss.length?'bad':''}"><div class="thead"><b>${esc(t.full_name)}</b>
   <span class="badge ${perm?'b-info':'b-warn'}">${perm?'ثابت':'بالأجر'}</span>${rel?`<span class="badge ${rel.c}">${esc(rel.t)}</span>`:''}${r.on_renewed_leave?'<span class="badge b-warn">إجازة</span>':''}${r.scope_is_senior_teacher||r.is_senior_teacher?'<span class="badge b-ok">مشرف المادة</span>':''}${st&&!r.on_renewed_leave?`<span class="badge ${stc}">${esc(st)}</span>`:''}</div>
   <div class="kv">${v('الرقم القومي',t.civil_id,true)}${v('الدرجة الوظيفية',t.job_title,perm)}${v('النصاب',r.weekly_target??'')}${v('المحتسب',r.total_counted_periods!=null?`${r.total_counted_periods} (${parts.join(' + ')})`:'')}${v('المتبقي',r.remaining_periods??'')}${v('تاريخ التعيين',t.appointment_date,perm)}${v('استلام العمل',t.work_start_date)}${v('الحصول على الدرجة',t.grade_acquired_date)}${v('الهاتف',t.phone,true)}${v('المؤهل',t.qualification?t.qualification+(t.qualification_year?' — '+t.qualification_year:''):'',true)}${v('التخصص',t.specialty)}${v('كود المعلم',t.teacher_code)}${v('محل الإقامة',t.residence)}${v('البريد',t.email)}${r.school_relation!=='home'?v('المدرسة الأصلية',r.home_school_name||schoolName(t.home_school_id)):''}</div>
-  <div class="tcls"><span class="sub">الفصول المسندة:</span>${cls.map(a=>{const ext=a.school_classes?.school_id&&a.school_classes.school_id!==s.id;return `<span class="${ext?'ext':''}">${esc(a.school_classes?.class_name||'—')} • ${Number(a.weekly_periods||0)} ح${ext?' — '+esc(schoolName(a.school_classes.school_id)):''}</span>`}).join('')||'<span class="sub">لا يوجد</span>'}</div>
+  <div class="tcls"><span class="sub">الفصول المسندة:</span>${cls.map(a=>{const ext=a.school_classes?.school_id&&a.school_classes.school_id!==s.id,subj=a.curriculum_subjects?.subject_name;return `<span class="${ext?'ext':''}">${esc(a.school_classes?.class_name||'—')}${subj&&!/^علوم$/.test(subj)?' '+esc(subj):''} • ${Number(a.weekly_periods||0)} ح${ext?' — '+esc(schoolName(a.school_classes.school_id)):`<button class="x" data-unassign="${a.id}" data-label="${esc(a.school_classes?.class_name||'')}" title="إلغاء الإسناد" aria-label="إلغاء إسناد ${esc(a.school_classes?.class_name||'')}">×</button>`}</span>`}).join('')||'<span class="sub">لا يوجد</span>'}</div>
+  ${S.tAssign===id?assignRow(s,r):''}
   ${miss.length?`<div class="notice n-bad" style="margin-top:10px;font-size:13px">ناقص: ${miss.map(esc).join('، ')}</div>`:''}
-  <div class="actions" style="margin-top:10px">${editable?`<button class="btn primary sm" data-tedit="${id}" ${S.tEdit?'disabled':''}>تعديل البيانات</button>`:'<span class="sub">سجله الأصلي خارج مرحلتك؛ يعدّله منسق مرحلته.</span>'}</div></div>`;
+  <div class="actions" style="margin-top:10px">${r.on_renewed_leave?'':`<button class="btn gold sm" data-tassign="${id}" ${S.tEdit||S.tAssign===id?'disabled':''}>+ إسناد فصل</button>`}${editable?`<button class="btn primary sm" data-tedit="${id}" ${S.tEdit?'disabled':''}>تعديل البيانات</button>`:'<span class="sub">سجله الأصلي خارج مرحلتك؛ يعدّله منسق مرحلته.</span>'}</div></div>`;
+}
+function assignRow(s,r){
+ const o=openSlots(s);
+ if(!o.length)return `<div class="notice n-info" style="margin-top:10px">لا توجد فصول غير مسندة في هذه المدرسة. <button class="btn ghost sm" id="aCancel">إغلاق</button></div>`;
+ return `<div class="assign-row"><select id="aSel" aria-label="الفصل">${o.map(x=>`<option value="${x.class_id}|${x.subject_id}" data-p="${x.weekly_periods}">${esc(x.cls.class_name)} — ${esc(x.curriculum_subjects?.subject_name||'علوم')} (${x.weekly_periods} حصص)</option>`).join('')}</select>
+  <button class="btn primary sm" id="aGo" data-t="${r.teacher_id||r.id}" data-rem="${Number(r.remaining_periods??0)}">إسناد</button><button class="btn ghost sm" id="aCancel">إلغاء</button></div>
+  <div class="sub" style="margin-top:4px">يُسند الفصل كاملًا بحصصه المقررة. المتبقي من نصابه الآن: ${Number(r.remaining_periods??0)} حصة.</div>`;
+}
+function assignClass(s,btn){
+ const sel=$('aSel');if(!sel)return;const [cid,sid]=sel.value.split('|'),per=Number(sel.selectedOptions[0].dataset.p||0),rem=Number(btn.dataset.rem||0);
+ if(per>rem&&!confirm(`المتبقي من نصابه ${rem} حصة، والفصل ${per} حصص. سيتجاوز النصاب بـ ${per-rem} حصة وتُحتسب زيادة. متابعة؟`))return;
+ guard(async()=>{
+  await q(sb.rpc('assign_class_atomic',{p_teacher_id:btn.dataset.t,p_class_id:cid,p_subject_id:sid,p_academic_year_id:S.year.id,p_term_id:S.term.id}));
+  S.tAssign=null;toast('تم إسناد الفصل');await loadTeachers(s.id);
+ },true);
+}
+function unassignClass(s,aid,label){
+ if(!confirm(`إلغاء إسناد الفصل ${label}؟`))return;
+ guard(async()=>{
+  const r=await q(sb.from('teaching_assignments').delete().eq('id',aid).select('id'));
+  if(!r?.length)throw new Error('لا يمكن التراجع عن الإسناد بعد الاعتماد النهائي للمدرسة');
+  toast(`أُلغي إسناد ${label}`);await loadTeachers(s.id);
+ });
 }
 function teacherForm(s,t){
  const isNew=!t;t=t||{work_type:'permanent'};
@@ -381,6 +418,10 @@ function wireTeachers(s){
  on('tNew',()=>{S.tEdit='new';renderMain();$('t_civil_id')?.focus()});
  on('tMissOnly',()=>{S.tMissOnly=!S.tMissOnly;renderMain()});
  on('tCancel',()=>{S.tEdit=null;renderMain()});
+ document.querySelectorAll('[data-tassign]').forEach(b=>b.onclick=()=>{S.tAssign=b.dataset.tassign;renderMain()});
+ document.querySelectorAll('[data-unassign]').forEach(b=>b.onclick=()=>unassignClass(s,b.dataset.unassign,b.dataset.label));
+ on('aCancel',()=>{S.tAssign=null;renderMain()});
+ const go=$('aGo');if(go)go.onclick=()=>assignClass(s,go);
  document.querySelectorAll('[data-tedit]').forEach(b=>b.onclick=()=>{S.tEdit=b.dataset.tedit;renderMain();$('teacherForm')?.scrollIntoView({block:'start'})});
  const form=$('teacherForm');if(form)form.onsubmit=e=>{e.preventDefault();saveTeacher(s,form)};
 }
