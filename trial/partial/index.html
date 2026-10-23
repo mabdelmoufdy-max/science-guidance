@@ -1,5 +1,8 @@
 <!doctype html>
-<!-- v170: عجز المعلم المنتدب جزئيًا (بين مدارس المرحلة أو من الابتدائي) يظهر في مدرسته الأصلية فقط؛ في المدرسة المنتدب إليها عجزه 0 وحالته «منتدب جزئيًا» (قاعدة البيانات: migration v170_partial_deficit_home_only + v86ApplyPartialDelegateRule). المتبقي للتدريس وعجز المدرسة بلا تغيير. -->
+<!-- v177: عجز المعلم المنتدب جزئيًا (بين مدارس المرحلة أو من الابتدائي) يظهر في مدرسته الأصلية فقط؛ في المدرسة المنتدب إليها عجزه 0 وحالته «منتدب جزئيًا» (قاعدة البيانات: migration v170_partial_deficit_home_only + v86ApplyPartialDelegateRule). المتبقي للتدريس وعجز المدرسة بلا تغيير. -->
+<!-- v175: زر «رجوع» في الهاتف أثناء فتح معاينة تقرير يغلق المعاينة ويبقى في الشاشة نفسها (كان يرجع لشاشة سابقة/الرئيسية): المعاينة تضيف خطوة في سجل التصفح، والإغلاق بالزر يزيلها. -->
+<!-- v174: شاشة المدارس (مدرسة مختارة): زر «تقرير إسناد الفصول» بجوار «تقرير المدرسة الشامل» — تقرير A4 جديد `schoolAssignments` من بيانات ملف المدرسة نفسها (v110LoadSchoolDossier): كل معلم وفصوله المسندة وحصصه، الفصول غير المسندة أو المسندة جزئيًا، والمعلمون بلا فصول. عرض فقط. -->
+<!-- v173: زر «⇄ تبديل الدور» في القائمة الجانبية كان بلون أزرق داكن على خلفية القائمة الكحلية فلا يُرى (على الهاتف هو المكان الوحيد للزر منذ v149)؛ صار زرًا ذهبيًا واضحًا. -->
 <!-- v169: «تصدير Excel» في شاشة المعلمين يُخرج ملف xlsx حقيقيًا (من اليمين لليسار، عربية سليمة) بدل CSV؛ وعلى الهاتف يفتح نافذة المشاركة/الحفظ، وعلى الكمبيوتر ينزل الملف. عرض فقط، بلا تعديل بيانات. -->
 <!-- v168: لوحة منسق المرحلة مبسطة لدعم القرار: (1) صندوق «يحتاج قرارًا» = ما يبقى «بلا تغطية» بعد ما يُسد داخليًا ومقترح الانتداب والأجر المسند، مع شريط تفصيل العجز؛ (2) تنبيه «الأرقام تقديرية» بعدد المعلمين الأساسيين وبالأجر الذين لم تُدخل حصصهم وطاقة الأساسيين المحسوبة ضمن «يُسد داخليًا»؛ (3) أربع بطاقات (المطلوب، الفعلي، العجز، المعتمدة) وسطر أعداد عامة؛ (4) «ماذا أفعل الآن؟» مهام مرتبة بأزرار تفتح التقارير (ومنها تقرير جديد «معلمون لم تُدخل حصصهم»)؛ (5) أعلى 5 مدارس عجزًا والموجهون وعدالة الكادر مطوية. حُذف من لوحة المنسق قسما «مرحبًا» و«ملخص الحصص والعجز» المكرران. نفس الحسابات المعتمدة، عرض فقط. -->
 <!-- v167: آلية الجدول المجمّع (v166) في كل عروض جدول المدرسة: (1) تقرير الطباعة «الجدول الأسبوعي لمعلمي المدرسة»: لكل يوم المعلمون الذين لهم حصص فيه فقط، والأعمدة اليوم ← المعلم (عريض) ← الحصص (ضيقة) والخانة الفصل مختصرًا، و«مدرسة أخرى» للمنتدب، ويوم بلا حصص سطر واحد؛ (2) «جدول المدرسة المسجل» في ملف المدرسة بنفس شكل جدول المعلم المجمّع بدل خانات بأسماء المعلمين. عرض فقط. -->
@@ -87,7 +90,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#152c43">
-<title>نظام توجيه العلوم — v170</title>
+<title>نظام توجيه العلوم — v177</title>
 <link rel="manifest" href="../../manifest.webmanifest">
 <link rel="icon" type="image/png" sizes="192x192" href="../../icon-192.png">
 <link rel="apple-touch-icon" href="../../icon-192.png">
@@ -2254,6 +2257,9 @@ td .btn,.report-preview-toolbar .btn,.btn.btn-sm{min-height:var(--ctl-h-sm);padd
 .v168-go{font-size:12px;color:#1f4274;font-weight:700;white-space:nowrap}
 .v168-fold{margin-bottom:8px}
 .v168-meeting{width:100%;margin-top:4px}
+/* v173: زر تبديل الدور في القائمة الجانبية واضح على الخلفية الكحلية */
+.sidebar .side-user .role-switch-side{color:#fbe599!important;background:rgba(206,158,72,.18)!important;border:1px solid rgba(251,229,153,.55)!important;border-radius:8px;padding:6px 12px;font-weight:700;margin-top:8px;min-height:36px}
+.sidebar .side-user .role-switch-side:hover{background:rgba(206,158,72,.32)!important}
 </style>
 </head>
 <body>
@@ -2598,7 +2604,10 @@ window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();window.v152
 window.addEventListener('appinstalled',()=>{window.v152InstallPrompt=null;v152SyncInstallBtn()});
 if('serviceWorker' in navigator&&location.protocol!=='file:')window.addEventListener('load',()=>navigator.serviceWorker.register('../../service-worker.js').catch(()=>{}));
 const V145_NEWS=[
- ['v170','المنتدب جزئيًا: عجزه يظهر في مدرسته الأصلية فقط، وفي المدرسة المنتدب إليها تظهر حالته «منتدب جزئيًا».'],
+ ['v177','المنتدب جزئيًا: عجزه يظهر في مدرسته الأصلية فقط، وفي المدرسة المنتدب إليها تظهر حالته «منتدب جزئيًا».'],
+ ['v175','زر «رجوع» في الهاتف أثناء معاينة تقرير يغلق المعاينة ويبقى في نفس الشاشة.'],
+ ['v174','شاشة المدارس: زر «تقرير إسناد الفصول» بجوار التقرير الشامل — المعلمون وفصولهم، والفصول غير المسندة، والمعلمون بلا فصول.'],
+ ['v173','زر «⇄ تبديل الدور» في القائمة الجانبية صار واضحًا (ذهبي).'],
  ['v169','«تصدير Excel» في شاشة المعلمين يُخرج ملف Excel حقيقيًا يفتح على الهاتف والكمبيوتر، ويفتح المشاركة على الهاتف.'],
  ['v168','لوحة المنسق مبسطة: رقم القرار أولًا، وتنبيه البيانات الناقصة، ومهام «ماذا أفعل الآن؟».'],
  ['v167','الجدول المجمّع (المعلم في أيام حصصه فقط) في طباعة جداول المعلمين وفي ملف المدرسة.'],
@@ -7903,7 +7912,7 @@ function v86ApplyPartialDelegateRule(row,partial){
  const target=Number(row?.weekly_target||0)||0;
  const maximum=row?.workload_rule_type==='maximum';
  return {...row,is_senior_teacher:false,supervision_periods:0,total_counted_periods:total,
-  deficit_periods:maximum?(row?.deficit_periods??0):0, // v170: عجز المنتدب جزئيًا يظهر في مدرسته الأصلية فقط
+  deficit_periods:maximum?(row?.deficit_periods??0):0, // v177: عجز المنتدب جزئيًا يظهر في مدرسته الأصلية فقط
   surplus_periods:target?Math.max(total-target,0):0,
   remaining_periods:target?Math.max(target-total,0):0,
   workload_status:maximum?(total>target?'تجاوز الحد':total===target?'بلغ الحد':'ضمن الحد'):(total<target?'منتدب جزئيًا':total>target?'زيادة':'مكتمل')
@@ -9365,7 +9374,7 @@ function v110DossierMarkup(d){
   :`<div class="notice">${d.can_manage?(reportNumber(d.config.revision)?'إعدادات الجدول محفوظة، ولم تُدخل حصص الجدول بعد.':'لم يُدخل جدول للمدرسة بعد.'):'لا توجد حصص جدول متاحة للعرض لهذا الحساب.'}</div>`;
  return `<div class="v110-dossier">
   <div class="page-head"><div><h2>${esc(d.school.name)}</h2><p>بيان المدرسة الشامل — ${esc([activeYear?.label,activeTerm?.name].filter(Boolean).join(' — '))}</p></div>
-   <div class="actions">${isAdminV128?`<button class="btn primary add-class-action" type="button" data-action="add-class" data-school-id="${id}">+ إضافة فصل</button>`:''}<button class="btn primary" type="button" onclick="openSchoolReport('${id}')">تقرير المدرسة الشامل / طباعة</button><button class="btn secondary" type="button" onclick="loadPage(true)">تحديث البيانات</button><button class="btn secondary" type="button" onclick="v98SetSchool('')">كل المدارس</button></div></div>
+   <div class="actions">${isAdminV128?`<button class="btn primary add-class-action" type="button" data-action="add-class" data-school-id="${id}">+ إضافة فصل</button>`:''}<button class="btn primary" type="button" onclick="openSchoolReport('${id}')">تقرير المدرسة الشامل / طباعة</button><button class="btn primary" type="button" onclick="v174OpenAssignmentReport('${id}')">تقرير إسناد الفصول</button><button class="btn secondary" type="button" onclick="loadPage(true)">تحديث البيانات</button><button class="btn secondary" type="button" onclick="v98SetSchool('')">كل المدارس</button></div></div>
   <div class="v111-school-kpis">${[['الفصول المسجلة',d.class_count],['الفصول المفصلة',d.classes.length],['المعلمون المسجلون',d.teachers.length],['حصص الفصول أسبوعيًا',d.required],['حصص مسندة',d.assigned],['حصص مجدولة',d.slots.length]].map(([label,value])=>`<div class="v111-school-kpi"><span>${esc(label)}</span><strong>${value}</strong></div>`).join('')}</div>
   <section class="card"><h3>بيانات المدرسة</h3>${v110FactsMarkup(v110SchoolFacts(d))}${d.class_count>d.classes.length?'<div class="notice">عدد الفصول المعتمد أكبر من الفصول ذات البيانات التفصيلية؛ احتياج الحصص المعروض يخص الفصول المدخلة فقط.</div>':''}</section>
   <section class="card"><h3>المعلمون والأنصبة (${d.teachers.length})</h3><p class="muted">النصاب القانوني بحسب الدرجة؛ حصص الملفات مرجعية، والتدريس المسند محسوب من إسنادات الفصول في البرنامج.</p>
@@ -9434,6 +9443,56 @@ function v110SchoolDossierReport(d,ctx){
   totals:[reportTotalsMetric('معلمو المدرسة',d.teachers.length),reportTotalsMetric('الفصول المفصلة',d.classes.length),reportTotalsMetric('الحصص المجدولة',d.slots.length)],approval:{enabled:false}});
 }
 ReportAdapters.schoolDossier={async load(ctx,options={}){return v110SchoolDossierReport(await v110LoadSchoolDossier(options.schoolId||v98School()),ctx)}};
+/* v174: تقرير إسناد الفصول للمدرسة — المعلمون وفصولهم، الفصول غير المسندة، المعلمون بلا فصول (من بيانات ملف المدرسة نفسها). */
+function v174AssignmentReport(d,ctx){
+ const rows=[],meta={_schoolId:String(d.school.id),_schoolIds:[String(d.school.id)],_school:d.school.name,_schools:[d.school.name],_stage:d.school.stage,_stages:[d.school.stage]};
+ const add=(section,item,details,periods,extra={})=>rows.push({section,item,details,periods:periods===''||periods==null?'—':String(periods),...meta,...extra});
+ const classOrder=new Map(d.classes.map((c,i)=>[String(c.id),i])),{groups}=v112TeacherGroups(d);
+ const withClasses=[],without=[];
+ groups.forEach(g=>{const as=g.assignments;(as.length?withClasses:without).push(g)});
+ add('المعلمون وفصولهم','','',' ',{_group:true,_groupTitle:`المعلمون المسند لهم فصول (${withClasses.length})`});
+ withClasses.forEach((g,i)=>{
+  const as=[...g.assignments].sort((a,b)=>(classOrder.get(String(a.class_id))??1e9)-(classOrder.get(String(b.class_id))??1e9));
+  const kind=g.teacher?(isPaidTeacher(g.teacher)?'بالأجر':'ثابت'):'غير ظاهر في الكادر';
+  add('المعلمون وفصولهم',`${i+1}. ${g.name}`,`${kind} — `+as.map(a=>`${v110ClassName(a)}${a.subject_name&&!/^علوم$/.test(a.subject_name)?' ('+a.subject_name+')':''}: ${a.weekly_periods}`).join('؛ '),as.reduce((n,a)=>n+reportNumber(a.weekly_periods),0),{_search:g.name});
+ });
+ if(!withClasses.length)add('المعلمون وفصولهم','—','لم تُسند فصول لأي معلم بعد.','');
+ const open=[];
+ d.classes.forEach(c=>{
+  const req=reportNumber(v110ClassRequired(c)),got=d.assignments.filter(a=>String(a.class_id)===String(c.id)).reduce((n,a)=>n+reportNumber(a.weekly_periods),0);
+  if(req>0&&got<req)open.push({c,req,got});
+ });
+ add('فصول غير مسندة','','',' ',{_group:true,_groupTitle:`الفصول غير المسندة أو المسندة جزئيًا (${open.length})`});
+ open.forEach(({c,req,got},i)=>add('فصول غير مسندة',`${i+1}. ${v110ClassName(c)}`,got?`مسند جزئيًا: ${got} من ${req} حصة`:`غير مسند — ${(c.class_subject_requirements||[]).filter(r=>reportNumber(r.weekly_periods)>0).map(r=>`${r.curriculum_subjects?.subject_name||'علوم'} (${r.weekly_periods})`).join('؛ ')||req+' حصة'}`,req-got));
+ if(!open.length)add('فصول غير مسندة','—',d.classes.length?'كل الفصول مسندة بالكامل.':'لم تُدخل فصول لهذه المدرسة بعد.','');
+ add('معلمون بلا فصول','','',' ',{_group:true,_groupTitle:`معلمون لم تُسند لهم فصول (${without.length})`});
+ without.forEach((g,i)=>{const t=g.teacher;add('معلمون بلا فصول',`${i+1}. ${g.name}`,t?[t.on_renewed_leave?'إجازة':'',isPaidTeacher(t)?'بالأجر':'ثابت',t.display_job||t.job_title||''].filter(Boolean).join(' — '):'—',0,{_search:g.name})});
+ if(!without.length)add('معلمون بلا فصول','—','كل المعلمين لهم فصول مسندة.','');
+ const openPeriods=open.reduce((n,x)=>n+x.req-x.got,0);
+ return makeReportSchema({reportId:'schoolAssignments',title:'تقرير إسناد الفصول',subtitle:d.school.name+' — المعلمون وفصولهم المسندة، والفصول غير المسندة، والمعلمون بلا فصول',period:ctx.period,issuer:ctx.issuer,
+  columns:[reportColumn('section','القسم',1),reportColumn('item','المعلم / الفصل',1.8),reportColumn('details','الفصول المسندة / التفاصيل',4.6),reportColumn('periods','الحصص',.7)],rows,
+  summary:[reportMetric('المعلمون',groups.length),reportMetric('معلمون لهم فصول',withClasses.length),reportMetric('معلمون بلا فصول',without.length),reportMetric('الفصول',d.classes.length),reportMetric('فصول غير مسندة',open.length),reportMetric('حصص غير مسندة',openPeriods)],
+  totals:[reportTotalsMetric('الحصص المطلوبة',d.required),reportTotalsMetric('الحصص المسندة',d.assigned),reportTotalsMetric('حصص غير مسندة',openPeriods)],approval:{enabled:false}});
+}
+ReportAdapters.schoolAssignments={async load(ctx,options={}){return v174AssignmentReport(await v110LoadSchoolDossier(options.schoolId||v98School()),ctx)}};
+/* v175: معاينة التقرير خطوة في سجل التصفح — «رجوع» الهاتف يغلقها ولا يغادر الشاشة. */
+let v175PreviewInHistory=false;
+const v175PreviewOpen=()=>document.getElementById('reportPreviewOverlay')?.classList.contains('open');
+const v175BaseOpenReportById=openReportById,v175BaseCloseReportPreview=closeReportPreview;
+openReportById=async function(...args){
+ const result=await v175BaseOpenReportById.apply(this,args);
+ if(v175PreviewOpen()&&!v175PreviewInHistory){try{history.pushState({...(history.state||{}),v175ReportPreview:true},'',location.href);v175PreviewInHistory=true}catch{}}
+ return result;
+};
+closeReportPreview=function(...args){
+ const r=v175BaseCloseReportPreview.apply(this,args);
+ if(v175PreviewInHistory){v175PreviewInHistory=false;if(history.state?.v175ReportPreview)history.back()}
+ return r;
+};
+window.addEventListener('popstate',()=>{if(v175PreviewInHistory&&v175PreviewOpen()){v175PreviewInHistory=false;v175BaseCloseReportPreview()}});
+function v174OpenAssignmentReport(schoolId){
+ return openReportById('schoolAssignments',{schoolId,filterState:{active:true,search:'',filters:[{label:'معرف المدرسة',value:String(schoolId)}],displayFilters:[{label:'النطاق',value:'المدرسة المختارة'}],sourcePage:currentPage}});
+}
 const v110BaseSchoolsPage=schoolsPage;
 schoolsPage=async function(options={}){
  const schoolId=v98School(),revision=v97StageRevision;
