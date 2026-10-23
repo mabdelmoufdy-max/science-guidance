@@ -10,4 +10,5 @@ begin
     replace(d, 'COALESCE((tr.weekly_target_override)::integer, wr.weekly_norm)', 'wr.weekly_norm');
 end $$;
 alter table public.teacher_records drop column weekly_target_override;
+delete from public.supervision_declined where teacher_id='155fe4e3-dec0-4f27-b9e3-54f3a257e8e1' and school_id='caa808ac-b5ad-4283-ab8c-bfabeb7ed6fb';
 commit;
