@@ -6,3 +6,11 @@ using public.teacher_records tr, public.school_classes c, public.schools s
 where ta.teacher_id=tr.id and ta.class_id=c.id and c.school_id=s.id
   and ((tr.full_name='فاطمة محمد القاسم محمود' and s.name='الجمالية تعليم اساسي' and c.class_name in ('1/1','2/1','3/1'))
     or (tr.full_name='فهد هاشم احمد' and s.name='عمر بن عبدالعزيز' and c.class_name in ('2/2','2/3','2/4','2/5','2/6')));
+-- 6/1 الابتدائي لفاطمة (الجمالية الابتدائية تعليم اساسي) + الانتداب الجزئي وتسجيل المدرسة:
+delete from public.teaching_assignments ta using public.teacher_records tr, public.school_classes c, public.schools s
+where ta.teacher_id=tr.id and ta.class_id=c.id and c.school_id=s.id
+  and tr.full_name='فاطمة محمد القاسم محمود' and s.name='الجمالية الابتدائية تعليم اساسي' and c.class_name='6/1';
+update public.teacher_school_assignments tsa set active=false from public.teacher_records tr, public.schools s
+where tsa.teacher_id=tr.id and tsa.school_id=s.id and tr.full_name='فاطمة محمد القاسم محمود' and s.name='الجمالية الابتدائية تعليم اساسي';
+update public.delegations d set active=false from public.teacher_records tr, public.schools s
+where d.teacher_id=tr.id and d.to_school_id=s.id and tr.full_name='فاطمة محمد القاسم محمود' and s.name='الجمالية الابتدائية تعليم اساسي' and d.created_at::date='2026-10-23';
