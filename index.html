@@ -1,4 +1,5 @@
 <!doctype html>
+<!-- v170: عجز المعلم المنتدب جزئيًا (بين مدارس المرحلة أو من الابتدائي) يظهر في مدرسته الأصلية فقط؛ في المدرسة المنتدب إليها عجزه 0 وحالته «منتدب جزئيًا» (قاعدة البيانات: migration v170_partial_deficit_home_only + v86ApplyPartialDelegateRule). المتبقي للتدريس وعجز المدرسة بلا تغيير. -->
 <!-- v169: «تصدير Excel» في شاشة المعلمين يُخرج ملف xlsx حقيقيًا (من اليمين لليسار، عربية سليمة) بدل CSV؛ وعلى الهاتف يفتح نافذة المشاركة/الحفظ، وعلى الكمبيوتر ينزل الملف. عرض فقط، بلا تعديل بيانات. -->
 <!-- v168: لوحة منسق المرحلة مبسطة لدعم القرار: (1) صندوق «يحتاج قرارًا» = ما يبقى «بلا تغطية» بعد ما يُسد داخليًا ومقترح الانتداب والأجر المسند، مع شريط تفصيل العجز؛ (2) تنبيه «الأرقام تقديرية» بعدد المعلمين الأساسيين وبالأجر الذين لم تُدخل حصصهم وطاقة الأساسيين المحسوبة ضمن «يُسد داخليًا»؛ (3) أربع بطاقات (المطلوب، الفعلي، العجز، المعتمدة) وسطر أعداد عامة؛ (4) «ماذا أفعل الآن؟» مهام مرتبة بأزرار تفتح التقارير (ومنها تقرير جديد «معلمون لم تُدخل حصصهم»)؛ (5) أعلى 5 مدارس عجزًا والموجهون وعدالة الكادر مطوية. حُذف من لوحة المنسق قسما «مرحبًا» و«ملخص الحصص والعجز» المكرران. نفس الحسابات المعتمدة، عرض فقط. -->
 <!-- v167: آلية الجدول المجمّع (v166) في كل عروض جدول المدرسة: (1) تقرير الطباعة «الجدول الأسبوعي لمعلمي المدرسة»: لكل يوم المعلمون الذين لهم حصص فيه فقط، والأعمدة اليوم ← المعلم (عريض) ← الحصص (ضيقة) والخانة الفصل مختصرًا، و«مدرسة أخرى» للمنتدب، ويوم بلا حصص سطر واحد؛ (2) «جدول المدرسة المسجل» في ملف المدرسة بنفس شكل جدول المعلم المجمّع بدل خانات بأسماء المعلمين. عرض فقط. -->
@@ -86,7 +87,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#152c43">
-<title>نظام توجيه العلوم — v169</title>
+<title>نظام توجيه العلوم — v170</title>
 <link rel="manifest" href="./manifest.webmanifest">
 <link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png">
 <link rel="apple-touch-icon" href="./icon-192.png">
@@ -2597,6 +2598,7 @@ window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();window.v152
 window.addEventListener('appinstalled',()=>{window.v152InstallPrompt=null;v152SyncInstallBtn()});
 if('serviceWorker' in navigator&&location.protocol!=='file:')window.addEventListener('load',()=>navigator.serviceWorker.register('./service-worker.js').catch(()=>{}));
 const V145_NEWS=[
+ ['v170','المنتدب جزئيًا: عجزه يظهر في مدرسته الأصلية فقط، وفي المدرسة المنتدب إليها تظهر حالته «منتدب جزئيًا».'],
  ['v169','«تصدير Excel» في شاشة المعلمين يُخرج ملف Excel حقيقيًا يفتح على الهاتف والكمبيوتر، ويفتح المشاركة على الهاتف.'],
  ['v168','لوحة المنسق مبسطة: رقم القرار أولًا، وتنبيه البيانات الناقصة، ومهام «ماذا أفعل الآن؟».'],
  ['v167','الجدول المجمّع (المعلم في أيام حصصه فقط) في طباعة جداول المعلمين وفي ملف المدرسة.'],
@@ -7901,10 +7903,10 @@ function v86ApplyPartialDelegateRule(row,partial){
  const target=Number(row?.weekly_target||0)||0;
  const maximum=row?.workload_rule_type==='maximum';
  return {...row,is_senior_teacher:false,supervision_periods:0,total_counted_periods:total,
-  deficit_periods:maximum?(row?.deficit_periods??0):Math.max(target-total,0),
+  deficit_periods:maximum?(row?.deficit_periods??0):0, // v170: عجز المنتدب جزئيًا يظهر في مدرسته الأصلية فقط
   surplus_periods:target?Math.max(total-target,0):0,
   remaining_periods:target?Math.max(target-total,0):0,
-  workload_status:maximum?(total>target?'تجاوز الحد':total===target?'بلغ الحد':'ضمن الحد'):(total<target?'عجز':total>target?'زيادة':'مكتمل')
+  workload_status:maximum?(total>target?'تجاوز الحد':total===target?'بلغ الحد':'ضمن الحد'):(total<target?'منتدب جزئيًا':total>target?'زيادة':'مكتمل')
  };
 }
 
