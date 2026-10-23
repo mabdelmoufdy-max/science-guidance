@@ -3,7 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>إدخال بيانات المنسق — v170</title>
+<title>إدخال بيانات المنسق — v170.1</title>
+<!-- v170.1: الحساب الذي له دور مدير النظام يدخل به أولًا (حساب المالك له دور منسق بلا مدارس فكانت القائمة فارغة). -->
 <!-- v170: رابط مستقل لمنسق المرحلة: دخول بالرقم القومي وكلمة المرور، قائمة مدارس المرحلة، بطاقة بيانات المدرسة (عرض/تعديل/اعتماد المنسق) مع إضافة/حذف الفصول. المرحلة 2: بطاقات المعلمين. -->
 <link rel="manifest" href="../../manifest.webmanifest">
 <link rel="icon" href="../../icon-192.png">
@@ -167,7 +168,7 @@ async function boot(){
   const prof=await q(sb.from('profiles').select('id,full_name,civil_id,must_change_password,is_active').eq('id',uid).single());
   if(!prof.is_active){await sb.auth.signOut();return renderLogin('الحساب غير مفعل')}
   const roles=(await q(sb.from('user_roles').select('role').eq('profile_id',uid).eq('is_active',true))).map(r=>r.role);
-  activeRole=['stage_coordinator','admin','first_supervisor'].find(r=>roles.includes(r))||'';
+  activeRole=['admin','first_supervisor','stage_coordinator'].find(r=>roles.includes(r))||'';
   if(!activeRole){await sb.auth.signOut();return renderLogin('هذا الرابط لمنسقي المراحل فقط')}
   S.me={...prof,id:uid};
   if(prof.must_change_password)return renderChangePassword();
