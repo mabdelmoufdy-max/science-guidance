@@ -1,4 +1,5 @@
 <!doctype html>
+<!-- v175: زر «رجوع» في الهاتف أثناء فتح معاينة تقرير يغلق المعاينة ويبقى في الشاشة نفسها (كان يرجع لشاشة سابقة/الرئيسية): المعاينة تضيف خطوة في سجل التصفح، والإغلاق بالزر يزيلها. -->
 <!-- v174: شاشة المدارس (مدرسة مختارة): زر «تقرير إسناد الفصول» بجوار «تقرير المدرسة الشامل» — تقرير A4 جديد `schoolAssignments` من بيانات ملف المدرسة نفسها (v110LoadSchoolDossier): كل معلم وفصوله المسندة وحصصه، الفصول غير المسندة أو المسندة جزئيًا، والمعلمون بلا فصول. عرض فقط. -->
 <!-- v173: زر «⇄ تبديل الدور» في القائمة الجانبية كان بلون أزرق داكن على خلفية القائمة الكحلية فلا يُرى (على الهاتف هو المكان الوحيد للزر منذ v149)؛ صار زرًا ذهبيًا واضحًا. -->
 <!-- v169: «تصدير Excel» في شاشة المعلمين يُخرج ملف xlsx حقيقيًا (من اليمين لليسار، عربية سليمة) بدل CSV؛ وعلى الهاتف يفتح نافذة المشاركة/الحفظ، وعلى الكمبيوتر ينزل الملف. عرض فقط، بلا تعديل بيانات. -->
@@ -88,7 +89,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#152c43">
-<title>نظام توجيه العلوم — v174</title>
+<title>نظام توجيه العلوم — v175</title>
 <link rel="manifest" href="../../manifest.webmanifest">
 <link rel="icon" type="image/png" sizes="192x192" href="../../icon-192.png">
 <link rel="apple-touch-icon" href="../../icon-192.png">
@@ -2602,6 +2603,7 @@ window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();window.v152
 window.addEventListener('appinstalled',()=>{window.v152InstallPrompt=null;v152SyncInstallBtn()});
 if('serviceWorker' in navigator&&location.protocol!=='file:')window.addEventListener('load',()=>navigator.serviceWorker.register('../../service-worker.js').catch(()=>{}));
 const V145_NEWS=[
+ ['v175','زر «رجوع» في الهاتف أثناء معاينة تقرير يغلق المعاينة ويبقى في نفس الشاشة.'],
  ['v174','شاشة المدارس: زر «تقرير إسناد الفصول» بجوار التقرير الشامل — المعلمون وفصولهم، والفصول غير المسندة، والمعلمون بلا فصول.'],
  ['v173','زر «⇄ تبديل الدور» في القائمة الجانبية صار واضحًا (ذهبي).'],
  ['v169','«تصدير Excel» في شاشة المعلمين يُخرج ملف Excel حقيقيًا يفتح على الهاتف والكمبيوتر، ويفتح المشاركة على الهاتف.'],
@@ -9471,6 +9473,21 @@ function v174AssignmentReport(d,ctx){
   totals:[reportTotalsMetric('الحصص المطلوبة',d.required),reportTotalsMetric('الحصص المسندة',d.assigned),reportTotalsMetric('حصص غير مسندة',openPeriods)],approval:{enabled:false}});
 }
 ReportAdapters.schoolAssignments={async load(ctx,options={}){return v174AssignmentReport(await v110LoadSchoolDossier(options.schoolId||v98School()),ctx)}};
+/* v175: معاينة التقرير خطوة في سجل التصفح — «رجوع» الهاتف يغلقها ولا يغادر الشاشة. */
+let v175PreviewInHistory=false;
+const v175PreviewOpen=()=>document.getElementById('reportPreviewOverlay')?.classList.contains('open');
+const v175BaseOpenReportById=openReportById,v175BaseCloseReportPreview=closeReportPreview;
+openReportById=async function(...args){
+ const result=await v175BaseOpenReportById.apply(this,args);
+ if(v175PreviewOpen()&&!v175PreviewInHistory){try{history.pushState({...(history.state||{}),v175ReportPreview:true},'',location.href);v175PreviewInHistory=true}catch{}}
+ return result;
+};
+closeReportPreview=function(...args){
+ const r=v175BaseCloseReportPreview.apply(this,args);
+ if(v175PreviewInHistory){v175PreviewInHistory=false;if(history.state?.v175ReportPreview)history.back()}
+ return r;
+};
+window.addEventListener('popstate',()=>{if(v175PreviewInHistory&&v175PreviewOpen()){v175PreviewInHistory=false;v175BaseCloseReportPreview()}});
 function v174OpenAssignmentReport(schoolId){
  return openReportById('schoolAssignments',{schoolId,filterState:{active:true,search:'',filters:[{label:'معرف المدرسة',value:String(schoolId)}],displayFilters:[{label:'النطاق',value:'المدرسة المختارة'}],sourcePage:currentPage}});
 }
