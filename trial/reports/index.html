@@ -1,4 +1,10 @@
 <!doctype html>
+<!-- v192: تقرير «الموجهين ومدارسهم»: لا يظهر سجل موجه بلا مدارس إن كان لنفس الاسم سجل آخر له مدارس (سجلّا شيماء محمد فرج محمد). -->
+<!-- v191: تقرير «الموجهين ومدارسهم»: سطر لكل مدرسة (بدل قائمة أسماء مكدسة في خانة واحدة)؛ اسم الموجه وهاتفه وعدد مدارسه في أول سطر من مجموعته فقط. -->
+<!-- v190: تقرير «الموجهين» (للأدوار التي ترى الدليل كاملًا): سطر لكل موجه ومرحلة وأمامه عدد مدارسه وأسماؤها (من schools.supervisor_id) بدل أعمدة الدليل المهني. -->
+<!-- v189: تقرير الفصول وتقرير المدارس (عدة مدارس): سطر واحد لكل مدرسة، وعمود لكل صف (الإعدادي/الثانوي: الأول–الثالث، الابتدائي: الرابع–السادس) بعدد فصوله بدل تكرار المدرسة لكل صف أو نص «ميزانية المدرسة»؛ أعمدة الصفوف غير الموجودة في النتائج تُخفى بعد الفلترة؛ ومربع «عدد الفصول» في تقرير الفصول بعد الفلترة يجمع الفصول (كان يعدّ الأسطر). -->
+<!-- v188: «رجوع» و«آخر شاشة» لا يعتمدان على وجود صفحة سابقة في المتصفح: كل خطوة داخل البرنامج تُرقَّم (v188Idx)؛ «رجوع» داخل تقرير مفتوح يعيد لقائمة التقارير، وفي أول خطوة (فتح الرابط مباشرة/بعد التحديث) ينتقل لآخر شاشة محفوظة أو الرئيسية بدل الخروج من البرنامج؛ «آخر شاشة» داخل التقرير بلا شاشة محفوظة يعيد لقائمة التقارير. -->
+<!-- v187: «رجوع» داخل «تقارير المرحلة»: فتح تقرير يُسجَّل في سجل الرجوع (history.pushState بعلامة v187Inner)، فالرجوع من التقرير يعيد لقائمة التقارير بدل الخروج إلى الرئيسية. -->
 <!-- v186: تبويبا «التقارير/تقارير المرحلة» و«الإحصائيات» صارا تبويبًا واحدًا (صفحة statistics باسم وأيقونة تبويب التقارير للدور؛ reports يُحوَّل إليها)، وحُذفت من «قوالب حسب الغرض» ثلاث بطاقات: مطابقة أسماء المعلمين والمدارس، بيانات الحصص والمدرسين، تقرير الانتداب. -->
 <!-- v185: حقل «مشرف المادة» في تعديل بيانات المعلم يقرأ قيمته الحالية من كشف المدرسة (get_school_teacher_roster: is_senior_teacher للمعلم في مدرسته الأصلية أو المنتدب إليها) بدل علامة is_senior_teacher؛ كانت رانيا عبد الباسط (الشعراني) تظهر «لا يشرف» في الحقل ومشرفة في الكشف، فلا يُحفظ اختيار «لا يشرف». -->
 <!-- v184: (رقم v183 لقاعدة البيانات) «تعديل بيانات المعلم» للموجه ومنسق المرحلة ومدير النظام: حقل «مشرف المادة» (لا يشرف / مدرسته الأصلية / مدرسة منتدب إليها) بعد آخر غلاف لـ editTeacherForm؛ الحفظ (غلاف saveTeacherEdit) بعد نجاح حفظ البيانات الأساسية عبر RPC set_school_supervisor مع تأكيد يذكر المشرف الحالي الذي سيُستبدل. مشرف واحد لكل مدرسة، والمعلم يشرف على مدرسة واحدة؛ النقل/الإلغاء يترك المدرسة بلا مشرف حتى يُختار غيره. -->
@@ -98,7 +104,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#152c43">
-<title>نظام توجيه العلوم — v186</title>
+<title>نظام توجيه العلوم — v192</title>
 <link rel="manifest" href="../../manifest.webmanifest">
 <link rel="icon" type="image/png" sizes="192x192" href="../../icon-192.png">
 <link rel="apple-touch-icon" href="../../icon-192.png">
@@ -2629,6 +2635,12 @@ window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();window.v152
 window.addEventListener('appinstalled',()=>{window.v152InstallPrompt=null;v152SyncInstallBtn()});
 if('serviceWorker' in navigator&&location.protocol!=='file:')window.addEventListener('load',()=>navigator.serviceWorker.register('../../service-worker.js').catch(()=>{}));
 const V145_NEWS=[
+ ['v192','تقرير «الموجهين ومدارسهم»: لا يتكرر الموجه في آخر التقرير بسطر «لا توجد مدارس».'],
+ ['v191','تقرير «الموجهين ومدارسهم»: كل مدرسة في سطر مستقل تحت موجهها.'],
+ ['v190','تقرير «الموجهين» يعرض كل موجه وأمامه مدارسه.'],
+ ['v189','تقرير الفصول وتقرير المدارس: سطر واحد لكل مدرسة وعمود لكل صف بعدد فصوله.'],
+ ['v188','«رجوع» و«آخر شاشة» يعملان داخل التقارير حتى بعد تحديث الصفحة أو فتح الرابط مباشرة، ولا يخرجان من البرنامج.'],
+ ['v187','«رجوع» من تقرير مفتوح في «تقارير المرحلة» يعيد لقائمة التقارير بدل الرئيسية.'],
  ['v186','التقارير والإحصائيات صارا تبويبًا واحدًا (مثل «تقارير المرحلة» للمنسق)، وحُذفت ثلاثة قوالب غير مستخدمة.'],
  ['v184','تعديل بيانات المعلم (للموجه والمنسق ومدير النظام): حقل «مشرف المادة» لإضافة الإشراف أو إلغائه — مشرف واحد لكل مدرسة.'],
  ['v182','الإجازات: تجديد إجازة معلم له فصول مسندة يلغي إسنادها تلقائيًا بعد تأكيدك، فتعود «غير مسندة» وتظهر في «توزيع العجز».'],
@@ -10566,6 +10578,118 @@ const __v186StatisticsPage=statisticsPage;
 statisticsPage=async function(options={}){
  const html=await __v186StatisticsPage(options),label=V186_LABEL[profile?.role];
  return label&&typeof html==='string'?html.replace('<h2>الإحصائيات</h2>',`<h2>${esc(label)}</h2>`):html;
+};
+
+/* v187: فتح تقرير من «تقارير المرحلة/التقارير» يُسجَّل خطوة في سجل الرجوع؛ «رجوع» (زر الشاشة/الهاتف/المتصفح) يعيد لقائمة التقارير بدل الخروج من الشاشة، وزر «← رجوع للتقارير» يستهلك الخطوة نفسها. */
+const __v187OpenReport=statisticsOpenReport;
+statisticsOpenReport=function(key){
+ const r=__v187OpenReport(key);
+ if(currentPage==='statistics'&&statisticsSelectedReport&&!history.state?.v187Inner){try{history.pushState({...(history.state||{}),scienceGuidance:true,page:'statistics',v187Inner:true,v187Key:key},'',location.href)}catch(_){}}
+ return r;
+};
+const __v187BackToCenter=statisticsBackToCenter;
+statisticsBackToCenter=function(){if(history.state?.v187Inner){history.back();return}return __v187BackToCenter()};
+window.addEventListener('popstate',()=>{
+ if(!profile)return;
+ if(history.state?.v187Inner){ // v188: الرجوع/التقدم إلى خطوة تقرير والتقرير مغلق ← يُفتح التقرير نفسه (بدل خطوة لا تغيّر شيئًا)
+  const k=history.state.v187Key;
+  if(k&&STATISTICS_REPORTS[k]&&currentPage==='statistics'&&!statisticsSelectedReport){statisticsSelectedReport=k;loadPage().catch(moneySafeError)}
+  return;
+ }
+ if(currentPage==='statistics'&&statisticsSelectedReport&&appNavHashPage()==='statistics')__v187BackToCenter();
+});
+
+/* v188: «رجوع»/«آخر شاشة» لا يعتمدان على history.length: كل خطوة داخل البرنامج تحمل رقمًا (v188Idx). عند فتح الرابط مباشرة أو بعد التحديث كان «رجوع» يخرج من البرنامج أو لا يفعل شيئًا، و«آخر شاشة» يكتفي برسالة. */
+const __v188Push=history.pushState.bind(history),__v188Replace=history.replaceState.bind(history);
+history.pushState=function(s,...a){return __v188Push({...(s&&typeof s==='object'?s:{}),v188Idx:(Number(history.state?.v188Idx)||0)+1},...a)};
+history.replaceState=function(s,...a){return __v188Replace({...(s&&typeof s==='object'?s:{}),v188Idx:Number(history.state?.v188Idx)||0},...a)};
+function v188LastTarget(){const st=appNavRead();return [st.lastDifferent,st.previous].find(p=>p&&p!==currentPage&&appNavAllowed(p))||''}
+appNavGoBack=function(){
+ if(currentPage==='statistics'&&statisticsSelectedReport)return statisticsBackToCenter();
+ if((Number(history.state?.v188Idx)||0)>0){history.back();return}
+ const t=v188LastTarget();if(t)return go(t);
+ appNavHome();
+};
+const __v188Last=appNavLast;
+appNavLast=function(){if(!v188LastTarget()&&currentPage==='statistics'&&statisticsSelectedReport)return statisticsBackToCenter();return __v188Last()};
+
+/* v189: عدد الفصول لكل صف في أعمدة (سطر واحد لكل مدرسة) — تقرير الفصول، وتقرير المدارس لعدة مدارس (بدل عمود «ميزانية المدرسة» النصي). */
+const V189_GRADES=['الأول','الثاني','الثالث','الرابع','الخامس','السادس'];
+function v189Grade(g){return String(g||'').replace(/^الصف\s+/,'').trim()}
+function v189StageGrades(stage){const st=String(stage||'');const k=st.includes('ابتدائي')?'ابتدائي':st.includes('ثانوي')?'ثانوي':st.includes('إعدادي')||st.includes('اعدادي')?'إعدادي':'';return (GRADE_OPTIONS[k]||[]).map(o=>o.value)}
+function v189GradeColumns(stages,extra=[]){const set=new Set(extra);stages.forEach(st=>v189StageGrades(st).forEach(g=>set.add(g)));return V189_GRADES.filter(g=>set.has(g)).map(g=>reportColumn('g_'+g,'الصف '+g,.62,{numeric:true}))}
+function v189FillGrades(row,stage,counts){const own=v189StageGrades(stage);V189_GRADES.forEach(g=>{row['g_'+g]=counts.has(g)?counts.get(g):own.includes(g)?0:'—'})}
+formatClassesReport=function(raw,ctx){
+ const single=typeof v115SingleSchoolRole==='function'&&v115SingleSchoolRole();
+ const map=new Map();
+ (raw.classes||[]).forEach(c=>{const key=(c.school_id||'')+'|'+(c.stage||'');if(!map.has(key))map.set(key,{school_id:c.school_id,school:c.schools?.name||'',stage:c.stage||'',counts:new Map(),count:0,periods:0});const g=map.get(key),gr=v189Grade(c.grade);g.counts.set(gr,(g.counts.get(gr)||0)+1);g.count++;g.periods+=v119ClassPeriods(c)});
+ const groups=[...map.values()].sort((a,b)=>String(a.school).localeCompare(String(b.school),'ar')||String(a.stage).localeCompare(String(b.stage),'ar'));
+ const rows=groups.map(g=>{const r={school:reportCellValue(g.school),stage:reportCellValue(g.stage),count:g.count,periods:g.periods,_schoolId:String(g.school_id||''),_school:reportCellValue(g.school),_stage:reportCellValue(g.stage)};v189FillGrades(r,g.stage,g.counts);return r});
+ const extra=groups.flatMap(g=>[...g.counts.keys()]);
+ const columns=[...(single?[]:[reportColumn('school','المدرسة',1.8)]),reportColumn('stage','المرحلة',.7),...v189GradeColumns(groups.map(g=>g.stage),extra),reportColumn('count','إجمالي الفصول',.75,{numeric:true}),reportColumn('periods','إجمالي حصص العلوم',.85,{numeric:true})];
+ const schema=makeReportSchema({reportId:'classes',title:'تقرير الفصول',subtitle:'عدد الفصول لكل صف وحصص العلوم المطلوبة — سطر لكل مدرسة',period:ctx.period,summary:[],columns,rows,totals:[]});
+ return v189ClassesMetrics(schema);
+};
+function v189ClassesMetrics(schema){
+ const rows=schema.rows||[],grades=(schema.columns||[]).filter(c=>String(c.key).startsWith('g_'));
+ schema.summary=[reportMetric('عدد المدارس',new Set(rows.map(r=>r._schoolId)).size),reportMetric('عدد الفصول',reportSum(rows,'count')),reportMetric('إجمالي حصص العلوم',reportSum(rows,'periods'))];
+ schema.totals=[...grades.map(c=>reportTotalsMetric(c.label,reportSum(rows,c.key))),reportTotalsMetric('إجمالي الفصول',reportSum(rows,'count')),reportTotalsMetric('إجمالي حصص العلوم',reportSum(rows,'periods'))];
+ return schema;
+}
+const __v189SchoolReport=formatSchoolReport;
+formatSchoolReport=function(raw,ctx,options={}){
+ const schema=__v189SchoolReport(raw,ctx,options);
+ const idx=(schema.columns||[]).findIndex(c=>c.key==='budget');if(idx<0)return schema;
+ const per={};(raw.classes||[]).forEach(x=>{const m=per[x.school_id]||(per[x.school_id]=new Map()),g=v189Grade(x.grade);m.set(g,(m.get(g)||0)+1)});
+ const stageOf=Object.fromEntries((raw.schools||[]).map(s=>[String(s.id),s.stage]));
+ (schema.rows||[]).forEach(r=>v189FillGrades(r,stageOf[r._schoolId]||r._stage,per[r._schoolId]||new Map()));
+ const extra=Object.values(per).flatMap(m=>[...m.keys()]);
+ schema.columns.splice(idx,1,...v189GradeColumns((raw.schools||[]).map(s=>s.stage),extra));
+ return schema;
+};
+const __v189ApplyFilters=applyCurrentFiltersToReportSchema;
+applyCurrentFiltersToReportSchema=function(schema,state){
+ const out=__v189ApplyFilters(schema,state);
+ if(out&&['classes','school'].includes(out.reportId)&&(out.columns||[]).some(c=>String(c.key).startsWith('g_'))){
+  out.columns=out.columns.filter(c=>!String(c.key).startsWith('g_')||(out.rows||[]).some(r=>r[c.key]!=='—'&&r[c.key]!==undefined));
+  if(out.reportId==='classes')v189ClassesMetrics(out);
+ }
+ return out;
+};
+
+/* v190: تقرير «الموجهين»: الموجه وأمامه مدارسه (سطر لكل موجه ومرحلة). */
+let __v190SupRaw=null;
+const __v190FormatSupervisors=formatSupervisorsReport;
+formatSupervisorsReport=function(raw,ctx){__v190SupRaw=raw;return __v190FormatSupervisors(raw,ctx)};
+const __v190SupLoad=ReportAdapters.supervisors.load;
+ReportAdapters.supervisors.load=async function(ctx,...rest){
+ __v190SupRaw=null;
+ const base=await __v190SupLoad.call(this,ctx,...rest);
+ const raw=__v190SupRaw;if(!raw?.fullAccess)return base;
+ const {data,error}=await sb.from('schools').select('id,name,stage,supervisor_id').order('name');if(error)throw error;
+ const bySup=new Map();(data||[]).forEach(x=>{if(!x.supervisor_id)return;const k=String(x.supervisor_id);if(!bySup.has(k))bySup.set(k,[]);bySup.get(k).push(x)});
+ const order=['ابتدائي','إعدادي','ثانوي'],stageRank=st=>{const i=order.findIndex(o=>String(st||'').includes(o));return i<0?9:i};
+ const rows=[];
+ const groups=[];
+ (raw.supervisors||[]).forEach(sup=>{
+  const list=bySup.get(String(sup.id))||[];const name=reportCellValue(supervisorDirectoryName(sup)),phone=reportCellValue(supervisorDirectoryPhone(sup));
+  const stages=[...new Set(list.map(x=>x.stage||'—'))].sort((a,b)=>stageRank(a)-stageRank(b));
+  if(!stages.length){groups.push({id:sup.id,name,phone,stage:'—',schools:[]});return}
+  stages.forEach(st=>groups.push({id:sup.id,name,phone,stage:st,schools:list.filter(x=>(x.stage||'—')===st).map(x=>x.name).sort((a,b)=>String(a).localeCompare(String(b),'ar'))}));
+ });
+ const withSchools=new Set(groups.filter(g=>g.schools.length).map(g=>filterNormalize(g.name)));
+ for(let i=groups.length-1;i>=0;i--)if(!groups[i].schools.length&&withSchools.has(filterNormalize(groups[i].name)))groups.splice(i,1); // v192: سجل مكرر بالاسم بلا مدارس
+ groups.sort((a,b)=>stageRank(a.stage)-stageRank(b.stage)||(b.schools.length?1:0)-(a.schools.length?1:0)||String(a.name).localeCompare(String(b.name),'ar'));
+ groups.forEach(g=>{
+  const head={name:g.name,phone:g.phone,count:g.schools.length,_stage:reportCellValue(g.stage),_search:[g.name,...g.schools].join(' ')};
+  if(!g.schools.length){rows.push({...head,n:'\u00a0',school:'لا توجد مدارس مسندة',stage:'\u00a0'});return}
+  g.schools.forEach((sc,i)=>rows.push(i?{name:'\u00a0',phone:'\u00a0',count:'\u00a0',n:i+1,school:reportCellValue(sc),stage:reportCellValue(g.stage),_stage:head._stage,_search:head._search}:{...head,n:1,school:reportCellValue(sc),stage:reportCellValue(g.stage)}));
+ });
+ const sups=new Set(groups.map(g=>String(g.id))).size,nSchools=groups.reduce((a,g)=>a+g.schools.length,0);
+ return makeReportSchema({reportId:'supervisors',title:'تقرير الموجهين ومدارسهم',subtitle:'كل موجه وأمامه المدارس المسندة إليه حسب المرحلة',period:ctx.period,
+  summary:[reportMetric('عدد الموجهين',sups),reportMetric('عدد المدارس المسندة',nSchools)],
+  columns:[reportColumn('name','الموجه',1.6),reportColumn('phone','الهاتف',1,{id:true,nowrap:true}),reportColumn('count','عدد مدارسه',.6,{numeric:true}),reportColumn('n','م',.35,{numeric:true}),reportColumn('school','المدرسة',2.4),reportColumn('stage','المرحلة',.7)],
+  rows,totals:[reportTotalsMetric('عدد الموجهين',sups),reportTotalsMetric('عدد المدارس المسندة',nSchools)],issuer:ctx.issuer});
 };
 
 /* v165 (من v161 في محادثة أخرى): قائمة دور المعلم المختصرة — بياناتي (+ بيانات المعلم) وحصصي وفصولي (+ الجدول الأسبوعي). */
