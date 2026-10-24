@@ -1,4 +1,5 @@
 <!doctype html>
+<!-- v184: (رقم v183 لقاعدة البيانات) «تعديل بيانات المعلم» للموجه ومنسق المرحلة ومدير النظام: حقل «مشرف المادة» (لا يشرف / مدرسته الأصلية / مدرسة منتدب إليها) بعد آخر غلاف لـ editTeacherForm؛ الحفظ (غلاف saveTeacherEdit) بعد نجاح حفظ البيانات الأساسية عبر RPC set_school_supervisor مع تأكيد يذكر المشرف الحالي الذي سيُستبدل. مشرف واحد لكل مدرسة، والمعلم يشرف على مدرسة واحدة؛ النقل/الإلغاء يترك المدرسة بلا مشرف حتى يُختار غيره. -->
 <!-- v182: الإجازات (المرحلة 2 — البند 1): حفظ «إجازة مجددة» لمعلم له فصول مسندة في الفصل الدراسي الحالي يعرض تأكيدًا بأسمائها ثم، بعد نجاح حفظ الإجازة، يلغي إسنادها واحدًا واحدًا بـ unassign_class_atomic (saveLongLeaveStatus أُعيد تعريفها)؛ ما يتعذر إلغاؤه (مثل اعتماد نهائي) يظهر في رسالة. نص تحذير v180 صار «سيُلغى إسناد هذه الفصول تلقائيًا عند الحفظ». لا تغيير في قاعدة البيانات. -->
 <!-- v181: شاشة المعلمين: زر «توزيع العجز بالأجر» صار «توزيع العجز» ويفتح أسفله (بدل النافذة) قائمة المدارس (فلتر المرحلة/البحث/بها عجز فقط، مرتبة بالعجز الرسمي)؛ الضغط على مدرسة يفتح بطاقتها: الحصص المطلوبة/المسند/غير المسند، الفصول غير المسندة، بطاقة لكل معلم (النصاب/المحتسب/المتبقي، فصوله وفصول المدارس الأخرى بلون مختلف، «إلغاء الإسناد» = unassign_class_atomic، «+ إسناد فصل» = assign_class_atomic مع تأكيد عند تجاوز المتبقي)، و«اقتراح التغطية» (متبقٍّ يكفي ← ثابت زيادة ← أجر؛ «تطبيق» يدوي). الأجر المسجل بالأرقام سابقًا يظهر للقراءة فقط (اختيار المستخدم 1)؛ بياناته وتقاريره بلا تغيير. لا تغيير في قاعدة البيانات. -->
 <!-- v180: نافذة «الإجازات وتجديدها» (openLongLeaveCenter): القائمة لأصحاب الإجازات فقط بأقسام وعدادات (كل الإجازات، بانتظار التجديد، مجددة، قرار مؤقت، تنتهي/انتهت، عادوا للعمل)، نموذج التسجيل يظهر بزر «+ تسجيل إجازة» أو «تعديل»؛ تنبيه انتهاء الإجازة في النافذة والجرس (عرض فقط، لا تتغير الحالة تلقائيًا)؛ تحذير بالفصول المسندة عند اختيار «إجازة مجددة»؛ زر «معاينة التقرير المالي» داخل النافذة صار «طباعة كشف الإجازات» للقسم المعروض (ReportAdapters.longLeaves). الحفظ وقواعد الحساب بلا تغيير. -->
@@ -95,7 +96,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#152c43">
-<title>نظام توجيه العلوم — v182</title>
+<title>نظام توجيه العلوم — v184</title>
 <link rel="manifest" href="./manifest.webmanifest">
 <link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png">
 <link rel="apple-touch-icon" href="./icon-192.png">
@@ -2626,6 +2627,7 @@ window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();window.v152
 window.addEventListener('appinstalled',()=>{window.v152InstallPrompt=null;v152SyncInstallBtn()});
 if('serviceWorker' in navigator&&location.protocol!=='file:')window.addEventListener('load',()=>navigator.serviceWorker.register('./service-worker.js').catch(()=>{}));
 const V145_NEWS=[
+ ['v184','تعديل بيانات المعلم (للموجه والمنسق ومدير النظام): حقل «مشرف المادة» لإضافة الإشراف أو إلغائه — مشرف واحد لكل مدرسة.'],
  ['v182','الإجازات: تجديد إجازة معلم له فصول مسندة يلغي إسنادها تلقائيًا بعد تأكيدك، فتعود «غير مسندة» وتظهر في «توزيع العجز».'],
  ['v181','توزيع العجز: زر في شاشة المعلمين يفتح المدارس أسفله؛ لكل مدرسة الفصول غير المسندة وبطاقة لكل معلم بفصوله مع «إلغاء الإسناد» و«+ إسناد فصل»، و«اقتراح التغطية».'],
  ['v180','الإجازات وتجديدها: القائمة لأصحاب الإجازات فقط بأقسام (بانتظار التجديد، مجددة، قرار مؤقت، تنتهي/انتهت، عادوا)، تنبيه بانتهاء الإجازة، تحذير بالفصول المسندة عند التجديد، وطباعة كشف الإجازات.'],
@@ -10488,6 +10490,59 @@ saveLongLeaveStatus=async function(event){
   await openLongLeaveCenter();
   if(failed.length)alert(`حُفظت الإجازة، لكن تعذر إلغاء إسناد ${failed.length} فصل (ألغِه من «توزيع العجز» أو «توزيع الفصول»):\n${failed.join('\n')}`);
  }catch(error){moneySafeError(error)}finally{if(document.body.contains(form)&&btn){btn.disabled=false;btn.textContent='حفظ الحالة وإعادة حساب التقارير الجديدة'}}
+};
+
+/* v184: «تعديل بيانات المعلم» للموجه ومنسق المرحلة ومدير النظام: حقل «مشرف المادة» (لا يشرف / مدرسته الأصلية / مدرسة منتدب إليها). الحفظ عبر set_school_supervisor (v184): مشرف واحد لكل مدرسة، والمعلم يشرف على مدرسة واحدة؛ نقل الإشراف يترك المدرسة السابقة بلا مشرف حتى يُختار غيره. */
+const V184_SUP_ROLES=['admin','stage_coordinator','supervisor'];
+const __v184BaseEditTeacherForm=editTeacherForm;
+editTeacherForm=async function(id){
+ await __v184BaseEditTeacherForm(id);
+ if(!V184_SUP_ROLES.includes(profile?.role))return;
+ const form=document.querySelector('#modal form');if(!form||form.elements.namedItem('v184_supervision'))return;
+ try{
+  const [tr,dr,cr]=await Promise.all([
+   sb.from('teacher_records').select('id,work_type,home_school_id,is_senior_teacher').eq('id',id).maybeSingle(),
+   sb.from('delegations').select('to_school_id,start_date,end_date').eq('teacher_id',id).eq('active',true),
+   sb.from('school_supervisor_choice').select('school_id').eq('teacher_id',id).maybeSingle()]);
+  for(const x of [tr,dr,cr])if(x.error)throw x.error;
+  const t=tr.data;if(!t||t.work_type!=='permanent')return;
+  const today=new Date().toISOString().slice(0,10);
+  const ids=[...new Set([t.home_school_id,...(dr.data||[]).filter(d=>d.to_school_id&&(!d.start_date||d.start_date<=today)&&(!d.end_date||d.end_date>=today)).map(d=>d.to_school_id)].filter(Boolean))];
+  if(!ids.length)return;
+  const sr=await sb.from('schools').select('id,name').in('id',ids);if(sr.error)throw sr.error;
+  const names=Object.fromEntries((sr.data||[]).map(s=>[s.id,s.name]));
+  const current=cr.data?.school_id||(t.is_senior_teacher?t.home_school_id:'')||'';
+  const opts=ids.map(sid=>`<option value="${sid}" ${sid===current?'selected':''}>مشرف المادة في ${esc(names[sid]||'مدرسة')}${sid===t.home_school_id?' (الأصلية)':' (منتدب إليها)'}</option>`).join('');
+  const box=document.createElement('div');box.className='field v184-sup-field';
+  box.innerHTML=`<label for="v184Supervision">مشرف المادة</label><select id="v184Supervision" name="v184_supervision" data-initial="${current}"><option value="" ${current?'':'selected'}>لا يشرف</option>${opts}</select><small class="muted">لكل مدرسة مشرف مادة واحد: اختيار مدرسة يستبدل مشرفها الحالي، والمعلم يشرف على مدرسة واحدة فقط.</small>`;
+  (form.querySelector('.form-grid')||form).appendChild(box);
+ }catch(error){console.warn('v184 supervision field',error)}
+};
+const __v184BaseSaveTeacherEdit=saveTeacherEdit;
+saveTeacherEdit=async function(e,id,...rest){
+ const form=e?.target,sel=form?.elements?.namedItem('v184_supervision');
+ const initial=sel?.dataset.initial||'',next=sel?sel.value||'':'';
+ if(!sel||initial===next)return __v184BaseSaveTeacherEdit(e,id,...rest);
+ e.preventDefault();
+ const label=v=>{const o=[...sel.options].find(x=>x.value===v);return (o?.textContent||'').replace(/^مشرف المادة في /,'').replace(/ \((الأصلية|منتدب إليها)\)$/,'')};
+ let msg;
+ try{
+  if(next){
+   const {data:c}=await sb.from('school_supervisor_choice').select('teacher_id').eq('school_id',next).maybeSingle();
+   let prevId=c?c.teacher_id:null;
+   if(!c){const {data:f}=await sb.from('teacher_records').select('id').eq('home_school_id',next).eq('is_senior_teacher',true).eq('active',true).limit(1);prevId=f?.[0]?.id||null}
+   let prevName='';if(prevId&&prevId!==id){const {data:pn}=await sb.from('teacher_records').select('full_name').eq('id',prevId).maybeSingle();prevName=pn?.full_name||''}
+   msg=`سيصبح هذا المعلم مشرف المادة في «${label(next)}»${prevName?` بدلًا من ${prevName}`:''}.${initial?`\nويُرفع إشرافه في «${label(initial)}» وتبقى بلا مشرف حتى يُختار غيره.`:''}\nمتابعة؟`;
+  }else msg=`سيُلغى إشراف هذا المعلم في «${label(initial)}»، وتبقى المدرسة بلا مشرف مادة حتى يُختار غيره.\nمتابعة؟`;
+ }catch(error){return moneySafeError(error)}
+ if(!confirm(msg))return;
+ await __v184BaseSaveTeacherEdit(e,id,...rest);
+ if(document.body.contains(form))return; // لم يُحفظ تعديل البيانات الأساسية
+ const {data,error}=await sb.rpc('set_school_supervisor',{p_school_id:next||initial,p_teacher_id:next?id:null});
+ if(error)return moneySafeError(error);
+ invalidateData('teachers','hierarchy','dashboard','page:reports','alerts');
+ toast(next?`تم: مشرف المادة في «${label(next)}»${data?.previous_teacher_name&&data.previous_teacher_id!==id?` بدلًا من ${data.previous_teacher_name}`:''}`:`أُلغي الإشراف في «${label(initial)}»`);
+ refreshCurrentPage({invalidate:['teachers','hierarchy','dashboard']}).catch(()=>{});
 };
 
 /* v165 (من v161 في محادثة أخرى): قائمة دور المعلم المختصرة — بياناتي (+ بيانات المعلم) وحصصي وفصولي (+ الجدول الأسبوعي). */
