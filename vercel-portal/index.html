@@ -691,11 +691,17 @@ summary{cursor:pointer;font-weight:600;padding:4px 0}
     }
     function drawChips() {
       chips.replaceChildren();
+      var closedSt = (S.mode === 'new' && S.status && S.status.closed_stages) || {};
+      if (closedSt[S.stageKey]) { S.stageKey = null; S.school = null; S.sel = new Map(); }
       STAGES.forEach(function (s) {
+        if (closedSt[s.k]) return;
         chips.appendChild(h('button', { type: 'button', class: 'chip', 'data-stage': s.k, 'aria-pressed': S.stageKey === s.k ? 'true' : 'false', onclick: function () {
           if (S.school && S.school.stage_key !== s.k) { S.school = null; S.sel = new Map(); }
           S.stageKey = s.k; saveDraft(); drawChips(); drawPicked(); drawList();
         } }, s.t));
+      });
+      STAGES.forEach(function (s) {
+        if (closedSt[s.k]) chips.appendChild(h('div', { class: 'warn', style: 'width:100%;margin-top:8px' }, 'المرحلة ' + s.t + ': التسجيل غير متاح من البوابة — ' + String(closedSt[s.k]).replace(/^للعرض فقط — /, '')));
       });
     }
     function drawList() {
