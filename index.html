@@ -1,4 +1,5 @@
 <!doctype html>
+<!-- v179: (1) حُذف «استيراد Excel/CSV» من البرنامج كله مع أكواده (openBulkImport وما يتبعه؛ كان في المعلمين/المدارس/الموجهين/الفصول لمدير النظام والمشرف الأول). (2) شاشة المدارس: زرّا «تصدير Excel — الخطة التشغيلية» و«تصدير Excel — النتائج المفلترة» (v179ExportReport من مُحوّل التقرير وفلاتره). (3) شاشة المدارس للأدوار متعددة المدارس تبدأ فارغة مثل المعلمين (v179SchoolsMode في v163Gate)؛ القائمة تظهر باختيار مدرسة أو بالبحث/الفلتر، والتقارير والتصدير تعمل دون عرضها. -->
 <!-- v178: (4) الخطة التشغيلية: عمود «العجز» نفسه صار يُحسب بعد الأجر = max(العجز − الأجر المسند، 0) (عرض فقط؛ row.deficit الأصلي باقٍ لتقرير العجز والزيادة)، ومربعه ومجموعه كذلك. (3) الخطة الملخصة/التشغيلية (summaryPlan): حُذف عمودا الزيادة والحالة (يبقى العجز بطلب المستخدم؛ الأجر المسند موضح في عموده)؛ في المربعات أعلى الجدول أضيف «المعلمون بالأجر» بجوار «المعلمون الثابتون» وحُذف «سجلات المدارس» و«الزيادة» (والمجاميع كذلك). (2) أي تقرير فيه عمود «م» يُعاد ترقيمه 1، 2، 3… بعد تطبيق الفلاتر (كان يحتفظ برقمه قبل الفلترة، مثل الخطة التشغيلية بعد اختيار المرحلة). (1) تقرير المدارس («معاينة التقرير/النتائج المفلترة» في شاشة المدارس): الأعمدة صارت المدرسة، المرحلة، النوع، ميزانية المدرسة (عدد الفصول لكل صف من school_classes)، إجمالي الفصول، الموجه المسؤول. تقرير المدرسة الواحدة بلا تغيير. -->
 <!-- v177: عجز المعلم المنتدب جزئيًا (بين مدارس المرحلة أو من الابتدائي) يظهر في مدرسته الأصلية فقط؛ في المدرسة المنتدب إليها عجزه 0 وحالته «منتدب جزئيًا» (قاعدة البيانات: migration v170_partial_deficit_home_only + v86ApplyPartialDelegateRule). المتبقي للتدريس وعجز المدرسة بلا تغيير. -->
 <!-- v175: زر «رجوع» في الهاتف أثناء فتح معاينة تقرير يغلق المعاينة ويبقى في الشاشة نفسها (كان يرجع لشاشة سابقة/الرئيسية): المعاينة تضيف خطوة في سجل التصفح، والإغلاق بالزر يزيلها. -->
@@ -91,7 +92,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#152c43">
-<title>نظام توجيه العلوم — v178</title>
+<title>نظام توجيه العلوم — v179</title>
 <link rel="manifest" href="./manifest.webmanifest">
 <link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png">
 <link rel="apple-touch-icon" href="./icon-192.png">
@@ -2227,7 +2228,7 @@ td .btn,.report-preview-toolbar .btn,.btn.btn-sm{min-height:var(--ctl-h-sm);padd
 .v163-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:10px 0}
 .v163-actions .btn{width:100%}
 .v163-hint{margin:-2px 0 10px;font-size:13px;text-align:center}
-#content[data-v163-teachers="1"] .page-head [data-bulk-import],#content[data-v163-teachers="1"] .page-head .report-preview-open-btn{display:none!important}
+#content[data-v163-teachers="1"] .page-head .report-preview-open-btn{display:none!important}
 /* v164: إخفاء الشريط السفلي في صفحة التقرير (المعاينة فيها الطباعة والمشاركة) */
 .statistics-fixed-actions{display:none!important}
 /* v166: الجدول المجمّع لمعلمي المدرسة */
@@ -2605,6 +2606,7 @@ window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();window.v152
 window.addEventListener('appinstalled',()=>{window.v152InstallPrompt=null;v152SyncInstallBtn()});
 if('serviceWorker' in navigator&&location.protocol!=='file:')window.addEventListener('load',()=>navigator.serviceWorker.register('./service-worker.js').catch(()=>{}));
 const V145_NEWS=[
+ ['v179','حُذف الاستيراد. شاشة المدارس: تصدير Excel للخطة التشغيلية وللنتائج المفلترة، وتبدأ فارغة مثل المعلمين (تظهر باختيار مدرسة أو بالبحث).'],
  ['v178','تقرير المدارس: يعرض ميزانية كل مدرسة (عدد الفصول في كل صف) والموجه المسؤول. وترقيم «م» يبدأ من 1 بعد الفلترة. والخطة التشغيلية: بلا عمودي الزيادة والحالة، ومربع «المعلمون بالأجر»، والعجز يُحسب بعد حصص الأجر (المدرسة المكتملة أساسي + أجر = صفر).'],
  ['v177','المنتدب جزئيًا: عجزه يظهر في مدرسته الأصلية فقط، وفي المدرسة المنتدب إليها تظهر حالته «منتدب جزئيًا».'],
  ['v175','زر «رجوع» في الهاتف أثناء معاينة تقرير يغلق المعاينة ويبقى في نفس الشاشة.'],
@@ -2826,6 +2828,8 @@ async function schoolsPage(){
      <p>اسم المدرسة والمرحلة بيانات هوية محمية؛ الإضافة والحذف وتعديل الاسم متاحة لمدير النظام فقط.</p>
    </div>
    <div class="actions">
+    <button class="btn secondary" onclick="v179ExportReport('summaryPlan','الخطة التشغيلية')">تصدير Excel — الخطة التشغيلية</button>
+    <button class="btn secondary" onclick="v179ExportReport('school','تقرير المدارس')">تصدير Excel — النتائج المفلترة</button>
     <button class="btn secondary" onclick="openSchoolsSummaryPlanReport()">طباعة الخطة التشغيلية</button>
     ${profile.role==='admin'?'<button class="btn primary" onclick="schoolForm()">+ إضافة مدرسة</button>':''}
    </div>
@@ -7088,7 +7092,6 @@ if(window.visualViewport)window.visualViewport.addEventListener('resize',()=>{if
 /* === UX Fast Entry & Mobile Data Entry — 2026.08.25 === */
 const UX_DRAFT_PREFIX='science_guidance_draft_v1:';
 let __identityLookupTimer=null;
-let __bulkImportState=null;
 let __assignmentUx=null;
 
 function uxDraftKey(key){return UX_DRAFT_PREFIX+[profile?.id||'anonymous',activeRole||profile?.role||'none',activeTerm?.id||'no-term',String(key||'form')].map(encodeURIComponent).join(':')}
@@ -7219,21 +7222,6 @@ saveAssignment=async function(e){if(!uxBeginSubmit(e))return;const form=e.target
 function uxShowUndo(message,action,ms=8000){document.querySelector('.undo-toast')?.remove();const box=document.createElement('div');box.className='undo-toast';box.innerHTML=`<span>${esc(message)}</span><button type="button">تراجع</button>`;document.body.appendChild(box);let done=false;const timer=setTimeout(()=>{if(!done)box.remove()},ms);box.querySelector('button').onclick=async()=>{if(done)return;done=true;clearTimeout(timer);box.querySelector('button').disabled=true;try{await action();box.remove()}catch(err){box.remove();moneySafeError(err)}}}
 
 function uxNormalizeText(v){return String(v??'').trim().replace(/\s+/g,' ')}
-function uxHeaderKey(h){const x=uxNormalizeText(h).toLowerCase();const map={'الرقم المدني':'civil_id','رقم مدني':'civil_id','الرقم القومي':'civil_id','رقم قومي':'civil_id','civil_id':'civil_id','civil id':'civil_id','الاسم':'full_name','الاسم الكامل':'full_name','full_name':'full_name','name':'name','اسم المدرسة':'name','المدرسة':'school','school':'school','school_id':'school_id','المرحلة':'stage','stage':'stage','الصف':'grade','grade':'grade','الفصل':'class_name','اسم الفصل':'class_name','class_name':'class_name','الهاتف':'phone','phone':'phone','البريد':'email','البريد الإلكتروني':'email','email':'email','الدرجة الوظيفية':'job_title','job_title':'job_title','نوع العمل':'work_type','work_type':'work_type','تاريخ الحصول على الدرجة':'grade_acquired_date','grade_acquired_date':'grade_acquired_date','تاريخ استلام العمل':'work_start_date','work_start_date':'work_start_date','تاريخ التعيين':'appointment_date','appointment_date':'appointment_date','المسمى الوظيفي':'job_title','الدرجة':'employment_grade','employment_grade':'employment_grade','تاريخ استلام العمل':'work_start_date','work_start_date':'work_start_date','الموقف':'assignment_status','assignment_status':'assignment_status','':'school_type','school_type':'school_type','النوع':'gender_type','gender_type':'gender_type','العنوان':'address','address':'address','عدد الفصول':'class_count','class_count':'class_count','جهة الاعتماد':'approval_authority','approval_authority':'approval_authority'};return map[x]||x}
-async function uxEnsureXlsx(){if(window.XLSX)return;await new Promise((resolve,reject)=>{const s=document.createElement('script');s.src='https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js';s.onload=resolve;s.onerror=()=>reject(new Error('تعذر تحميل قارئ Excel'));document.head.appendChild(s)})}
-async function uxParseBulkFile(file){await uxEnsureXlsx();const buf=await file.arrayBuffer(),wb=XLSX.read(buf,{type:'array'}),sheet=wb.Sheets[wb.SheetNames[0]],raw=XLSX.utils.sheet_to_json(sheet,{defval:'',raw:false});return raw.map(row=>{const out={};Object.entries(row).forEach(([k,v])=>out[uxHeaderKey(k)]=uxNormalizeText(v));return out})}
-async function uxValidateBulkRows(entity,rows){const errors=rows.map(()=>[]),normalized=rows.map(r=>({...r}));const {data:schools,error:schoolsError}=await sb.from('schools').select('id,name,stage').order('name');if(schoolsError)throw schoolsError;const byId=new Map((schools||[]).map(s=>[s.id,s])),byName=new Map();for(const school of schools||[]){const key=uxNormalizeText(school.name).toLowerCase();byName.set(key,byName.has(key)?null:school)};const seen=new Set();const jobTitles=new Set(['معلم','معلم أول','معلم أول (أ)','معلم خبير','كبير معلمين','معلم مساعد']);const stages=new Set(['ابتدائي','إعدادي','ثانوي']);for(let i=0;i<normalized.length;i++){const r=normalized[i];if(entity==='teachers'){if(!/^\d{14}$/.test(r.civil_id||''))errors[i].push('رقم قومي غير صحيح');if(!r.full_name)errors[i].push('الاسم مطلوب');if(seen.has(r.civil_id))errors[i].push('رقم قومي مكرر داخل الملف');seen.add(r.civil_id);const sc=(r.home_school_id||r.school_id)?byId.get(r.home_school_id||r.school_id):byName.get(uxNormalizeText(r.school||r.name).toLowerCase());if(!sc)errors[i].push('المدرسة غير معروفة أو اسمها ملتبس؛ استخدم معرّف المدرسة');else r.home_school_id=sc.id;if(!jobTitles.has(r.job_title))errors[i].push('درجة وظيفية غير معتمدة');const types={paid:'paid','بالأجر':'paid',permanent:'permanent','ثابت':'permanent'};if(!types[r.work_type])errors[i].push('نوع العمل غير معتمد');else r.work_type=types[r.work_type]}else if(entity==='supervisors'){if(!/^\d{14}$/.test(r.civil_id||''))errors[i].push('رقم قومي غير صحيح');if(!r.full_name)errors[i].push('الاسم مطلوب');if(seen.has(r.civil_id))errors[i].push('رقم قومي مكرر داخل الملف');seen.add(r.civil_id)}else if(entity==='schools'){r.name=r.name||r.full_name;if(!r.name)errors[i].push('اسم المدرسة مطلوب');if(!stages.has(r.stage))errors[i].push('مرحلة غير صحيحة');const key=`${uxNormalizeText(r.name).toLowerCase()}|${r.stage}`;if(seen.has(key))errors[i].push('مدرسة مكررة داخل الملف');seen.add(key);r.class_count=Number(r.class_count||0);if(!['supervisor','school_manager','admin'].includes(r.approval_authority))errors[i].push('جهة الاعتماد مطلوبة وغير قابلة للتخمين')}else if(entity==='classes'){const sc=r.school_id?byId.get(r.school_id):byName.get(uxNormalizeText(r.school||r.name).toLowerCase());if(!sc)errors[i].push('المدرسة غير معروفة أو اسمها ملتبس؛ استخدم معرّف المدرسة');else{r.school_id=sc.id;r.stage=r.stage||sc.stage;if(r.stage!==sc.stage)errors[i].push('مرحلة الفصل لا تطابق المدرسة')}if(!r.grade)errors[i].push('الصف مطلوب');if(!r.class_name)errors[i].push('اسم الفصل مطلوب');const curriculum=SCIENCE_CURRICULUM[r.stage]?.[r.grade]||[];if(!curriculum.length)errors[i].push('لا توجد مادة مقررة لهذا الصف');const key=`${r.school_id}|${r.grade}|${r.class_name}`;if(seen.has(key))errors[i].push('فصل مكرر داخل الملف');seen.add(key)}}
- if(entity==='teachers'||entity==='supervisors'){const civils=normalized.map(r=>r.civil_id).filter(Boolean);if(civils.length){const table=entity==='teachers'?'teacher_records':'supervisors';const {data:existing,error:existingError}=await sb.from(table).select('civil_id').in('civil_id',civils);if(existingError)throw existingError;const ex=new Set((existing||[]).map(x=>uxNormalizeText(x.civil_id)));normalized.forEach((r,i)=>{if(ex.has(r.civil_id))errors[i].push('موجود مسبقًا في النظام')})}}
- if(entity==='teachers'){const civils=normalized.map(r=>r.civil_id).filter(Boolean);if(civils.length){const {data:profileRows,error:profileError}=await sb.from('profiles').select('civil_id').in('civil_id',civils);if(profileError)throw profileError;const px=new Set((profileRows||[]).map(x=>uxNormalizeText(x.civil_id)));normalized.forEach((r,i)=>{if(px.has(r.civil_id)&&!errors[i].includes('موجود مسبقًا في النظام'))errors[i].push('يوجد حساب قائم بهذا الرقم القومي — استخدم الربط')})}}
- if(entity==='schools'){const current=new Set((schools||[]).map(s=>`${uxNormalizeText(s.name).toLowerCase()}|${s.stage}`));normalized.forEach((r,i)=>{if(current.has(`${uxNormalizeText(r.name).toLowerCase()}|${r.stage}`))errors[i].push('المدرسة موجودة مسبقًا')})}
- if(entity==='classes'){const ids=[...new Set(normalized.map(r=>r.school_id).filter(Boolean))];if(ids.length){const {data:existing,error:existingError}=await sb.from('school_classes').select('school_id,grade,class_name').in('school_id',ids).eq('term_id',activeTerm.id);if(existingError)throw existingError;const ex=new Set((existing||[]).map(x=>`${x.school_id}|${x.grade}|${x.class_name}`));normalized.forEach((r,i)=>{if(ex.has(`${r.school_id}|${r.grade}|${r.class_name}`))errors[i].push('الفصل موجود مسبقًا')})}}
- return {rows:normalized,errors,valid:errors.every(x=>x.length===0)} }
-function uxBulkEntityLabel(e){return {teachers:'المعلمين',supervisors:'الموجهين',schools:'المدارس',classes:'الفصول'}[e]||e}
-function openBulkImport(entity){if(!['admin','first_supervisor'].includes(profile.role))return toast('الاستيراد الجماعي متاح لمدير النظام والموجه الأول فقط');__bulkImportState={entity,rows:[],errors:[],valid:false};modal(`<h3>استيراد ${uxBulkEntityLabel(entity)} من Excel/CSV</h3><div class="notice info">المسار الآمن: <b>معاينة ← تحقق ← تأكيد ← معاملة واحدة</b>. إذا فشل سجل واحد فلن يتم حفظ أي سجل من الدفعة.</div><div class="bulk-file-drop"><input id="bulkFileInput" type="file" accept=".xlsx,.xls,.csv,.tsv" onchange="uxLoadBulkPreview(this.files[0])"><div style="margin-top:6px" class="muted">الحد الأقصى 500 سجل في الدفعة.</div></div><div id="bulkValidationSummary" style="margin:10px 0"></div><div id="bulkPreview"></div><div class="actions"><button id="bulkConfirmBtn" class="btn primary" type="button" onclick="uxConfirmBulkImport()" disabled>تأكيد الاستيراد</button><button class="btn secondary" type="button" onclick="closeModal()">إلغاء</button></div>`)}
-async function uxLoadBulkPreview(file){if(!file)return;const sum=document.getElementById('bulkValidationSummary'),box=document.getElementById('bulkPreview'),btn=document.getElementById('bulkConfirmBtn');sum.innerHTML='<span class="smart-save-state"><span class="smart-spinner"></span>جارٍ قراءة الملف والتحقق...</span>';btn.disabled=true;try{const raw=await uxParseBulkFile(file);if(!raw.length)throw new Error('الملف لا يحتوي بيانات');if(raw.length>500)throw new Error('الحد الأقصى 500 سجل');const result=await uxValidateBulkRows(__bulkImportState.entity,raw);Object.assign(__bulkImportState,result);const bad=result.errors.filter(x=>x.length).length;sum.innerHTML=result.valid?`<div class="notice ok">تم التحقق من ${result.rows.length} سجلًا — جاهزة للاستيراد.</div>`:`<div class="notice danger">يوجد ${bad} سجلًا يحتاج تصحيحًا قبل الاستيراد.</div>`;const cols=Object.keys(result.rows[0]||{}).slice(0,7);box.innerHTML=`<div class="bulk-preview"><table class="table"><thead><tr><th>#</th>${cols.map(c=>`<th>${esc(c)}</th>`).join('')}<th>التحقق</th></tr></thead><tbody>${result.rows.map((r,i)=>`<tr class="${result.errors[i].length?'bulk-row-error':'bulk-row-ok'}"><td>${i+1}</td>${cols.map(c=>`<td>${esc(r[c]||'')}</td>`).join('')}<td class="${result.errors[i].length?'bulk-status-error':'bulk-status-ok'}">${result.errors[i].length?esc(result.errors[i].join(' • ')):'✓ صالح'}</td></tr>`).join('')}</tbody></table></div>`;btn.disabled=!result.valid}catch(err){sum.innerHTML=`<div class="notice danger">${esc(err.message||err)}</div>`;box.innerHTML='';__bulkImportState.valid=false}}
-async function uxConfirmBulkImport(){if(!__bulkImportState?.valid)return;const btn=document.getElementById('bulkConfirmBtn');if(btn.disabled)return;btn.disabled=true;const old=btn.innerHTML;btn.innerHTML='<span class="smart-save-state"><span class="smart-spinner"></span>جارٍ تنفيذ المعاملة...</span>';try{const {data,error}=await sb.rpc('bulk_import_science_guidance_atomic',{p_entity:__bulkImportState.entity,p_rows:__bulkImportState.rows,p_academic_year_id:activeYear?.id||null,p_term_id:activeTerm?.id||null});if(error)throw error;closeModal();toast(`تم استيراد ${Number(data?.count||__bulkImportState.rows.length)} سجلًا بنجاح`);invalidateData('schools','teachers','supervisors','classes','hierarchy','dashboard','assignments','page:reports');await loadPage(true)}catch(err){moneySafeError(err);btn.disabled=false;btn.innerHTML=old}}
-
-
 function uxBuildMobileEntityCards(root){
  if(!root||!['teachers','schools','supervisors','classes','assignments','approval'].includes(currentPage))return;
  root.querySelectorAll('.table-wrap').forEach(wrap=>{
@@ -7262,9 +7250,8 @@ function uxBuildMobileEntityCards(root){
  });
 }
 
-function uxInjectPageActions(root){if(!root||!['admin','first_supervisor'].includes(profile?.role))return;const map={teachers:'teachers',schools:'schools',supervisors:'supervisors',classes:'classes'};const entity=map[currentPage];if(!entity)return;const head=root.querySelector('.page-head');if(!head||head.querySelector('[data-bulk-import]'))return;let actions=head.querySelector('.actions');if(!actions){actions=document.createElement('div');actions.className='actions';head.appendChild(actions)}const b=document.createElement('button');b.type='button';b.className='btn secondary';b.dataset.bulkImport='1';b.textContent='استيراد Excel/CSV';b.onclick=()=>openBulkImport(entity);actions.prepend(b)}
 const __uxBaseEnhanceMobileWorkspace=enhanceMobileWorkspace;
-enhanceMobileWorkspace=function(root){const r=__uxBaseEnhanceMobileWorkspace?.(root);requestAnimationFrame(()=>{uxBuildMobileEntityCards(root);uxInjectPageActions(root)});return r};
+enhanceMobileWorkspace=function(root){const r=__uxBaseEnhanceMobileWorkspace?.(root);requestAnimationFrame(()=>{uxBuildMobileEntityCards(root)});return r};
 
 function uxBusyButton(btn,text='جارٍ التنفيذ...'){if(!btn||btn.dataset.busy==='1')return false;btn.dataset.busy='1';btn.dataset.old=btn.innerHTML;btn.disabled=true;btn.innerHTML=`<span class="smart-save-state"><span class="smart-spinner"></span>${text}</span>`;return true}
 function uxReleaseButton(btn){if(!btn)return;btn.dataset.busy='0';btn.disabled=false;if(btn.dataset.old){btn.innerHTML=btn.dataset.old;delete btn.dataset.old}}
@@ -8425,7 +8412,7 @@ function clearSensitiveSessionState(){
  AppDataStore.clear();
  __activeReportSchema=null;__activeReportSignature='';__activeReportValidation=null;
  __reportShareFiles=[];__reportShareSignature='';__reportSharePreparingPromise=null;
- __assignmentUx=null;__bulkImportState=null;__alertsLast=[];
+ __assignmentUx=null;__alertsLast=[];
  window.__assignmentWorkspace=null;window.__reportRows=[];window.__budgetRows=[];window.__secondaryBudgetRowsV95=[];
  window.__supervisorWorkspace=null;window.__supervisorMapRows=[];window.__incomingData=null;window.__statisticsFilterData=null;
  window.__paidShortageTeachers=[];window.__financialLeaveRows=[];__approvalCenter=null;__approvalSafetyLast=null;
@@ -8669,8 +8656,9 @@ async function v98SetSchool(value){
 /* v163: شاشة المعلمين للأدوار متعددة المدارس: تبدأ فارغة، وتظهر القائمة باختيار مدرسة أو بالبحث/التصفية؛
    وزرّا «تصدير Excel» و«تقرير» يعملان على الفلاتر الحالية. عرض فقط. */
 function v163TeachersMode(){return currentPage==='teachers'&&!!profile&&!['school_manager','senior_teacher','teacher'].includes(profile.role)}
+function v179SchoolsMode(){return currentPage==='schools'&&!!profile&&!['school_manager','senior_teacher','teacher'].includes(profile.role)}
 function v163Gate(tableId,controls){
- if(!v163TeachersMode()||v98School())return false;
+ if(!(v163TeachersMode()||v179SchoolsMode())||v98School())return false;
  if(tableId!==document.querySelector('#content table.table')?.id)return false;
  return !(controls||[]).some(c=>filterNormalize(c.value));
 }
@@ -8682,6 +8670,7 @@ v97RenderPage=async function(renderPage,options){
   const key=v97StageKey();v98SchoolSelections.delete(key);
   if(profile.role==='supervisor')v142SupervisorAllKeys.add(key);
  }
+ if(v179SchoolsMode()&&__v163LastPage!=='schools')v98SchoolSelections.delete(v97StageKey());
  __v163LastPage=currentPage;
  return __v163BaseRenderPage(renderPage,options);
 };
@@ -8702,6 +8691,7 @@ const __v163BaseLoadPage=loadPage;
 loadPage=async function(force=false){
  const result=await __v163BaseLoadPage(force);
  try{v163InstallTeachersUi()}catch(_){}
+ try{v179InstallSchoolsUi()}catch(_){}
  return result;
 };
 function v163ExportTeachers(){
@@ -8718,6 +8708,28 @@ function v163ExportTeachers(){
  const school=(v98SchoolDirectories.get(v97StageKey())||[]).find(x=>String(x.id)===v98School())?.name||'';
  const name=`المعلمون${v97Stage()?' - '+v97Stage():''}${school?' - '+school:''}.xlsx`;
  v169SaveFile(new File([v169Xlsx(out)],name,{type:V169_XLSX_TYPE}),`تم تصدير ${rows.length} معلم.`);
+}
+/* v179: شاشة المدارس للأدوار متعددة المدارس تبدأ فارغة (مثل المعلمين)، وتصدير Excel للخطة التشغيلية وللنتائج المفلترة من مُحوّل التقرير نفسه (دون عرض القائمة). */
+function v179InstallSchoolsUi(){
+ const c=document.getElementById('content');if(!c||!v179SchoolsMode()||v98School()||c.querySelector('#v163Hint'))return;
+ const hint=document.createElement('div');hint.id='v163Hint';hint.className='muted v163-hint no-print';
+ hint.textContent='اختر المدرسة أو اكتب في البحث لعرض المدارس. أزرار التصدير والطباعة والمعاينة تعمل على الفلاتر الحالية دون عرض القائمة.';
+ const bar=c.querySelector('#v97StageBar');if(bar)bar.after(hint);else c.prepend(hint);
+ const t=c.querySelector('table.table');if(t?.id)applyAutoTableFilters(t.id);else v163SyncHint(false);
+}
+async function v179ExportReport(reportId,label){
+ const adapter=ReportAdapters[reportId];if(!adapter)return toast('لا يوجد تقرير للتصدير.');
+ try{
+  toast('جارٍ تجهيز ملف Excel...');
+  const raw=await adapter.load({period:reportPeriod(),issuer:reportIssuer()},{});
+  const schema=applyCurrentFiltersToReportSchema(raw,v97MergeStageFilter(currentReportFilterState(reportId)));
+  const cols=schema.columns||[],rows=schema.rows||[];
+  if(!rows.length)return toast('لا توجد بيانات مطابقة للفلاتر الحالية.');
+  const out=[cols.map(c=>c.label),...rows.map(r=>cols.map(c=>reportCellValue(r[c.key])))];
+  out.push([]);(schema.summary||[]).forEach(m=>out.push([m.label,reportCellValue(m.value)]));out.push([reportIssuerText()]);
+  const name=`${label}${v97Stage()?' - '+v97Stage():''}.xlsx`;
+  v169SaveFile(new File([v169Xlsx(out)],name,{type:V169_XLSX_TYPE}),`تم تصدير ${rows.length} صف.`);
+ }catch(e){toast('تعذر التصدير: '+(e?.message||e))}
 }
 /* v169: ملف xlsx حقيقي دون مكتبات (zip بلا ضغط) + حفظ/مشاركة مناسب للهاتف. */
 const V169_XLSX_TYPE='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
