@@ -1,4 +1,5 @@
 <!doctype html>
+<!-- v191: تقرير «الموجهين ومدارسهم»: سطر لكل مدرسة (بدل قائمة أسماء مكدسة في خانة واحدة)؛ اسم الموجه وهاتفه وعدد مدارسه في أول سطر من مجموعته فقط. -->
 <!-- v190: تقرير «الموجهين» (للأدوار التي ترى الدليل كاملًا): سطر لكل موجه ومرحلة وأمامه عدد مدارسه وأسماؤها (من schools.supervisor_id) بدل أعمدة الدليل المهني. -->
 <!-- v189: تقرير الفصول وتقرير المدارس (عدة مدارس): سطر واحد لكل مدرسة، وعمود لكل صف (الإعدادي/الثانوي: الأول–الثالث، الابتدائي: الرابع–السادس) بعدد فصوله بدل تكرار المدرسة لكل صف أو نص «ميزانية المدرسة»؛ أعمدة الصفوف غير الموجودة في النتائج تُخفى بعد الفلترة؛ ومربع «عدد الفصول» في تقرير الفصول بعد الفلترة يجمع الفصول (كان يعدّ الأسطر). -->
 <!-- v188: «رجوع» و«آخر شاشة» لا يعتمدان على وجود صفحة سابقة في المتصفح: كل خطوة داخل البرنامج تُرقَّم (v188Idx)؛ «رجوع» داخل تقرير مفتوح يعيد لقائمة التقارير، وفي أول خطوة (فتح الرابط مباشرة/بعد التحديث) ينتقل لآخر شاشة محفوظة أو الرئيسية بدل الخروج من البرنامج؛ «آخر شاشة» داخل التقرير بلا شاشة محفوظة يعيد لقائمة التقارير. -->
@@ -102,7 +103,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#152c43">
-<title>نظام توجيه العلوم — v190</title>
+<title>نظام توجيه العلوم — v191</title>
 <link rel="manifest" href="./manifest.webmanifest">
 <link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png">
 <link rel="apple-touch-icon" href="./icon-192.png">
@@ -2633,6 +2634,7 @@ window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();window.v152
 window.addEventListener('appinstalled',()=>{window.v152InstallPrompt=null;v152SyncInstallBtn()});
 if('serviceWorker' in navigator&&location.protocol!=='file:')window.addEventListener('load',()=>navigator.serviceWorker.register('./service-worker.js').catch(()=>{}));
 const V145_NEWS=[
+ ['v191','تقرير «الموجهين ومدارسهم»: كل مدرسة في سطر مستقل تحت موجهها.'],
  ['v190','تقرير «الموجهين» يعرض كل موجه وأمامه مدارسه.'],
  ['v189','تقرير الفصول وتقرير المدارس: سطر واحد لكل مدرسة وعمود لكل صف بعدد فصوله.'],
  ['v188','«رجوع» و«آخر شاشة» يعملان داخل التقارير حتى بعد تحديث الصفحة أو فتح الرابط مباشرة، ولا يخرجان من البرنامج.'],
@@ -10666,18 +10668,23 @@ ReportAdapters.supervisors.load=async function(ctx,...rest){
  const bySup=new Map();(data||[]).forEach(x=>{if(!x.supervisor_id)return;const k=String(x.supervisor_id);if(!bySup.has(k))bySup.set(k,[]);bySup.get(k).push(x)});
  const order=['ابتدائي','إعدادي','ثانوي'],stageRank=st=>{const i=order.findIndex(o=>String(st||'').includes(o));return i<0?9:i};
  const rows=[];
+ const groups=[];
  (raw.supervisors||[]).forEach(sup=>{
   const list=bySup.get(String(sup.id))||[];const name=reportCellValue(supervisorDirectoryName(sup)),phone=reportCellValue(supervisorDirectoryPhone(sup));
   const stages=[...new Set(list.map(x=>x.stage||'—'))].sort((a,b)=>stageRank(a)-stageRank(b));
-  if(!stages.length){rows.push({name,phone,stage:'—',count:0,schools:'لا توجد مدارس مسندة',_stage:'—',_search:name});return}
-  stages.forEach(st=>{const names=list.filter(x=>(x.stage||'—')===st).map(x=>x.name).sort((a,b)=>String(a).localeCompare(String(b),'ar'));rows.push({name,phone,stage:reportCellValue(st),count:names.length,schools:names.join('، '),_stage:reportCellValue(st),_search:[name,...names].join(' ')})});
+  if(!stages.length){groups.push({id:sup.id,name,phone,stage:'—',schools:[]});return}
+  stages.forEach(st=>groups.push({id:sup.id,name,phone,stage:st,schools:list.filter(x=>(x.stage||'—')===st).map(x=>x.name).sort((a,b)=>String(a).localeCompare(String(b),'ar'))}));
  });
- rows.sort((a,b)=>stageRank(a.stage)-stageRank(b.stage)||String(a.name).localeCompare(String(b.name),'ar'));
- rows.forEach((r,i)=>r.index=i+1);
- const sups=new Set(rows.map(r=>r.name)).size,nSchools=rows.reduce((a,r)=>a+r.count,0);
+ groups.sort((a,b)=>stageRank(a.stage)-stageRank(b.stage)||(b.schools.length?1:0)-(a.schools.length?1:0)||String(a.name).localeCompare(String(b.name),'ar'));
+ groups.forEach(g=>{
+  const head={name:g.name,phone:g.phone,count:g.schools.length,_stage:reportCellValue(g.stage),_search:[g.name,...g.schools].join(' ')};
+  if(!g.schools.length){rows.push({...head,n:'\u00a0',school:'لا توجد مدارس مسندة',stage:'\u00a0'});return}
+  g.schools.forEach((sc,i)=>rows.push(i?{name:'\u00a0',phone:'\u00a0',count:'\u00a0',n:i+1,school:reportCellValue(sc),stage:reportCellValue(g.stage),_stage:head._stage,_search:head._search}:{...head,n:1,school:reportCellValue(sc),stage:reportCellValue(g.stage)}));
+ });
+ const sups=new Set(groups.map(g=>String(g.id))).size,nSchools=groups.reduce((a,g)=>a+g.schools.length,0);
  return makeReportSchema({reportId:'supervisors',title:'تقرير الموجهين ومدارسهم',subtitle:'كل موجه وأمامه المدارس المسندة إليه حسب المرحلة',period:ctx.period,
   summary:[reportMetric('عدد الموجهين',sups),reportMetric('عدد المدارس المسندة',nSchools)],
-  columns:[reportColumn('index','م',.35,{numeric:true}),reportColumn('name','الموجه',1.5),reportColumn('phone','الهاتف',.95,{id:true,nowrap:true}),reportColumn('stage','المرحلة',.7),reportColumn('count','عدد المدارس',.6,{numeric:true}),reportColumn('schools','المدارس',4.2)],
+  columns:[reportColumn('name','الموجه',1.6),reportColumn('phone','الهاتف',1,{id:true,nowrap:true}),reportColumn('count','عدد مدارسه',.6,{numeric:true}),reportColumn('n','م',.35,{numeric:true}),reportColumn('school','المدرسة',2.4),reportColumn('stage','المرحلة',.7)],
   rows,totals:[reportTotalsMetric('عدد الموجهين',sups),reportTotalsMetric('عدد المدارس المسندة',nSchools)],issuer:ctx.issuer});
 };
 
