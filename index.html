@@ -1,4 +1,5 @@
 <!doctype html>
+<!-- v177: عجز المعلم المنتدب جزئيًا (بين مدارس المرحلة أو من الابتدائي) يظهر في مدرسته الأصلية فقط؛ في المدرسة المنتدب إليها عجزه 0 وحالته «منتدب جزئيًا» (قاعدة البيانات: migration v170_partial_deficit_home_only + v86ApplyPartialDelegateRule). المتبقي للتدريس وعجز المدرسة بلا تغيير. -->
 <!-- v175: زر «رجوع» في الهاتف أثناء فتح معاينة تقرير يغلق المعاينة ويبقى في الشاشة نفسها (كان يرجع لشاشة سابقة/الرئيسية): المعاينة تضيف خطوة في سجل التصفح، والإغلاق بالزر يزيلها. -->
 <!-- v174: شاشة المدارس (مدرسة مختارة): زر «تقرير إسناد الفصول» بجوار «تقرير المدرسة الشامل» — تقرير A4 جديد `schoolAssignments` من بيانات ملف المدرسة نفسها (v110LoadSchoolDossier): كل معلم وفصوله المسندة وحصصه، الفصول غير المسندة أو المسندة جزئيًا، والمعلمون بلا فصول. عرض فقط. -->
 <!-- v173: زر «⇄ تبديل الدور» في القائمة الجانبية كان بلون أزرق داكن على خلفية القائمة الكحلية فلا يُرى (على الهاتف هو المكان الوحيد للزر منذ v149)؛ صار زرًا ذهبيًا واضحًا. -->
@@ -89,7 +90,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#152c43">
-<title>نظام توجيه العلوم — v175</title>
+<title>نظام توجيه العلوم — v177</title>
 <link rel="manifest" href="./manifest.webmanifest">
 <link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png">
 <link rel="apple-touch-icon" href="./icon-192.png">
@@ -2603,6 +2604,7 @@ window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();window.v152
 window.addEventListener('appinstalled',()=>{window.v152InstallPrompt=null;v152SyncInstallBtn()});
 if('serviceWorker' in navigator&&location.protocol!=='file:')window.addEventListener('load',()=>navigator.serviceWorker.register('./service-worker.js').catch(()=>{}));
 const V145_NEWS=[
+ ['v177','المنتدب جزئيًا: عجزه يظهر في مدرسته الأصلية فقط، وفي المدرسة المنتدب إليها تظهر حالته «منتدب جزئيًا».'],
  ['v175','زر «رجوع» في الهاتف أثناء معاينة تقرير يغلق المعاينة ويبقى في نفس الشاشة.'],
  ['v174','شاشة المدارس: زر «تقرير إسناد الفصول» بجوار التقرير الشامل — المعلمون وفصولهم، والفصول غير المسندة، والمعلمون بلا فصول.'],
  ['v173','زر «⇄ تبديل الدور» في القائمة الجانبية صار واضحًا (ذهبي).'],
@@ -7910,10 +7912,10 @@ function v86ApplyPartialDelegateRule(row,partial){
  const target=Number(row?.weekly_target||0)||0;
  const maximum=row?.workload_rule_type==='maximum';
  return {...row,is_senior_teacher:false,supervision_periods:0,total_counted_periods:total,
-  deficit_periods:maximum?(row?.deficit_periods??0):Math.max(target-total,0),
+  deficit_periods:maximum?(row?.deficit_periods??0):0, // v177: عجز المنتدب جزئيًا يظهر في مدرسته الأصلية فقط
   surplus_periods:target?Math.max(total-target,0):0,
   remaining_periods:target?Math.max(target-total,0):0,
-  workload_status:maximum?(total>target?'تجاوز الحد':total===target?'بلغ الحد':'ضمن الحد'):(total<target?'عجز':total>target?'زيادة':'مكتمل')
+  workload_status:maximum?(total>target?'تجاوز الحد':total===target?'بلغ الحد':'ضمن الحد'):(total<target?'منتدب جزئيًا':total>target?'زيادة':'مكتمل')
  };
 }
 
