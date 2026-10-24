@@ -1,4 +1,5 @@
 <!doctype html>
+<!-- v178: تقرير المدارس («معاينة التقرير/النتائج المفلترة» في شاشة المدارس): الأعمدة صارت المدرسة، المرحلة، النوع، ميزانية المدرسة (عدد الفصول لكل صف من school_classes)، إجمالي الفصول، الموجه المسؤول. تقرير المدرسة الواحدة بلا تغيير. -->
 <!-- v177: عجز المعلم المنتدب جزئيًا (بين مدارس المرحلة أو من الابتدائي) يظهر في مدرسته الأصلية فقط؛ في المدرسة المنتدب إليها عجزه 0 وحالته «منتدب جزئيًا» (قاعدة البيانات: migration v170_partial_deficit_home_only + v86ApplyPartialDelegateRule). المتبقي للتدريس وعجز المدرسة بلا تغيير. -->
 <!-- v175: زر «رجوع» في الهاتف أثناء فتح معاينة تقرير يغلق المعاينة ويبقى في الشاشة نفسها (كان يرجع لشاشة سابقة/الرئيسية): المعاينة تضيف خطوة في سجل التصفح، والإغلاق بالزر يزيلها. -->
 <!-- v174: شاشة المدارس (مدرسة مختارة): زر «تقرير إسناد الفصول» بجوار «تقرير المدرسة الشامل» — تقرير A4 جديد `schoolAssignments` من بيانات ملف المدرسة نفسها (v110LoadSchoolDossier): كل معلم وفصوله المسندة وحصصه، الفصول غير المسندة أو المسندة جزئيًا، والمعلمون بلا فصول. عرض فقط. -->
@@ -90,7 +91,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#152c43">
-<title>نظام توجيه العلوم — v177</title>
+<title>نظام توجيه العلوم — v178</title>
 <link rel="manifest" href="./manifest.webmanifest">
 <link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png">
 <link rel="apple-touch-icon" href="./icon-192.png">
@@ -2604,6 +2605,7 @@ window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();window.v152
 window.addEventListener('appinstalled',()=>{window.v152InstallPrompt=null;v152SyncInstallBtn()});
 if('serviceWorker' in navigator&&location.protocol!=='file:')window.addEventListener('load',()=>navigator.serviceWorker.register('./service-worker.js').catch(()=>{}));
 const V145_NEWS=[
+ ['v178','تقرير المدارس: يعرض ميزانية كل مدرسة (عدد الفصول في كل صف) والموجه المسؤول.'],
  ['v177','المنتدب جزئيًا: عجزه يظهر في مدرسته الأصلية فقط، وفي المدرسة المنتدب إليها تظهر حالته «منتدب جزئيًا».'],
  ['v175','زر «رجوع» في الهاتف أثناء معاينة تقرير يغلق المعاينة ويبقى في نفس الشاشة.'],
  ['v174','شاشة المدارس: زر «تقرير إسناد الفصول» بجوار التقرير الشامل — المعلمون وفصولهم، والفصول غير المسندة، والمعلمون بلا فصول.'],
@@ -6521,6 +6523,7 @@ function reportError(result,label){if(result?.error)throw new Error(`${label}: $
 
 function formatSchoolReport(raw,ctx,options={}){
  const classCount={};(raw.classes||[]).forEach(x=>classCount[x.school_id]=(classCount[x.school_id]||0)+1);
+ const gradeCount={};(raw.classes||[]).forEach(x=>{const m=gradeCount[x.school_id]||(gradeCount[x.school_id]=new Map()),g=reportCellValue(x.grade||'—');m.set(g,(m.get(g)||0)+1)});
  const teacherCount={};
  if(raw.teacherCounts&&typeof raw.teacherCounts==='object'){
   Object.entries(raw.teacherCounts).forEach(([schoolId,count])=>teacherCount[schoolId]=reportNumber(count));
@@ -6528,7 +6531,7 @@ function formatSchoolReport(raw,ctx,options={}){
   (raw.teachers||[]).forEach(x=>{if(x.home_school_id)teacherCount[x.home_school_id]=(teacherCount[x.home_school_id]||0)+1});
  }
  const rows=(raw.schools||[]).map(s=>({
-  school:reportCellValue(s.name),stage:reportCellValue(s.stage),schoolType:reportCellValue(s.school_type||'عام'),classes:Math.max(reportNumber(s.class_count),reportNumber(classCount[s.id])),
+  school:reportCellValue(s.name),stage:reportCellValue(s.stage),schoolType:reportCellValue(s.school_type||'عام'),classes:Math.max(reportNumber(s.class_count),reportNumber(classCount[s.id])),budget:gradeCount[s.id]?[...gradeCount[s.id]].map(([g,n])=>`${g}: ${n}`).join(' · '):'—',
   teachers:reportNumber(teacherCount[s.id]),_teacherIds:Array.isArray(raw.teacherScopes)?raw.teacherScopes.filter(t=>v91ScopeSchoolId(t)===String(s.id)).map(v91TeacherId):undefined,supervisor:reportCellValue(s.supervisors?.full_name||s.supervisors?.profile?.full_name||'غير مسندة'),approval:reportAuthority(s.approval_authority),status:reportStatus(s.status),
   _schoolId:String(s.id),_school:reportCellValue(s.name),_stage:reportCellValue(s.stage),_schoolType:reportCellValue(s.school_type||'عام'),_supervisor:reportCellValue(s.supervisors?.full_name||s.supervisors?.profile?.full_name||'غير مسندة'),_approval:reportAuthority(s.approval_authority),_status:reportStatus(s.status)
  }));
@@ -6537,7 +6540,7 @@ function formatSchoolReport(raw,ctx,options={}){
  const uniqueTeachers=Array.isArray(raw.teacherScopes)?new Set(raw.teacherScopes.filter(t=>(raw.schools||[]).some(s=>String(s.id)===v91ScopeSchoolId(t))).map(v91TeacherId).filter(Boolean)).size:memberships;
  return makeReportSchema({reportId:'school',title:single?`تقرير مدرسة — ${rows[0].school}`:'تقرير المدارس',subtitle:single?reportCellValue(raw.schools?.[0]?.address||''):'بيانات المدارس الظاهرة حسب صلاحيات المستخدم',period:ctx.period,
   summary:[reportMetric('عدد المدارس',rows.length),reportMetric('إجمالي الفصول',rows.reduce((a,r)=>a+reportNumber(r.classes),0)),reportMetric(single?'معلمو المدرسة':'المعلمون الفريدون',uniqueTeachers),...(single?[]:[reportMetric('ظهور الكادر بالمدارس',memberships)])],
-  columns:[reportColumn('school','المدرسة',2.4),reportColumn('stage','المرحلة',.8),reportColumn('schoolType','النوع',.9),reportColumn('classes','الفصول',.65,{numeric:true}),reportColumn('teachers','المعلمون',.7,{numeric:true}),reportColumn('supervisor','الموجه',1.45),reportColumn('approval','جهة الاعتماد',1.1),reportColumn('status','الحالة',1)],rows,
+  columns:single?[reportColumn('school','المدرسة',2.4),reportColumn('stage','المرحلة',.8),reportColumn('schoolType','النوع',.9),reportColumn('classes','الفصول',.65,{numeric:true}),reportColumn('teachers','المعلمون',.7,{numeric:true}),reportColumn('supervisor','الموجه',1.45),reportColumn('approval','جهة الاعتماد',1.1),reportColumn('status','الحالة',1)]:[reportColumn('school','المدرسة',2.2),reportColumn('stage','المرحلة',.7),reportColumn('schoolType','النوع',.7),reportColumn('budget','ميزانية المدرسة (الفصول لكل صف)',2.6),reportColumn('classes','إجمالي الفصول',.7,{numeric:true}),reportColumn('supervisor','الموجه المسؤول',1.5)],rows,
   totals:[reportTotalsMetric('إجمالي المدارس',rows.length),reportTotalsMetric('إجمالي الفصول',rows.reduce((a,r)=>a+reportNumber(r.classes),0)),reportTotalsMetric(single?'معلمو المدرسة':'المعلمون الفريدون',uniqueTeachers),...(single?[]:[reportTotalsMetric('ظهور الكادر بالمدارس',memberships)])],issuer:ctx.issuer});
 }
 function formatSupervisorsReport(raw,ctx){
