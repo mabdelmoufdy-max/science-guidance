@@ -1,4 +1,5 @@
 <!doctype html>
+<!-- v188: «رجوع» و«آخر شاشة» لا يعتمدان على وجود صفحة سابقة في المتصفح: كل خطوة داخل البرنامج تُرقَّم (v188Idx)؛ «رجوع» داخل تقرير مفتوح يعيد لقائمة التقارير، وفي أول خطوة (فتح الرابط مباشرة/بعد التحديث) ينتقل لآخر شاشة محفوظة أو الرئيسية بدل الخروج من البرنامج؛ «آخر شاشة» داخل التقرير بلا شاشة محفوظة يعيد لقائمة التقارير. -->
 <!-- v187: «رجوع» داخل «تقارير المرحلة»: فتح تقرير يُسجَّل في سجل الرجوع (history.pushState بعلامة v187Inner)، فالرجوع من التقرير يعيد لقائمة التقارير بدل الخروج إلى الرئيسية. -->
 <!-- v186: تبويبا «التقارير/تقارير المرحلة» و«الإحصائيات» صارا تبويبًا واحدًا (صفحة statistics باسم وأيقونة تبويب التقارير للدور؛ reports يُحوَّل إليها)، وحُذفت من «قوالب حسب الغرض» ثلاث بطاقات: مطابقة أسماء المعلمين والمدارس، بيانات الحصص والمدرسين، تقرير الانتداب. -->
 <!-- v185: حقل «مشرف المادة» في تعديل بيانات المعلم يقرأ قيمته الحالية من كشف المدرسة (get_school_teacher_roster: is_senior_teacher للمعلم في مدرسته الأصلية أو المنتدب إليها) بدل علامة is_senior_teacher؛ كانت رانيا عبد الباسط (الشعراني) تظهر «لا يشرف» في الحقل ومشرفة في الكشف، فلا يُحفظ اختيار «لا يشرف». -->
@@ -99,7 +100,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#152c43">
-<title>نظام توجيه العلوم — v187</title>
+<title>نظام توجيه العلوم — v188</title>
 <link rel="manifest" href="../../manifest.webmanifest">
 <link rel="icon" type="image/png" sizes="192x192" href="../../icon-192.png">
 <link rel="apple-touch-icon" href="../../icon-192.png">
@@ -2630,6 +2631,7 @@ window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();window.v152
 window.addEventListener('appinstalled',()=>{window.v152InstallPrompt=null;v152SyncInstallBtn()});
 if('serviceWorker' in navigator&&location.protocol!=='file:')window.addEventListener('load',()=>navigator.serviceWorker.register('../../service-worker.js').catch(()=>{}));
 const V145_NEWS=[
+ ['v188','«رجوع» و«آخر شاشة» يعملان داخل التقارير حتى بعد تحديث الصفحة أو فتح الرابط مباشرة، ولا يخرجان من البرنامج.'],
  ['v187','«رجوع» من تقرير مفتوح في «تقارير المرحلة» يعيد لقائمة التقارير بدل الرئيسية.'],
  ['v186','التقارير والإحصائيات صارا تبويبًا واحدًا (مثل «تقارير المرحلة» للمنسق)، وحُذفت ثلاثة قوالب غير مستخدمة.'],
  ['v184','تعديل بيانات المعلم (للموجه والمنسق ومدير النظام): حقل «مشرف المادة» لإضافة الإشراف أو إلغائه — مشرف واحد لكل مدرسة.'],
@@ -10574,15 +10576,34 @@ statisticsPage=async function(options={}){
 const __v187OpenReport=statisticsOpenReport;
 statisticsOpenReport=function(key){
  const r=__v187OpenReport(key);
- if(currentPage==='statistics'&&statisticsSelectedReport&&!history.state?.v187Inner){try{history.pushState({...(history.state||{}),scienceGuidance:true,page:'statistics',v187Inner:true},'',location.href)}catch(_){}}
+ if(currentPage==='statistics'&&statisticsSelectedReport&&!history.state?.v187Inner){try{history.pushState({...(history.state||{}),scienceGuidance:true,page:'statistics',v187Inner:true,v187Key:key},'',location.href)}catch(_){}}
  return r;
 };
 const __v187BackToCenter=statisticsBackToCenter;
 statisticsBackToCenter=function(){if(history.state?.v187Inner){history.back();return}return __v187BackToCenter()};
 window.addEventListener('popstate',()=>{
- if(!profile||history.state?.v187Inner)return;
+ if(!profile)return;
+ if(history.state?.v187Inner){ // v188: الرجوع/التقدم إلى خطوة تقرير والتقرير مغلق ← يُفتح التقرير نفسه (بدل خطوة لا تغيّر شيئًا)
+  const k=history.state.v187Key;
+  if(k&&STATISTICS_REPORTS[k]&&currentPage==='statistics'&&!statisticsSelectedReport){statisticsSelectedReport=k;loadPage().catch(moneySafeError)}
+  return;
+ }
  if(currentPage==='statistics'&&statisticsSelectedReport&&appNavHashPage()==='statistics')__v187BackToCenter();
 });
+
+/* v188: «رجوع»/«آخر شاشة» لا يعتمدان على history.length: كل خطوة داخل البرنامج تحمل رقمًا (v188Idx). عند فتح الرابط مباشرة أو بعد التحديث كان «رجوع» يخرج من البرنامج أو لا يفعل شيئًا، و«آخر شاشة» يكتفي برسالة. */
+const __v188Push=history.pushState.bind(history),__v188Replace=history.replaceState.bind(history);
+history.pushState=function(s,...a){return __v188Push({...(s&&typeof s==='object'?s:{}),v188Idx:(Number(history.state?.v188Idx)||0)+1},...a)};
+history.replaceState=function(s,...a){return __v188Replace({...(s&&typeof s==='object'?s:{}),v188Idx:Number(history.state?.v188Idx)||0},...a)};
+function v188LastTarget(){const st=appNavRead();return [st.lastDifferent,st.previous].find(p=>p&&p!==currentPage&&appNavAllowed(p))||''}
+appNavGoBack=function(){
+ if(currentPage==='statistics'&&statisticsSelectedReport)return statisticsBackToCenter();
+ if((Number(history.state?.v188Idx)||0)>0){history.back();return}
+ const t=v188LastTarget();if(t)return go(t);
+ appNavHome();
+};
+const __v188Last=appNavLast;
+appNavLast=function(){if(!v188LastTarget()&&currentPage==='statistics'&&statisticsSelectedReport)return statisticsBackToCenter();return __v188Last()};
 
 /* v165 (من v161 في محادثة أخرى): قائمة دور المعلم المختصرة — بياناتي (+ بيانات المعلم) وحصصي وفصولي (+ الجدول الأسبوعي). */
 NAV.teacher=NAV.teacher.filter(n=>!['teachers','reports','teacherTimetable'].includes(n[0]));
