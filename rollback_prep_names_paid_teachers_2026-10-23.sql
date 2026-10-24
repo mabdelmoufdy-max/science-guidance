@@ -1,4 +1,4 @@
--- Rollback (2026-10-23): أسماء 4 مدارس إعدادية «ت س» ← «اعدادي»، ونقل معلمَين بالأجر إلى العقب الاعدادية القديمة
+-- Rollback (2026-10-23/24): أسماء 4 مدارس إعدادية «ت س» ← «اعدادي» ثم (2026-10-24) ← «تعليم اساسي اعدادي»؛ الاسترجاع يعيد «ت س»، ونقل معلمَين بالأجر إلى العقب الاعدادية القديمة
 begin;
 update public.teacher_records set home_school_id='50552425-2197-4ee6-913d-ff8af515fb05' where id in ('e078a1b8-8982-452d-a3f0-2c75cef395a6','1d506dc2-d502-466f-a23b-66b3c3ec89b2');
 set local session_replication_role = replica; -- enforce_school_identity يسمح بتغيير الاسم للمدير فقط

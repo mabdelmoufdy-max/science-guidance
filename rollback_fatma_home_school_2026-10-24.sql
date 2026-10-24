@@ -6,3 +6,6 @@ update public.teacher_school_assignments set is_home_school=false where id='9840
 update public.delegations set from_school_id='607ed619-9119-4da1-be1e-1c4d9501ffb7', to_school_id='ba66c4f9-3ce8-458e-91e8-4bdae68c5f0f' where id='9a0bff10-91f2-4acd-8cef-3f0f0e223b48';
 update public.delegations set from_school_id='607ed619-9119-4da1-be1e-1c4d9501ffb7' where id='7cad43d9-6b04-4da1-abcc-1130f52d8af3';
 commit;
+-- (لاحقًا 2026-10-24) إلغاء انتدابها القديم إلى «الجمالية ع المشتركة» — للاسترجاع:
+-- update public.delegations set active=true where id='7cad43d9-6b04-4da1-abcc-1130f52d8af3';
+-- update public.teacher_school_assignments set active=true where id='022ad1e2-ae74-4180-b210-824149c311f5';
