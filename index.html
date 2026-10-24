@@ -1,4 +1,5 @@
 <!doctype html>
+<!-- v182: الإجازات (المرحلة 2 — البند 1): حفظ «إجازة مجددة» لمعلم له فصول مسندة في الفصل الدراسي الحالي يعرض تأكيدًا بأسمائها ثم، بعد نجاح حفظ الإجازة، يلغي إسنادها واحدًا واحدًا بـ unassign_class_atomic (saveLongLeaveStatus أُعيد تعريفها)؛ ما يتعذر إلغاؤه (مثل اعتماد نهائي) يظهر في رسالة. نص تحذير v180 صار «سيُلغى إسناد هذه الفصول تلقائيًا عند الحفظ». لا تغيير في قاعدة البيانات. -->
 <!-- v181: شاشة المعلمين: زر «توزيع العجز بالأجر» صار «توزيع العجز» ويفتح أسفله (بدل النافذة) قائمة المدارس (فلتر المرحلة/البحث/بها عجز فقط، مرتبة بالعجز الرسمي)؛ الضغط على مدرسة يفتح بطاقتها: الحصص المطلوبة/المسند/غير المسند، الفصول غير المسندة، بطاقة لكل معلم (النصاب/المحتسب/المتبقي، فصوله وفصول المدارس الأخرى بلون مختلف، «إلغاء الإسناد» = unassign_class_atomic، «+ إسناد فصل» = assign_class_atomic مع تأكيد عند تجاوز المتبقي)، و«اقتراح التغطية» (متبقٍّ يكفي ← ثابت زيادة ← أجر؛ «تطبيق» يدوي). الأجر المسجل بالأرقام سابقًا يظهر للقراءة فقط (اختيار المستخدم 1)؛ بياناته وتقاريره بلا تغيير. لا تغيير في قاعدة البيانات. -->
 <!-- v180: نافذة «الإجازات وتجديدها» (openLongLeaveCenter): القائمة لأصحاب الإجازات فقط بأقسام وعدادات (كل الإجازات، بانتظار التجديد، مجددة، قرار مؤقت، تنتهي/انتهت، عادوا للعمل)، نموذج التسجيل يظهر بزر «+ تسجيل إجازة» أو «تعديل»؛ تنبيه انتهاء الإجازة في النافذة والجرس (عرض فقط، لا تتغير الحالة تلقائيًا)؛ تحذير بالفصول المسندة عند اختيار «إجازة مجددة»؛ زر «معاينة التقرير المالي» داخل النافذة صار «طباعة كشف الإجازات» للقسم المعروض (ReportAdapters.longLeaves). الحفظ وقواعد الحساب بلا تغيير. -->
 <!-- v179: (1) حُذف «استيراد Excel/CSV» من البرنامج كله مع أكواده (openBulkImport وما يتبعه؛ كان في المعلمين/المدارس/الموجهين/الفصول لمدير النظام والمشرف الأول). (2) شاشة المدارس: زرّا «تصدير Excel — الخطة التشغيلية» و«تصدير Excel — النتائج المفلترة» (v179ExportReport من مُحوّل التقرير وفلاتره). (3) شاشة المدارس للأدوار متعددة المدارس تبدأ فارغة مثل المعلمين (v179SchoolsMode في v163Gate)؛ القائمة تظهر باختيار مدرسة أو بالبحث/الفلتر، والتقارير والتصدير تعمل دون عرضها. -->
@@ -94,7 +95,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#152c43">
-<title>نظام توجيه العلوم — v181</title>
+<title>نظام توجيه العلوم — v182</title>
 <link rel="manifest" href="./manifest.webmanifest">
 <link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png">
 <link rel="apple-touch-icon" href="./icon-192.png">
@@ -2625,6 +2626,7 @@ window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();window.v152
 window.addEventListener('appinstalled',()=>{window.v152InstallPrompt=null;v152SyncInstallBtn()});
 if('serviceWorker' in navigator&&location.protocol!=='file:')window.addEventListener('load',()=>navigator.serviceWorker.register('./service-worker.js').catch(()=>{}));
 const V145_NEWS=[
+ ['v182','الإجازات: تجديد إجازة معلم له فصول مسندة يلغي إسنادها تلقائيًا بعد تأكيدك، فتعود «غير مسندة» وتظهر في «توزيع العجز».'],
  ['v181','توزيع العجز: زر في شاشة المعلمين يفتح المدارس أسفله؛ لكل مدرسة الفصول غير المسندة وبطاقة لكل معلم بفصوله مع «إلغاء الإسناد» و«+ إسناد فصل»، و«اقتراح التغطية».'],
  ['v180','الإجازات وتجديدها: القائمة لأصحاب الإجازات فقط بأقسام (بانتظار التجديد، مجددة، قرار مؤقت، تنتهي/انتهت، عادوا)، تنبيه بانتهاء الإجازة، تحذير بالفصول المسندة عند التجديد، وطباعة كشف الإجازات.'],
  ['v179','حُذف الاستيراد. شاشة المدارس: تصدير Excel للخطة التشغيلية وللنتائج المفلترة، وتبدأ فارغة مثل المعلمين (تظهر باختيار مدرسة أو بالبحث).'],
@@ -10226,7 +10228,7 @@ financialLeaveToggleRenewal=async function(){
    if(error)box.innerHTML=`<div class="notice danger">تعذر فحص الفصول المسندة: ${esc(error.message||'')}</div>`;
    else if((data||[]).length){
     const total=data.reduce((s,a)=>s+Number(a.weekly_periods||0),0);
-    box.innerHTML=`<div class="notice danger"><b>تنبيه: لهذا المعلم ${data.length} فصل مسند (${total} حصة) في الفصل الدراسي الحالي.</b> الإجازة المجددة لا تُسند لها حصص؛ ألغِ إسناد هذه الفصول من «توزيع الفصول» قبل التجديد أو بعده، وإلا يظهر المعلم في إجازة وله حصص.<br>${data.map(a=>`${esc(a.school_classes?.class_name||'')} — ${esc(a.school_classes?.schools?.name||'')}${a.curriculum_subjects?.subject_name?` (${esc(a.curriculum_subjects.subject_name)})`:''}: ${Number(a.weekly_periods||0)}`).join('، ')}</div>`;
+    box.innerHTML=`<div class="notice danger"><b>تنبيه: لهذا المعلم ${data.length} فصل مسند (${total} حصة) في الفصل الدراسي الحالي.</b> الإجازة المجددة لا تُسند لها حصص؛ <b>سيُلغى إسناد هذه الفصول تلقائيًا عند الحفظ</b> (بعد تأكيدك) وتعود «غير مسندة».<br>${data.map(a=>`${esc(a.school_classes?.class_name||'')} — ${esc(a.school_classes?.schools?.name||'')}${a.curriculum_subjects?.subject_name?` (${esc(a.curriculum_subjects.subject_name)})`:''}: ${Number(a.weekly_periods||0)}`).join('، ')}</div>`;
    }
   }
  }
@@ -10442,6 +10444,50 @@ const __v181TeachersPage=teachersPage;
 teachersPage=async function(opts={}){
  const h=await __v181TeachersPage(opts);
  return typeof h==='string'?h.replace('onclick="openPaidShortageCenter()">توزيع العجز بالأجر</button>','onclick="openPaidShortageCenter()">توزيع العجز</button>'):h;
+};
+
+/* v182: عند حفظ «إجازة مجددة» يُلغى إسناد فصول المعلم في الفصل الدراسي الحالي (بعد تأكيد) عبر unassign_class_atomic لكل فصل، بعد نجاح حفظ الإجازة. لا تغيير في قاعدة البيانات. */
+async function v182TeacherAssignments(teacherId){
+ if(!teacherId||!activeTerm?.id)return [];
+ const {data,error}=await sb.from('teaching_assignments').select('id,weekly_periods,school_classes(class_name,schools(name))').eq('teacher_id',teacherId).eq('term_id',activeTerm.id);
+ if(error)throw error;return data||[];
+}
+saveLongLeaveStatus=async function(event){
+ event.preventDefault();if(!canViewFinancialGuidanceReport())return toast('ليست لديك صلاحية الحفظ.');
+ const form=event.target,fd=new FormData(form),teacherId=String(fd.get('teacher_id')||''),status=String(fd.get('renewal_status')||'');
+ if(!teacherId||!status)return toast('اختر المعلم وحالة الإجازة.');
+ let assigned=[];
+ if(status==='renewed'){
+  try{assigned=await v182TeacherAssignments(teacherId)}catch(error){return moneySafeError(error)}
+  if(assigned.length){
+   const total=assigned.reduce((n,a)=>n+Number(a.weekly_periods||0),0);
+   if(!confirm(`لهذا المعلم ${assigned.length} فصل مسند (${total} حصة):\n${assigned.map(a=>`${a.school_classes?.class_name||''} — ${a.school_classes?.schools?.name||''}`).join('\n')}\n\nعند الحفظ سيُلغى إسنادها وتعود «غير مسندة». متابعة؟`))return;
+  }
+ }
+ const replacement=form.querySelector('input[name="replacement_teacher_id"]:checked')?.value||null;
+ const btn=form.querySelector('button[type="submit"]');if(btn){btn.disabled=true;btn.textContent='جارٍ الحفظ...'}
+ try{
+  const {data,error}=await sb.rpc('save_teacher_long_leave_status',{
+   p_teacher_id:teacherId,
+   p_academic_year_id:activeYear.id,
+   p_leave_type:String(fd.get('leave_type')||'').trim(),
+   p_renewal_status:status,
+   p_decision_number:String(fd.get('decision_number')||'').trim()||null,
+   p_decision_date:String(fd.get('decision_date')||'')||null,
+   p_effective_from:String(fd.get('effective_from')||'')||null,
+   p_effective_to:String(fd.get('effective_to')||'')||null,
+   p_notes:String(fd.get('notes')||'').trim()||null,
+   p_replacement_teacher_id:replacement
+  });
+  if(error)throw error;
+  const failed=[];
+  for(const a of assigned){const r=await sb.rpc('unassign_class_atomic',{p_assignment_id:a.id});if(r.error)failed.push(`${a.school_classes?.class_name||''} — ${a.school_classes?.schools?.name||''}: ${r.error.message||'تعذر الإلغاء'}`)}
+  invalidateData('teachers','hierarchy','dashboard','page:reports','alerts');
+  const msg=data?.replacement_teacher_name?`تم تسجيل التجديد وإسناد الإشراف إلى ${data.replacement_teacher_name}`:'تم حفظ حالة الإجازة وإعادة حساب التقارير الجديدة';
+  toast(assigned.length?`${msg} — أُلغي إسناد ${assigned.length-failed.length} من ${assigned.length} فصل`:msg);
+  await openLongLeaveCenter();
+  if(failed.length)alert(`حُفظت الإجازة، لكن تعذر إلغاء إسناد ${failed.length} فصل (ألغِه من «توزيع العجز» أو «توزيع الفصول»):\n${failed.join('\n')}`);
+ }catch(error){moneySafeError(error)}finally{if(document.body.contains(form)&&btn){btn.disabled=false;btn.textContent='حفظ الحالة وإعادة حساب التقارير الجديدة'}}
 };
 
 /* v165 (من v161 في محادثة أخرى): قائمة دور المعلم المختصرة — بياناتي (+ بيانات المعلم) وحصصي وفصولي (+ الجدول الأسبوعي). */
