@@ -1,4 +1,5 @@
 <!doctype html>
+<!-- v186: تبويبا «التقارير/تقارير المرحلة» و«الإحصائيات» صارا تبويبًا واحدًا (صفحة statistics باسم وأيقونة تبويب التقارير للدور؛ reports يُحوَّل إليها)، وحُذفت من «قوالب حسب الغرض» ثلاث بطاقات: مطابقة أسماء المعلمين والمدارس، بيانات الحصص والمدرسين، تقرير الانتداب. -->
 <!-- v185: حقل «مشرف المادة» في تعديل بيانات المعلم يقرأ قيمته الحالية من كشف المدرسة (get_school_teacher_roster: is_senior_teacher للمعلم في مدرسته الأصلية أو المنتدب إليها) بدل علامة is_senior_teacher؛ كانت رانيا عبد الباسط (الشعراني) تظهر «لا يشرف» في الحقل ومشرفة في الكشف، فلا يُحفظ اختيار «لا يشرف». -->
 <!-- v184: (رقم v183 لقاعدة البيانات) «تعديل بيانات المعلم» للموجه ومنسق المرحلة ومدير النظام: حقل «مشرف المادة» (لا يشرف / مدرسته الأصلية / مدرسة منتدب إليها) بعد آخر غلاف لـ editTeacherForm؛ الحفظ (غلاف saveTeacherEdit) بعد نجاح حفظ البيانات الأساسية عبر RPC set_school_supervisor مع تأكيد يذكر المشرف الحالي الذي سيُستبدل. مشرف واحد لكل مدرسة، والمعلم يشرف على مدرسة واحدة؛ النقل/الإلغاء يترك المدرسة بلا مشرف حتى يُختار غيره. -->
 <!-- v182: الإجازات (المرحلة 2 — البند 1): حفظ «إجازة مجددة» لمعلم له فصول مسندة في الفصل الدراسي الحالي يعرض تأكيدًا بأسمائها ثم، بعد نجاح حفظ الإجازة، يلغي إسنادها واحدًا واحدًا بـ unassign_class_atomic (saveLongLeaveStatus أُعيد تعريفها)؛ ما يتعذر إلغاؤه (مثل اعتماد نهائي) يظهر في رسالة. نص تحذير v180 صار «سيُلغى إسناد هذه الفصول تلقائيًا عند الحفظ». لا تغيير في قاعدة البيانات. -->
@@ -97,7 +98,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#152c43">
-<title>نظام توجيه العلوم — v185</title>
+<title>نظام توجيه العلوم — v186</title>
 <link rel="manifest" href="./manifest.webmanifest">
 <link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png">
 <link rel="apple-touch-icon" href="./icon-192.png">
@@ -2628,6 +2629,7 @@ window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();window.v152
 window.addEventListener('appinstalled',()=>{window.v152InstallPrompt=null;v152SyncInstallBtn()});
 if('serviceWorker' in navigator&&location.protocol!=='file:')window.addEventListener('load',()=>navigator.serviceWorker.register('./service-worker.js').catch(()=>{}));
 const V145_NEWS=[
+ ['v186','التقارير والإحصائيات صارا تبويبًا واحدًا (مثل «تقارير المرحلة» للمنسق)، وحُذفت ثلاثة قوالب غير مستخدمة.'],
  ['v184','تعديل بيانات المعلم (للموجه والمنسق ومدير النظام): حقل «مشرف المادة» لإضافة الإشراف أو إلغائه — مشرف واحد لكل مدرسة.'],
  ['v182','الإجازات: تجديد إجازة معلم له فصول مسندة يلغي إسنادها تلقائيًا بعد تأكيدك، فتعود «غير مسندة» وتظهر في «توزيع العجز».'],
  ['v181','توزيع العجز: زر في شاشة المعلمين يفتح المدارس أسفله؛ لكل مدرسة الفصول غير المسندة وبطاقة لكل معلم بفصوله مع «إلغاء الإسناد» و«+ إسناد فصل»، و«اقتراح التغطية».'],
@@ -2691,6 +2693,7 @@ async function loadPage(force=false){
  const c=document.getElementById('content');if(!c)return;
  if(currentPage==='supervisorMap')currentPage='schools';
  if(currentPage==='studyPlans'||currentPage==='budget')currentPage='dashboard';
+ if(currentPage==='reports'&&typeof V186_MERGED!=='undefined'&&V186_MERGED.has(profile?.role))currentPage='statistics'; // v186
  __pageLoadController?.abort();__pageLoadController=new AbortController();const local=__pageLoadController;
  const pages={teacherTimetable:teacherTimetablePage,dashboard:dashboardPage,users:usersPage,supervisors:supervisorsPage,schools:schoolsPage,incoming:incomingDataPage,teachers:teachersPage,classes:classesPage,assignments:assignmentsPage,approval:approvalPage,myAssignments:myAssignmentsPage,workload:workloadPage,budget:budgetPage,completion:dataCompletionPage,alerts:alertsPage,statistics:statisticsPage,reports:reportsPage,announcements:announcementsPage,supervisorHealth:supervisorHealthPage};
  const renderPage=pages[currentPage]||dashboardPage;
@@ -10547,6 +10550,22 @@ saveTeacherEdit=async function(e,id,...rest){
  invalidateData('teachers','hierarchy','dashboard','page:reports','alerts');
  toast(next?`تم: مشرف المادة في «${label(next)}»${data?.previous_teacher_name&&data.previous_teacher_id!==id?` بدلًا من ${data.previous_teacher_name}`:''}`:`أُلغي الإشراف في «${label(initial)}»`);
  refreshCurrentPage({invalidate:['teachers','hierarchy','dashboard']}).catch(()=>{});
+};
+
+/* v186: «التقارير» و«الإحصائيات» تبويب واحد لكل دور فيه الاثنان: يبقى مركز الإحصائيات (الملخص + القوالب + التقارير التفصيلية) باسم تبويب التقارير للدور وأيقونته (مثل «تقارير المرحلة» للمنسق)، ويُحذف تبويب التقارير المكرر؛ go/loadPage إلى reports يُحوَّل إليه. وأُزيلت من القوالب: مطابقة أسماء المعلمين والمدارس، بيانات الحصص والمدرسين، تقرير الانتداب (التقارير نفسها باقية في الكود). */
+const V186_MERGED=new Set(),V186_LABEL={};
+for(const role of Object.keys(NAV)){
+ const items=NAV[role]||[],ri=items.findIndex(n=>n[0]==='reports'),si=items.findIndex(n=>n[0]==='statistics');
+ if(ri<0||si<0)continue;
+ V186_MERGED.add(role);V186_LABEL[role]=items[ri][1];
+ items[si]=['statistics',items[ri][1],items[ri][2]];items.splice(ri,1);
+}
+const V186_HIDDEN_REPORTS=['sourceNameSchoolMatch2027','sourcePeriods2027','teacherDelegations'];
+v103Cards=function(){return v103AvailableReports().filter(k=>!V186_HIDDEN_REPORTS.includes(k)).map(statisticsReportCard).join('')};
+const __v186StatisticsPage=statisticsPage;
+statisticsPage=async function(options={}){
+ const html=await __v186StatisticsPage(options),label=V186_LABEL[profile?.role];
+ return label&&typeof html==='string'?html.replace('<h2>الإحصائيات</h2>',`<h2>${esc(label)}</h2>`):html;
 };
 
 /* v165 (من v161 في محادثة أخرى): قائمة دور المعلم المختصرة — بياناتي (+ بيانات المعلم) وحصصي وفصولي (+ الجدول الأسبوعي). */
