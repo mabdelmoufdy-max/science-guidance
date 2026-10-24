@@ -1,4 +1,5 @@
 <!doctype html>
+<!-- v187: «رجوع» داخل «تقارير المرحلة»: فتح تقرير يُسجَّل في سجل الرجوع (history.pushState بعلامة v187Inner)، فالرجوع من التقرير يعيد لقائمة التقارير بدل الخروج إلى الرئيسية. -->
 <!-- v186: تبويبا «التقارير/تقارير المرحلة» و«الإحصائيات» صارا تبويبًا واحدًا (صفحة statistics باسم وأيقونة تبويب التقارير للدور؛ reports يُحوَّل إليها)، وحُذفت من «قوالب حسب الغرض» ثلاث بطاقات: مطابقة أسماء المعلمين والمدارس، بيانات الحصص والمدرسين، تقرير الانتداب. -->
 <!-- v185: حقل «مشرف المادة» في تعديل بيانات المعلم يقرأ قيمته الحالية من كشف المدرسة (get_school_teacher_roster: is_senior_teacher للمعلم في مدرسته الأصلية أو المنتدب إليها) بدل علامة is_senior_teacher؛ كانت رانيا عبد الباسط (الشعراني) تظهر «لا يشرف» في الحقل ومشرفة في الكشف، فلا يُحفظ اختيار «لا يشرف». -->
 <!-- v184: (رقم v183 لقاعدة البيانات) «تعديل بيانات المعلم» للموجه ومنسق المرحلة ومدير النظام: حقل «مشرف المادة» (لا يشرف / مدرسته الأصلية / مدرسة منتدب إليها) بعد آخر غلاف لـ editTeacherForm؛ الحفظ (غلاف saveTeacherEdit) بعد نجاح حفظ البيانات الأساسية عبر RPC set_school_supervisor مع تأكيد يذكر المشرف الحالي الذي سيُستبدل. مشرف واحد لكل مدرسة، والمعلم يشرف على مدرسة واحدة؛ النقل/الإلغاء يترك المدرسة بلا مشرف حتى يُختار غيره. -->
@@ -98,7 +99,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#152c43">
-<title>نظام توجيه العلوم — v186</title>
+<title>نظام توجيه العلوم — v187</title>
 <link rel="manifest" href="../../manifest.webmanifest">
 <link rel="icon" type="image/png" sizes="192x192" href="../../icon-192.png">
 <link rel="apple-touch-icon" href="../../icon-192.png">
@@ -2629,6 +2630,7 @@ window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();window.v152
 window.addEventListener('appinstalled',()=>{window.v152InstallPrompt=null;v152SyncInstallBtn()});
 if('serviceWorker' in navigator&&location.protocol!=='file:')window.addEventListener('load',()=>navigator.serviceWorker.register('../../service-worker.js').catch(()=>{}));
 const V145_NEWS=[
+ ['v187','«رجوع» من تقرير مفتوح في «تقارير المرحلة» يعيد لقائمة التقارير بدل الرئيسية.'],
  ['v186','التقارير والإحصائيات صارا تبويبًا واحدًا (مثل «تقارير المرحلة» للمنسق)، وحُذفت ثلاثة قوالب غير مستخدمة.'],
  ['v184','تعديل بيانات المعلم (للموجه والمنسق ومدير النظام): حقل «مشرف المادة» لإضافة الإشراف أو إلغائه — مشرف واحد لكل مدرسة.'],
  ['v182','الإجازات: تجديد إجازة معلم له فصول مسندة يلغي إسنادها تلقائيًا بعد تأكيدك، فتعود «غير مسندة» وتظهر في «توزيع العجز».'],
@@ -10567,6 +10569,20 @@ statisticsPage=async function(options={}){
  const html=await __v186StatisticsPage(options),label=V186_LABEL[profile?.role];
  return label&&typeof html==='string'?html.replace('<h2>الإحصائيات</h2>',`<h2>${esc(label)}</h2>`):html;
 };
+
+/* v187: فتح تقرير من «تقارير المرحلة/التقارير» يُسجَّل خطوة في سجل الرجوع؛ «رجوع» (زر الشاشة/الهاتف/المتصفح) يعيد لقائمة التقارير بدل الخروج من الشاشة، وزر «← رجوع للتقارير» يستهلك الخطوة نفسها. */
+const __v187OpenReport=statisticsOpenReport;
+statisticsOpenReport=function(key){
+ const r=__v187OpenReport(key);
+ if(currentPage==='statistics'&&statisticsSelectedReport&&!history.state?.v187Inner){try{history.pushState({...(history.state||{}),scienceGuidance:true,page:'statistics',v187Inner:true},'',location.href)}catch(_){}}
+ return r;
+};
+const __v187BackToCenter=statisticsBackToCenter;
+statisticsBackToCenter=function(){if(history.state?.v187Inner){history.back();return}return __v187BackToCenter()};
+window.addEventListener('popstate',()=>{
+ if(!profile||history.state?.v187Inner)return;
+ if(currentPage==='statistics'&&statisticsSelectedReport&&appNavHashPage()==='statistics')__v187BackToCenter();
+});
 
 /* v165 (من v161 في محادثة أخرى): قائمة دور المعلم المختصرة — بياناتي (+ بيانات المعلم) وحصصي وفصولي (+ الجدول الأسبوعي). */
 NAV.teacher=NAV.teacher.filter(n=>!['teachers','reports','teacherTimetable'].includes(n[0]));
