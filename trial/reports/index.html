@@ -1,4 +1,5 @@
 <!doctype html>
+<!-- v189: تقرير الفصول وتقرير المدارس (عدة مدارس): سطر واحد لكل مدرسة، وعمود لكل صف (الإعدادي/الثانوي: الأول–الثالث، الابتدائي: الرابع–السادس) بعدد فصوله بدل تكرار المدرسة لكل صف أو نص «ميزانية المدرسة»؛ أعمدة الصفوف غير الموجودة في النتائج تُخفى بعد الفلترة؛ ومربع «عدد الفصول» في تقرير الفصول بعد الفلترة يجمع الفصول (كان يعدّ الأسطر). -->
 <!-- v188: «رجوع» و«آخر شاشة» لا يعتمدان على وجود صفحة سابقة في المتصفح: كل خطوة داخل البرنامج تُرقَّم (v188Idx)؛ «رجوع» داخل تقرير مفتوح يعيد لقائمة التقارير، وفي أول خطوة (فتح الرابط مباشرة/بعد التحديث) ينتقل لآخر شاشة محفوظة أو الرئيسية بدل الخروج من البرنامج؛ «آخر شاشة» داخل التقرير بلا شاشة محفوظة يعيد لقائمة التقارير. -->
 <!-- v187: «رجوع» داخل «تقارير المرحلة»: فتح تقرير يُسجَّل في سجل الرجوع (history.pushState بعلامة v187Inner)، فالرجوع من التقرير يعيد لقائمة التقارير بدل الخروج إلى الرئيسية. -->
 <!-- v186: تبويبا «التقارير/تقارير المرحلة» و«الإحصائيات» صارا تبويبًا واحدًا (صفحة statistics باسم وأيقونة تبويب التقارير للدور؛ reports يُحوَّل إليها)، وحُذفت من «قوالب حسب الغرض» ثلاث بطاقات: مطابقة أسماء المعلمين والمدارس، بيانات الحصص والمدرسين، تقرير الانتداب. -->
@@ -100,7 +101,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#152c43">
-<title>نظام توجيه العلوم — v188</title>
+<title>نظام توجيه العلوم — v189</title>
 <link rel="manifest" href="../../manifest.webmanifest">
 <link rel="icon" type="image/png" sizes="192x192" href="../../icon-192.png">
 <link rel="apple-touch-icon" href="../../icon-192.png">
@@ -2631,6 +2632,7 @@ window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();window.v152
 window.addEventListener('appinstalled',()=>{window.v152InstallPrompt=null;v152SyncInstallBtn()});
 if('serviceWorker' in navigator&&location.protocol!=='file:')window.addEventListener('load',()=>navigator.serviceWorker.register('../../service-worker.js').catch(()=>{}));
 const V145_NEWS=[
+ ['v189','تقرير الفصول وتقرير المدارس: سطر واحد لكل مدرسة وعمود لكل صف بعدد فصوله.'],
  ['v188','«رجوع» و«آخر شاشة» يعملان داخل التقارير حتى بعد تحديث الصفحة أو فتح الرابط مباشرة، ولا يخرجان من البرنامج.'],
  ['v187','«رجوع» من تقرير مفتوح في «تقارير المرحلة» يعيد لقائمة التقارير بدل الرئيسية.'],
  ['v186','التقارير والإحصائيات صارا تبويبًا واحدًا (مثل «تقارير المرحلة» للمنسق)، وحُذفت ثلاثة قوالب غير مستخدمة.'],
@@ -10604,6 +10606,50 @@ appNavGoBack=function(){
 };
 const __v188Last=appNavLast;
 appNavLast=function(){if(!v188LastTarget()&&currentPage==='statistics'&&statisticsSelectedReport)return statisticsBackToCenter();return __v188Last()};
+
+/* v189: عدد الفصول لكل صف في أعمدة (سطر واحد لكل مدرسة) — تقرير الفصول، وتقرير المدارس لعدة مدارس (بدل عمود «ميزانية المدرسة» النصي). */
+const V189_GRADES=['الأول','الثاني','الثالث','الرابع','الخامس','السادس'];
+function v189Grade(g){return String(g||'').replace(/^الصف\s+/,'').trim()}
+function v189StageGrades(stage){const st=String(stage||'');const k=st.includes('ابتدائي')?'ابتدائي':st.includes('ثانوي')?'ثانوي':st.includes('إعدادي')||st.includes('اعدادي')?'إعدادي':'';return (GRADE_OPTIONS[k]||[]).map(o=>o.value)}
+function v189GradeColumns(stages,extra=[]){const set=new Set(extra);stages.forEach(st=>v189StageGrades(st).forEach(g=>set.add(g)));return V189_GRADES.filter(g=>set.has(g)).map(g=>reportColumn('g_'+g,'الصف '+g,.62,{numeric:true}))}
+function v189FillGrades(row,stage,counts){const own=v189StageGrades(stage);V189_GRADES.forEach(g=>{row['g_'+g]=counts.has(g)?counts.get(g):own.includes(g)?0:'—'})}
+formatClassesReport=function(raw,ctx){
+ const single=typeof v115SingleSchoolRole==='function'&&v115SingleSchoolRole();
+ const map=new Map();
+ (raw.classes||[]).forEach(c=>{const key=(c.school_id||'')+'|'+(c.stage||'');if(!map.has(key))map.set(key,{school_id:c.school_id,school:c.schools?.name||'',stage:c.stage||'',counts:new Map(),count:0,periods:0});const g=map.get(key),gr=v189Grade(c.grade);g.counts.set(gr,(g.counts.get(gr)||0)+1);g.count++;g.periods+=v119ClassPeriods(c)});
+ const groups=[...map.values()].sort((a,b)=>String(a.school).localeCompare(String(b.school),'ar')||String(a.stage).localeCompare(String(b.stage),'ar'));
+ const rows=groups.map(g=>{const r={school:reportCellValue(g.school),stage:reportCellValue(g.stage),count:g.count,periods:g.periods,_schoolId:String(g.school_id||''),_school:reportCellValue(g.school),_stage:reportCellValue(g.stage)};v189FillGrades(r,g.stage,g.counts);return r});
+ const extra=groups.flatMap(g=>[...g.counts.keys()]);
+ const columns=[...(single?[]:[reportColumn('school','المدرسة',1.8)]),reportColumn('stage','المرحلة',.7),...v189GradeColumns(groups.map(g=>g.stage),extra),reportColumn('count','إجمالي الفصول',.75,{numeric:true}),reportColumn('periods','إجمالي حصص العلوم',.85,{numeric:true})];
+ const schema=makeReportSchema({reportId:'classes',title:'تقرير الفصول',subtitle:'عدد الفصول لكل صف وحصص العلوم المطلوبة — سطر لكل مدرسة',period:ctx.period,summary:[],columns,rows,totals:[]});
+ return v189ClassesMetrics(schema);
+};
+function v189ClassesMetrics(schema){
+ const rows=schema.rows||[],grades=(schema.columns||[]).filter(c=>String(c.key).startsWith('g_'));
+ schema.summary=[reportMetric('عدد المدارس',new Set(rows.map(r=>r._schoolId)).size),reportMetric('عدد الفصول',reportSum(rows,'count')),reportMetric('إجمالي حصص العلوم',reportSum(rows,'periods'))];
+ schema.totals=[...grades.map(c=>reportTotalsMetric(c.label,reportSum(rows,c.key))),reportTotalsMetric('إجمالي الفصول',reportSum(rows,'count')),reportTotalsMetric('إجمالي حصص العلوم',reportSum(rows,'periods'))];
+ return schema;
+}
+const __v189SchoolReport=formatSchoolReport;
+formatSchoolReport=function(raw,ctx,options={}){
+ const schema=__v189SchoolReport(raw,ctx,options);
+ const idx=(schema.columns||[]).findIndex(c=>c.key==='budget');if(idx<0)return schema;
+ const per={};(raw.classes||[]).forEach(x=>{const m=per[x.school_id]||(per[x.school_id]=new Map()),g=v189Grade(x.grade);m.set(g,(m.get(g)||0)+1)});
+ const stageOf=Object.fromEntries((raw.schools||[]).map(s=>[String(s.id),s.stage]));
+ (schema.rows||[]).forEach(r=>v189FillGrades(r,stageOf[r._schoolId]||r._stage,per[r._schoolId]||new Map()));
+ const extra=Object.values(per).flatMap(m=>[...m.keys()]);
+ schema.columns.splice(idx,1,...v189GradeColumns((raw.schools||[]).map(s=>s.stage),extra));
+ return schema;
+};
+const __v189ApplyFilters=applyCurrentFiltersToReportSchema;
+applyCurrentFiltersToReportSchema=function(schema,state){
+ const out=__v189ApplyFilters(schema,state);
+ if(out&&['classes','school'].includes(out.reportId)&&(out.columns||[]).some(c=>String(c.key).startsWith('g_'))){
+  out.columns=out.columns.filter(c=>!String(c.key).startsWith('g_')||(out.rows||[]).some(r=>r[c.key]!=='—'&&r[c.key]!==undefined));
+  if(out.reportId==='classes')v189ClassesMetrics(out);
+ }
+ return out;
+};
 
 /* v165 (من v161 في محادثة أخرى): قائمة دور المعلم المختصرة — بياناتي (+ بيانات المعلم) وحصصي وفصولي (+ الجدول الأسبوعي). */
 NAV.teacher=NAV.teacher.filter(n=>!['teachers','reports','teacherTimetable'].includes(n[0]));
