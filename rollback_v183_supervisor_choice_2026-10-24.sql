@@ -1,4 +1,5 @@
--- استرجاع v183 (2026-10-24): يعيد الدوال الثلاث كما كانت، ويحذف جدول اختيار الموجه، ويعيد الموجه المسؤول للمدارس الخمس وعلامة مشرف المادة كما كانت قبل v183.
+-- استرجاع v183 (2026-10-24): يعيد الدوال الثلاث والعرض teacher_workload_summary كما كانت، ويحذف جدول اختيار الموجه،
+-- ويعيد الموجه المسؤول للمدارس الخمس وعلامة مشرف المادة كما كانت قبل v183 (من اللقطة private.v183_snap — لا تحذفها).
 -- يُشغَّل من SQL Editor.
 begin;
 do $mig$
@@ -12,7 +13,9 @@ begin
   d := replace(d, E'    limit 1)\n  ), scope_teaching as (', E'    limit 1\n  ), scope_teaching as (');
   if d=o then raise exception 'roster: limit not replaced'; end if; o := d;
   d := replace(d, E'        when ss.teacher_id=w.teacher_id then 2\n        when exists (select 1 from public.school_supervisor_choice c2 where c2.teacher_id=w.teacher_id and c2.school_id<>p_school_id) then 2  -- v183\n        else 0\n      end::integer as global_supervision_periods', E'        when ss.teacher_id=w.teacher_id then 2\n        else 0\n      end::integer as global_supervision_periods');
-  if d=o then raise exception 'roster: global not replaced'; end if;
+  if d=o then raise exception 'roster: global not replaced'; end if; o := d;
+  d := replace(d, E'          then case when coalesce(w.supervision_periods,0)>0 then 2 else 0 end  -- v183', E'          then case when coalesce(w.is_senior_teacher,false) then 2 else 0 end');
+  if d=o then raise exception 'roster: partial-in not replaced'; end if;
   execute d;
 
   -- 2) private.school_teacher_rosters_all
@@ -23,7 +26,9 @@ begin
   d := replace(d, E'  ), ss as (\n    select r.sid, r.tid from ranked r where r.rn=1 and not exists (select 1 from public.school_supervisor_choice c where c.school_id=r.sid)\n    union all  -- v183: اختيار الموجه\n    select p.sid, p.tid from pairs p\n    join public.school_supervisor_choice c on c.school_id=p.sid and c.teacher_id=p.tid\n    join public.teacher_records tr on tr.id=p.tid\n    where tr.active and tr.work_type=''permanent''::public.work_type\n      and not exists (select 1 from public.teacher_long_leaves l join public.academic_years ay on ay.id=l.academic_year_id and ay.is_active where l.teacher_id=tr.id and l.renewal_status=''renewed'')\n  ),', E'  ), ss as (\n    select r.sid, r.tid from ranked r where r.rn=1\n  ),');
   if d=o then raise exception 'all: ss not replaced'; end if; o := d;
   d := replace(d, E'        when ss.tid=w.teacher_id then 2\n        when exists (select 1 from public.school_supervisor_choice c2 where c2.teacher_id=w.teacher_id and c2.school_id<>p.sid) then 2  -- v183\n        else 0\n      end::integer as global_supervision_periods,', E'        when ss.tid=w.teacher_id then 2\n        else 0\n      end::integer as global_supervision_periods,');
-  if d=o then raise exception 'all: global not replaced'; end if;
+  if d=o then raise exception 'all: global not replaced'; end if; o := d;
+  d := replace(d, E'          then case when coalesce(w.supervision_periods,0)>0 then 2 else 0 end  -- v183', E'          then case when coalesce(w.is_senior_teacher,false) then 2 else 0 end');
+  if d=o then raise exception 'all: partial-in not replaced'; end if;
   execute d;
 
   -- 3) private.sync_school_senior_teacher
@@ -34,8 +39,17 @@ begin
   d := replace(d, E'  limit 1;\n\n  -- v183: اختيار الموجه يتقدم على الأقدمية (teacher_id فارغ = لا مشرف)\n  if exists (select 1 from public.school_supervisor_choice c where c.school_id = p_school_id) then\n    select c.teacher_id into v_winner from public.school_supervisor_choice c where c.school_id = p_school_id;\n  end if;\n\n  update public.teacher_records tr\n  set is_senior_teacher = false,', E'  limit 1;\n\n  update public.teacher_records tr\n  set is_senior_teacher = false,');
   if d=o then raise exception 'sync: choice not inserted'; end if; o := d;
   d := replace(d, E'    and tr.id is distinct from v_winner\n    and not exists (select 1 from public.school_supervisor_choice c3 where c3.teacher_id = tr.id and c3.school_id <> p_school_id)  -- v183\n', E'    and tr.id is distinct from v_winner\n');
-  if d=o then raise exception 'sync: reset guard not replaced'; end if;
+  if d=o then raise exception 'sync: reset guard not replaced'; end if; o := d;
+  d := replace(d, E'    where tr.id = v_winner\n      and tr.is_senior_teacher is distinct from true\n      and (tr.home_school_id = p_school_id or exists (select 1 from public.delegations d where d.teacher_id = tr.id and d.to_school_id = p_school_id and d.delegation_type = ''full''::public.delegation_type and d.active and d.start_date <= current_date and (d.end_date is null or d.end_date >= current_date)));  -- v183: المنتدب جزئيًا المختار لا تُرفع علامته (قيد مشرف واحد لكل مدرسة أصلية)؛ إشرافه من school_supervisor_choice', E'    where tr.id = v_winner\n      and tr.is_senior_teacher is distinct from true;');
+  if d=o then raise exception 'sync: winner flag guard not replaced'; end if;
   execute d;
+
+  -- 4) public.teacher_workload_summary: الإشراف = العلامة أو اختيار الموجه في أي مدرسة
+  d := pg_get_viewdef('public.teacher_workload_summary'::regclass);
+  o := d;
+  d := replace(d, E'WHEN ((tr.is_senior_teacher OR (EXISTS ( SELECT 1\n                       FROM school_supervisor_choice c\n                      WHERE (c.teacher_id = tr.id)))) AND (tr.work_type = ''permanent''::work_type)) THEN 2', E'WHEN (tr.is_senior_teacher AND (tr.work_type = ''permanent''::work_type)) THEN 2');
+  if d=o then raise exception 'view: supervision not replaced'; end if;
+  execute 'create or replace view public.teacher_workload_summary as ' || d;
 end
 $mig$;
 
@@ -44,9 +58,11 @@ update public.schools set supervisor_id='367e91fd-f844-4f9f-bc48-c8dedcbbac36' w
 update public.schools set supervisor_id='bacb6309-6181-4afb-b005-c390df6295c5' where id='fe98af7a-ce7b-437a-ad26-a95b13c23c67'; -- نجع البرج ← كمال
 update public.schools set supervisor_id='675c533c-c3d0-4102-a87d-e815115a973e' where id='2f4eb287-653c-45dd-b79e-066b418d29e5'; -- شهيد مصطفى حراجية ← عزالدين
 
--- علامة مشرف المادة كما كانت (لقطة private.v183_snap قبل التعديل)
-update public.teacher_records tr set is_senior_teacher=(s.h='true') from private.v183_snap s
- where s.kind='flag_before' and s.k=tr.id::text and tr.is_senior_teacher is distinct from (s.h='true');
+-- علامة مشرف المادة كما كانت: الإنزال أولًا ثم الرفع (قيد مشرف واحد لكل مدرسة أصلية)
+update public.teacher_records tr set is_senior_teacher=false from private.v183_snap s
+ where s.kind='flag_before' and s.k=tr.id::text and s.h='false' and tr.is_senior_teacher;
+update public.teacher_records tr set is_senior_teacher=true from private.v183_snap s
+ where s.kind='flag_before' and s.k=tr.id::text and s.h='true' and not tr.is_senior_teacher;
 
 drop table public.school_supervisor_choice;
 commit;

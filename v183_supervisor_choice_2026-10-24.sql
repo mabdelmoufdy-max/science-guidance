@@ -1,6 +1,6 @@
 -- v183 (2026-10-24، بطلب المستخدم «نفذ ما ارسلته لك واجعل القاعدة الاقدم او اختيار الموجه»)
 -- مشرف المادة = اختيار الموجه للمدرسة إن وُجد (school_supervisor_choice؛ teacher_id فارغ = لا مشرف)، وإلا الأقدم كما كان.
--- يُشغَّل مرة واحدة من Supabase → SQL Editor. الاسترجاع: rollback_v183_supervisor_choice_2026-10-24.sql
+-- طُبِّق 2026-10-24 (بعد إصلاح خطأ one_active_senior_teacher_per_school: المنتدبة جزئيًا المختارة لا تُرفع علامتها). لا تُشغّله مرة ثانية. الاسترجاع: rollback_v183_supervisor_choice_2026-10-24.sql
 begin;
 
 create table public.school_supervisor_choice(
@@ -27,7 +27,10 @@ begin
   if d=o then raise exception 'roster: limit not replaced'; end if; o := d;
   d := replace(d, E'        when ss.teacher_id=w.teacher_id then 2\n        else 0\n      end::integer as global_supervision_periods',
     E'        when ss.teacher_id=w.teacher_id then 2\n        when exists (select 1 from public.school_supervisor_choice c2 where c2.teacher_id=w.teacher_id and c2.school_id<>p_school_id) then 2  -- v183\n        else 0\n      end::integer as global_supervision_periods');
-  if d=o then raise exception 'roster: global not replaced'; end if;
+  if d=o then raise exception 'roster: global not replaced'; end if; o := d;
+  d := replace(d, E'          then case when coalesce(w.is_senior_teacher,false) then 2 else 0 end',
+    E'          then case when coalesce(w.supervision_periods,0)>0 then 2 else 0 end  -- v183');
+  if d=o then raise exception 'roster: partial-in not replaced'; end if;
   execute d;
 
   -- 2) private.school_teacher_rosters_all
@@ -41,7 +44,10 @@ begin
   if d=o then raise exception 'all: ss not replaced'; end if; o := d;
   d := replace(d, E'        when ss.tid=w.teacher_id then 2\n        else 0\n      end::integer as global_supervision_periods,',
     E'        when ss.tid=w.teacher_id then 2\n        when exists (select 1 from public.school_supervisor_choice c2 where c2.teacher_id=w.teacher_id and c2.school_id<>p.sid) then 2  -- v183\n        else 0\n      end::integer as global_supervision_periods,');
-  if d=o then raise exception 'all: global not replaced'; end if;
+  if d=o then raise exception 'all: global not replaced'; end if; o := d;
+  d := replace(d, E'          then case when coalesce(w.is_senior_teacher,false) then 2 else 0 end',
+    E'          then case when coalesce(w.supervision_periods,0)>0 then 2 else 0 end  -- v183');
+  if d=o then raise exception 'all: partial-in not replaced'; end if;
   execute d;
 
   -- 3) private.sync_school_senior_teacher
@@ -55,8 +61,19 @@ begin
   if d=o then raise exception 'sync: choice not inserted'; end if; o := d;
   d := replace(d, E'    and tr.id is distinct from v_winner\n',
     E'    and tr.id is distinct from v_winner\n    and not exists (select 1 from public.school_supervisor_choice c3 where c3.teacher_id = tr.id and c3.school_id <> p_school_id)  -- v183\n');
-  if d=o then raise exception 'sync: reset guard not replaced'; end if;
+  if d=o then raise exception 'sync: reset guard not replaced'; end if; o := d;
+  d := replace(d, E'    where tr.id = v_winner\n      and tr.is_senior_teacher is distinct from true;',
+    E'    where tr.id = v_winner\n      and tr.is_senior_teacher is distinct from true\n      and (tr.home_school_id = p_school_id or exists (select 1 from public.delegations d where d.teacher_id = tr.id and d.to_school_id = p_school_id and d.delegation_type = ''full''::public.delegation_type and d.active and d.start_date <= current_date and (d.end_date is null or d.end_date >= current_date)));  -- v183: المنتدب جزئيًا المختار لا تُرفع علامته (قيد مشرف واحد لكل مدرسة أصلية)؛ إشرافه من school_supervisor_choice');
+  if d=o then raise exception 'sync: winner flag guard not replaced'; end if;
   execute d;
+
+  -- 4) public.teacher_workload_summary: الإشراف = العلامة أو اختيار الموجه في أي مدرسة
+  d := pg_get_viewdef('public.teacher_workload_summary'::regclass);
+  o := d;
+  d := replace(d, E'WHEN (tr.is_senior_teacher AND (tr.work_type = ''permanent''::work_type)) THEN 2',
+    E'WHEN ((tr.is_senior_teacher OR (EXISTS ( SELECT 1 FROM public.school_supervisor_choice c WHERE (c.teacher_id = tr.id)))) AND (tr.work_type = ''permanent''::work_type)) THEN 2');
+  if d=o then raise exception 'view: supervision not replaced'; end if;
+  execute 'create or replace view public.teacher_workload_summary as ' || d;
 end
 $mig$;
 
@@ -111,7 +128,7 @@ update public.schools set supervisor_id='bacb6309-6181-4afb-b005-c390df6295c5' w
 update public.schools set supervisor_id='4d69363b-0b47-4d94-8c2d-d0e38d8c0f0a' where id='fe98af7a-ce7b-437a-ad26-a95b13c23c67'; -- نجع البرج ← محمد معله
 update public.schools set supervisor_id='54161bac-29ed-4276-a0e0-a45b23ca4b8e' where id='2f4eb287-653c-45dd-b79e-066b418d29e5'; -- شهيد مصطفى حراجية ← شيماء
 
--- إعادة حساب علامة مشرف المادة للمدارس المعنية والمدارس الأصلية للمنتدبات الثلاث
+-- إعادة حساب علامة مشرف المادة (لا تُرفع للمنتدبات جزئيًا؛ إشرافهن من جدول الاختيار) للمدارس المعنية والمدارس الأصلية للمنتدبات الثلاث
 select private.sync_school_senior_teacher(s) from (
   select school_id s from public.school_supervisor_choice
   union select home_school_id from public.teacher_records where id in ('65bf3a29-1d09-46d6-ae64-f63070b98b95','377dff96-ac2f-42c0-86b3-30c47ab5f800','614e604b-cea2-4a55-b994-be31cd8a8b52')
