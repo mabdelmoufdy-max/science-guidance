@@ -188,7 +188,7 @@ summary{cursor:pointer;font-weight:600;padding:4px 0}
         (r.remaining > 0 ? ' متبقي لك ' + plural(r.remaining, 'محاولة واحدة', 'محاولتان', 'محاولات') + '.' : ' كانت هذه آخر محاولة، وسيتوقف الدخول مؤقتًا.');
       case 'locked': return 'تم إيقاف الدخول مؤقتًا بسبب محاولات خاطئة متكررة. حاول بعد ' + (r.minutes || 15) + ' دقيقة.';
       case 'busy': return 'الخدمة مشغولة الآن، حاول بعد قليل.';
-      case 'closed': return 'فترة تعديل البيانات مغلقة حاليًا.';
+      case 'closed': return r.note || 'فترة تعديل البيانات مغلقة حاليًا.';
       case 'exists': return isSup() ? 'هذا الرقم المدني مسجّل بالفعل في النظام. إن كان معلمًا في مدرستك فابحث عنه في القائمة، وإن كان في مدرسة أخرى فتواصل مع إدارة التوجيه.'
         : 'هذا الرقم المدني مسجّل بالفعل. ارجع واختر «معلم مسجّل في النظام».';
       case 'forbidden': return 'هذا الإجراء غير متاح لك على هذا المعلم أو هذه المدرسة.';
@@ -381,7 +381,7 @@ summary{cursor:pointer;font-weight:600;padding:4px 0}
 
   async function enterRegistered(r, c, p) {
     S.auth = { civil: c, phone: p }; S.lookup = r; S.mode = 'registered'; S.limited = !!r.limited;
-    S.closed = r.editing_open === false;
+    S.closed = r.editing_open === false; S.closedNote = r.closed_note || '';
     var t = r.teacher || {};
     S.base = {}; S.person = {};
     PKEYS.forEach(function (k) { var v = t[k] == null ? '' : String(t[k]); S.base[k] = v; S.person[k] = v; });
@@ -400,7 +400,7 @@ summary{cursor:pointer;font-weight:600;padding:4px 0}
     go(S.limited ? 'flow' : 'confirm');
   }
   async function startNew() {
-    S.auth = null; S.lookup = null; S.mode = 'new'; S.limited = false; S.closed = false;
+    S.auth = null; S.lookup = null; S.mode = 'new'; S.limited = false; S.closed = false; S.closedNote = '';
     S.base = {}; S.person = { work_type: '' }; PKEYS.forEach(function (k) { S.person[k] = ''; }); S.person.civil_id = '';
     S.school = null; S.stageKey = null; S.baseSel = new Map(); S.sel = new Map(); S.step = 1; S.dbase = {}; S.dsel = {};
     S.draft = loadDraft(dkey()); go('flow');
@@ -486,7 +486,7 @@ summary{cursor:pointer;font-weight:600;padding:4px 0}
     return h('div', { class: 'card' }, topbar('بياناتك'),
       h('h2', null, 'أهلًا ' + (pv('full_name').split(' ')[0] || '')),
       h('p', { class: 'sub', style: 'text-align:right' }, 'راجع بياناتك المسجّلة. إن كانت صحيحة اضغط «بياناتي صحيحة»، وإلا عدّلها أو أكمل الناقص.'),
-      S.closed ? h('div', { class: 'warn', id: 'closed-banner' }, 'فترة تعديل البيانات مغلقة حاليًا، يمكنك المراجعة فقط.') : null,
+      S.closed ? h('div', { class: 'warn', id: 'closed-banner' }, S.closedNote || 'فترة تعديل البيانات مغلقة حاليًا، يمكنك المراجعة فقط.') : null,
       S.lookup.pending ? h('div', { class: 'note', id: 'pending-note' }, 'لديك طلب سابق قيد المراجعة (رقم ' + S.lookup.pending.ref + '). أي إرسال جديد يحلّ محله.') : null,
       otherN > 0 ? h('div', { class: 'note' }, 'لديك ' + otherN + ' فصل في مدرسة أخرى (انتداب/إعارة)؛ تُدار من المشرف ولا تتغير من هنا.') : null,
       d ? h('div', { class: 'warn', id: 'draft-note' }, 'لديك مسودة غير مرسلة محفوظة على هذا الجهاز. ',
@@ -553,7 +553,7 @@ summary{cursor:pointer;font-weight:600;padding:4px 0}
     wrap.appendChild(steps);
     wrap.appendChild(h('div', { class: 'stlabel', id: 'stlabel' }, STEP_N[stepKey(S.step)]));
     if (S.mode === 'registered' && S.limited && S.step === 1) wrap.appendChild(h('div', { class: 'warn', id: 'limited-note' }, 'لا يوجد رقم هاتف مسجّل لك في النظام، لذلك لا نعرض بياناتك. اكتب بياناتك كاملة وسيراجعها المشرف قبل اعتمادها.'));
-    if (S.closed) wrap.appendChild(h('div', { class: 'warn', id: 'closed-banner' }, 'فترة تعديل البيانات مغلقة حاليًا.'));
+    if (S.closed) wrap.appendChild(h('div', { class: 'warn', id: 'closed-banner' }, S.closedNote || 'فترة تعديل البيانات مغلقة حاليًا.'));
     if (S.draft && S.step === 1) {
       var d = S.draft;
       wrap.appendChild(h('div', { class: 'warn', id: 'draft-note' }, 'لديك مسودة غير مرسلة محفوظة على هذا الجهاز. ',
@@ -882,7 +882,7 @@ summary{cursor:pointer;font-weight:600;padding:4px 0}
   function suptop(title, backLabel, backFn) {
     return h('div', { class: 'top' }, h('button', { type: 'button', class: 'link', id: 'sup-back', onclick: backFn }, backLabel), h('strong', null, title || ''));
   }
-  function closedBanner() { return S.closed ? h('div', { class: 'warn', id: 'closed-banner' }, 'فترة تعديل البيانات مغلقة حاليًا، يمكنك المراجعة فقط.') : null; }
+  function closedBanner() { return S.closed ? h('div', { class: 'warn', id: 'closed-banner' }, S.closedNote || 'فترة تعديل البيانات مغلقة حاليًا، يمكنك المراجعة فقط.') : null; }
   function wtLabel(w) { return w === 'permanent' ? 'معيّن (دائم)' : w === 'paid' ? 'بالأجر (عقد)' : ''; }
   function supTotal(t) { var n = 0; (t.classes || []).forEach(function (c) { n += c.periods; }); return n; }
 
@@ -890,7 +890,7 @@ summary{cursor:pointer;font-weight:600;padding:4px 0}
     var r = await rpc('teacher_portal_sup_school', { p_civil: S.sup.auth.civil, p_phone: S.sup.auth.phone, p_school_id: id, p_code: S.sup.auth.code });
     if (!r || r.ok !== true) throw (r || { reason: 'x' });
     S.sup.school = r.school; S.sup.classes = r.classes || []; S.sup.teachers = r.teachers || []; S.sup.q = ''; S.sup.t = null;
-    S.cache[r.school.id] = S.sup.classes; S.closed = r.editing_open === false; S.mode = 'sup';
+    S.cache[r.school.id] = S.sup.classes; S.closed = r.editing_open === false; S.closedNote = r.closed_note || ''; S.mode = 'sup';
     go('supschool');
   }
 
@@ -911,7 +911,7 @@ summary{cursor:pointer;font-weight:600;padding:4px 0}
         var r = await rpc('teacher_portal_sup_login', { p_civil: c, p_phone: p, p_code: k });
         if (!r || r.ok !== true) { r = r || {}; r.sup = true; showErr(box, reasonMsg(r)); btnBusy(btn, false); return; }
         S.sup = { auth: { civil: c, phone: p, code: k }, name: r.name || '', schools: r.schools || [], school: null, classes: [], teachers: [], t: null, q: '' };
-        S.closed = r.editing_open === false;
+        S.closed = r.editing_open === false; S.closedNote = r.closed_note || '';
         if (S.sup.schools.length === 1) await openSchool(S.sup.schools[0].id); else go('supschools');
       } catch (e) { showErr(box, errMsg(e)); btnBusy(btn, false); }
     } },

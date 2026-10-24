@@ -1,17 +1,42 @@
 {
   "rewrites": [
-    { "source": "/coordinator", "destination": "https://mabdelmoufdy-max.github.io/science-guidance/trial/coordinator-entry/" },
-    { "source": "/coordinator/", "destination": "https://mabdelmoufdy-max.github.io/science-guidance/trial/coordinator-entry/" }
+    {
+      "source": "/",
+      "destination": "https://mabdelmoufdy-max.github.io/science-guidance/portal/"
+    },
+    {
+      "source": "/coordinator",
+      "destination": "https://mabdelmoufdy-max.github.io/science-guidance/trial/coordinator-entry/"
+    },
+    {
+      "source": "/coordinator/",
+      "destination": "https://mabdelmoufdy-max.github.io/science-guidance/trial/coordinator-entry/"
+    }
   ],
   "headers": [
     {
       "source": "/(.*)",
       "headers": [
-        { "key": "X-Frame-Options", "value": "DENY" },
-        { "key": "X-Content-Type-Options", "value": "nosniff" },
-        { "key": "Referrer-Policy", "value": "no-referrer" },
-        { "key": "X-Robots-Tag", "value": "noindex, nofollow" },
-        { "key": "Cache-Control", "value": "no-store" }
+        {
+          "key": "X-Frame-Options",
+          "value": "DENY"
+        },
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        },
+        {
+          "key": "Referrer-Policy",
+          "value": "no-referrer"
+        },
+        {
+          "key": "X-Robots-Tag",
+          "value": "noindex, nofollow"
+        },
+        {
+          "key": "Cache-Control",
+          "value": "no-store"
+        }
       ]
     }
   ]
