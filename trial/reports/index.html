@@ -1,4 +1,5 @@
 <!doctype html>
+<!-- v192: تقرير «الموجهين ومدارسهم»: لا يظهر سجل موجه بلا مدارس إن كان لنفس الاسم سجل آخر له مدارس (سجلّا شيماء محمد فرج محمد). -->
 <!-- v191: تقرير «الموجهين ومدارسهم»: سطر لكل مدرسة (بدل قائمة أسماء مكدسة في خانة واحدة)؛ اسم الموجه وهاتفه وعدد مدارسه في أول سطر من مجموعته فقط. -->
 <!-- v190: تقرير «الموجهين» (للأدوار التي ترى الدليل كاملًا): سطر لكل موجه ومرحلة وأمامه عدد مدارسه وأسماؤها (من schools.supervisor_id) بدل أعمدة الدليل المهني. -->
 <!-- v189: تقرير الفصول وتقرير المدارس (عدة مدارس): سطر واحد لكل مدرسة، وعمود لكل صف (الإعدادي/الثانوي: الأول–الثالث، الابتدائي: الرابع–السادس) بعدد فصوله بدل تكرار المدرسة لكل صف أو نص «ميزانية المدرسة»؛ أعمدة الصفوف غير الموجودة في النتائج تُخفى بعد الفلترة؛ ومربع «عدد الفصول» في تقرير الفصول بعد الفلترة يجمع الفصول (كان يعدّ الأسطر). -->
@@ -103,7 +104,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#152c43">
-<title>نظام توجيه العلوم — v191</title>
+<title>نظام توجيه العلوم — v192</title>
 <link rel="manifest" href="../../manifest.webmanifest">
 <link rel="icon" type="image/png" sizes="192x192" href="../../icon-192.png">
 <link rel="apple-touch-icon" href="../../icon-192.png">
@@ -2634,6 +2635,7 @@ window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();window.v152
 window.addEventListener('appinstalled',()=>{window.v152InstallPrompt=null;v152SyncInstallBtn()});
 if('serviceWorker' in navigator&&location.protocol!=='file:')window.addEventListener('load',()=>navigator.serviceWorker.register('../../service-worker.js').catch(()=>{}));
 const V145_NEWS=[
+ ['v192','تقرير «الموجهين ومدارسهم»: لا يتكرر الموجه في آخر التقرير بسطر «لا توجد مدارس».'],
  ['v191','تقرير «الموجهين ومدارسهم»: كل مدرسة في سطر مستقل تحت موجهها.'],
  ['v190','تقرير «الموجهين» يعرض كل موجه وأمامه مدارسه.'],
  ['v189','تقرير الفصول وتقرير المدارس: سطر واحد لكل مدرسة وعمود لكل صف بعدد فصوله.'],
@@ -10675,6 +10677,8 @@ ReportAdapters.supervisors.load=async function(ctx,...rest){
   if(!stages.length){groups.push({id:sup.id,name,phone,stage:'—',schools:[]});return}
   stages.forEach(st=>groups.push({id:sup.id,name,phone,stage:st,schools:list.filter(x=>(x.stage||'—')===st).map(x=>x.name).sort((a,b)=>String(a).localeCompare(String(b),'ar'))}));
  });
+ const withSchools=new Set(groups.filter(g=>g.schools.length).map(g=>filterNormalize(g.name)));
+ for(let i=groups.length-1;i>=0;i--)if(!groups[i].schools.length&&withSchools.has(filterNormalize(groups[i].name)))groups.splice(i,1); // v192: سجل مكرر بالاسم بلا مدارس
  groups.sort((a,b)=>stageRank(a.stage)-stageRank(b.stage)||(b.schools.length?1:0)-(a.schools.length?1:0)||String(a.name).localeCompare(String(b.name),'ar'));
  groups.forEach(g=>{
   const head={name:g.name,phone:g.phone,count:g.schools.length,_stage:reportCellValue(g.stage),_search:[g.name,...g.schools].join(' ')};
