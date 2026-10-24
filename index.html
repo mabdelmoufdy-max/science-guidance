@@ -1,4 +1,5 @@
 <!doctype html>
+<!-- v180: نافذة «الإجازات وتجديدها» (openLongLeaveCenter): القائمة لأصحاب الإجازات فقط بأقسام وعدادات (كل الإجازات، بانتظار التجديد، مجددة، قرار مؤقت، تنتهي/انتهت، عادوا للعمل)، نموذج التسجيل يظهر بزر «+ تسجيل إجازة» أو «تعديل»؛ تنبيه انتهاء الإجازة في النافذة والجرس (عرض فقط، لا تتغير الحالة تلقائيًا)؛ تحذير بالفصول المسندة عند اختيار «إجازة مجددة»؛ زر «معاينة التقرير المالي» داخل النافذة صار «طباعة كشف الإجازات» للقسم المعروض (ReportAdapters.longLeaves). الحفظ وقواعد الحساب بلا تغيير. -->
 <!-- v179: (1) حُذف «استيراد Excel/CSV» من البرنامج كله مع أكواده (openBulkImport وما يتبعه؛ كان في المعلمين/المدارس/الموجهين/الفصول لمدير النظام والمشرف الأول). (2) شاشة المدارس: زرّا «تصدير Excel — الخطة التشغيلية» و«تصدير Excel — النتائج المفلترة» (v179ExportReport من مُحوّل التقرير وفلاتره). (3) شاشة المدارس للأدوار متعددة المدارس تبدأ فارغة مثل المعلمين (v179SchoolsMode في v163Gate)؛ القائمة تظهر باختيار مدرسة أو بالبحث/الفلتر، والتقارير والتصدير تعمل دون عرضها. -->
 <!-- v178: (4) الخطة التشغيلية: عمود «العجز» نفسه صار يُحسب بعد الأجر = max(العجز − الأجر المسند، 0) (عرض فقط؛ row.deficit الأصلي باقٍ لتقرير العجز والزيادة)، ومربعه ومجموعه كذلك. (3) الخطة الملخصة/التشغيلية (summaryPlan): حُذف عمودا الزيادة والحالة (يبقى العجز بطلب المستخدم؛ الأجر المسند موضح في عموده)؛ في المربعات أعلى الجدول أضيف «المعلمون بالأجر» بجوار «المعلمون الثابتون» وحُذف «سجلات المدارس» و«الزيادة» (والمجاميع كذلك). (2) أي تقرير فيه عمود «م» يُعاد ترقيمه 1، 2، 3… بعد تطبيق الفلاتر (كان يحتفظ برقمه قبل الفلترة، مثل الخطة التشغيلية بعد اختيار المرحلة). (1) تقرير المدارس («معاينة التقرير/النتائج المفلترة» في شاشة المدارس): الأعمدة صارت المدرسة، المرحلة، النوع، ميزانية المدرسة (عدد الفصول لكل صف من school_classes)، إجمالي الفصول، الموجه المسؤول. تقرير المدرسة الواحدة بلا تغيير. -->
 <!-- v177: عجز المعلم المنتدب جزئيًا (بين مدارس المرحلة أو من الابتدائي) يظهر في مدرسته الأصلية فقط؛ في المدرسة المنتدب إليها عجزه 0 وحالته «منتدب جزئيًا» (قاعدة البيانات: migration v170_partial_deficit_home_only + v86ApplyPartialDelegateRule). المتبقي للتدريس وعجز المدرسة بلا تغيير. -->
@@ -92,7 +93,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#152c43">
-<title>نظام توجيه العلوم — v179</title>
+<title>نظام توجيه العلوم — v180</title>
 <link rel="manifest" href="./manifest.webmanifest">
 <link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png">
 <link rel="apple-touch-icon" href="./icon-192.png">
@@ -2262,6 +2263,8 @@ td .btn,.report-preview-toolbar .btn,.btn.btn-sm{min-height:var(--ctl-h-sm);padd
 /* v173: زر تبديل الدور في القائمة الجانبية واضح على الخلفية الكحلية */
 .sidebar .side-user .role-switch-side{color:#fbe599!important;background:rgba(206,158,72,.18)!important;border:1px solid rgba(251,229,153,.55)!important;border-radius:8px;padding:6px 12px;font-weight:700;margin-top:8px;min-height:36px}
 .sidebar .side-user .role-switch-side:hover{background:rgba(206,158,72,.32)!important}
+/* v180: أقسام نافذة الإجازات */
+.modal-card .v180-leave-tabs{position:static;grid-template-columns:repeat(auto-fit,minmax(104px,1fr));background:none;backdrop-filter:none;padding:0;margin:10px 0}
 </style>
 </head>
 <body>
@@ -2606,6 +2609,7 @@ window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();window.v152
 window.addEventListener('appinstalled',()=>{window.v152InstallPrompt=null;v152SyncInstallBtn()});
 if('serviceWorker' in navigator&&location.protocol!=='file:')window.addEventListener('load',()=>navigator.serviceWorker.register('./service-worker.js').catch(()=>{}));
 const V145_NEWS=[
+ ['v180','الإجازات وتجديدها: القائمة لأصحاب الإجازات فقط بأقسام (بانتظار التجديد، مجددة، قرار مؤقت، تنتهي/انتهت، عادوا)، تنبيه بانتهاء الإجازة، تحذير بالفصول المسندة عند التجديد، وطباعة كشف الإجازات.'],
  ['v179','حُذف الاستيراد. شاشة المدارس: تصدير Excel للخطة التشغيلية وللنتائج المفلترة، وتبدأ فارغة مثل المعلمين (تظهر باختيار مدرسة أو بالبحث).'],
  ['v178','تقرير المدارس: يعرض ميزانية كل مدرسة (عدد الفصول في كل صف) والموجه المسؤول. وترقيم «م» يبدأ من 1 بعد الفلترة. والخطة التشغيلية: بلا عمودي الزيادة والحالة، ومربع «المعلمون بالأجر»، والعجز يُحسب بعد حصص الأجر (المدرسة المكتملة أساسي + أجر = صفر).'],
  ['v177','المنتدب جزئيًا: عجزه يظهر في مدرسته الأصلية فقط، وفي المدرسة المنتدب إليها تظهر حالته «منتدب جزئيًا».'],
@@ -10099,6 +10103,190 @@ function v156LeaveSearch(q){
 }
 const v156BaseLeaveEdit=financialLeaveEdit;
 financialLeaveEdit=function(teacherId){const s=document.getElementById('financialLeaveSearch');if(s?.value){s.value='';v156LeaveSearch('')}return v156BaseLeaveEdit(teacherId)};
+
+/* v180: نافذة «الإجازات وتجديدها» — القائمة لأصحاب الإجازات فقط بأقسام، تنبيه الانتهاء (عرض فقط)، تحذير الفصول المسندة عند التجديد، وكشف الإجازات بدل التقرير المالي داخل النافذة. لا تغيير في الحفظ أو قواعد الحساب. */
+const V180_LEAVE_STATUSES=['pending_renewal','renewed','returned'];
+const V180_LEAVE_TABS=[['all','كل الإجازات'],['pending_renewal','بانتظار التجديد'],['renewed','مجددة'],['temp','قرار مؤقت'],['expiry','تنتهي / انتهت'],['returned','عادوا للعمل']];
+let __v180LeaveTab='all';
+function v180Today(){const d=new Date();return new Date(d.getFullYear(),d.getMonth(),d.getDate())}
+function v180LeaveDays(row){if(!row?.effective_to)return null;const t=new Date(row.effective_to+'T00:00:00');return Number.isNaN(+t)?null:Math.round((t-v180Today())/86400000)}
+function v180LeaveExpiry(row){
+ if(!['renewed','pending_renewal'].includes(row?.leave_status))return '';
+ const d=v180LeaveDays(row);if(d===null)return '';
+ return d<0?'expired':d<=30?'soon':'';
+}
+function v180LeaveTemp(row){return row?.leave_status==='renewed'&&(!String(row.decision_number||'').trim()||String(row.decision_number).includes('مؤقت'))}
+function v180LeaveInTab(row,tab){
+ if(!V180_LEAVE_STATUSES.includes(row?.leave_status))return false;
+ if(tab==='all')return true;
+ if(tab==='temp')return v180LeaveTemp(row);
+ if(tab==='expiry')return !!v180LeaveExpiry(row);
+ return row.leave_status===tab;
+}
+function v180LeaveTabTitle(tab){return (V180_LEAVE_TABS.find(t=>t[0]===tab)||V180_LEAVE_TABS[0])[1]}
+function v180LeaveExpiryText(row){
+ const e=v180LeaveExpiry(row),d=v180LeaveDays(row);
+ return e==='expired'?`انتهت منذ ${-d} يوم — جدّد أو سجّل العودة`:e==='soon'?`تنتهي خلال ${d} يوم`:'';
+}
+function v180LeaveFlags(row){
+ const f=[];const ex=v180LeaveExpiry(row);
+ if(ex)f.push(`<span class="badge ${ex==='expired'?'danger':'warn'}">${esc(v180LeaveExpiryText(row))}</span>`);
+ if(v180LeaveTemp(row))f.push('<span class="badge info">قرار مؤقت</span>');
+ return f.join(' ');
+}
+function v180LeaveTableRows(rows){
+ return rows.map(r=>`<tr>
+  <td><b>${esc(r.full_name)}</b><br><small class="muted" style="direction:ltr;display:inline-block">${esc(r.civil_id)}</small></td>
+  <td>${esc(r.school_name||'—')}</td>
+  <td>${financialLeaveStatusBadge(r)}${v180LeaveFlags(r)?'<br>'+v180LeaveFlags(r):''}</td>
+  <td>${esc(r.decision_number||'—')}${r.decision_date?`<br><small class="muted">${esc(r.decision_date)}</small>`:''}</td>
+  <td><small>${esc(r.effective_from||'—')}<br>${esc(r.effective_to||'—')}</small></td>
+  <td><button type="button" class="btn secondary" onclick="financialLeaveEdit('${r.teacher_id}')">تعديل</button></td>
+ </tr>`).join('');
+}
+function v180LeaveRender(){
+ const rows=window.__financialLeaveRows||[],leaves=rows.filter(r=>v180LeaveInTab(r,'all'));
+ const tabs=document.getElementById('v180LeaveTabs');
+ if(tabs)tabs.innerHTML=V180_LEAVE_TABS.map(([k,l])=>`<button type="button" class="approval-filter-card ${__v180LeaveTab===k?'active':''}" onclick="v180LeaveSetTab('${k}')"><b>${leaves.filter(r=>v180LeaveInTab(r,k)).length}</b><span>${l}</span></button>`).join('');
+ const list=leaves.filter(r=>v180LeaveInTab(r,__v180LeaveTab)),body=document.getElementById('v180LeaveBody');
+ if(body)body.innerHTML=v180LeaveTableRows(list)||`<tr><td colspan="6" class="muted">لا توجد إجازات في قسم «${esc(v180LeaveTabTitle(__v180LeaveTab))}».</td></tr>`;
+ const btn=document.getElementById('v180LeaveReportBtn');if(btn)btn.textContent=`طباعة كشف الإجازات — ${v180LeaveTabTitle(__v180LeaveTab)}`;
+}
+function v180LeaveSetTab(tab){__v180LeaveTab=V180_LEAVE_TABS.some(t=>t[0]===tab)?tab:'all';v180LeaveRender()}
+function v180LeaveShowForm(clear){
+ const box=document.getElementById('v180LeaveFormBox');if(!box)return;box.style.display='';
+ if(clear){const s=document.getElementById('financialLeaveSearch');if(s){s.value='';v156LeaveSearch('')}const t=document.getElementById('financialLeaveTeacher');if(t){t.value='';financialLeaveTeacherChanged()}setTimeout(()=>s?.focus(),50)}
+ box.scrollIntoView({behavior:'smooth',block:'start'});
+}
+openLongLeaveCenter=async function(){
+ if(!canViewFinancialGuidanceReport())return toast('إدارة الإجازات الطويلة متاحة من دور الموجّه فما فوق فقط.');
+ if(!activeYear?.id)return toast('لا يوجد عام دراسي نشط.');
+ const r=await sb.from('teacher_financial_guidance')
+  .select('teacher_id,civil_id,full_name,work_type,job_title,home_school_id,school_name,stage,is_senior_teacher,academic_year_id,leave_type,leave_status,leave_status_source,decision_number,decision_date,effective_from,effective_to,notes,legal_quota,financial_teaching_quota,supervision_periods,financial_total')
+  .eq('academic_year_id',activeYear.id)
+  .eq('work_type','permanent')
+  .order('school_name')
+  .order('full_name');
+ if(r.error)return moneySafeError(r.error);
+ const rows=r.data||[];window.__financialLeaveRows=rows;
+ const options=rows.map(x=>`<option value="${x.teacher_id}">${esc(x.full_name)} — ${esc(x.civil_id)} — ${esc(x.school_name||'')}</option>`).join('');
+ modal(`<div class="modal-head"><div><h3>الإجازات الطويلة وتجديدها</h3><div class="muted">${esc(activeYear.label||'')} • نطاق البيانات حسب دورك ومدارسك</div></div><button class="close" type="button" onclick="closeModal()">×</button></div>
+  <div class="notice info"><b>قاعدة الاحتساب:</b> «بانتظار التجديد» يحسب النصاب كاملًا، و«إجازة مجددة» يظهر اسم المعلم ونوع الإجازة وتكون جميع حصصه المالية صفرًا. تاريخ نهاية الإجازة للتنبيه فقط ولا يغيّر الحالة تلقائيًا.</div>
+  <div id="v180LeaveTabs" class="approval-center-summary v180-leave-tabs"></div>
+  <div class="actions"><button type="button" class="btn primary" onclick="v180LeaveShowForm(true)">+ تسجيل إجازة</button><button type="button" id="v180LeaveReportBtn" class="btn secondary" onclick="openReportById('longLeaves',{section:__v180LeaveTab,filterState:{active:false}})">طباعة كشف الإجازات</button><button type="button" class="btn danger" onclick="closeModal()">إغلاق</button></div>
+  <div class="table-wrap" style="margin-top:10px;max-height:42vh;overflow:auto"><table class="table"><thead><tr><th>المعلم / الرقم القومي</th><th>المدرسة</th><th>الحالة</th><th>القرار</th><th>من / إلى</th><th>إجراء</th></tr></thead><tbody id="v180LeaveBody"></tbody></table></div>
+  <div id="v180LeaveFormBox" class="card" style="display:none;margin-top:12px">
+  <form id="financialLeaveForm" onsubmit="saveLongLeaveStatus(event)">
+   <div class="form-grid">
+    <div class="field" style="grid-column:1/-1"><label for="financialLeaveSearch">المعلم — ابحث بالاسم أو الرقم القومي</label><input id="financialLeaveSearch" class="v156-leave-search" type="search" autocomplete="off" placeholder="🔎 اكتب جزءًا من الاسم أو الرقم القومي" oninput="v156LeaveSearch(this.value)"><select id="financialLeaveTeacher" name="teacher_id" onchange="financialLeaveTeacherChanged()" required><option value="">— اختر المعلم —</option>${options}</select><small id="financialLeaveSearchHint" class="muted"></small></div>
+    <div class="field"><label>نوع الإجازة الطويلة</label><input id="financialLeaveType" name="leave_type" list="financialLeaveTypes" placeholder="مثال: رعاية طفل" required><datalist id="financialLeaveTypes"><option value="رعاية طفل"><option value="إجازة بدون مرتب"><option value="مرافقة زوج أو زوجة"><option value="إجازة مرضية طويلة"><option value="إجازة طويلة أخرى"></datalist></div>
+    <div class="field"><label>الحالة في العام الحالي</label><select id="financialLeaveStatus" name="renewal_status" onchange="financialLeaveToggleRenewal()" required><option value="">— اختر الحالة —</option><option value="pending_renewal">بانتظار التجديد — يحسب ماليًا</option><option value="renewed">إجازة مجددة — صفر ماليًا</option><option value="returned">عاد للعمل — يحسب ماليًا</option></select></div>
+    <div class="field financial-renewal-only" style="display:none"><label>رقم قرار التجديد</label><input id="financialLeaveDecisionNumber" name="decision_number"></div>
+    <div class="field financial-renewal-only" style="display:none"><label>تاريخ قرار التجديد</label><input id="financialLeaveDecisionDate" name="decision_date" type="date"></div>
+    <div class="field"><label>بداية الإجازة (اختياري)</label><input id="financialLeaveFrom" name="effective_from" type="date"></div>
+    <div class="field"><label>نهاية الإجازة (اختياري)</label><input id="financialLeaveTo" name="effective_to" type="date"></div>
+    <div class="field" style="grid-column:1/-1"><label>ملاحظات</label><textarea id="financialLeaveNotes" name="notes" rows="2"></textarea></div>
+   </div>
+   <div id="financialLeaveCurrent" class="notice" style="margin-top:9px">اختر معلمًا لعرض حالته المالية.</div>
+   <div id="v180LeaveClasses"></div>
+   <div id="financialLeaveReplacement"></div>
+   <div class="actions"><button type="submit" class="btn primary">حفظ الحالة وإعادة حساب التقارير الجديدة</button><button type="button" class="btn secondary" onclick="document.getElementById('v180LeaveFormBox').style.display='none'">إلغاء</button></div>
+  </form>
+  </div>`);
+ v180LeaveRender();
+};
+const v180BaseLeaveEdit=financialLeaveEdit;
+financialLeaveEdit=function(teacherId){v180LeaveShowForm(false);return v180BaseLeaveEdit(teacherId)};
+/* تحذير الفصول المسندة عند اختيار «إجازة مجددة» (عرض فقط؛ لا يُلغى الإسناد تلقائيًا) */
+const v180BaseLeaveToggle=financialLeaveToggleRenewal;
+financialLeaveToggleRenewal=async function(){
+ const p=v180BaseLeaveToggle();
+ const box=document.getElementById('v180LeaveClasses');if(box)box.innerHTML='';
+ const teacherId=document.getElementById('financialLeaveTeacher')?.value;
+ if(box&&teacherId&&activeTerm?.id&&document.getElementById('financialLeaveStatus')?.value==='renewed'){
+  const {data,error}=await sb.from('teaching_assignments').select('weekly_periods,curriculum_subjects(subject_name),school_classes(grade,class_name,schools(name))').eq('teacher_id',teacherId).eq('term_id',activeTerm.id);
+  if(document.getElementById('financialLeaveTeacher')?.value===teacherId&&document.getElementById('financialLeaveStatus')?.value==='renewed'){
+   if(error)box.innerHTML=`<div class="notice danger">تعذر فحص الفصول المسندة: ${esc(error.message||'')}</div>`;
+   else if((data||[]).length){
+    const total=data.reduce((s,a)=>s+Number(a.weekly_periods||0),0);
+    box.innerHTML=`<div class="notice danger"><b>تنبيه: لهذا المعلم ${data.length} فصل مسند (${total} حصة) في الفصل الدراسي الحالي.</b> الإجازة المجددة لا تُسند لها حصص؛ ألغِ إسناد هذه الفصول من «توزيع الفصول» قبل التجديد أو بعده، وإلا يظهر المعلم في إجازة وله حصص.<br>${data.map(a=>`${esc(a.school_classes?.class_name||'')} — ${esc(a.school_classes?.schools?.name||'')}${a.curriculum_subjects?.subject_name?` (${esc(a.curriculum_subjects.subject_name)})`:''}: ${Number(a.weekly_periods||0)}`).join('، ')}</div>`;
+   }
+  }
+ }
+ return p;
+};
+function formatLongLeavesReport(sourceRows,ctx,section){
+ const rows=(sourceRows||[]).filter(r=>v180LeaveInTab(r,section)).map((r,i)=>({
+  index:i+1,
+  name:reportCellValue(r.full_name),
+  civil:reportCellValue(r.civil_id),
+  school:reportCellValue(r.school_name),
+  type:reportCellValue(r.leave_type),
+  status:financialLeaveStatusText(r,false)+(v180LeaveExpiry(r)?' — '+v180LeaveExpiryText(r):'')+(v180LeaveTemp(r)?' — قرار مؤقت':''),
+  decision:[r.decision_number,r.decision_date].filter(Boolean).join(' — ')||'—',
+  from:reportCellValue(r.effective_from),
+  to:reportCellValue(r.effective_to),
+  _school:reportCellValue(r.school_name),
+  _stage:reportCellValue(r.stage),
+  _search:[r.full_name,r.civil_id,r.school_name,r.leave_type,financialLeaveStatusText(r)].filter(Boolean).join(' ')
+ }));
+ const all=(sourceRows||[]).filter(r=>v180LeaveInTab(r,'all'));
+ return makeReportSchema({
+  reportId:'longLeaves',
+  title:'كشف الإجازات الطويلة'+(section&&section!=='all'?' — '+v180LeaveTabTitle(section):''),
+  subtitle:'المعلمون الدائمون أصحاب الإجازات الطويلة في العام الحالي: «بانتظار التجديد» يحسب نصابه كاملًا، و«إجازة مجددة» لا تُسند لها حصص.',
+  period:ctx.period,
+  summary:[
+   reportMetric('عدد الكشف',rows.length),
+   reportMetric('بانتظار التجديد',all.filter(r=>r.leave_status==='pending_renewal').length),
+   reportMetric('مجددة',all.filter(r=>r.leave_status==='renewed').length),
+   reportMetric('قرار مؤقت',all.filter(v180LeaveTemp).length),
+   reportMetric('تنتهي / انتهت',all.filter(r=>v180LeaveExpiry(r)).length),
+   reportMetric('عادوا للعمل',all.filter(r=>r.leave_status==='returned').length)
+  ],
+  columns:[
+   reportColumn('index','م',.34,{numeric:true}),
+   reportColumn('name','المعلم',1.5),
+   reportColumn('civil','الرقم القومي',1.1,{id:true,nowrap:true}),
+   reportColumn('school','المدرسة',1.45),
+   reportColumn('type','نوع الإجازة',.9),
+   reportColumn('status','الحالة',1.25),
+   reportColumn('decision','القرار',1),
+   reportColumn('from','من',.72,{nowrap:true}),
+   reportColumn('to','إلى',.72,{nowrap:true})
+  ],
+  rows,
+  totals:[reportTotalsMetric('المعلمون',rows.length)],
+  issuer:ctx.issuer
+ });
+}
+ReportAdapters.longLeaves={async load(ctx,options={}){
+ if(!canViewFinancialGuidanceReport())throw new Error('كشف الإجازات متاح من دور الموجّه فما فوق فقط.');
+ if(!activeYear?.id)throw new Error('لا يوجد عام دراسي نشط.');
+ const r=await sb.from('teacher_financial_guidance')
+  .select('teacher_id,civil_id,full_name,work_type,school_name,stage,leave_type,leave_status,decision_number,decision_date,effective_from,effective_to')
+  .eq('academic_year_id',activeYear.id)
+  .eq('work_type','permanent')
+  .in('leave_status',V180_LEAVE_STATUSES)
+  .order('school_name')
+  .order('full_name');
+ return formatLongLeavesReport(reportError(r,'الإجازات'),ctx,options.section||'all');
+}};
+/* تنبيه الجرس: إجازة مجددة/بانتظار التجديد انتهى تاريخها أو ينتهي خلال 30 يومًا (عرض فقط) */
+const v180BaseSmartAlerts=loadSmartAlerts;
+loadSmartAlerts=async function(opts={}){
+ const list=await v180BaseSmartAlerts(opts);
+ if(!canViewFinancialGuidanceReport()||!activeYear?.id)return list;
+ try{
+  const rows=await cachedRead(`alerts:leaves:${activeYear.id}`,async signal=>{
+   let q=sb.from('teacher_financial_guidance').select('teacher_id,full_name,school_name,leave_status,effective_to').eq('academic_year_id',activeYear.id).eq('work_type','permanent').in('leave_status',['renewed','pending_renewal']).not('effective_to','is',null);
+   q=abortable(q,signal);const {data,error}=await q;if(error)throw error;return data||[];
+  },{ttl:45000,force:!!opts.force});
+  rows.forEach(r=>{const e=v180LeaveExpiry(r);if(e)alertPush(list,{key:`leave-expiry:${r.teacher_id}`,level:e==='expired'?'danger':'warn',title:`${e==='expired'?'انتهت إجازة':'تنتهي إجازة'} — ${r.full_name}`,message:`${r.school_name||''}: ${v180LeaveExpiryText(r)} (نهاية الإجازة ${r.effective_to}). من «المعلمون» ← «الإجازات وتجديدها».`,page:'teachers',teacherId:r.teacher_id})});
+  const order={danger:0,warn:1,info:2};list.sort((a,b)=>order[a.level]-order[b.level]||String(a.title).localeCompare(String(b.title),'ar'));
+ }catch(e){console.warn('v180 leave alerts',e)}
+ __alertsLast=list;return list;
+};
 
 /* v165 (من v161 في محادثة أخرى): قائمة دور المعلم المختصرة — بياناتي (+ بيانات المعلم) وحصصي وفصولي (+ الجدول الأسبوعي). */
 NAV.teacher=NAV.teacher.filter(n=>!['teachers','reports','teacherTimetable'].includes(n[0]));
