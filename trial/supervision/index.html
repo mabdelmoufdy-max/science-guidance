@@ -1,4 +1,5 @@
 <!doctype html>
+<!-- v185: حقل «مشرف المادة» في تعديل بيانات المعلم يقرأ قيمته الحالية من كشف المدرسة (get_school_teacher_roster: is_senior_teacher للمعلم في مدرسته الأصلية أو المنتدب إليها) بدل علامة is_senior_teacher؛ كانت رانيا عبد الباسط (الشعراني) تظهر «لا يشرف» في الحقل ومشرفة في الكشف، فلا يُحفظ اختيار «لا يشرف». -->
 <!-- v184: (رقم v183 لقاعدة البيانات) «تعديل بيانات المعلم» للموجه ومنسق المرحلة ومدير النظام: حقل «مشرف المادة» (لا يشرف / مدرسته الأصلية / مدرسة منتدب إليها) بعد آخر غلاف لـ editTeacherForm؛ الحفظ (غلاف saveTeacherEdit) بعد نجاح حفظ البيانات الأساسية عبر RPC set_school_supervisor مع تأكيد يذكر المشرف الحالي الذي سيُستبدل. مشرف واحد لكل مدرسة، والمعلم يشرف على مدرسة واحدة؛ النقل/الإلغاء يترك المدرسة بلا مشرف حتى يُختار غيره. -->
 <!-- v182: الإجازات (المرحلة 2 — البند 1): حفظ «إجازة مجددة» لمعلم له فصول مسندة في الفصل الدراسي الحالي يعرض تأكيدًا بأسمائها ثم، بعد نجاح حفظ الإجازة، يلغي إسنادها واحدًا واحدًا بـ unassign_class_atomic (saveLongLeaveStatus أُعيد تعريفها)؛ ما يتعذر إلغاؤه (مثل اعتماد نهائي) يظهر في رسالة. نص تحذير v180 صار «سيُلغى إسناد هذه الفصول تلقائيًا عند الحفظ». لا تغيير في قاعدة البيانات. -->
 <!-- v181: شاشة المعلمين: زر «توزيع العجز بالأجر» صار «توزيع العجز» ويفتح أسفله (بدل النافذة) قائمة المدارس (فلتر المرحلة/البحث/بها عجز فقط، مرتبة بالعجز الرسمي)؛ الضغط على مدرسة يفتح بطاقتها: الحصص المطلوبة/المسند/غير المسند، الفصول غير المسندة، بطاقة لكل معلم (النصاب/المحتسب/المتبقي، فصوله وفصول المدارس الأخرى بلون مختلف، «إلغاء الإسناد» = unassign_class_atomic، «+ إسناد فصل» = assign_class_atomic مع تأكيد عند تجاوز المتبقي)، و«اقتراح التغطية» (متبقٍّ يكفي ← ثابت زيادة ← أجر؛ «تطبيق» يدوي). الأجر المسجل بالأرقام سابقًا يظهر للقراءة فقط (اختيار المستخدم 1)؛ بياناته وتقاريره بلا تغيير. لا تغيير في قاعدة البيانات. -->
@@ -96,7 +97,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#152c43">
-<title>نظام توجيه العلوم — v184</title>
+<title>نظام توجيه العلوم — v185</title>
 <link rel="manifest" href="../../manifest.webmanifest">
 <link rel="icon" type="image/png" sizes="192x192" href="../../icon-192.png">
 <link rel="apple-touch-icon" href="../../icon-192.png">
@@ -10511,7 +10512,10 @@ editTeacherForm=async function(id){
   if(!ids.length)return;
   const sr=await sb.from('schools').select('id,name').in('id',ids);if(sr.error)throw sr.error;
   const names=Object.fromEntries((sr.data||[]).map(s=>[s.id,s.name]));
-  const current=cr.data?.school_id||(t.is_senior_teacher?t.home_school_id:'')||'';
+  // v185: الحالة الحالية = المشرف الظاهر فعلًا في كشف المدرسة (الكشف هو المرجع)، وإلا اختيار الموجه/العلامة
+  let current='';
+  for(const sid of ids){try{const r=await schoolTeacherRosterFor(sid);if(!r.error&&(r.data||[]).some(x=>String(x.teacher_id||x.id)===String(id)&&x.is_senior_teacher)){current=sid;break}}catch(_){}}
+  if(!current)current=cr.data?.school_id||'';
   const opts=ids.map(sid=>`<option value="${sid}" ${sid===current?'selected':''}>مشرف المادة في ${esc(names[sid]||'مدرسة')}${sid===t.home_school_id?' (الأصلية)':' (منتدب إليها)'}</option>`).join('');
   const box=document.createElement('div');box.className='field v184-sup-field';
   box.innerHTML=`<label for="v184Supervision">مشرف المادة</label><select id="v184Supervision" name="v184_supervision" data-initial="${current}"><option value="" ${current?'':'selected'}>لا يشرف</option>${opts}</select><small class="muted">لكل مدرسة مشرف مادة واحد: اختيار مدرسة يستبدل مشرفها الحالي، والمعلم يشرف على مدرسة واحدة فقط.</small>`;
