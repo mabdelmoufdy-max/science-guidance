@@ -21,6 +21,7 @@
 <!-- v168: لوحة منسق المرحلة مبسطة لدعم القرار: (1) صندوق «يحتاج قرارًا» = ما يبقى «بلا تغطية» بعد ما يُسد داخليًا ومقترح الانتداب والأجر المسند، مع شريط تفصيل العجز؛ (2) تنبيه «الأرقام تقديرية» بعدد المعلمين الأساسيين وبالأجر الذين لم تُدخل حصصهم وطاقة الأساسيين المحسوبة ضمن «يُسد داخليًا»؛ (3) أربع بطاقات (المطلوب، الفعلي، العجز، المعتمدة) وسطر أعداد عامة؛ (4) «ماذا أفعل الآن؟» مهام مرتبة بأزرار تفتح التقارير (ومنها تقرير جديد «معلمون لم تُدخل حصصهم»)؛ (5) أعلى 5 مدارس عجزًا والموجهون وعدالة الكادر مطوية. حُذف من لوحة المنسق قسما «مرحبًا» و«ملخص الحصص والعجز» المكرران. نفس الحسابات المعتمدة، عرض فقط. -->
 <!-- v167: آلية الجدول المجمّع (v166) في كل عروض جدول المدرسة: (1) تقرير الطباعة «الجدول الأسبوعي لمعلمي المدرسة»: لكل يوم المعلمون الذين لهم حصص فيه فقط، والأعمدة اليوم ← المعلم (عريض) ← الحصص (ضيقة) والخانة الفصل مختصرًا، و«مدرسة أخرى» للمنتدب، ويوم بلا حصص سطر واحد؛ (2) «جدول المدرسة المسجل» في ملف المدرسة بنفس شكل جدول المعلم المجمّع بدل خانات بأسماء المعلمين. عرض فقط. -->
 <!-- v166: شاشة «جدول المعلم»: فلترة المرحلة ← المدرسة ← المعلم؛ وخيار «كل معلمي المدرسة» (يُختار تلقائيًا عند اختيار مدرسة لمن يدير الجداول) يعرض جداول كل المعلمين في جدول واحد: لكل يوم صفوف بأسماء المعلمين الذين لهم حصص في ذلك اليوم فقط، وعمود معلم عريض وأعمدة حصص ضيقة، وفي الخانة الفصل (وحصص المدرسة الأخرى للمنتدب). اختيار معلم بعينه يعرض جدوله للتعديل كما كان. دور المعلم بلا تغيير. عرض فقط. -->
+<!-- v204: منسق المرحلة يضيف انتدابًا ويلغيه (زرّا «إضافة انتداب» و«إلغاء الانتداب» في «معلمو المرحلة» وملف المدرسة) ضمن مرحلته؛ الخادم: سياسة delegations_update ودالة execute-teacher-delegation v3. -->
 <!-- v203: «توزيع الموجهين»: فلتر ثالث «الموجه» (الكل/بلا موجه/موجهو المرحلة المختارة) يعرض المدارس المسندة إليه بعد «عرض المدارس». -->
 <!-- v202: تبويب «توزيع الموجهين» (منسق المرحلة ومدير النظام): يفتح فارغًا، فلتر المرحلة/المدرسة ثم «عرض المدارس»، مربعات المدارس أبجديًا وفي كل مربع قائمة لتبديل الموجه بعد تأكيد. -->
 <!-- v201: «موجهو المرحلة» (الأدوار ذات العرض الكامل) لا تعرض سجلًا بلا إسناد مرحلة توجيه نشط (سجل المنسق غير الموجه وسجل معطّل) — عرض فقط. -->
@@ -115,7 +116,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#152c43">
-<title>نظام توجيه العلوم — v203</title>
+<title>نظام توجيه العلوم — v204</title>
 <link rel="manifest" href="./manifest.webmanifest">
 <link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png">
 <link rel="apple-touch-icon" href="./icon-192.png">
@@ -3211,7 +3212,7 @@ async function teachersPage({force=false}={}){
  },{ttl:30000,force});
  if(error)return `<div class="error">${esc(error.message)}</div>`;
  const teachers=(Array.isArray(teachersRaw)?teachersRaw:[]).filter(t=>v97StageMatches(v97TeacherStage(t,t._v142School||scopeSchool))&&v98SchoolMatches(scopeSchool?.id||v91ScopeSchoolId(t)));
- const canAdd=['supervisor','senior_teacher'].includes(profile.role),canEdit=['admin','first_supervisor','stage_coordinator','supervisor','senior_teacher'].includes(profile.role),canDelegate=['admin','first_supervisor','supervisor','senior_teacher'].includes(profile.role);
+ const canAdd=['supervisor','senior_teacher'].includes(profile.role),canEdit=['admin','first_supervisor','stage_coordinator','supervisor','senior_teacher'].includes(profile.role),canDelegate=['admin','first_supervisor','stage_coordinator','supervisor','senior_teacher'].includes(profile.role);
  const scopeNotice=allSchools?`<div class="notice info"><b>نطاق العرض: كل مدارسي (${allSchools.length})</b> — يظهر معلمو كل مدرسة والمنتدبون إليها، والمنتدب جزئيًا يظهر في المدرستين.</div>`:schoolScopedRole?(scopeSchool?`<div class="notice info"><b>نطاق العرض: ${esc(scopeSchool.name)}</b> — يظهر معلمو المدرسة والمنتدبون إليها فقط، وتطبق قاعدة الإشراف بحسب مدرسة العمل الحالية.</div>`:`<div class="notice warn">لا توجد مدرسة مرتبطة بالحساب.</div>`):'';
  const relationLabel=t=>{
    if(!schoolScopedRole){const relation=v91SchoolRelationText(t);return `${esc(t.scope_school_name||t.home_school_name||'—')}${relation?`<div class="cell-sub">${esc(relation)}</div>`:''}`;}
@@ -3227,7 +3228,7 @@ async function teachersPage({force=false}={}){
    const editBtn=ownTeacher?`<button class="btn secondary" onclick="editTeacherForm('${t.teacher_id}')">تعديل</button>`:'';
    const delegateBtn=canDelegate&&ownTeacher?`<button class="btn primary" title="فتح نموذج إضافة انتداب للمعلم" onclick="openTeacherDelegationForm('${t.teacher_id}')">إضافة انتداب</button>`:'';
    const delegatedBadge=!ownTeacher?`<span class="badge info">منتدب للمدرسة</span>`:'';
-   const cancelDelegBtn=profile.role==='admin'&&String(t.school_relation||'').startsWith('delegated_')?`<button class="btn secondary" title="إنهاء الانتداب النشط وإعادة ربط المعلم بمدرسته الأصلية" onclick="adminCancelDelegationForm('${t.teacher_id}')">إلغاء الانتداب</button>`:'';
+   const cancelDelegBtn=['admin','stage_coordinator'].includes(profile.role)&&String(t.school_relation||'').startsWith('delegated_')?`<button class="btn secondary" title="إنهاء الانتداب النشط وإعادة ربط المعلم بمدرسته الأصلية" onclick="adminCancelDelegationForm('${t.teacher_id}')">إلغاء الانتداب</button>`:'';
    return `<td><div class="actions" style="gap:5px;flex-wrap:wrap">${editBtn}${delegateBtn}${cancelDelegBtn}${delegatedBadge}</div></td>`;
  };
  let specMap=new Map();
@@ -3368,7 +3369,7 @@ async function adminDeleteClassConfirmed(classId,schoolId){
  }catch(err){moneySafeError(err);if(btn){btn.disabled=false;btn.textContent='تأكيد الحذف'}}
 }
 async function adminCancelDelegationForm(teacherId){
- if(profile?.role!=='admin')return toast('إلغاء الانتداب متاح لمدير النظام فقط');
+ if(!['admin','stage_coordinator'].includes(profile?.role))return toast('إلغاء الانتداب متاح لمدير النظام ومنسق المرحلة فقط');
  try{
   const [{data:t,error:te},{data:ds,error:de}]=await Promise.all([
    sb.from('teacher_records').select('id,full_name,home_school_id').eq('id',teacherId).maybeSingle(),
@@ -3383,7 +3384,7 @@ async function adminCancelDelegationForm(teacherId){
  }catch(err){moneySafeError(err)}
 }
 async function adminCancelDelegation(delegationId,teacherId,btn){
- if(profile?.role!=='admin')return toast('إلغاء الانتداب متاح لمدير النظام فقط');
+ if(!['admin','stage_coordinator'].includes(profile?.role))return toast('إلغاء الانتداب متاح لمدير النظام ومنسق المرحلة فقط');
  if(btn){if(btn.disabled)return;btn.disabled=true;btn.textContent='جارٍ الإلغاء...'}
  let delegationDone=false,snapshot=[];
  const restore=async()=>{
@@ -9458,7 +9459,7 @@ function v110DossierMarkup(d){
   <div class="v111-school-kpis">${[['الفصول المسجلة',d.class_count],['الفصول المفصلة',d.classes.length],['المعلمون المسجلون',d.teachers.length],['حصص الفصول أسبوعيًا',d.required],['حصص مسندة',d.assigned],['حصص مجدولة',d.slots.length]].map(([label,value])=>`<div class="v111-school-kpi"><span>${esc(label)}</span><strong>${value}</strong></div>`).join('')}</div>
   <section class="card"><h3>بيانات المدرسة</h3>${v110FactsMarkup(v110SchoolFacts(d))}${d.class_count>d.classes.length?'<div class="notice">عدد الفصول المعتمد أكبر من الفصول ذات البيانات التفصيلية؛ احتياج الحصص المعروض يخص الفصول المدخلة فقط.</div>':''}</section>
   <section class="card"><h3>المعلمون والأنصبة (${d.teachers.length})</h3><p class="muted">النصاب القانوني بحسب الدرجة؛ حصص الملفات مرجعية، والتدريس المسند محسوب من إسنادات الفصول في البرنامج.</p>
-   <div class="v110-teachers">${d.teachers.map(t=>`<details class="v110-teacher"><summary><strong>${esc(t.full_name)}</strong><small>تدريس مسند: ${esc(v110Number(t.scope_teaching_periods??t.teaching_periods))} • النصاب: ${esc(isPaidTeacher(t)?'بالأجر':v110Number(t.legal_quota))}<br>عرض جميع بيانات المعلم</small></summary>${v110FactsMarkup(v110TeacherFacts(t))}${isAdminV128?`<div class="actions" style="margin-top:10px;flex-wrap:wrap"><button type="button" class="btn primary" onclick="openTeacherDelegationForm('${esc(v110TeacherId(t))}')">إضافة انتداب</button>${String(t.school_relation||'').startsWith('delegated_')?`<button type="button" class="btn secondary" onclick="adminCancelDelegationForm('${esc(v110TeacherId(t))}')">إلغاء الانتداب</button>`:''}</div>`:''}</details>`).join('')||'<div class="notice">لا يوجد كادر معلمين متاح لهذه المدرسة.</div>'}</div></section>
+   <div class="v110-teachers">${d.teachers.map(t=>`<details class="v110-teacher"><summary><strong>${esc(t.full_name)}</strong><small>تدريس مسند: ${esc(v110Number(t.scope_teaching_periods??t.teaching_periods))} • النصاب: ${esc(isPaidTeacher(t)?'بالأجر':v110Number(t.legal_quota))}<br>عرض جميع بيانات المعلم</small></summary>${v110FactsMarkup(v110TeacherFacts(t))}${(isAdminV128||profile?.role==='stage_coordinator')?`<div class="actions" style="margin-top:10px;flex-wrap:wrap"><button type="button" class="btn primary" onclick="openTeacherDelegationForm('${esc(v110TeacherId(t))}')">إضافة انتداب</button>${String(t.school_relation||'').startsWith('delegated_')?`<button type="button" class="btn secondary" onclick="adminCancelDelegationForm('${esc(v110TeacherId(t))}')">إلغاء الانتداب</button>`:''}</div>`:''}</details>`).join('')||'<div class="notice">لا يوجد كادر معلمين متاح لهذه المدرسة.</div>'}</div></section>
   <section class="card"><h3>الفصول (${d.classes.length})</h3>${classRows.length?v110Table(['الصف / الفصل','الحصص الأسبوعية','المواد المطلوبة','المعلمون المسندون'],classRows):'<div class="notice">لم تُدخل بيانات تفصيلية للفصول بعد.</div>'}</section>
   ${isAdminV128?`<section class="card"><h3>إدارة الفصول (مدير النظام)</h3><p class="muted">الحذف متاح للفصل الذي لا يوجد عليه معلم مسند ولا حصص جدول. لتعديل حصص المواد استخدم شاشة الفصول.</p>${d.classes.length?`<div class="table-wrap"><table class="table"><thead><tr><th>الصف / الفصل</th><th>المعلمون المسندون</th><th></th></tr></thead><tbody>${d.classes.map(c=>{const n=d.assignments.filter(a=>String(a.class_id)===String(c.id)).length;return `<tr><td><b>${esc(v110ClassName(c))}</b></td><td>${n?n+' إسناد':'—'}</td><td>${n?'<span class="muted">مسند — فُك الإسناد أولًا</span>':`<button type="button" class="btn danger" onclick="adminDeleteClass('${esc(String(c.id))}','${id}')">حذف</button>`}</td></tr>`}).join('')}</tbody></table></div>`:'<div class="notice">لا توجد فصول مفصلة لهذه المدرسة.</div>'}</section>`:''}
   <section class="card"><h3>إسناد حصص الفصول</h3>${assignmentRows.length?v110Table(['المعلم','الصف / الفصل','المادة','الحصص الأسبوعية'],assignmentRows):'<div class="notice">لم تُدخل إسنادات حصص للفصول بعد.</div>'}</section>
