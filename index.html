@@ -21,6 +21,7 @@
 <!-- v168: لوحة منسق المرحلة مبسطة لدعم القرار: (1) صندوق «يحتاج قرارًا» = ما يبقى «بلا تغطية» بعد ما يُسد داخليًا ومقترح الانتداب والأجر المسند، مع شريط تفصيل العجز؛ (2) تنبيه «الأرقام تقديرية» بعدد المعلمين الأساسيين وبالأجر الذين لم تُدخل حصصهم وطاقة الأساسيين المحسوبة ضمن «يُسد داخليًا»؛ (3) أربع بطاقات (المطلوب، الفعلي، العجز، المعتمدة) وسطر أعداد عامة؛ (4) «ماذا أفعل الآن؟» مهام مرتبة بأزرار تفتح التقارير (ومنها تقرير جديد «معلمون لم تُدخل حصصهم»)؛ (5) أعلى 5 مدارس عجزًا والموجهون وعدالة الكادر مطوية. حُذف من لوحة المنسق قسما «مرحبًا» و«ملخص الحصص والعجز» المكرران. نفس الحسابات المعتمدة، عرض فقط. -->
 <!-- v167: آلية الجدول المجمّع (v166) في كل عروض جدول المدرسة: (1) تقرير الطباعة «الجدول الأسبوعي لمعلمي المدرسة»: لكل يوم المعلمون الذين لهم حصص فيه فقط، والأعمدة اليوم ← المعلم (عريض) ← الحصص (ضيقة) والخانة الفصل مختصرًا، و«مدرسة أخرى» للمنتدب، ويوم بلا حصص سطر واحد؛ (2) «جدول المدرسة المسجل» في ملف المدرسة بنفس شكل جدول المعلم المجمّع بدل خانات بأسماء المعلمين. عرض فقط. -->
 <!-- v166: شاشة «جدول المعلم»: فلترة المرحلة ← المدرسة ← المعلم؛ وخيار «كل معلمي المدرسة» (يُختار تلقائيًا عند اختيار مدرسة لمن يدير الجداول) يعرض جداول كل المعلمين في جدول واحد: لكل يوم صفوف بأسماء المعلمين الذين لهم حصص في ذلك اليوم فقط، وعمود معلم عريض وأعمدة حصص ضيقة، وفي الخانة الفصل (وحصص المدرسة الأخرى للمنتدب). اختيار معلم بعينه يعرض جدوله للتعديل كما كان. دور المعلم بلا تغيير. عرض فقط. -->
+<!-- v201: «موجهو المرحلة» (الأدوار ذات العرض الكامل) لا تعرض سجلًا بلا إسناد مرحلة توجيه نشط (سجل المنسق غير الموجه وسجل معطّل) — عرض فقط. -->
 <!-- v200: «تعديل بيانات الموجه» لمدير النظام فقط (حُذف الزر من الموجه الأول ومنسق المرحلة، وحراسة داخل editSupervisorForm)؛ سياسة قاعدة البيانات supervisors_manage_update تُقيَّد عند النشر. -->
 <!-- v199: التقرير بلا فلاتر (الأنصبة، الموجهين) لا يعرض بطاقة الملاحظتين «لا يحتاج نطاقًا إضافيًا/كل فلتر يحدّث…»، ويبقى زر «معاينة التقرير للطباعة». -->
 <!-- v198: تقرير «الأنصبة» يعرض جدول الأنصبة القانونية داخل الصفحة عند التحميل، وزر «معاينة التقرير للطباعة» يفتحه للطباعة. -->
@@ -112,7 +113,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#152c43">
-<title>نظام توجيه العلوم — v200</title>
+<title>نظام توجيه العلوم — v201</title>
 <link rel="manifest" href="./manifest.webmanifest">
 <link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png">
 <link rel="apple-touch-icon" href="./icon-192.png">
@@ -3529,7 +3530,7 @@ async function supervisorsPage(){
  }else sups=[];
  if(error)return `<div class="error">${esc(error.message)}</div>`;
  const canEdit=fullAccess&&profile.role==='admin',canCreate=fullAccess&&['admin','first_supervisor'].includes(profile.role);
- const rows=sups||[];supervisorDirectoryRows=rows;supervisorDirectoryPermissions={canEdit,canCreate};
+ const rows=(sups||[]).filter(s=>!fullAccess||(s.supervisor_stage_assignments||[]).some(a=>a.active));supervisorDirectoryRows=rows;supervisorDirectoryPermissions={canEdit,canCreate};
  if(supervisorDirectoryActiveId&&!rows.some(s=>String(s.id)===supervisorDirectoryActiveId))supervisorDirectoryActiveId='';
  const pageTitle=profile.role==='stage_coordinator'?'موجهو المرحلة':(fullAccess?'الموجهون':'الموجه المسؤول');
  const activeRow=rows.find(s=>String(s.id)===supervisorDirectoryActiveId);
