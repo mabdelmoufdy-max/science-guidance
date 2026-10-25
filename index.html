@@ -21,6 +21,7 @@
 <!-- v168: لوحة منسق المرحلة مبسطة لدعم القرار: (1) صندوق «يحتاج قرارًا» = ما يبقى «بلا تغطية» بعد ما يُسد داخليًا ومقترح الانتداب والأجر المسند، مع شريط تفصيل العجز؛ (2) تنبيه «الأرقام تقديرية» بعدد المعلمين الأساسيين وبالأجر الذين لم تُدخل حصصهم وطاقة الأساسيين المحسوبة ضمن «يُسد داخليًا»؛ (3) أربع بطاقات (المطلوب، الفعلي، العجز، المعتمدة) وسطر أعداد عامة؛ (4) «ماذا أفعل الآن؟» مهام مرتبة بأزرار تفتح التقارير (ومنها تقرير جديد «معلمون لم تُدخل حصصهم»)؛ (5) أعلى 5 مدارس عجزًا والموجهون وعدالة الكادر مطوية. حُذف من لوحة المنسق قسما «مرحبًا» و«ملخص الحصص والعجز» المكرران. نفس الحسابات المعتمدة، عرض فقط. -->
 <!-- v167: آلية الجدول المجمّع (v166) في كل عروض جدول المدرسة: (1) تقرير الطباعة «الجدول الأسبوعي لمعلمي المدرسة»: لكل يوم المعلمون الذين لهم حصص فيه فقط، والأعمدة اليوم ← المعلم (عريض) ← الحصص (ضيقة) والخانة الفصل مختصرًا، و«مدرسة أخرى» للمنتدب، ويوم بلا حصص سطر واحد؛ (2) «جدول المدرسة المسجل» في ملف المدرسة بنفس شكل جدول المعلم المجمّع بدل خانات بأسماء المعلمين. عرض فقط. -->
 <!-- v166: شاشة «جدول المعلم»: فلترة المرحلة ← المدرسة ← المعلم؛ وخيار «كل معلمي المدرسة» (يُختار تلقائيًا عند اختيار مدرسة لمن يدير الجداول) يعرض جداول كل المعلمين في جدول واحد: لكل يوم صفوف بأسماء المعلمين الذين لهم حصص في ذلك اليوم فقط، وعمود معلم عريض وأعمدة حصص ضيقة، وفي الخانة الفصل (وحصص المدرسة الأخرى للمنتدب). اختيار معلم بعينه يعرض جدوله للتعديل كما كان. دور المعلم بلا تغيير. عرض فقط. -->
+<!-- v202: تبويب «توزيع الموجهين» (منسق المرحلة ومدير النظام): يفتح فارغًا، فلتر المرحلة/المدرسة ثم «عرض المدارس»، مربعات المدارس أبجديًا وفي كل مربع قائمة لتبديل الموجه بعد تأكيد. -->
 <!-- v201: «موجهو المرحلة» (الأدوار ذات العرض الكامل) لا تعرض سجلًا بلا إسناد مرحلة توجيه نشط (سجل المنسق غير الموجه وسجل معطّل) — عرض فقط. -->
 <!-- v200: «تعديل بيانات الموجه» لمدير النظام فقط (حُذف الزر من الموجه الأول ومنسق المرحلة، وحراسة داخل editSupervisorForm)؛ سياسة قاعدة البيانات supervisors_manage_update تُقيَّد عند النشر. -->
 <!-- v199: التقرير بلا فلاتر (الأنصبة، الموجهين) لا يعرض بطاقة الملاحظتين «لا يحتاج نطاقًا إضافيًا/كل فلتر يحدّث…»، ويبقى زر «معاينة التقرير للطباعة». -->
@@ -113,7 +114,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#152c43">
-<title>نظام توجيه العلوم — v201</title>
+<title>نظام توجيه العلوم — v202</title>
 <link rel="manifest" href="./manifest.webmanifest">
 <link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png">
 <link rel="apple-touch-icon" href="./icon-192.png">
@@ -2300,6 +2301,18 @@ td .btn,.report-preview-toolbar .btn,.btn.btn-sm{min-height:var(--ctl-h-sm);padd
 .v181-suggest{border:1px dashed var(--primary);border-radius:var(--radius);padding:10px;margin:10px 0}
 .v181-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
 .v181-srow{display:flex;flex-wrap:wrap;gap:6px 12px;align-items:center;padding:7px 0;border-bottom:1px solid var(--line)}.v181-srow>span:nth-child(2){flex:1 1 160px;min-width:0}
+/* v202: توزيع الموجهين */
+.v202-filters{display:grid;grid-template-columns:minmax(140px,220px) 1fr auto;gap:12px;align-items:end}
+.v202-go{display:flex;align-items:end}
+.v202-count{margin:12px 2px;font-weight:700;color:var(--muted,#555)}
+.v202-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:10px}
+.v202-box{border:1px solid #d7dde8;border-radius:var(--radius,12px);padding:10px;background:#fff;display:flex;flex-direction:column;gap:6px}
+.v202-box.v202-empty{border:2px solid #e08a1e}
+.v202-name{font-weight:700;line-height:1.4}
+.v202-stage{font-size:12px;color:#667}
+.v202-box select{width:100%}
+@media (max-width:800px){.v202-filters{grid-template-columns:1fr}.v202-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:380px){.v202-grid{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -2716,7 +2729,7 @@ async function loadPage(force=false){
  if(currentPage==='studyPlans'||currentPage==='budget')currentPage='dashboard';
  if(currentPage==='reports'&&typeof V186_MERGED!=='undefined'&&V186_MERGED.has(profile?.role))currentPage='statistics'; // v186
  __pageLoadController?.abort();__pageLoadController=new AbortController();const local=__pageLoadController;
- const pages={teacherTimetable:teacherTimetablePage,dashboard:dashboardPage,users:usersPage,supervisors:supervisorsPage,schools:schoolsPage,incoming:incomingDataPage,teachers:teachersPage,classes:classesPage,assignments:assignmentsPage,approval:approvalPage,myAssignments:myAssignmentsPage,workload:workloadPage,budget:budgetPage,completion:dataCompletionPage,alerts:alertsPage,statistics:statisticsPage,reports:reportsPage,announcements:announcementsPage,supervisorHealth:supervisorHealthPage};
+ const pages={teacherTimetable:teacherTimetablePage,dashboard:dashboardPage,users:usersPage,supervisors:supervisorsPage,schools:schoolsPage,incoming:incomingDataPage,teachers:teachersPage,classes:classesPage,assignments:assignmentsPage,approval:approvalPage,myAssignments:myAssignmentsPage,workload:workloadPage,budget:budgetPage,completion:dataCompletionPage,alerts:alertsPage,statistics:statisticsPage,reports:reportsPage,announcements:announcementsPage,supervisorHealth:supervisorHealthPage,supDistribution:supDistributionPage};
  const renderPage=pages[currentPage]||dashboardPage;
  const html=await v97RenderPage(renderPage,{force,signal:local.signal});if(local.signal.aborted)return;
  c.innerHTML=html;appNavRenderStrip();initializeCurrentPageUi(c);v97InstallStageFilter(c);enhanceMobileWorkspace(c);refreshMobileActionBar(c);if(currentPage==='dashboard')injectCompletionDashboardCards(c).catch(()=>{});
@@ -10751,6 +10764,74 @@ myAssignmentsPage=async function(options={}){
  let tt='';window.__v161EmbedTimetable=true;try{tt=await teacherTimetablePage(options)}catch(e){tt=`<div class="notice danger">${esc(e?.message||'تعذر تحميل الجدول الأسبوعي')}</div>`}finally{window.__v161EmbedTimetable=false}
  return base+tt;
 };
+
+/* v202: تبويب «توزيع الموجهين» لمنسق المرحلة ومدير النظام: الشاشة تفتح فارغة؛ يُختار فلتر المرحلة/المدرسة (أو «الكل») ثم «عرض المدارس»؛ مربع لكل مدرسة (ترتيب أبجدي) فيه قائمة موجهي مرحلتها؛ التغيير بعد تأكيد يحدّث schools.supervisor_id (سياسة schools_manage_update). */
+const V202_ROLES=['admin','stage_coordinator'];
+for(const role of V202_ROLES){
+ const items=NAV[role];if(!items||items.some(n=>n[0]==='supDistribution'))continue;
+ const i=items.findIndex(n=>n[0]==='supervisors');items.splice(i<0?items.length:i+1,0,['supDistribution','توزيع الموجهين','⊞']);
+}
+let v202State={stage:'',q:'',loaded:false,schools:[],sups:[]};
+async function v202Stages(){
+ if(profile?.role!=='stage_coordinator')return STAGES.slice();
+ const {data}=await sb.from('supervisors').select('stage_coordinator_assignments(stage,active)').eq('profile_id',profile.id);
+ return [...new Set((data||[]).flatMap(s=>(s.stage_coordinator_assignments||[]).filter(a=>a.active).map(a=>a.stage)))].filter(Boolean);
+}
+async function supDistributionPage(){
+ if(!V202_ROLES.includes(profile?.role))return '<div class="error">هذه الشاشة لمنسق المرحلة ومدير النظام فقط.</div>';
+ const stages=await v202Stages();
+ v202State={stage:stages.length===1?stages[0]:'',q:'',loaded:false,schools:[],sups:[],stages};
+ const stageOpts=(stages.length>1?['<option value="">الكل</option>']:[]).concat(stages.map(s=>`<option value="${esc(s)}">${esc(s)}</option>`)).join('');
+ return `<div class="page-head"><div><h2>توزيع الموجهين</h2><p>اختر المرحلة أو المدرسة (أو «الكل») ثم اضغط «عرض المدارس». لتغيير موجه مدرسة اختره من قائمتها.</p></div></div>
+ <div class="card v202-filters">
+  <div class="field"><label>المرحلة</label><select id="v202Stage" onchange="v202State.stage=this.value">${stageOpts||'<option value="">—</option>'}</select></div>
+  <div class="field"><label>المدرسة</label><input id="v202Q" placeholder="اكتب جزءًا من اسم المدرسة، أو اتركه فارغًا للكل" oninput="v202State.q=this.value" onkeydown="if(event.key==='Enter')v202Load()"></div>
+  <div class="v202-go"><button class="btn primary" onclick="v202Load()">عرض المدارس</button></div>
+ </div>
+ <div id="v202Out"><div class="notice info">لم تُعرض المدارس بعد.</div></div>`;
+}
+async function v202Load(){
+ const out=document.getElementById('v202Out');if(!out)return;
+ if(!(v202State.stages||[]).length){out.innerHTML='<div class="notice warn">لا توجد مرحلة مسندة لحسابك.</div>';return}
+ out.innerHTML='<div class="notice info">جاري تحميل المدارس…</div>';
+ try{
+  const stages=v202State.stage?[v202State.stage]:v202State.stages;
+  const [sc,su]=await Promise.all([
+   sb.from('schools').select('id,name,stage,supervisor_id').in('stage',stages).order('name'),
+   sb.from('supervisors').select('id,full_name,active,supervisor_stage_assignments(stage,active)').order('full_name')
+  ]);
+  if(sc.error)throw sc.error;if(su.error)throw su.error;
+  v202State.schools=sc.data||[];v202State.sups=su.data||[];v202State.loaded=true;v202Render();
+ }catch(e){out.innerHTML=`<div class="error">${esc(e?.message||'تعذر التحميل')}</div>`}
+}
+function v202SupName(id){return v202State.sups.find(s=>String(s.id)===String(id))?.full_name||'موجه غير ظاهر'}
+function v202StageSups(stage){return v202State.sups.filter(s=>s.active!==false&&(s.supervisor_stage_assignments||[]).some(a=>a.active&&a.stage===stage))}
+function v202Render(){
+ const out=document.getElementById('v202Out');if(!out)return;
+ const q=filterNormalize(v202State.q||'');
+ const rows=v202State.schools.filter(s=>!q||filterNormalize(s.name).includes(q)).sort((a,b)=>String(a.name).localeCompare(String(b.name),'ar'));
+ const none=rows.filter(s=>!s.supervisor_id).length,supCount=new Set(rows.map(s=>s.supervisor_id).filter(Boolean)).size;
+ if(!rows.length){out.innerHTML='<div class="notice warn">لا توجد مدارس مطابقة.</div>';return}
+ out.innerHTML=`<div class="v202-count">${rows.length} مدرسة · ${supCount} موجه · ${none} بلا موجه</div><div class="v202-grid">${rows.map(s=>{
+  const list=v202StageSups(s.stage);
+  if(s.supervisor_id&&!list.some(x=>String(x.id)===String(s.supervisor_id)))list.unshift({id:s.supervisor_id,full_name:v202SupName(s.supervisor_id)});
+  const opts=`<option value="">— بلا موجه —</option>`+list.map(x=>`<option value="${esc(x.id)}"${String(x.id)===String(s.supervisor_id||'')?' selected':''}>${esc(x.full_name)}</option>`).join('');
+  return `<div class="v202-box${s.supervisor_id?'':' v202-empty'}"><div class="v202-name">${esc(s.name)}</div>${v202State.stage?'':`<div class="v202-stage">${esc(s.stage)}</div>`}<select onchange="v202Change('${esc(s.id)}',this)">${opts}</select></div>`;
+ }).join('')}</div>`;
+}
+async function v202Change(schoolId,sel){
+ const s=v202State.schools.find(x=>String(x.id)===String(schoolId));if(!s)return;
+ const to=sel.value||null,fromName=s.supervisor_id?v202SupName(s.supervisor_id):'بلا موجه',toName=to?v202SupName(to):'بلا موجه';
+ if(String(to||'')===String(s.supervisor_id||''))return;
+ if(!confirm(`نقل مدرسة «${s.name}» من (${fromName}) إلى (${toName})؟`)){sel.value=s.supervisor_id||'';return}
+ sel.disabled=true;
+ try{
+  const {data,error}=await sb.from('schools').update({supervisor_id:to}).eq('id',s.id).select('id');
+  if(error)throw error;if(!data?.length)throw new Error('لم يُحفظ التغيير (لا صلاحية على هذه المدرسة).');
+  s.supervisor_id=to;invalidateData('schools','hierarchy','dashboard','page:reports','supervisors');toast('تم تغيير موجه المدرسة');v202Render();
+ }catch(e){sel.value=s.supervisor_id||'';sel.disabled=false;moneySafeError(e)}
+}
+
 </script>
 
 <div id="reportPreviewOverlay" class="report-preview-overlay" role="dialog" aria-modal="true" aria-label="معاينة التقرير" aria-hidden="true">
