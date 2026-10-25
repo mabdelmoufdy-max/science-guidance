@@ -21,6 +21,7 @@
 <!-- v168: لوحة منسق المرحلة مبسطة لدعم القرار: (1) صندوق «يحتاج قرارًا» = ما يبقى «بلا تغطية» بعد ما يُسد داخليًا ومقترح الانتداب والأجر المسند، مع شريط تفصيل العجز؛ (2) تنبيه «الأرقام تقديرية» بعدد المعلمين الأساسيين وبالأجر الذين لم تُدخل حصصهم وطاقة الأساسيين المحسوبة ضمن «يُسد داخليًا»؛ (3) أربع بطاقات (المطلوب، الفعلي، العجز، المعتمدة) وسطر أعداد عامة؛ (4) «ماذا أفعل الآن؟» مهام مرتبة بأزرار تفتح التقارير (ومنها تقرير جديد «معلمون لم تُدخل حصصهم»)؛ (5) أعلى 5 مدارس عجزًا والموجهون وعدالة الكادر مطوية. حُذف من لوحة المنسق قسما «مرحبًا» و«ملخص الحصص والعجز» المكرران. نفس الحسابات المعتمدة، عرض فقط. -->
 <!-- v167: آلية الجدول المجمّع (v166) في كل عروض جدول المدرسة: (1) تقرير الطباعة «الجدول الأسبوعي لمعلمي المدرسة»: لكل يوم المعلمون الذين لهم حصص فيه فقط، والأعمدة اليوم ← المعلم (عريض) ← الحصص (ضيقة) والخانة الفصل مختصرًا، و«مدرسة أخرى» للمنتدب، ويوم بلا حصص سطر واحد؛ (2) «جدول المدرسة المسجل» في ملف المدرسة بنفس شكل جدول المعلم المجمّع بدل خانات بأسماء المعلمين. عرض فقط. -->
 <!-- v166: شاشة «جدول المعلم»: فلترة المرحلة ← المدرسة ← المعلم؛ وخيار «كل معلمي المدرسة» (يُختار تلقائيًا عند اختيار مدرسة لمن يدير الجداول) يعرض جداول كل المعلمين في جدول واحد: لكل يوم صفوف بأسماء المعلمين الذين لهم حصص في ذلك اليوم فقط، وعمود معلم عريض وأعمدة حصص ضيقة، وفي الخانة الفصل (وحصص المدرسة الأخرى للمنتدب). اختيار معلم بعينه يعرض جدوله للتعديل كما كان. دور المعلم بلا تغيير. عرض فقط. -->
+<!-- v195: توضيح الفرق بين تقارير المعلمين في أسطر وصف البطاقات (المعلمين، الشامل، بيانات معلمي المدرسة، الكادر) — نص فقط. -->
 <!-- v194: حُذف قالب «بيانات معلمي العلوم 2027» من «قوالب حسب الغرض» لأنه مكرر لـ«بيانات معلمي المدرسة» (الكود باقٍ). -->
 <!-- v193: إلغاء تكرار زر «معاينة التقرير للطباعة» ومربع النتائج في صفحة التقرير (كانا يُحقنان مرتين: v103Detail ثم statisticsReportDetail). -->
 <!-- v165: دمج للنشر: v161–v164 من هذه المحادثة (تجميع المدارس المربوطة، تسريع تحميل البيانات، شاشة المعلمين تبدأ فارغة مع تصدير/تقرير، التقارير والإحصائيات بالفلاتر ثم المعاينة) + تعديل محادثة أخرى رقمه هناك v161: قائمة دور المعلم: حُذفت «بيانات المعلم» و«تقاريري» و«جدولي الأسبوعي»؛ بيانات المعلم (v160) داخل «بياناتي»، والجدول الأسبوعي داخل «حصصي وفصولي» (العلَم __v161EmbedTimetable). -->
@@ -106,7 +107,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#152c43">
-<title>نظام توجيه العلوم — v194</title>
+<title>نظام توجيه العلوم — v195</title>
 <link rel="manifest" href="./manifest.webmanifest">
 <link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png">
 <link rel="apple-touch-icon" href="./icon-192.png">
@@ -4754,14 +4755,14 @@ function exportBudgetCSV(){
 let statisticsSelectedReport='';
 const STATISTICS_REPORTS={
  schools:{title:'المدارس',subtitle:'بيانات المدارس الأساسية',icon:'🏫',adapter:'school',filters:['stage','supervisor','school','status']},
- teachers:{title:'المعلمين',subtitle:'الأنصبة والحالة الحالية',icon:'👨‍🏫',adapter:'teachers',filters:['stage','supervisor','school','status']},
+ teachers:{title:'المعلمين',subtitle:'الأنصبة والحالة: النصاب والفعلي والعجز/الزيادة لكل معلم',icon:'👨‍🏫',adapter:'teachers',filters:['stage','supervisor','school','status']},
  supervisionPriority:{title:'ترتيب أولوية الإشراف',subtitle:'ترتيب جميع المعلمين وفق الدرجة وتواريخ الأقدمية',icon:'★',adapter:'supervisionPriority',filters:['stage','supervisor','school'],featured:true},
  classes:{title:'الفصول',subtitle:'الفصول وحصص العلوم',icon:'▦',adapter:'classes',filters:['stage','supervisor','school']},
  deficitSurplus:{title:'العجز والزيادة',subtitle:'الحالات التي تحتاج موازنة',icon:'⇅',adapter:'deficitSurplus',filters:['stage','supervisor','school','status']},
  workload:{title:'الأنصبة',subtitle:'الأنصبة القانونية',icon:'◫',adapter:'workload',filters:[]},
  supervisors:{title:'الموجهين',subtitle:'دليل الموجهين',icon:'◆',adapter:'supervisors',filters:[]},
  schoolsComprehensive:{title:'تقرير المدارس الشامل',subtitle:'الخطة التشغيلية لكل مدرسة',icon:'▤',adapter:'summaryPlan',filters:['stage','supervisor','school','status'],featured:true,customTitle:'التقرير الشامل للمدارس'},
- teachersComprehensive:{title:'تقرير المعلمين الشامل',subtitle:'بيانات المعلمين والأنصبة كاملة',icon:'▥',adapter:'teachers',filters:['stage','supervisor','school','status'],featured:true,customTitle:'التقرير الشامل للمعلمين'}
+ teachersComprehensive:{title:'تقرير المعلمين الشامل',subtitle:'نفس بيانات «المعلمين» (الأنصبة والحالة) بعنوان «التقرير الشامل للمعلمين» للطباعة الرسمية',icon:'▥',adapter:'teachers',filters:['stage','supervisor','school','status'],featured:true,customTitle:'التقرير الشامل للمعلمين'}
 };
 function statisticsOpenReport(key){if(!STATISTICS_REPORTS[key])return;statisticsSelectedReport=key;loadPage().catch(moneySafeError)}
 function statisticsBackToCenter(){statisticsSelectedReport='';loadPage().catch(moneySafeError)}
@@ -8996,7 +8997,7 @@ function v102PrintSchoolTimetable(){try{v102AssertPrintReady(true);return openRe
 const V103_PURPOSE_REPORTS=['staffRoster','schoolShortage','teacherDelegations','teacherLeaves','financialGuidance'];
 let v103SelectedReport='';
 Object.assign(STATISTICS_REPORTS,{
- staffRoster:{title:'تقرير الكادر',subtitle:'المعلمون ونوع التعاقد والمدرسة وحصص التدريس الفعلية',icon:'👨‍🏫',adapter:'staffRoster',filters:['stage','supervisor','school','status'],purpose:true,statusLabel:'نوع التعاقد',statuses:['ثابت','بالأجر'],note:'يظهر المعلم داخل كل مدرسة يعمل بها، وتُحسب أعداد المعلمين دون تكرار. حصص التدريس تخص المدرسة الظاهرة في الصف.'},
+ staffRoster:{title:'تقرير الكادر',subtitle:'من يعمل في كل مدرسة: نوع التعاقد وحصص التدريس الفعلية (بلا بيانات شخصية)',icon:'👨‍🏫',adapter:'staffRoster',filters:['stage','supervisor','school','status'],purpose:true,statusLabel:'نوع التعاقد',statuses:['ثابت','بالأجر'],note:'يظهر المعلم داخل كل مدرسة يعمل بها، وتُحسب أعداد المعلمين دون تكرار. حصص التدريس تخص المدرسة الظاهرة في الصف.'},
  schoolShortage:{title:'تقرير العجز',subtitle:'الحصص المطلوبة والتغطية والعجز قبل الأجر وبعده',icon:'⇅',adapter:'schoolShortage',filters:['stage','supervisor','school','status'],purpose:true,statuses:['عجز','متوازن','زيادة','بيانات غير مكتملة'],note:'العجز قبل الأجر = المطلوب ناقص التدريس الفعلي للثابت والمنتدب. المتبقي بعد الأجر يخص التغطية الفعلية. المدارس غير المكتملة تُعرض دون تقدير العجز.'},
  teacherDelegations:{title:'تقرير الانتداب',subtitle:'الانتدابات السارية ومدارس الأصل والوجهة وحصص الوجهة',icon:'↔',adapter:'teacherDelegations',filters:['stage','supervisor','school','status'],purpose:true,statusLabel:'نوع الانتداب',statuses:['جزئي','كلي'],note:'يعرض الانتدابات السارية اليوم. اختيار المدرسة يعرض الانتدابات منها وإليها؛ كل انتداب يُحتسب مرة واحدة، ويشمل معلمي الأجر.'},
  teacherLeaves:{title:'تقرير الإجازات',subtitle:'إجازات العام الدراسي وقراراتها وموقف التجديد',icon:'◷',adapter:'teacherLeaves',filters:['stage','supervisor','school','status'],purpose:true,statuses:['بانتظار التجديد','إجازة مجددة','عاد للعمل'],note:'يعرض الإجازات الطويلة المسجلة وموقفها في العام الدراسي المحدد. الإجازة المرحّلة من عام سابق تظهر بانتظار التجديد، دون نسب قرار سابق إلى العام الحالي.'},
@@ -9710,7 +9711,7 @@ formatClassesReport=function(raw,ctx){
 /* v120: تقرير «بيانات معلمي المدرسة» — كل بيانات المعلم المسجلة، مع زر تعديل لكل معلم ثم طباعة. */
 const V120_TEACHER_FIELDS='id,civil_id,full_name,phone,email,job_title,work_type,grade_acquired_date,work_start_date,appointment_date,home_school_id,specialty,qualification,qualification_year,teacher_code,residence,active,source_reference';
 let v120LastRows=[];
-STATISTICS_REPORTS.schoolTeachersData={title:'بيانات معلمي المدرسة',subtitle:'كل بيانات المعلمين المسجلة مع إمكانية التعديل والطباعة',icon:'🗂',adapter:'schoolTeachersData',filters:['stage','supervisor','school','status'],purpose:true,statusLabel:'نوع التعاقد',statuses:['ثابت','بالأجر'],note:'البيانات كما هي مسجلة في قاعدة البيانات. زر «تعديل» يفتح نموذج بيانات المعلم، وبعد الحفظ تتحدث القائمة.'};
+STATISTICS_REPORTS.schoolTeachersData={title:'بيانات معلمي المدرسة',subtitle:'البيانات الشخصية والوظيفية (الرقم القومي، الهاتف، الدرجة، المؤهل، التعيين) مع زر تعديل — بلا أنصبة',icon:'🗂',adapter:'schoolTeachersData',filters:['stage','supervisor','school','status'],purpose:true,statusLabel:'نوع التعاقد',statuses:['ثابت','بالأجر'],note:'البيانات كما هي مسجلة في قاعدة البيانات. زر «تعديل» يفتح نموذج بيانات المعلم، وبعد الحفظ تتحدث القائمة.'};
 if(!V103_PURPOSE_REPORTS.includes('schoolTeachersData'))V103_PURPOSE_REPORTS.unshift('schoolTeachersData');
 ReportAdapters.schoolTeachersData={async load(ctx){
  const data=await v91LoadReportsDataset({force:true}),scopes=v103ScopeRows(data);
