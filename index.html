@@ -21,6 +21,7 @@
 <!-- v168: لوحة منسق المرحلة مبسطة لدعم القرار: (1) صندوق «يحتاج قرارًا» = ما يبقى «بلا تغطية» بعد ما يُسد داخليًا ومقترح الانتداب والأجر المسند، مع شريط تفصيل العجز؛ (2) تنبيه «الأرقام تقديرية» بعدد المعلمين الأساسيين وبالأجر الذين لم تُدخل حصصهم وطاقة الأساسيين المحسوبة ضمن «يُسد داخليًا»؛ (3) أربع بطاقات (المطلوب، الفعلي، العجز، المعتمدة) وسطر أعداد عامة؛ (4) «ماذا أفعل الآن؟» مهام مرتبة بأزرار تفتح التقارير (ومنها تقرير جديد «معلمون لم تُدخل حصصهم»)؛ (5) أعلى 5 مدارس عجزًا والموجهون وعدالة الكادر مطوية. حُذف من لوحة المنسق قسما «مرحبًا» و«ملخص الحصص والعجز» المكرران. نفس الحسابات المعتمدة، عرض فقط. -->
 <!-- v167: آلية الجدول المجمّع (v166) في كل عروض جدول المدرسة: (1) تقرير الطباعة «الجدول الأسبوعي لمعلمي المدرسة»: لكل يوم المعلمون الذين لهم حصص فيه فقط، والأعمدة اليوم ← المعلم (عريض) ← الحصص (ضيقة) والخانة الفصل مختصرًا، و«مدرسة أخرى» للمنتدب، ويوم بلا حصص سطر واحد؛ (2) «جدول المدرسة المسجل» في ملف المدرسة بنفس شكل جدول المعلم المجمّع بدل خانات بأسماء المعلمين. عرض فقط. -->
 <!-- v166: شاشة «جدول المعلم»: فلترة المرحلة ← المدرسة ← المعلم؛ وخيار «كل معلمي المدرسة» (يُختار تلقائيًا عند اختيار مدرسة لمن يدير الجداول) يعرض جداول كل المعلمين في جدول واحد: لكل يوم صفوف بأسماء المعلمين الذين لهم حصص في ذلك اليوم فقط، وعمود معلم عريض وأعمدة حصص ضيقة، وفي الخانة الفصل (وحصص المدرسة الأخرى للمنتدب). اختيار معلم بعينه يعرض جدوله للتعديل كما كان. دور المعلم بلا تغيير. عرض فقط. -->
+<!-- v205: زر «إيقاف معلم الأجر» في «معلمو المرحلة» لمنسق المرحلة ومدير النظام: يجعل teacher_records.active=false (لا حذف) بعد تأكيد، ويُرفض إن كان له فصول مسندة في الفصل الدراسي الحالي. -->
 <!-- v204: منسق المرحلة يضيف انتدابًا ويلغيه (زرّا «إضافة انتداب» و«إلغاء الانتداب» في «معلمو المرحلة» وملف المدرسة) ضمن مرحلته؛ الخادم: سياسة delegations_update ودالة execute-teacher-delegation v3. -->
 <!-- v203: «توزيع الموجهين»: فلتر ثالث «الموجه» (الكل/بلا موجه/موجهو المرحلة المختارة) يعرض المدارس المسندة إليه بعد «عرض المدارس». -->
 <!-- v202: تبويب «توزيع الموجهين» (منسق المرحلة ومدير النظام): يفتح فارغًا، فلتر المرحلة/المدرسة ثم «عرض المدارس»، مربعات المدارس أبجديًا وفي كل مربع قائمة لتبديل الموجه بعد تأكيد. -->
@@ -116,7 +117,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#152c43">
-<title>نظام توجيه العلوم — v204</title>
+<title>نظام توجيه العلوم — v205</title>
 <link rel="manifest" href="./manifest.webmanifest">
 <link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png">
 <link rel="apple-touch-icon" href="./icon-192.png">
@@ -3229,7 +3230,8 @@ async function teachersPage({force=false}={}){
    const delegateBtn=canDelegate&&ownTeacher?`<button class="btn primary" title="فتح نموذج إضافة انتداب للمعلم" onclick="openTeacherDelegationForm('${t.teacher_id}')">إضافة انتداب</button>`:'';
    const delegatedBadge=!ownTeacher?`<span class="badge info">منتدب للمدرسة</span>`:'';
    const cancelDelegBtn=['admin','stage_coordinator'].includes(profile.role)&&String(t.school_relation||'').startsWith('delegated_')?`<button class="btn secondary" title="إنهاء الانتداب النشط وإعادة ربط المعلم بمدرسته الأصلية" onclick="adminCancelDelegationForm('${t.teacher_id}')">إلغاء الانتداب</button>`:'';
-   return `<td><div class="actions" style="gap:5px;flex-wrap:wrap">${editBtn}${delegateBtn}${cancelDelegBtn}${delegatedBadge}</div></td>`;
+   const stopPaidBtn=['admin','stage_coordinator'].includes(profile.role)&&ownTeacher&&isPaidTeacher(t)?`<button class="btn danger" title="إيقاف معلم الأجر (لا يُحذف سجله)" onclick="v205StopPaidTeacher('${t.teacher_id}')">إيقاف معلم الأجر</button>`:''; // v205
+   return `<td><div class="actions" style="gap:5px;flex-wrap:wrap">${editBtn}${delegateBtn}${cancelDelegBtn}${stopPaidBtn}${delegatedBadge}</div></td>`;
  };
  let specMap=new Map();
  try{const sp=await cachedRead(`page:teachers:specialty:${profile.id}:${profile.role}:${activeTerm?.id||'no-term'}`,async()=>({data:await v103ReadAll(()=>sb.from('teacher_records').select('id,specialty').eq('active',true).order('id')),error:null}),{ttl:30000,force});specMap=new Map((sp?.data||[]).filter(r=>r.specialty).map(r=>[String(r.id),r.specialty]));}catch(_e){}
@@ -10846,6 +10848,24 @@ async function v202Change(schoolId,sel){
  }catch(e){sel.value=s.supervisor_id||'';sel.disabled=false;moneySafeError(e)}
 }
 
+
+/* v205: إيقاف معلم الأجر (منسق المرحلة ومدير النظام): active=false لسجل المعلم بعد التأكد من عدم وجود فصول مسندة له في الفصل الدراسي الحالي. */
+async function v205StopPaidTeacher(teacherId){
+ if(!['admin','stage_coordinator'].includes(profile?.role))return toast('إيقاف معلم الأجر متاح لمدير النظام ومنسق المرحلة فقط');
+ try{
+  const {data:t,error:te}=await sb.from('teacher_records').select('id,full_name,work_type,active').eq('id',teacherId).maybeSingle();if(te)throw te;
+  if(!t||t.active===false)throw new Error('المعلم غير موجود أو موقوف سابقًا.');
+  if(t.work_type!=='paid')throw new Error('هذا الإجراء لمعلمي الأجر فقط.');
+  const {data:as,error:ae}=await sb.from('teaching_assignments').select('id').eq('teacher_id',teacherId).eq('term_id',activeTerm.id);if(ae)throw ae;
+  if((as||[]).length)throw new Error(`للمعلم ${as.length} فصل مسند في الفصل الدراسي الحالي. ألغِ إسناد فصوله أولًا (من «توزيع العجز») ثم أوقفه.`);
+  if(!confirm(`إيقاف معلم الأجر «${t.full_name}»؟\nلن يظهر في الكشوف والتقارير، ويبقى سجله محفوظًا ويمكن إعادة تفعيله من مدير النظام.`))return;
+  const {data:u,error:ue}=await sb.from('teacher_records').update({active:false}).eq('id',teacherId).select('id');if(ue)throw ue;
+  if(!(u||[]).length)throw new Error('لم يُحفظ الإيقاف (لا صلاحية على هذا المعلم).');
+  toast('تم إيقاف معلم الأجر');
+  invalidateData('teachers','hierarchy','dashboard','assignments','page:reports','school:self');
+  await loadPage(true);
+ }catch(err){moneySafeError(err)}
+}
 </script>
 
 <div id="reportPreviewOverlay" class="report-preview-overlay" role="dialog" aria-modal="true" aria-label="معاينة التقرير" aria-hidden="true">
