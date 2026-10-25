@@ -1,4 +1,5 @@
 <!doctype html>
+<!-- v204: جدول المعلم: خط أوضح للحصص، لون هادئ للحصص المسندة، ودمج الحصتين المتتاليتين لنفس الفصل (شاشة التعديل، جدول معلمي المدرسة، تقريرا الطباعة) — عرض فقط، الحفظ والحسابات بلا تغيير. -->
 <!-- v192: تقرير «الموجهين ومدارسهم»: لا يظهر سجل موجه بلا مدارس إن كان لنفس الاسم سجل آخر له مدارس (سجلّا شيماء محمد فرج محمد). -->
 <!-- v191: تقرير «الموجهين ومدارسهم»: سطر لكل مدرسة (بدل قائمة أسماء مكدسة في خانة واحدة)؛ اسم الموجه وهاتفه وعدد مدارسه في أول سطر من مجموعته فقط. -->
 <!-- v190: تقرير «الموجهين» (للأدوار التي ترى الدليل كاملًا): سطر لكل موجه ومرحلة وأمامه عدد مدارسه وأسماؤها (من schools.supervisor_id) بدل أعمدة الدليل المهني. -->
@@ -115,7 +116,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#152c43">
-<title>نظام توجيه العلوم — v203</title>
+<title>نظام توجيه العلوم — v204</title>
 <link rel="manifest" href="./manifest.webmanifest">
 <link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png">
 <link rel="apple-touch-icon" href="./icon-192.png">
@@ -2314,6 +2315,17 @@ td .btn,.report-preview-toolbar .btn,.btn.btn-sm{min-height:var(--ctl-h-sm);padd
 .v202-box select{width:100%}
 @media (max-width:800px){.v202-filters{grid-template-columns:1fr}.v202-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media (max-width:380px){.v202-grid{grid-template-columns:1fr}}
+/* v204: جدول المعلم — وضوح الخط، لون الحصص المسندة، ودمج المتتاليتين */
+.v101-timetable .v101-slot-select{font-size:14px;font-weight:600;color:#0f172a}
+.v101-timetable .v101-slot-text{font-size:14px;font-weight:600;color:#0f172a}
+.v101-timetable .v101-slot-select.v204-on,.v101-timetable td.v204-on,.v101-timetable td.v204-on .v101-slot-text{background:#e3f3e8!important;color:#14532d!important;font-weight:700!important}
+.v101-timetable .v101-slot-select.v204-on{border-color:#2e7d32!important}
+.v101-timetable td.v204-on{font-size:14px;border-color:#9ccfab}
+.v101-timetable td.v204-merged{text-align:center;vertical-align:middle;background:#cfe9d6!important;color:#14532d;border-color:#2e7d32}
+.v204-merged-label{font-size:14px;font-weight:700;line-height:1.7}
+.v204-merged small{display:block;color:#3f6b4b;font-size:11px;font-weight:400}
+.v204-unmerge{margin-top:4px;min-height:26px!important;padding:2px 10px!important;font-size:11px!important}
+.report-a4-page td.report-merged{background:#e3f3e8!important;font-weight:700!important}
 </style>
 </head>
 <body>
@@ -6715,7 +6727,7 @@ function reportHeader(schema){const h=document.createElement('header');h.classNa
 function reportFooter(schema,signature){const f=document.createElement('footer');f.className='report-page-footer';f.innerHTML=`<div class="report-footer-issuer">مُصدر التقرير: ${esc(schema.issuer.name)} — الصفة: ${esc(schema.issuer.role)}<div class="report-signature">DATA ${esc(signature)}</div></div><div class="report-footer-date">${esc(schema.issuer.issuedAtText)}</div><div class="report-page-number"></div>`;return f;}
 function reportSummaryNode(summary){const g=document.createElement('div');g.className='report-summary-grid';(summary||[]).forEach(m=>{const d=document.createElement('div');d.className='report-summary-item';d.innerHTML=`<span class="report-summary-label">${esc(m.label)}</span><span class="report-summary-value">${esc(reportCellValue(m.value))}</span>`;g.appendChild(d)});return g;}
 function reportTableSkeleton(schema){const table=document.createElement('table');table.className='report-table';table.dataset.reportTable='1';const cg=document.createElement('colgroup');const total=schema.columns.reduce((a,c)=>a+reportNumber(c.weight||1),0)||schema.columns.length;schema.columns.forEach(c=>{const col=document.createElement('col');col.style.width=((reportNumber(c.weight||1)/total)*100).toFixed(3)+'%';cg.appendChild(col)});table.appendChild(cg);const thead=document.createElement('thead'),tr=document.createElement('tr');schema.columns.forEach(c=>{const th=document.createElement('th');th.textContent=c.label;tr.appendChild(th)});thead.appendChild(tr);table.appendChild(thead);const tbody=document.createElement('tbody');table.appendChild(tbody);return {table,tbody};}
-function reportRowNode(schema,row,index){const tr=document.createElement('tr');tr.dataset.reportRowIndex=String(index);if(row&&row._group){tr.classList.add('report-group-row');const gtd=document.createElement('td');gtd.colSpan=schema.columns.length;gtd.textContent=reportCellValue(row._groupTitle);tr.appendChild(gtd);return tr;}schema.columns.forEach(c=>{const td=document.createElement('td');if(c.numeric)td.classList.add('report-numeric');if(c.id)td.classList.add('report-id');if(c.nowrap)td.classList.add('report-nowrap');td.textContent=reportCellValue(row[c.key]);tr.appendChild(td)});return tr;}
+function reportRowNode(schema,row,index){const tr=document.createElement('tr');tr.dataset.reportRowIndex=String(index);if(row&&row._group){tr.classList.add('report-group-row');const gtd=document.createElement('td');gtd.colSpan=schema.columns.length;gtd.textContent=reportCellValue(row._groupTitle);tr.appendChild(gtd);return tr;}let v204Skip=0;schema.columns.forEach(c=>{if(v204Skip>0){v204Skip--;return}const td=document.createElement('td');if(c.numeric)td.classList.add('report-numeric');if(c.id)td.classList.add('report-id');if(c.nowrap)td.classList.add('report-nowrap');const sp=row&&row._span&&row._span[c.key];if(sp>1){td.colSpan=sp;td.classList.add('report-merged');v204Skip=sp-1}td.textContent=reportCellValue(row[c.key]);tr.appendChild(td)});return tr;}
 function reportTotalsNode(totals){const d=document.createElement('div');d.className='report-totals';(totals||[]).forEach(m=>{const x=document.createElement('span');x.className='report-total-item';x.textContent=`${m.label}: ${reportCellValue(m.value)}`;d.appendChild(x)});return d;}
 function reportApprovalNodeV32(schema){const a=document.createElement('div');a.className='report-approval-space';if(schema.approval?.enabled===false)return a;const fields=Array.isArray(schema.approval?.fields)&&schema.approval.fields.length?schema.approval.fields:REPORT_DEFAULT_APPROVAL.fields;a.innerHTML=`<div class="report-approval-title">${esc(schema.approval?.title||'الاعتماد')}</div>${fields.map(f=>`<div class="report-approval-field">${esc(f)}:</div>`).join('')}<div class="report-system-author">إعداد: ${esc(REPORT_SYSTEM_AUTHOR.name)} &nbsp; — &nbsp; الصفة: ${esc(REPORT_SYSTEM_AUTHOR.role)}</div>`;return a;}
 function reportCreatePage(stack,schema,signature){const frame=document.createElement('div');frame.className='report-page-frame';const page=document.createElement('article');page.className='report-a4-page';page.dataset.reportSignature=signature;page.appendChild(reportHeader(schema));const body=document.createElement('main');body.className='report-page-body';page.appendChild(body);page.appendChild(reportFooter(schema,signature));frame.appendChild(page);stack.appendChild(frame);return {frame,page,body};}
@@ -8888,6 +8900,23 @@ async function v166ChangeStage(value){
  await v101ReloadTimetable(false);
 }
 function v166Short(a){const subj=a.subject_name&&a.subject_name!=='علوم'?' '+a.subject_name:'';return (a.class_name||v101AssignmentLabel(a))+subj}
+/* v204: دمج الحصتين المتتاليتين لنفس الفصل (عرض فقط). idAt(p) ← معرّف الإسناد أو ''. */
+const v204Un=new Set();
+function v204Merge(day,P,idAt,useUn=true){
+ const start=new Set(),skip=new Set();
+ for(let p=1;p<P;p++){
+  const a=idAt(p);if(!a||a!==idAt(p+1))continue;
+  if(useUn&&v204Un.has(`${day}:${p}`)){p++;continue}
+  start.add(p);skip.add(p+1);p++;
+ }
+ return {start,skip};
+}
+function v204Sig(){
+ const ws=v101Timetable;if(!ws||v101TeacherId==='__all__')return '';
+ return (ws.config.operating_days||[]).map(day=>[...v204Merge(day,Number(ws.config.periods_per_day)||0,p=>v101Draft.get(v101SlotKey(day,p))||'').start].join(',')).join('|');
+}
+function v204Unmerge(day,p){v204Un.add(`${day}:${p}`);const el=document.getElementById('v101TeacherArea');if(el)el.innerHTML=v101TeacherArea();v204SetStatus()}
+function v204SetStatus(){const st=document.getElementById('v101SaveStatus');if(st&&v101Dirty)st.textContent='تعديلات غير محفوظة'}
 function v166SchoolGrid(){
  const ws=v101Timetable;
  const teachers=[...(ws.teachers||[])].sort((a,b)=>String(a.full_name||'').localeCompare(String(b.full_name||''),'ar'));
@@ -8904,10 +8933,13 @@ function v166SchoolGrid(){
   dayTeachers.forEach((t,i)=>{
    const id=String(t.teacher_id||t.id);
    body+=`<tr class="${i===0?'v166-day-start':''}">${i===0?`<th scope="rowgroup" rowspan="${dayTeachers.length}" class="v166-day">${V101_DAY_NAMES[day]}</th>`:''}<th scope="row" class="v166-teacher">${esc(t.full_name||'—')}${isPaidTeacher(t)?' <small class="muted">(بالأجر)</small>':''}</th>`;
+   const mg=v204Merge(day,P,p=>slotMap.get(`${id}:${day}:${p}`)?.assignment_id||'',false);
    for(let p=1;p<=P;p++){
     const key=`${id}:${day}:${p}`,slot=slotMap.get(key),a=slot?assignments.get(slot.assignment_id):null;
     if(a)placed++;
-    body+=`<td>${a?esc(v166Short(a)):(otherMap.has(key)?'<small class="muted">مدرسة أخرى</small>':'')}</td>`;
+    if(mg.skip.has(p))continue;
+    if(mg.start.has(p)){body+=`<td colspan="2" class="v204-merged"><div class="v204-merged-label">${esc(v166Short(a))}</div><small>حصتان متتاليتان</small></td>`;continue}
+    body+=`<td${a?' class="v204-on"':''}>${a?esc(v166Short(a)):(otherMap.has(key)?'<small class="muted">مدرسة أخرى</small>':'')}</td>`;
    }
    body+='</tr>';
   });
@@ -8923,10 +8955,12 @@ function v101TeacherArea(){
  const assignments=ws.assignments.filter(a=>a.teacher_id===v101TeacherId);
  const teacher=ws.teachers.find(t=>String(t.teacher_id||t.id)===v101TeacherId);
  let rows='';
- for(const day of ws.config.operating_days){rows+=`<tr><th scope="row">${V101_DAY_NAMES[day]}</th>`;for(let p=1;p<=ws.config.periods_per_day;p++){
+ for(const day of ws.config.operating_days){rows+=`<tr><th scope="row">${V101_DAY_NAMES[day]}</th>`;const v204M=v204Merge(day,Number(ws.config.periods_per_day)||0,q=>v101Draft.get(v101SlotKey(day,q))||'');for(let p=1;p<=ws.config.periods_per_day;p++){
+  if(v204M.skip.has(p))continue;
+  if(v204M.start.has(p)){const ma=assignments.find(a=>a.id===v101Draft.get(v101SlotKey(day,p)));rows+=`<td colspan="2" class="v204-merged"><div class="v204-merged-label">${esc(ma?v101AssignmentLabel(ma):'')}</div><small>حصتان متتاليتان</small>${editable?`<button type="button" class="btn secondary v204-unmerge" onclick="v204Unmerge(${day},${p})">فك الدمج</button>`:''}</td>`;continue}
   const key=v101SlotKey(day,p),selected=v101Draft.get(key)||'',other=(ws.other_school_slots||[]).find(s=>s.teacher_id===v101TeacherId&&s.weekday===day&&s.period_number===p);
   const saved=assignments.find(a=>a.id===selected);
-  rows+=`<td>${editable?`<select class="v101-slot-select" data-day="${day}" data-period="${p}" aria-label="${V101_DAY_NAMES[day]}، الحصة ${p}" onchange="v101ChangeSlot(this)"><option value="">${window.matchMedia('(max-width:700px)').matches?'فارغة':'— دون تدريس —'}</option>${assignments.map(a=>{const busy=ws.slots.some(s=>s.teacher_id!==v101TeacherId&&s.class_id===a.class_id&&s.weekday===day&&s.period_number===p);return `<option value="${a.id}" ${a.id===selected?'selected':''} ${busy||other?'disabled':''}>${esc(v116SlotLabel(a))}${busy?' (مشغول)':''}</option>`}).join('')}</select>`:`<div class="v101-slot-text">${saved?esc(v101AssignmentLabel(saved)):'—'}</div>`}${other?`<small class="v101-other-school">تدريس في ${esc(other.school_name||'مدرسة أخرى')}</small>`:''}</td>`;
+  rows+=`<td>${editable?`<select class="v101-slot-select${selected?' v204-on':''}" data-day="${day}" data-period="${p}" aria-label="${V101_DAY_NAMES[day]}، الحصة ${p}" onchange="v101ChangeSlot(this)"><option value="">${window.matchMedia('(max-width:700px)').matches?'فارغة':'— دون تدريس —'}</option>${assignments.map(a=>{const busy=ws.slots.some(s=>s.teacher_id!==v101TeacherId&&s.class_id===a.class_id&&s.weekday===day&&s.period_number===p);return `<option value="${a.id}" ${a.id===selected?'selected':''} ${busy||other?'disabled':''}>${esc(v116SlotLabel(a))}${busy?' (مشغول)':''}</option>`}).join('')}</select>`:`<div class="v101-slot-text${saved?' v204-on':''}">${saved?esc(v101AssignmentLabel(saved)):'—'}</div>`}${other?`<small class="v101-other-school">تدريس في ${esc(other.school_name||'مدرسة أخرى')}</small>`:''}</td>`;
  }rows+='</tr>'}
  return `<div class="card"><div class="card-title"><div><h3>${esc(teacher?.full_name||'جدول المعلم')}</h3><p class="muted">${esc(ws.school.name)} • ${esc(activeYear?.label||'')} • ${esc(activeTerm?.name||'')}</p></div><span id="v101SaveStatus" class="badge info">${v101Draft.size?'محفوظ':'لا توجد حصص مسجلة'}</span></div>
  ${ws.can_manage?'<div class="notice info">اختر الفصل والمادة في كل خانة. يمكنك حفظ جدول غير مكتمل واستكماله لاحقًا؛ لا يجوز تجاوز عدد حصص الإسناد أو تداخل المعلم والفصل.</div>':''}
@@ -8936,6 +8970,19 @@ function v101TeacherArea(){
 }
 function v101ProgressMarkup(){const assignments=(v101Timetable?.assignments||[]).filter(a=>a.teacher_id===v101TeacherId);const used=new Map();for(const id of v101Draft.values())used.set(id,(used.get(id)||0)+1);const needed=assignments.reduce((n,a)=>n+Number(a.weekly_periods),0);return `<div class="v101-progress-total"><b>حصص التدريس بالجدول: ${v101Draft.size} / ${needed}</b><span>${needed===0?'لا توجد إسنادات':v101Draft.size===needed?'مكتمل':'يحتاج استكمالًا'}</span></div><div class="v101-progress-list">${assignments.map(a=>`<span class="badge ${(used.get(a.id)||0)===Number(a.weekly_periods)?'ok':'warn'}">${esc(v101AssignmentLabel(a))}: ${used.get(a.id)||0} / ${a.weekly_periods}</span>`).join('')||'<div class="notice">لم تُسند فصول لهذا المعلم في هذه المدرسة بعد. ابدأ بإسناد الفصول ثم أدخل أيام وحصص الجدول.</div>'}</div>`}
 function v101ChangeSlot(el){if(v101Saving)return;const key=v101SlotKey(Number(el.dataset.day),Number(el.dataset.period)),previous=v101Draft.get(key)||'';if(el.value){const a=v101Timetable.assignments.find(a=>a.id===el.value);const used=[...v101Draft].filter(([k,id])=>k!==key&&id===el.value).length;if(!a||used>=Number(a.weekly_periods)){el.value=previous;return toast('عدد حصص هذا الفصل مكتمل في الجدول')}v101Draft.set(key,el.value)}else v101Draft.delete(key);v101Dirty=true;document.getElementById('v101SaveStatus').textContent='تعديلات غير محفوظة';document.getElementById('v101AssignmentProgress').innerHTML=v101ProgressMarkup()}
+const v204BaseChangeSlot=v101ChangeSlot;
+v101ChangeSlot=function(el){
+ const before=v204Sig(),prev=v101Draft.size;
+ v204BaseChangeSlot(el);
+ el.classList.toggle('v204-on',!!el.value);
+ if(v204Sig()!==before){
+  const sc=document.querySelector('#v101TeacherArea .v101-grid-scroll'),left=sc?sc.scrollLeft:0,top=sc?sc.scrollTop:0;
+  const area=document.getElementById('v101TeacherArea');if(area)area.innerHTML=v101TeacherArea();v204SetStatus();
+  const ns=document.querySelector('#v101TeacherArea .v101-grid-scroll');if(ns){ns.scrollLeft=left;ns.scrollTop=top}
+ }
+};
+const v204BaseSetDraft=v101SetDraft;
+v101SetDraft=function(){v204Un.clear();return v204BaseSetDraft.apply(this,arguments)};
 async function v101ChangeSchool(id){if(v101Saving)return;if(!v101ConfirmDiscard()){document.getElementById('v101SchoolSelect').value=v101SchoolId;return}const previousSchool=v101SchoolId,previousTeacher=v101TeacherId;v101SchoolId=id;v101TeacherId='';v101Dirty=false;v101SettingsDirty=false;if(!await v101ReloadTimetable(false)){v101SchoolId=previousSchool;v101TeacherId=previousTeacher;document.getElementById('v101SchoolSelect').value=previousSchool;v101SetDraft();document.getElementById('v101TeacherArea').innerHTML=v101TeacherArea()}}
 function v101ChangeTeacher(id){if(v101Saving)return;if(!v101ConfirmDiscard()){document.getElementById('v101TeacherSelect').value=v101TeacherId;return}v101TeacherId=id;v101SetDraft();v101SettingsDirty=false;document.getElementById('v101WeekMode').value=v101Timetable.config.operating_days.includes(6)?'saturday':'sunday';document.getElementById('v101PeriodCount').value=v101Timetable.config.periods_per_day;document.getElementById('v101TeacherArea').innerHTML=v101TeacherArea()}
 async function v101ReloadTimetable(confirmDiscard=true){if(v101Saving)return;if(confirmDiscard&&!v101ConfirmDiscard())return;v101Dirty=false;v101SettingsDirty=false;try{await loadPage(true);return true}catch(error){moneySafeError(error);return false}}
@@ -8958,7 +9005,7 @@ function v101TimetableReport(ctx){
  if(!v101TeacherId)throw new Error('اختر المعلم أولًا');
  const ws=v101Timetable,t=ws.teachers.find(t=>String(t.teacher_id||t.id)===v101TeacherId),columns=[reportColumn('day','اليوم',.7)];for(let p=1;p<=ws.config.periods_per_day;p++)columns.push(reportColumn('p'+p,'الحصة '+p,1.2));
  if(!t||(!ws.can_manage&&String(t.profile_id||'')!==String(profile?.id||'')))throw new Error('لا توجد صلاحية لطباعة جدول هذا المعلم');
- const rows=ws.config.operating_days.map(day=>{const row={day:V101_DAY_NAMES[day]};for(let p=1;p<=ws.config.periods_per_day;p++){const a=ws.assignments.find(a=>a.id===v101Draft.get(v101SlotKey(day,p))),other=(ws.other_school_slots||[]).find(s=>s.teacher_id===v101TeacherId&&s.weekday===day&&s.period_number===p);row['p'+p]=a?v101AssignmentLabel(a):other?'تدريس في '+(other.school_name||'مدرسة أخرى'):'—'}return row});
+ const rows=ws.config.operating_days.map(day=>{const row={day:V101_DAY_NAMES[day]},mg=v204Merge(day,Number(ws.config.periods_per_day)||0,q=>v101Draft.get(v101SlotKey(day,q))||'',false);for(let p=1;p<=ws.config.periods_per_day;p++){if(mg.skip.has(p)){row['p'+p]='';continue}if(mg.start.has(p)){(row._span||(row._span={}))['p'+p]=2}const a=ws.assignments.find(a=>a.id===v101Draft.get(v101SlotKey(day,p))),other=(ws.other_school_slots||[]).find(s=>s.teacher_id===v101TeacherId&&s.weekday===day&&s.period_number===p);row['p'+p]=a?v101AssignmentLabel(a):other?'تدريس في '+(other.school_name||'مدرسة أخرى'):'—'}return row});
  return makeReportSchema({reportId:'teacherTimetable',title:'جدول المعلم الأسبوعي',subtitle:`${t?.full_name||''} — ${ws.school.name}`,period:ctx.period,issuer:ctx.issuer,columns,rows,summary:[reportMetric('حصص التدريس بالمدرسة',v101Draft.size),reportMetric('أيام الدراسة',ws.config.operating_days.length)],approval:{enabled:false}});
 }
 ReportAdapters.teacherTimetable={async load(ctx){return v101TimetableReport(ctx)}};
@@ -8998,9 +9045,11 @@ function v102SchoolTimetableReport(ctx){
   const dayTeachers=teachers.filter(t=>{const id=String(t.teacher_id||t.id);for(let p=1;p<=P;p++){const k=`${id}:${day}:${p}`;if(slotMap.has(k)||otherSet.has(k))return true}return false});
   if(!dayTeachers.length){const row={day:V101_DAY_NAMES[day],teacher:'لا توجد حصص مسجلة'};for(let p=1;p<=P;p++)row['p'+p]='';rows.push(row);continue}
   for(const t of dayTeachers){
-   const id=String(t.teacher_id||t.id),row={day:V101_DAY_NAMES[day],teacher:t.full_name||'—'};
+   const id=String(t.teacher_id||t.id),row={day:V101_DAY_NAMES[day],teacher:t.full_name||'—'},mg=v204Merge(day,P,q=>slotMap.get(`${id}:${day}:${q}`)?.assignment_id||'',false);
    for(let p=1;p<=P;p++){
     const k=`${id}:${day}:${p}`,slot=slotMap.get(k),a=slot?assignments.get(slot.assignment_id):null;
+    if(mg.skip.has(p)){row['p'+p]='';continue}
+    if(mg.start.has(p)){(row._span||(row._span={}))['p'+p]=2}
     row['p'+p]=a?v166Short(a):(otherSet.has(k)?'مدرسة أخرى':'');
    }
    rows.push(row);
