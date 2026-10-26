@@ -21,7 +21,7 @@
 <!-- v168: لوحة منسق المرحلة مبسطة لدعم القرار: (1) صندوق «يحتاج قرارًا» = ما يبقى «بلا تغطية» بعد ما يُسد داخليًا ومقترح الانتداب والأجر المسند، مع شريط تفصيل العجز؛ (2) تنبيه «الأرقام تقديرية» بعدد المعلمين الأساسيين وبالأجر الذين لم تُدخل حصصهم وطاقة الأساسيين المحسوبة ضمن «يُسد داخليًا»؛ (3) أربع بطاقات (المطلوب، الفعلي، العجز، المعتمدة) وسطر أعداد عامة؛ (4) «ماذا أفعل الآن؟» مهام مرتبة بأزرار تفتح التقارير (ومنها تقرير جديد «معلمون لم تُدخل حصصهم»)؛ (5) أعلى 5 مدارس عجزًا والموجهون وعدالة الكادر مطوية. حُذف من لوحة المنسق قسما «مرحبًا» و«ملخص الحصص والعجز» المكرران. نفس الحسابات المعتمدة، عرض فقط. -->
 <!-- v167: آلية الجدول المجمّع (v166) في كل عروض جدول المدرسة: (1) تقرير الطباعة «الجدول الأسبوعي لمعلمي المدرسة»: لكل يوم المعلمون الذين لهم حصص فيه فقط، والأعمدة اليوم ← المعلم (عريض) ← الحصص (ضيقة) والخانة الفصل مختصرًا، و«مدرسة أخرى» للمنتدب، ويوم بلا حصص سطر واحد؛ (2) «جدول المدرسة المسجل» في ملف المدرسة بنفس شكل جدول المعلم المجمّع بدل خانات بأسماء المعلمين. عرض فقط. -->
 <!-- v166: شاشة «جدول المعلم»: فلترة المرحلة ← المدرسة ← المعلم؛ وخيار «كل معلمي المدرسة» (يُختار تلقائيًا عند اختيار مدرسة لمن يدير الجداول) يعرض جداول كل المعلمين في جدول واحد: لكل يوم صفوف بأسماء المعلمين الذين لهم حصص في ذلك اليوم فقط، وعمود معلم عريض وأعمدة حصص ضيقة، وفي الخانة الفصل (وحصص المدرسة الأخرى للمنتدب). اختيار معلم بعينه يعرض جدوله للتعديل كما كان. دور المعلم بلا تغيير. عرض فقط. -->
-<!-- v206: توحيد عدد المدارس في التقارير: المدرسة المربوطة (schools.aggregate_with_school_id، مثل «النصر ع بنات صباحي» مع «النصر ع بنات») كانت تُحسب مدرسة مستقلة في تقارير «المدارس» و«الفصول» و«الموجهين ومدارسهم» (72 للإعدادي) وتُجمع مع الأساسية في بقية التقارير (71). الآن تُجمع في الثلاثة أيضًا. تقرير مدرسة واحدة مختارة لا يتغير. لا تعديل في قاعدة البيانات. -->
+<!-- v206: توحيد عدد المدارس في التقارير: المدرسة المربوطة (schools.aggregate_with_school_id، مثل «النصر ع بنات صباحي» مع «النصر ع بنات») كانت تُحسب مدرسة مستقلة في تقارير «المدارس» و«الفصول» و«الموجهين ومدارسهم» (72 للإعدادي) وتُجمع مع الأساسية في بقية التقارير (71). الآن تُجمع في الثلاثة أيضًا. تقرير مدرسة واحدة مختارة لا يتغير. + شاشة المدارس: المدرسة المربوطة سطر واحد (71)، وقوائم «المدرسة» تجمع الفترتين في مجموعة واحدة، وفي ملف المدرسة زر للفترة الأخرى. لا تعديل في قاعدة البيانات. -->
 <!-- v205: زر «إيقاف معلم الأجر» في «معلمو المرحلة» لمنسق المرحلة ومدير النظام: يجعل teacher_records.active=false (لا حذف) بعد تأكيد، ويُرفض إن كان له فصول مسندة في الفصل الدراسي الحالي. -->
 <!-- v204: منسق المرحلة يضيف انتدابًا ويلغيه (زرّا «إضافة انتداب» و«إلغاء الانتداب» في «معلمو المرحلة» وملف المدرسة) ضمن مرحلته؛ الخادم: سياسة delegations_update ودالة execute-teacher-delegation v3. -->
 <!-- v203: «توزيع الموجهين»: فلتر ثالث «الموجه» (الكل/بلا موجه/موجهو المرحلة المختارة) يعرض المدارس المسندة إليه بعد «عرض المدارس». -->
@@ -2661,7 +2661,7 @@ window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();window.v152
 window.addEventListener('appinstalled',()=>{window.v152InstallPrompt=null;v152SyncInstallBtn()});
 if('serviceWorker' in navigator&&location.protocol!=='file:')window.addEventListener('load',()=>navigator.serviceWorker.register('./service-worker.js').catch(()=>{}));
 const V145_NEWS=[
- ['v206','توحيد عدد المدارس في كل التقارير (المدرسة المربوطة تُحسب مع الأساسية).'],
+ ['v206','توحيد عدد المدارس في التقارير وشاشة المدارس: المدرسة بفترتين (صباحي/مسائي) تُحسب مدرسة واحدة.'],
  ['v192','تقرير «الموجهين ومدارسهم»: لا يتكرر الموجه في آخر التقرير بسطر «لا توجد مدارس».'],
  ['v191','تقرير «الموجهين ومدارسهم»: كل مدرسة في سطر مستقل تحت موجهها.'],
  ['v190','تقرير «الموجهين» يعرض كل موجه وأمامه مدارسه.'],
@@ -2868,7 +2868,8 @@ async function schoolsPage(){
  if(classRes.error)return `<div class="error">${esc(classRes.error.message)}</div>`;
  if(supervisorRes.error)return `<div class="error">${esc(supervisorRes.error.message)}</div>`;
 
- const schools=v98FilterSchoolRows(v97SchoolRows(schoolRes.data));
+ const v206Links=await v161AggregateLinks();
+ const schools=v161MergeSchools(v98FilterSchoolRows(v97SchoolRows(schoolRes.data)),v206Links); // v206: المدرسة المربوطة (فترتان) سطر واحد
  const allSupervisors=supervisorRes.data||[];
  const supervisorById=new Map(allSupervisors.map(sp=>[String(sp.id),sp]));
  const detailedClassCounts={};
@@ -8674,7 +8675,10 @@ function v98SchoolOptions(){
  const rows=v97SchoolRows(v98SchoolDirectories.get(v97StageKey())||[]),selected=v98School();
  const singleSchool=currentPage==='teachers'&&['school_manager','senior_teacher'].includes(profile?.role);
  const first=singleSchool?'<option value="" disabled>اختر المدرسة</option>':'<option value="">المدرسة: الكل</option>';
- return first+rows.map(s=>`<option value="${esc(s.id)}" ${String(s.id)===selected?'selected':''}>${esc(s.name)}</option>`).join('');
+ const L=window.__v206Links||new Map(),opt=s=>`<option value="${esc(s.id)}" ${String(s.id)===selected?'selected':''}>${esc(s.name)}</option>`;
+ const ids=new Set(rows.map(x=>String(x.id))),isKid=s=>{const p=L.get(String(s.id));return !!p&&ids.has(p)},kids=new Map();
+ rows.forEach(s=>{if(isKid(s)){const p=L.get(String(s.id));if(!kids.has(p))kids.set(p,[]);kids.get(p).push(s)}});
+ return first+rows.filter(s=>!isKid(s)).map(s=>kids.has(String(s.id))?`<optgroup label="${esc(s.name)} — مدرسة واحدة بفترتين">${opt(s)}${kids.get(String(s.id)).map(opt).join('')}</optgroup>`:opt(s)).join(''); // v206
 }
 function v98SchoolFilterHtml(){
  if(!v98SchoolFilterPages.has(currentPage))return '';
@@ -8694,7 +8698,7 @@ async function v98PrepareSchoolFilter(options={}){
  },{ttl:30000,force:options.force===true});
  if(epoch!==v96SessionEpoch||key!==v97StageKey()||options.signal?.aborted)return false;
  const unique=new Map();for(const school of rows||[])if(school.id)unique.set(String(school.id),school);
- rows=[...unique.values()];v98SchoolDirectories.set(key,rows);
+ rows=[...unique.values()];window.__v206Links=await v161AggregateLinks();v98SchoolDirectories.set(key,rows);
  const choices=v97SchoolRows(rows),selected=v98SchoolSelections.get(key)||'';
  if(!choices.some(s=>String(s.id)===selected))v98SchoolSelections.delete(key);
  if(page==='schools'&&role==='supervisor'&&v98SchoolSelections.get(key))supervisorRememberSchoolV75(v98SchoolSelections.get(key));
@@ -9578,6 +9582,16 @@ window.addEventListener('popstate',()=>{if(v175PreviewInHistory&&v175PreviewOpen
 function v174OpenAssignmentReport(schoolId){
  return openReportById('schoolAssignments',{schoolId,filterState:{active:true,search:'',filters:[{label:'معرف المدرسة',value:String(schoolId)}],displayFilters:[{label:'النطاق',value:'المدرسة المختارة'}],sourcePage:currentPage}});
 }
+const __v206DossierMarkup=v110DossierMarkup;
+v110DossierMarkup=function(d){
+ const html=__v206DossierMarkup(d),id=String(v98School()||''),L=window.__v206Links||new Map();
+ if(!id||!L.size)return html;
+ const other=[...L.entries()].filter(([c,pr])=>c===id||pr===id).flatMap(([c,pr])=>c===id?[pr]:[c]);
+ const dir=v98SchoolDirectories.get(v97StageKey())||[];
+ const rows=other.map(o=>({id:o,name:(dir.find(x=>String(x.id)===o)||{}).name})).filter(x=>x.name);
+ if(!rows.length)return html;
+ return `<div class="notice ok">هذه مدرسة واحدة بفترتين. الفترة الأخرى: ${rows.map(x=>`<button class="btn secondary" type="button" onclick="v98SetSchool('${esc(x.id)}')">${esc(x.name)}</button>`).join(' ')}</div>`+html; // v206
+};
 const v110BaseSchoolsPage=schoolsPage;
 schoolsPage=async function(options={}){
  const schoolId=v98School(),revision=v97StageRevision;
