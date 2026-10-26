@@ -90,3 +90,5 @@ drop function if exists private.supervises_school(uuid,uuid);
 update public.supervisor_stage_assignments set active=false where supervisor_id='54161bac-29ed-4276-a0e0-a45b23ca4b8e' and stage='ثانوي';
 -- إعادة تفعيل صفوف «علوم متكاملة» في الثانوي (عُطّلت 2026-10-26؛ كانت: معله، عبدالناصر، وشيماء بدل نوبي في العام)
 update public.supervisor_school_subjects x set active=true from public.schools sc where sc.id=x.school_id and sc.stage='ثانوي' and x.subject_name='علوم متكاملة';
+-- إعادة كيمياء الثانوي الصناعي (3 مدارس) إلى نوبي محمود عبدالله بدل شيماء
+update public.supervisor_school_subjects x set supervisor_id=(select id from public.supervisors where full_name like 'نوبي محمود عبدالله%' limit 1) where x.id in ('3c4902f2-43c2-4f18-86a3-f4fadb29fdde','8eb18824-1cc9-4dc5-a0ff-0d780fcf1b19','4cd4f34f-fa8a-43bf-85c1-8284404d2742');
