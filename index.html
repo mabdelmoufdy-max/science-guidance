@@ -21,6 +21,7 @@
 <!-- v168: لوحة منسق المرحلة مبسطة لدعم القرار: (1) صندوق «يحتاج قرارًا» = ما يبقى «بلا تغطية» بعد ما يُسد داخليًا ومقترح الانتداب والأجر المسند، مع شريط تفصيل العجز؛ (2) تنبيه «الأرقام تقديرية» بعدد المعلمين الأساسيين وبالأجر الذين لم تُدخل حصصهم وطاقة الأساسيين المحسوبة ضمن «يُسد داخليًا»؛ (3) أربع بطاقات (المطلوب، الفعلي، العجز، المعتمدة) وسطر أعداد عامة؛ (4) «ماذا أفعل الآن؟» مهام مرتبة بأزرار تفتح التقارير (ومنها تقرير جديد «معلمون لم تُدخل حصصهم»)؛ (5) أعلى 5 مدارس عجزًا والموجهون وعدالة الكادر مطوية. حُذف من لوحة المنسق قسما «مرحبًا» و«ملخص الحصص والعجز» المكرران. نفس الحسابات المعتمدة، عرض فقط. -->
 <!-- v167: آلية الجدول المجمّع (v166) في كل عروض جدول المدرسة: (1) تقرير الطباعة «الجدول الأسبوعي لمعلمي المدرسة»: لكل يوم المعلمون الذين لهم حصص فيه فقط، والأعمدة اليوم ← المعلم (عريض) ← الحصص (ضيقة) والخانة الفصل مختصرًا، و«مدرسة أخرى» للمنتدب، ويوم بلا حصص سطر واحد؛ (2) «جدول المدرسة المسجل» في ملف المدرسة بنفس شكل جدول المعلم المجمّع بدل خانات بأسماء المعلمين. عرض فقط. -->
 <!-- v166: شاشة «جدول المعلم»: فلترة المرحلة ← المدرسة ← المعلم؛ وخيار «كل معلمي المدرسة» (يُختار تلقائيًا عند اختيار مدرسة لمن يدير الجداول) يعرض جداول كل المعلمين في جدول واحد: لكل يوم صفوف بأسماء المعلمين الذين لهم حصص في ذلك اليوم فقط، وعمود معلم عريض وأعمدة حصص ضيقة، وفي الخانة الفصل (وحصص المدرسة الأخرى للمنتدب). اختيار معلم بعينه يعرض جدوله للتعديل كما كان. دور المعلم بلا تغيير. عرض فقط. -->
+<!-- v206: توحيد عدد المدارس في التقارير: المدرسة المربوطة (schools.aggregate_with_school_id، مثل «النصر ع بنات صباحي» مع «النصر ع بنات») كانت تُحسب مدرسة مستقلة في تقارير «المدارس» و«الفصول» و«الموجهين ومدارسهم» (72 للإعدادي) وتُجمع مع الأساسية في بقية التقارير (71). الآن تُجمع في الثلاثة أيضًا. تقرير مدرسة واحدة مختارة لا يتغير. لا تعديل في قاعدة البيانات. -->
 <!-- v205: زر «إيقاف معلم الأجر» في «معلمو المرحلة» لمنسق المرحلة ومدير النظام: يجعل teacher_records.active=false (لا حذف) بعد تأكيد، ويُرفض إن كان له فصول مسندة في الفصل الدراسي الحالي. -->
 <!-- v204: منسق المرحلة يضيف انتدابًا ويلغيه (زرّا «إضافة انتداب» و«إلغاء الانتداب» في «معلمو المرحلة» وملف المدرسة) ضمن مرحلته؛ الخادم: سياسة delegations_update ودالة execute-teacher-delegation v3. -->
 <!-- v203: «توزيع الموجهين»: فلتر ثالث «الموجه» (الكل/بلا موجه/موجهو المرحلة المختارة) يعرض المدارس المسندة إليه بعد «عرض المدارس». -->
@@ -117,7 +118,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#152c43">
-<title>نظام توجيه العلوم — v205</title>
+<title>نظام توجيه العلوم — v206</title>
 <link rel="manifest" href="./manifest.webmanifest">
 <link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png">
 <link rel="apple-touch-icon" href="./icon-192.png">
@@ -2660,6 +2661,7 @@ window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();window.v152
 window.addEventListener('appinstalled',()=>{window.v152InstallPrompt=null;v152SyncInstallBtn()});
 if('serviceWorker' in navigator&&location.protocol!=='file:')window.addEventListener('load',()=>navigator.serviceWorker.register('./service-worker.js').catch(()=>{}));
 const V145_NEWS=[
+ ['v206','توحيد عدد المدارس في كل التقارير (المدرسة المربوطة تُحسب مع الأساسية).'],
  ['v192','تقرير «الموجهين ومدارسهم»: لا يتكرر الموجه في آخر التقرير بسطر «لا توجد مدارس».'],
  ['v191','تقرير «الموجهين ومدارسهم»: كل مدرسة في سطر مستقل تحت موجهها.'],
  ['v190','تقرير «الموجهين» يعرض كل موجه وأمامه مدارسه.'],
@@ -6669,7 +6671,7 @@ const ReportAdapters={
  teachers:{async load(ctx){const r=await sb.from('teacher_workload_summary').select(TEACHER_WORKLOAD_FIELDS).order('full_name');return formatTeachersReport({teachers:reportError(r,'المعلمون')},ctx)}},
  supervisionPriority:{async load(ctx){const r=await sb.from('teacher_supervision_priority').select('teacher_id,civil_id,full_name,home_school_id,school_name,stage,job_title,work_type,grade_acquired_date,work_start_date,appointment_date,is_senior_teacher,general_priority,school_priority,supervision_status').order('general_priority');return formatSupervisionPriorityReport({rows:reportError(r,'أولوية الإشراف')},ctx)}},
  workload:{async load(ctx){const r=await sb.from('workload_rules').select(WORKLOAD_RULE_FIELDS).eq('active',true).order('job_title');return formatWorkloadReport({rules:reportError(r,'الأنصبة')},ctx)}},
- classes:{async load(ctx){const r=await sb.from('school_classes').select('id,school_id,stage,grade,class_name,science_periods,grade_order,schools(name),class_subject_requirements(weekly_periods,curriculum_subjects(subject_name))').eq('term_id',activeTerm.id).order('grade_order');return formatClassesReport({classes:reportError(r,'الفصول')},ctx)}},
+ classes:{async load(ctx){const r=await sb.from('school_classes').select('id,school_id,stage,grade,class_name,science_periods,grade_order,schools(name),class_subject_requirements(weekly_periods,curriculum_subjects(subject_name))').eq('term_id',activeTerm.id).order('grade_order');const v206Links=await v161AggregateLinks(),v206Names=new Map(((await v91LoadReportsDataset())?.hierarchy?.schools||[]).map(x=>[String(x.id),x.name]));return formatClassesReport({classes:reportError(r,'الفصول').map(c=>{const pid=v206Links.get(String(c.school_id));return pid?{...c,school_id:pid,schools:{...(c.schools||{}),name:v206Names.get(pid)||c.schools?.name}}:c})},ctx)}},
  distribution:{async load(ctx){const [ar,tr,cr,sr]=await Promise.all([sb.from('teaching_assignments').select('teacher_id,class_id,subject_id,weekly_periods').eq('term_id',activeTerm.id),sb.from('teacher_records').select('id,full_name').eq('active',true),sb.from('school_classes').select('id,school_id,stage,grade,class_name,schools(name)').eq('term_id',activeTerm.id),sb.from('curriculum_subjects').select('id,subject_name')]);return formatDistributionReport({assignments:reportError(ar,'الإسنادات'),teachers:reportError(tr,'المعلمون'),classes:reportError(cr,'الفصول'),subjects:reportError(sr,'المواد')},ctx)}},
  approval:{async load(ctx){const [sub,sch]=await Promise.all([sb.from('school_submissions').select('id,school_id,status,submitted_at,approved_at,return_reason,entry_source').eq('term_id',activeTerm.id).order('submitted_at',{ascending:false}),sb.from('schools').select('id,name,stage,status,approval_authority')]);return formatApprovalReport({submissions:reportError(sub,'الاعتمادات'),schools:reportError(sch,'المدارس')},ctx)}},
  summaryPlan:{async load(ctx){let cq=sb.from('school_classes').select('id,school_id,stage,grade,science_periods,class_subject_requirements(weekly_periods)').eq('stage','إعدادي');if(activeYear?.id)cq=cq.eq('academic_year_id',activeYear.id);if(activeTerm?.id)cq=cq.eq('term_id',activeTerm.id);let aq=sb.from('teaching_assignments').select('teacher_id,class_id,weekly_periods');if(activeTerm?.id)aq=aq.eq('term_id',activeTerm.id);const [sr,cr,tr,wr,ar]=await Promise.all([sb.from('schools').select('id,name,stage,class_count').eq('stage','إعدادي').order('name'),cq,sb.from('teacher_records').select('id,full_name,work_type,job_title,home_school_id,is_senior_teacher,active').eq('active',true),sb.from('workload_rules').select('job_title,stage,weekly_norm,effective_from,effective_to,active').eq('active',true),aq]);const plan=buildOperationalSchoolPlanData({schools:reportError(sr,'المدارس'),classes:reportError(cr,'الفصول'),teachers:reportError(tr,'المعلمون'),rules:reportError(wr,'الأنصبة'),assignments:reportError(ar,'الإسنادات')});return formatSummaryPlanReport(plan,ctx)}}
@@ -8361,7 +8363,7 @@ formatSupervisionPriorityReport=function(raw,ctx){
 ReportAdapters.teachers={async load(ctx){const data=await v91LoadReportsDataset();return formatTeachersReport({teachers:v91ScopeRows(data)},ctx)}};
 ReportAdapters.school={async load(ctx,options={}){
  let q=sb.from('schools').select('id,name,stage,school_type,address,phone,class_count,status,approval_authority,supervisor_id,supervisors(id,full_name,profile:profiles!supervisors_profile_id_fkey(full_name))').order('name');if(options.schoolId)q=q.eq('id',options.schoolId);
- const [schoolsResult,data]=await Promise.all([q,v91LoadReportsDataset()]);const schools=reportError(schoolsResult,'المدارس'),scopes=v91ScopeRows(data),counts={};
+ const [schoolsResult,data]=await Promise.all([q,v91LoadReportsDataset()]);const schools=options.schoolId?reportError(schoolsResult,'المدارس'):v161MergeSchools(reportError(schoolsResult,'المدارس'),await v161AggregateLinks()),scopes=v91ScopeRows(data),counts={};
  scopes.forEach(r=>{const id=v91ScopeSchoolId(r);if(id)counts[id]=(counts[id]||0)+1});
  return formatSchoolReport({schools,classes:data.classes||[],teacherCounts:counts,teacherScopes:scopes},ctx,options);
 }};
@@ -10728,7 +10730,8 @@ ReportAdapters.supervisors.load=async function(ctx,...rest){
  __v190SupRaw=null;
  const base=await __v190SupLoad.call(this,ctx,...rest);
  const raw=__v190SupRaw;if(!raw?.fullAccess)return base;
- const {data,error}=await sb.from('schools').select('id,name,stage,supervisor_id').order('name');if(error)throw error;
+ const {data:v206Raw,error}=await sb.from('schools').select('id,name,stage,supervisor_id').order('name');if(error)throw error;
+ const data=v161MergeSchools(v206Raw||[],await v161AggregateLinks()); // v206: المدرسة المربوطة تُحسب مع الأساسية
  const bySup=new Map();(data||[]).forEach(x=>{if(!x.supervisor_id)return;const k=String(x.supervisor_id);if(!bySup.has(k))bySup.set(k,[]);bySup.get(k).push(x)});
  const order=['ابتدائي','إعدادي','ثانوي'],stageRank=st=>{const i=order.findIndex(o=>String(st||'').includes(o));return i<0?9:i};
  const rows=[];
