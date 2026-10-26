@@ -21,6 +21,7 @@
 <!-- v168: لوحة منسق المرحلة مبسطة لدعم القرار: (1) صندوق «يحتاج قرارًا» = ما يبقى «بلا تغطية» بعد ما يُسد داخليًا ومقترح الانتداب والأجر المسند، مع شريط تفصيل العجز؛ (2) تنبيه «الأرقام تقديرية» بعدد المعلمين الأساسيين وبالأجر الذين لم تُدخل حصصهم وطاقة الأساسيين المحسوبة ضمن «يُسد داخليًا»؛ (3) أربع بطاقات (المطلوب، الفعلي، العجز، المعتمدة) وسطر أعداد عامة؛ (4) «ماذا أفعل الآن؟» مهام مرتبة بأزرار تفتح التقارير (ومنها تقرير جديد «معلمون لم تُدخل حصصهم»)؛ (5) أعلى 5 مدارس عجزًا والموجهون وعدالة الكادر مطوية. حُذف من لوحة المنسق قسما «مرحبًا» و«ملخص الحصص والعجز» المكرران. نفس الحسابات المعتمدة، عرض فقط. -->
 <!-- v167: آلية الجدول المجمّع (v166) في كل عروض جدول المدرسة: (1) تقرير الطباعة «الجدول الأسبوعي لمعلمي المدرسة»: لكل يوم المعلمون الذين لهم حصص فيه فقط، والأعمدة اليوم ← المعلم (عريض) ← الحصص (ضيقة) والخانة الفصل مختصرًا، و«مدرسة أخرى» للمنتدب، ويوم بلا حصص سطر واحد؛ (2) «جدول المدرسة المسجل» في ملف المدرسة بنفس شكل جدول المعلم المجمّع بدل خانات بأسماء المعلمين. عرض فقط. -->
 <!-- v166: شاشة «جدول المعلم»: فلترة المرحلة ← المدرسة ← المعلم؛ وخيار «كل معلمي المدرسة» (يُختار تلقائيًا عند اختيار مدرسة لمن يدير الجداول) يعرض جداول كل المعلمين في جدول واحد: لكل يوم صفوف بأسماء المعلمين الذين لهم حصص في ذلك اليوم فقط، وعمود معلم عريض وأعمدة حصص ضيقة، وفي الخانة الفصل (وحصص المدرسة الأخرى للمنتدب). اختيار معلم بعينه يعرض جدوله للتعديل كما كان. دور المعلم بلا تغيير. عرض فقط. -->
+<!-- v208: «الخطة الملخصة» للثانوي: أعمدة «موجه الفيزياء/الكيمياء/الأحياء» (من supervisor_school_subjects) بعد اسم المدرسة؛ والموجه يرى مدارسه المربوطة بالمادة (قاعدة بيانات v208: دالة private.supervises_school وسياسات الجدول). لا تغيير في قواعد الحساب. -->
 <!-- v207: «الخطة الملخصة» للمرحلة الثانوية على الفعلي: «الفصول» = الفصول المفصّلة بصفوفها فقط (مجموع أولى/ثانية/ثالثة) بدل الرقم المسجل للمدرسة (321 مسجل مقابل 264 مفصّل؛ حصص غير المفصّل لم تكن تدخل «المطلوب» أصلًا في الثانوي)، وأعمدة حصص الكيمياء والفيزياء والأحياء والعلوم المتكاملة لكل مدرسة (من class_subject_requirements مع اسم المادة، قراءة فقط). تظهر فقط حين يضم التقرير مدارس ثانوية وتُخفى الأعمدة الفارغة بعد الفلترة. لا تعديل في قاعدة البيانات ولا في قواعد الحساب. -->
 <!-- v206: توحيد عدد المدارس في التقارير: المدرسة المربوطة (schools.aggregate_with_school_id، مثل «النصر ع بنات صباحي» مع «النصر ع بنات») كانت تُحسب مدرسة مستقلة في تقارير «المدارس» و«الفصول» و«الموجهين ومدارسهم» (72 للإعدادي) وتُجمع مع الأساسية في بقية التقارير (71). الآن تُجمع في الثلاثة أيضًا. تقرير مدرسة واحدة مختارة لا يتغير. + شاشة المدارس: المدرسة المربوطة سطر واحد (71)، وقوائم «المدرسة» تجمع الفترتين في مجموعة واحدة، وفي ملف المدرسة زر للفترة الأخرى. لا تعديل في قاعدة البيانات. + عدد المعلمين موحّد في التقارير: «المعلمون» = من أصل مدرستهم في المدارس المعروضة (الإعدادي 211 = 119 ثابت + 92 أجر)، سطر «منتدبون من خارج المدارس المعروضة»، و«صفوف الكادر» للسجلات؛ الخطة الملخصة «المعلمون بالأجر» تُعد الشخص مرة واحدة. -->
 <!-- v205: زر «إيقاف معلم الأجر» في «معلمو المرحلة» لمنسق المرحلة ومدير النظام: يجعل teacher_records.active=false (لا حذف) بعد تأكيد، ويُرفض إن كان له فصول مسندة في الفصل الدراسي الحالي. -->
@@ -119,7 +120,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#152c43">
-<title>نظام توجيه العلوم — v207</title>
+<title>نظام توجيه العلوم — v208</title>
 <link rel="manifest" href="./manifest.webmanifest">
 <link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png">
 <link rel="apple-touch-icon" href="./icon-192.png">
@@ -2662,6 +2663,7 @@ window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();window.v152
 window.addEventListener('appinstalled',()=>{window.v152InstallPrompt=null;v152SyncInstallBtn()});
 if('serviceWorker' in navigator&&location.protocol!=='file:')window.addEventListener('load',()=>navigator.serviceWorker.register('./service-worker.js').catch(()=>{}));
 const V145_NEWS=[
+ ['v208','الخطة الملخصة للثانوي: موجه كل مادة (فيزياء/كيمياء/أحياء) بجانب المدرسة؛ والموجه يرى مدارسه في كل المراحل.'],
  ['v207','الخطة الملخصة للثانوي على الفعلي: «الفصول» = المفصّلة بصفوفها، وحصص الكيمياء والفيزياء والأحياء والعلوم المتكاملة لكل مدرسة.'],
  ['v206','توحيد عدد المدارس في التقارير وشاشة المدارس: المدرسة بفترتين (صباحي/مسائي) تُحسب مدرسة واحدة.'],
  ['v192','تقرير «الموجهين ومدارسهم»: لا يتكرر الموجه في آخر التقرير بسطر «لا توجد مدارس».'],
@@ -10934,8 +10936,10 @@ rebuildFilteredReportMetrics=function(schema){return v206TeacherMetrics(__v206Re
 /* v207: الثانوي في الخطة الملخصة — الفصول الفعلية + حصص المواد */
 const V207_SUBJECTS=[['الكيمياء','chem','الكيمياء'],['الفيزياء','phys','الفيزياء'],['الأحياء','bio','الأحياء'],['علوم متكاملة','integ','علوم متكاملة']];
 async function v207SecondarySubjects(){
- const out=new Map();if(!activeTerm?.id)return out;
- const [r,links]=await Promise.all([sb.from('school_classes').select('id,school_id,class_subject_requirements(weekly_periods,curriculum_subjects(subject_name))').eq('stage','ثانوي').eq('term_id',activeTerm.id),v161AggregateLinks()]);
+ const out=new Map();out.sups=new Map();if(!activeTerm?.id)return out;
+ const [r,links,sr,nr]=await Promise.all([sb.from('school_classes').select('id,school_id,class_subject_requirements(weekly_periods,curriculum_subjects(subject_name))').eq('stage','ثانوي').eq('term_id',activeTerm.id),v161AggregateLinks(),sb.from('supervisor_school_subjects').select('school_id,supervisor_id,subject_name').eq('active',true),sb.from('supervisors').select('id,full_name')]);
+ try{if(!sr.error&&!nr.error){const nm=new Map((nr.data||[]).map(x=>[String(x.id),String(x.full_name||'').trim().split(/\s+/).slice(0,2).join(' ')]));
+  (sr.data||[]).forEach(x=>{const base=links.get(String(x.school_id))||String(x.school_id),m=out.sups.get(base)||{};if(['الفيزياء','الكيمياء','الأحياء'].includes(x.subject_name)){const k=V207_SUBJECTS.find(y=>y[0]===x.subject_name)[1];m[k]=m[k]?m[k]+'، '+(nm.get(String(x.supervisor_id))||''):(nm.get(String(x.supervisor_id))||'')}out.sups.set(base,m)})}}catch(_){}
  if(r.error)return out;
  (r.data||[]).forEach(c=>{const sid=String(c.school_id),base=links.get(sid)||sid,m=out.get(base)||{};
   (c.class_subject_requirements||[]).forEach(q=>{const k=V207_SUBJECTS.find(x=>x[0]===q.curriculum_subjects?.subject_name);if(k)m[k[1]]=(m[k[1]]||0)+reportNumber(q.weekly_periods)});
@@ -10957,16 +10961,19 @@ ReportAdapters.summaryPlan.load=async function(...a){
  let map;try{map=await v207SecondarySubjects()}catch(_){return schema}
  rows.forEach(r=>{const sec=String(r._stage||'').includes('ثانوي'),m=map.get(r._schoolId)||{};
   if(sec){r.classes=reportNumber(r.g1)+reportNumber(r.g2)+reportNumber(r.g3);r._v207=true}
-  V207_SUBJECTS.forEach(x=>{r['s_'+x[1]]=sec?(m[x[1]]||0):'—'})});
+  V207_SUBJECTS.forEach(x=>{r['s_'+x[1]]=sec?(m[x[1]]||0):'—'});const sm=map.sups.get(r._schoolId)||{};['phys','chem','bio'].forEach(k=>{r['sup_'+k]=sec?(sm[k]||'—'):'—'})});
  const used=k=>rows.some(r=>reportNumber(r[k])>0);
  const sub=V207_SUBJECTS.filter(x=>used('s_'+x[1])).map(x=>reportColumn('s_'+x[1],'حصص '+x[2],.55,{numeric:true}));
  const ri=schema.columns.findIndex(c=>c.key==='required');if(ri>=0)schema.columns.splice(ri+1,0,...sub);else schema.columns.push(...sub);
+ const supCols=[['phys','موجه الفيزياء'],['chem','موجه الكيمياء'],['bio','موجه الأحياء']].filter(x=>rows.some(r=>r['sup_'+x[0]]&&r['sup_'+x[0]]!=='—')).map(x=>reportColumn('sup_'+x[0],x[1],.8));
+ const si=schema.columns.findIndex(c=>c.key==='school');schema.columns.splice(si>=0?si+1:0,0,...supCols);
  return v207Totals(schema);
 };
 const __v207Apply=applyCurrentFiltersToReportSchema;
 applyCurrentFiltersToReportSchema=function(schema,state){
  const out=__v207Apply(schema,state);
- if(out&&out.reportId==='summaryPlan'&&(out.columns||[]).some(c=>String(c.key).startsWith('s_'))){
+ if(out&&out.reportId==='summaryPlan'&&(out.columns||[]).some(c=>/^(s|sup)_/.test(String(c.key)))){
+  out.columns=out.columns.filter(c=>!String(c.key).startsWith('sup_')||(out.rows||[]).some(r=>r[c.key]&&r[c.key]!=='—'));
   out.columns=out.columns.filter(c=>!String(c.key).startsWith('s_')||(out.rows||[]).some(r=>reportNumber(r[c.key])>0));
   v207Totals(out);
  }
