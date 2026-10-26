@@ -3,7 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>إدخال بيانات المنسق — v172.4</title>
+<title>إدخال بيانات المنسق — v172.5</title>
+<!-- v172.5: المدرسة الصناعية لا تعرض سطر «غير مسند» لموجه الأحياء ولا تُعدّ ناقصة به. -->
 <!-- v172.4: موجهو المرحلة الثانوية (العامة والصناعية) للعرض فقط في هذه الصفحة؛ لا تعديل لهم حتى للمنسق (يُسندون من الإدارة). -->
 <!-- v172.3: المدرسة الثانوية بثلاثة موجهين حسب المادة (الفيزياء/الكيمياء/الأحياء) بدل موجه واحد؛ تُحفظ في supervisor_school_subjects (قاعدة v208). المراحل الأخرى كما هي. -->
 <!-- v172.2: اسم الفصل يُعرض «الصف 3 · فصل 1» بدل «3/1» (كان يُقرأ معكوسًا)، وزر «×» على الفصل المسند صار زرًا نصيًا «إلغاء الإسناد» (كان يُفهم علامة خطأ). عرض فقط؛ أسماء الفصول في القاعدة بلا تغيير. -->
@@ -226,7 +227,7 @@ function teacherMissing(t){const m=[];if(!t.phone)m.push('الهاتف');if(t.wo
 const homeTeachers=id=>S.teachers.filter(t=>t.home_school_id===id&&t.active!==false);
 const SUBJ=[['الفيزياء','f_sub_phys'],['الكيمياء','f_sub_chem'],['الأحياء','f_sub_bio']];
 function subjSupOf(sid,subject){const r=(S.subjRows||[]).find(x=>x.school_id===sid&&x.subject_name===subject&&x.active);return r?r.supervisor_id:''}
-function missingOf(s){const m=[];if(!s.gender_type)m.push('بنين/بنات');if(!s.address)m.push('العنوان');if(!s.phone)m.push('الهاتف');if(s.stage==='ثانوي'){SUBJ.forEach(([sj])=>{if(!subjSupOf(s.id,sj))m.push('موجه '+sj)})}else if(!s.supervisor_id)m.push('الموجه');if(!classesOf(s.id).length)m.push('الفصول');
+function missingOf(s){const m=[];if(!s.gender_type)m.push('بنين/بنات');if(!s.address)m.push('العنوان');if(!s.phone)m.push('الهاتف');if(s.stage==='ثانوي'){SUBJ.forEach(([sj])=>{if(!subjSupOf(s.id,sj)&&!(String(s.school_type||'').includes('صناعي')&&sj==='الأحياء'))m.push('موجه '+sj)})}else if(!s.supervisor_id)m.push('الموجه');if(!classesOf(s.id).length)m.push('الفصول');
  const ts=homeTeachers(s.id),bad=ts.filter(t=>teacherMissing(t).length).length;if(!ts.length)m.push('المعلمون');else if(bad)m.push(`بيانات ${bad} معلم`);return m}
 function lastChange(s){return Math.max(new Date(s.updated_at).getTime()||0,...homeTeachers(s.id).map(t=>new Date(t.updated_at).getTime()||0))}
 function statusOf(s){const ap=S.approvals[s.id];
@@ -294,7 +295,7 @@ function renderMain(){
  const v=(label,val)=>`<div><span>${label}</span><b class="${val?'':'miss'}">${val?esc(val):'غير مسجل'}</b></div>`;
  let body;
  if(!S.edit){
-  body=`<div class="kv">${v('اسم المدرسة',s.name)}${v('المرحلة',s.stage)}${v('النوع',(TYPES[s.stage]||[]).find(t=>t[0]===(s.school_type||''))?.[1]||s.school_type||'عام')}${v('بنين / بنات',s.gender_type)}${v('مدير المدرسة',S.managers[s.manager_profile_id]||'')}${s.stage==='ثانوي'?SUBJ.map(([sj])=>v('موجه '+sj,S.sups[subjSupOf(s.id,sj)]?.full_name||(subjSupOf(s.id,sj)?'(غير ظاهر)':''))).join(''):v('الموجه',supName)}${v('الهاتف',s.phone)}${v('العنوان',s.address)}</div>
+  body=`<div class="kv">${v('اسم المدرسة',s.name)}${v('المرحلة',s.stage)}${v('النوع',(TYPES[s.stage]||[]).find(t=>t[0]===(s.school_type||''))?.[1]||s.school_type||'عام')}${v('بنين / بنات',s.gender_type)}${v('مدير المدرسة',S.managers[s.manager_profile_id]||'')}${s.stage==='ثانوي'?SUBJ.filter(([sj])=>!(String(s.school_type||'').includes('صناعي')&&sj==='الأحياء'&&!subjSupOf(s.id,sj))).map(([sj])=>v('موجه '+sj,S.sups[subjSupOf(s.id,sj)]?.full_name||(subjSupOf(s.id,sj)?'(غير ظاهر)':''))).join(''):v('الموجه',supName)}${v('الهاتف',s.phone)}${v('العنوان',s.address)}</div>
   ${agg?`<div class="notice n-info" style="margin-top:10px">تُجمع مع «${esc(agg.name)}» في التقارير.</div>`:''}
   <h3>عدد الفصول (${classesOf(s.id).length})</h3>${classTable(groups,false)}
   ${miss.length?`<div class="notice n-bad" style="margin-top:12px">ناقص: ${miss.map(esc).join('، ')}</div>`:''}
@@ -311,7 +312,7 @@ function renderMain(){
    <div class="field"><label>المرحلة</label><input value="${esc(s.stage)}" readonly title="يعدّلها مدير النظام فقط"></div>
    ${types.length>1?`<div class="field"><label for="f_type">النوع</label><select id="f_type">${types.map(([val,t])=>`<option value="${esc(val)}" ${(s.school_type||'')===val?'selected':''}>${esc(t)}</option>`).join('')}</select></div>`:''}
    <div class="field"><label for="f_gender">بنين / بنات</label><select id="f_gender"><option value="">— اختر —</option>${['بنين','بنات','مشترك'].map(g=>`<option ${s.gender_type===g?'selected':''}>${g}</option>`).join('')}</select></div>
-   ${s.stage==='ثانوي'?SUBJ.map(([sj,id])=>`<div class="field"><label>موجه ${sj}</label><input value="${esc(S.sups[subjSupOf(s.id,sj)]?.full_name||'غير مسند')}" readonly title="يُسند من الإدارة"></div>`).join(''):`<div class="field"><label for="f_sup">الموجه</label><select id="f_sup"><option value="">— بدون —</option>${supOpts.map(x=>`<option value="${x.id}" ${x.id===s.supervisor_id?'selected':''}>${esc(x.full_name)}</option>`).join('')}</select></div>`}
+   ${s.stage==='ثانوي'?SUBJ.filter(([sj])=>!(String(s.school_type||'').includes('صناعي')&&sj==='الأحياء'&&!subjSupOf(s.id,sj))).map(([sj,id])=>`<div class="field"><label>موجه ${sj}</label><input value="${esc(S.sups[subjSupOf(s.id,sj)]?.full_name||'غير مسند')}" readonly title="يُسند من الإدارة"></div>`).join(''):`<div class="field"><label for="f_sup">الموجه</label><select id="f_sup"><option value="">— بدون —</option>${supOpts.map(x=>`<option value="${x.id}" ${x.id===s.supervisor_id?'selected':''}>${esc(x.full_name)}</option>`).join('')}</select></div>`}
    <div class="field"><label for="f_phone">هاتف المدرسة</label><input id="f_phone" inputmode="tel" value="${esc(s.phone||'')}"></div>
    <div class="field" style="grid-column:1/-1"><label for="f_addr">العنوان</label><input id="f_addr" value="${esc(s.address||'')}"></div>
    <div class="field"><label>مدير المدرسة</label><input value="${esc(S.managers[s.manager_profile_id]||'غير مسجل')}" readonly title="يُسند من شاشة الحسابات"></div>
