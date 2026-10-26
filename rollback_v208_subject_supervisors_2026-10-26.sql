@@ -88,3 +88,5 @@ drop policy if exists sss_update on public.supervisor_school_subjects;
 drop function if exists private.supervises_school(uuid,uuid);
 -- إلغاء إسناد مرحلة «ثانوي» لشيماء محمد فرج (أُضيف مع v208)
 update public.supervisor_stage_assignments set active=false where supervisor_id='54161bac-29ed-4276-a0e0-a45b23ca4b8e' and stage='ثانوي';
+-- إعادة تفعيل صفوف «علوم متكاملة» في الثانوي (عُطّلت 2026-10-26؛ كانت: معله، عبدالناصر، وشيماء بدل نوبي في العام)
+update public.supervisor_school_subjects x set active=true from public.schools sc where sc.id=x.school_id and sc.stage='ثانوي' and x.subject_name='علوم متكاملة';
