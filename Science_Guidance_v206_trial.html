@@ -21,7 +21,7 @@
 <!-- v168: لوحة منسق المرحلة مبسطة لدعم القرار: (1) صندوق «يحتاج قرارًا» = ما يبقى «بلا تغطية» بعد ما يُسد داخليًا ومقترح الانتداب والأجر المسند، مع شريط تفصيل العجز؛ (2) تنبيه «الأرقام تقديرية» بعدد المعلمين الأساسيين وبالأجر الذين لم تُدخل حصصهم وطاقة الأساسيين المحسوبة ضمن «يُسد داخليًا»؛ (3) أربع بطاقات (المطلوب، الفعلي، العجز، المعتمدة) وسطر أعداد عامة؛ (4) «ماذا أفعل الآن؟» مهام مرتبة بأزرار تفتح التقارير (ومنها تقرير جديد «معلمون لم تُدخل حصصهم»)؛ (5) أعلى 5 مدارس عجزًا والموجهون وعدالة الكادر مطوية. حُذف من لوحة المنسق قسما «مرحبًا» و«ملخص الحصص والعجز» المكرران. نفس الحسابات المعتمدة، عرض فقط. -->
 <!-- v167: آلية الجدول المجمّع (v166) في كل عروض جدول المدرسة: (1) تقرير الطباعة «الجدول الأسبوعي لمعلمي المدرسة»: لكل يوم المعلمون الذين لهم حصص فيه فقط، والأعمدة اليوم ← المعلم (عريض) ← الحصص (ضيقة) والخانة الفصل مختصرًا، و«مدرسة أخرى» للمنتدب، ويوم بلا حصص سطر واحد؛ (2) «جدول المدرسة المسجل» في ملف المدرسة بنفس شكل جدول المعلم المجمّع بدل خانات بأسماء المعلمين. عرض فقط. -->
 <!-- v166: شاشة «جدول المعلم»: فلترة المرحلة ← المدرسة ← المعلم؛ وخيار «كل معلمي المدرسة» (يُختار تلقائيًا عند اختيار مدرسة لمن يدير الجداول) يعرض جداول كل المعلمين في جدول واحد: لكل يوم صفوف بأسماء المعلمين الذين لهم حصص في ذلك اليوم فقط، وعمود معلم عريض وأعمدة حصص ضيقة، وفي الخانة الفصل (وحصص المدرسة الأخرى للمنتدب). اختيار معلم بعينه يعرض جدوله للتعديل كما كان. دور المعلم بلا تغيير. عرض فقط. -->
-<!-- v206: توحيد عدد المدارس في التقارير: المدرسة المربوطة (schools.aggregate_with_school_id، مثل «النصر ع بنات صباحي» مع «النصر ع بنات») كانت تُحسب مدرسة مستقلة في تقارير «المدارس» و«الفصول» و«الموجهين ومدارسهم» (72 للإعدادي) وتُجمع مع الأساسية في بقية التقارير (71). الآن تُجمع في الثلاثة أيضًا. تقرير مدرسة واحدة مختارة لا يتغير. + شاشة المدارس: المدرسة المربوطة سطر واحد (71)، وقوائم «المدرسة» تجمع الفترتين في مجموعة واحدة، وفي ملف المدرسة زر للفترة الأخرى. لا تعديل في قاعدة البيانات. -->
+<!-- v206: توحيد عدد المدارس في التقارير: المدرسة المربوطة (schools.aggregate_with_school_id، مثل «النصر ع بنات صباحي» مع «النصر ع بنات») كانت تُحسب مدرسة مستقلة في تقارير «المدارس» و«الفصول» و«الموجهين ومدارسهم» (72 للإعدادي) وتُجمع مع الأساسية في بقية التقارير (71). الآن تُجمع في الثلاثة أيضًا. تقرير مدرسة واحدة مختارة لا يتغير. + شاشة المدارس: المدرسة المربوطة سطر واحد (71)، وقوائم «المدرسة» تجمع الفترتين في مجموعة واحدة، وفي ملف المدرسة زر للفترة الأخرى. لا تعديل في قاعدة البيانات. + عدد المعلمين موحّد في التقارير: «المعلمون» = من أصل مدرستهم في المدارس المعروضة (الإعدادي 211 = 119 ثابت + 92 أجر)، سطر «منتدبون من خارج المدارس المعروضة»، و«صفوف الكادر» للسجلات؛ الخطة الملخصة «المعلمون بالأجر» تُعد الشخص مرة واحدة. -->
 <!-- v205: زر «إيقاف معلم الأجر» في «معلمو المرحلة» لمنسق المرحلة ومدير النظام: يجعل teacher_records.active=false (لا حذف) بعد تأكيد، ويُرفض إن كان له فصول مسندة في الفصل الدراسي الحالي. -->
 <!-- v204: منسق المرحلة يضيف انتدابًا ويلغيه (زرّا «إضافة انتداب» و«إلغاء الانتداب» في «معلمو المرحلة» وملف المدرسة) ضمن مرحلته؛ الخادم: سياسة delegations_update ودالة execute-teacher-delegation v3. -->
 <!-- v203: «توزيع الموجهين»: فلتر ثالث «الموجه» (الكل/بلا موجه/موجهو المرحلة المختارة) يعرض المدارس المسندة إليه بعد «عرض المدارس». -->
@@ -6607,7 +6607,7 @@ function formatSchoolReport(raw,ctx,options={}){
  }
  const rows=(raw.schools||[]).map(s=>({
   school:reportCellValue(s.name),stage:reportCellValue(s.stage),schoolType:reportCellValue(s.school_type||'عام'),classes:Math.max(reportNumber(s.class_count),reportNumber(classCount[s.id])),budget:gradeCount[s.id]?[...gradeCount[s.id]].map(([g,n])=>`${g}: ${n}`).join(' · '):'—',
-  teachers:reportNumber(teacherCount[s.id]),_teacherIds:Array.isArray(raw.teacherScopes)?raw.teacherScopes.filter(t=>v91ScopeSchoolId(t)===String(s.id)).map(v91TeacherId):undefined,supervisor:reportCellValue(s.supervisors?.full_name||s.supervisors?.profile?.full_name||'غير مسندة'),approval:reportAuthority(s.approval_authority),status:reportStatus(s.status),
+  teachers:reportNumber(teacherCount[s.id]),_teacherIds:Array.isArray(raw.teacherScopes)?raw.teacherScopes.filter(t=>v91ScopeSchoolId(t)===String(s.id)).map(v91TeacherId):undefined,_homeTeacherIds:Array.isArray(raw.teacherScopes)?raw.teacherScopes.filter(t=>v91ScopeSchoolId(t)===String(s.id)&&['home','delegated_out_partial'].includes(String(t.school_relation||'home'))).map(v91TeacherId):undefined,supervisor:reportCellValue(s.supervisors?.full_name||s.supervisors?.profile?.full_name||'غير مسندة'),approval:reportAuthority(s.approval_authority),status:reportStatus(s.status),
   _schoolId:String(s.id),_school:reportCellValue(s.name),_stage:reportCellValue(s.stage),_schoolType:reportCellValue(s.school_type||'عام'),_supervisor:reportCellValue(s.supervisors?.full_name||s.supervisors?.profile?.full_name||'غير مسندة'),_approval:reportAuthority(s.approval_authority),_status:reportStatus(s.status)
  }));
  const single=rows.length===1&&options.schoolId;
@@ -8275,6 +8275,7 @@ buildOperationalSchoolPlanData=function(input={}){
   const remainingDeficit=calculationReady?paidRequired:null,surplus=calculationReady?Math.max(basicCapacity-requiredPeriods,0):null;
   const classSource=detailed.length===0?'school_total':missingDetailed>0?'mixed':'detailed';
   const homePermanent=permanent.filter(t=>['home','delegated_out_partial'].includes(String(t.school_relation||'home'))).length;
+  const homePaid=paid.filter(t=>['home','delegated_out_partial'].includes(String(t.school_relation||'home'))).length; // v206: معلم الأجر المنتدب جزئيًا يُعد مرة واحدة
   const partialDelegates=permanent.filter(t=>String(t.school_relation||'').includes('partial')).length;
   const incomingPartial=permanent.filter(t=>String(t.school_relation||'')==='delegated_in_partial').length;
   const fullDelegates=permanent.filter(t=>String(t.school_relation||'')==='delegated_in_full').length;
@@ -8290,7 +8291,7 @@ buildOperationalSchoolPlanData=function(input={}){
   if(paid.length&&!paidAssigned)notes.push(`${paid.length} معلم أجر بلا حصص مسندة`);
   return {
    school_id:school.id,school_name:school.name,school_stage:school.stage,planning_capacity:planningCapacity,grade1_classes:gradeCount('الأول'),grade2_classes:gradeCount('الثاني'),grade3_classes:gradeCount('الثالث'),
-   total_classes:totalClasses,required_periods:requiredPeriods,roster_teachers:schoolTeachers.length,permanent_teachers:permanent.length,home_permanent_teachers:homePermanent,
+   total_classes:totalClasses,required_periods:requiredPeriods,roster_teachers:schoolTeachers.length,permanent_teachers:permanent.length,home_permanent_teachers:homePermanent,home_paid_teachers:homePaid,
    partial_delegates:partialDelegates,incoming_partial_delegates:incomingPartial,full_delegates:fullDelegates,delegated_coverage:delegatedCoverage,
    basic_norm_total:basicNormTotal,internal_duties:supervisionPeriods,supervision_periods:supervisionPeriods,personal_duties:supervisionPeriods,basic_capacity:basicCapacity,actual_teaching:basicCapacity,
    paid_teachers:paid.length,paid_required:paidRequired,paid_assigned:paidAssigned,remaining_deficit:remainingDeficit,surplus,class_source:classSource,calculation_ready:calculationReady,
@@ -8313,7 +8314,7 @@ buildOperationalSchoolPlanData=function(input={}){
 formatTeachersReport=function(raw,ctx){
  const source=raw.teachers||[],rows=source.map(t=>{
   const teaching=reportNumber(t.teaching_periods),supervision=reportNumber(t.supervision_periods);
-  return {teacherId:v91TeacherId(t),name:reportCellValue(t.full_name),civil:reportCellValue(t.civil_id),school:v91SchoolCell(t),workType:t.work_type==='paid'?'بالأجر':'ثابت',job:reportCellValue(t.job_title),
+  return {_home:['home','delegated_out_partial'].includes(String(t.school_relation||'home')),teacherId:v91TeacherId(t),name:reportCellValue(t.full_name),civil:reportCellValue(t.civil_id),school:v91SchoolCell(t),workType:t.work_type==='paid'?'بالأجر':'ثابت',job:reportCellValue(t.job_title),
    teaching,supervision,functionalTotal:teaching+supervision,target:workloadTargetLabel(t),
    deficit:isPaidTeacher(t)?'—':(t.deficit_periods==null?'—':reportNumber(t.deficit_periods)),surplus:isPaidTeacher(t)||t.surplus_periods==null?'—':reportNumber(t.surplus_periods),status:isPaidTeacher(t)?'حسب الحصص المسندة':reportCellValue(t.workload_status),
    _schoolId:v91ScopeSchoolId(t),_school:reportCellValue(t.scope_school_name||t.home_school_name),_stage:reportCellValue(t.scope_school_stage||t.home_school_stage),_status:isPaidTeacher(t)?'حسب الحصص المسندة':reportCellValue(t.workload_status),_search:[t.full_name,t.civil_id,t.scope_school_name,t.home_school_name,t.delegation_from_school_name,t.delegation_to_school_name,t.job_title].filter(Boolean).join(' ')};
@@ -8330,7 +8331,7 @@ formatTeachersReport=function(raw,ctx){
 formatSummaryPlanReport=function(plan,ctx){
  const rows=(plan?.rows||[]).map((r,i)=>{const deficit=r.calculation_ready?reportNumber(r.remaining_deficit):'—',surplus=r.calculation_ready?reportNumber(r.surplus):'—',status=!r.calculation_ready?'بيانات غير مكتملة':deficit>0?'عجز':surplus>0?'زيادة':'متوازن';return {
   index:i+1,school:reportCellValue(r.school_name),g1:reportCellValue(r.grade1_classes),g2:reportCellValue(r.grade2_classes),g3:reportCellValue(r.grade3_classes),classes:reportNumber(r.total_classes),required:reportNumber(r.required_periods),
-  roster:reportNumber(r.roster_teachers),home:reportNumber(r.home_permanent_teachers),partial:reportNumber(r.incoming_partial_delegates),full:reportNumber(r.full_delegates),paid:reportNumber(r.paid_teachers),coverage:reportNumber(r.basic_capacity),paidAssigned:reportNumber(r.paid_assigned),deficit,surplus,status,netDeficit:r.calculation_ready?Math.max(reportNumber(r.remaining_deficit)-reportNumber(r.paid_assigned),0):'—',
+  roster:reportNumber(r.roster_teachers),home:reportNumber(r.home_permanent_teachers),partial:reportNumber(r.incoming_partial_delegates),full:reportNumber(r.full_delegates),paid:reportNumber(r.paid_teachers),homePaid:reportNumber(r.home_paid_teachers),coverage:reportNumber(r.basic_capacity),paidAssigned:reportNumber(r.paid_assigned),deficit,surplus,status,netDeficit:r.calculation_ready?Math.max(reportNumber(r.remaining_deficit)-reportNumber(r.paid_assigned),0):'—',
   _schoolId:String(r.school_id||r.scope_school_id||''),_school:reportCellValue(r.school_name),_stage:reportCellValue(r.school_stage),_status:status};});
  const s=plan?.stats||{};
  return makeReportSchema({reportId:'summaryPlan',title:'الخطة الملخصة لتوجيه العلوم',subtitle:'الكادر الفعلي لكل مدرسة يشمل الأساسي والمنتدب والأجر. تغطية المنتدب الجزئي هي حصصه الفعلية في المدرسة، وإشرافه في المدرسة الأصلية فقط.',period:ctx.period,
@@ -9082,7 +9083,7 @@ function v103RebuildMetrics(schema){
 }
 ReportAdapters.staffRoster={async load(ctx){
  const data=await v91LoadReportsDataset(),rows=v103ScopeRows(data).sort((a,b)=>String(a.scope_school_name).localeCompare(String(b.scope_school_name),'ar')||String(a.full_name).localeCompare(String(b.full_name),'ar')).map((s,i)=>({
-  index:i+1,teacherId:v91TeacherId(s),name:reportCellValue(s.full_name),civil:reportCellValue(s.civil_id),school:reportCellValue(s.scope_school_name),job:reportCellValue(s.job_title),workType:isPaidTeacher(s)?'بالأجر':'ثابت',relation:v91SchoolRelationText(s)||'على قوة المدرسة',teaching:reportNumber(s.teaching_periods),...v103ScopeMeta([s]),_status:isPaidTeacher(s)?'بالأجر':'ثابت',_search:[s.full_name,s.civil_id,s.job_title,v91SchoolCell(s)].filter(Boolean).join(' ')
+  index:i+1,_home:['home','delegated_out_partial'].includes(String(s.school_relation||'home')),teacherId:v91TeacherId(s),name:reportCellValue(s.full_name),civil:reportCellValue(s.civil_id),school:reportCellValue(s.scope_school_name),job:reportCellValue(s.job_title),workType:isPaidTeacher(s)?'بالأجر':'ثابت',relation:v91SchoolRelationText(s)||'على قوة المدرسة',teaching:reportNumber(s.teaching_periods),...v103ScopeMeta([s]),_status:isPaidTeacher(s)?'بالأجر':'ثابت',_search:[s.full_name,s.civil_id,s.job_title,v91SchoolCell(s)].filter(Boolean).join(' ')
  }));
  return v103BaseReport('staffRoster',ctx,[reportColumn('index','م',.3,{numeric:true}),reportColumn('name','المعلم',1.6),reportColumn('civil','الرقم القومي',1.05,{id:true,nowrap:true}),reportColumn('school','المدرسة',1.5),reportColumn('job','الدرجة',.8),reportColumn('workType','نوع التعاقد',.7),reportColumn('relation','علاقة المعلم بالمدرسة',1.7),reportColumn('teaching','التدريس الفعلي',.7,{numeric:true})],rows,'حصص التدريس تخص المدرسة في الصف؛ أعداد المعلمين دون تكرار عبر المدارس. معلم الأجر يأخذ حصص المدرسة دون حد للنصاب أو زيادة أو نقص.');
 }};
@@ -9894,8 +9895,8 @@ ReportAdapters.teacherWorkload={async load(ctx){
   const delegName=otherNames.length?otherNames.join('، '):(outRow?.delegation_to_school_name||(other>0?'مدرسة أخرى':''));
   const homeName=t.home_school_name||homeRows[0]?.scope_school_name||t.delegation_from_school_name||'';
   const onLeave=t.workload_status==='إجازة';
-  if(onLeave)return {teacherId:v91TeacherId(t),name:reportCellValue(t.full_name),workType:'إجازة',home:reportCellValue(homeName),deleg:reportCellValue(delegName),homePeriods:'—',delegPeriods:'—',supervision:'—',leadership:'—',total:'—',target:'إجازة',deficit:'—',surplus:'—',_paid:false,_delegated:false,_status:'إجازة',...v103ScopeMeta(list),_civil:reportCellValue(t.civil_id),_job:reportCellValue(t.job_title),_search:[t.full_name,t.civil_id,homeName,delegName,'إجازة'].filter(Boolean).join(' ')};
-  return {teacherId:v91TeacherId(t),name:reportCellValue(t.full_name),workType:paid?'بالأجر':'ثابت',home:reportCellValue(homeName),deleg:reportCellValue(delegName),
+  if(onLeave)return {_home:homeRows.length>0,_paid:false,teacherId:v91TeacherId(t),name:reportCellValue(t.full_name),workType:'إجازة',home:reportCellValue(homeName),deleg:reportCellValue(delegName),homePeriods:'—',delegPeriods:'—',supervision:'—',leadership:'—',total:'—',target:'إجازة',deficit:'—',surplus:'—',_paid:false,_delegated:false,_status:'إجازة',...v103ScopeMeta(list),_civil:reportCellValue(t.civil_id),_job:reportCellValue(t.job_title),_search:[t.full_name,t.civil_id,homeName,delegName,'إجازة'].filter(Boolean).join(' ')};
+  return {_home:homeRows.length>0,teacherId:v91TeacherId(t),name:reportCellValue(t.full_name),workType:paid?'بالأجر':'ثابت',home:reportCellValue(homeName),deleg:reportCellValue(delegName),
    homePeriods:home,delegPeriods:(delegName||other>0)?other:'—',supervision:sup>0?sup:'—',leadership:lead>0?lead:'—',total,
    target:paid?'—':workloadTargetLabel(t),deficit:workloadDeficitLabel(t),surplus:workloadSurplusLabel(t),
    _paid:paid,_delegated:list.some(r=>/^delegated_/.test(String(r.school_relation||''))),
@@ -10041,7 +10042,7 @@ function v155BuildModel(data,subs){
  // v168: المعلمون الذين لم تُدخل لهم أي حصة (الأساسيون بطاقتهم المحسوبة، وبالأجر بلا طاقة محسوبة).
  const unent=new Map();rows.forEach(r=>(r.zero||[]).forEach(z=>{if(!unent.has(z.id))unent.set(z.id,{...z,school:r.name,type:'أساسي'})}));
  scopes.filter(x=>String(x.work_type)==='paid'&&!reportNumber(x.global_teaching_periods)).forEach(x=>{const id=v91TeacherId(x);if(!unent.has(id))unent.set(id,{id,name:x.full_name||'—',cap:0,school:x.scope_school_name||'',type:'بالأجر'})});
- const permIds=new Set(scopes.filter(x=>String(x.work_type)!=='paid').map(v91TeacherId)),paidIds=new Set(scopes.filter(x=>String(x.work_type)==='paid').map(v91TeacherId));
+ const v206Home=x=>['home','delegated_out_partial'].includes(String(x.school_relation||'home')),permIds=new Set(scopes.filter(x=>String(x.work_type)!=='paid'&&v206Home(x)).map(v91TeacherId)),paidIds=new Set(scopes.filter(x=>String(x.work_type)==='paid'&&v206Home(x)).map(v91TeacherId)); // v206: أصلهم في مدارس المرحلة
  return {unentered:[...unent.values()],permCount:permIds.size,paidCount:paidIds.size,stage,stages,rows,ready,proposals,supervisors,r2,bands,teachers:teachers.size,leave:leave.size,partial:partial.size,
   totals:{schools:rows.length,ready:ready.length,classes:sum(rows,'classes'),required:sum(ready,'required'),actual:sum(ready,'actual'),deficit:sum(ready,'deficit'),internal:sum(ready,'internal'),need:sum(ready,'need'),spare:sum(ready,'spare'),surplus:sum(ready,'surplus'),paid:sum(ready,'paid'),proposed:sum(ready,'proposed'),after:sum(ready,'after'),paidCov:sum(ready,'paidCov'),uncovered:sum(ready,'uncovered'),covered:sum(ready,'covered')}};
 }
@@ -10883,6 +10884,50 @@ async function v205StopPaidTeacher(teacherId){
   await loadPage(true);
  }catch(err){moneySafeError(err)}
 }
+
+/* v206: عدد المعلمين موحّد في كل التقارير: «المعلمون» = من أصل مدرستهم ضمن المدارس المعروضة (كل معلم مرة واحدة)،
+   و«منتدبون من خارج المدارس المعروضة» سطر مستقل، و«صفوف الكادر» = السجلات (المنتدب جزئيًا يتكرر). عرض فقط. */
+function v206TeacherMetrics(schema){
+ if(!schema||!Array.isArray(schema.rows))return schema;
+ const id=schema.reportId,rows=schema.rows;
+ const relabel=(list,map)=>list.map(m=>map[m.label]?reportMetric(map[m.label][0],map[m.label][1]):m);
+ const apply=(map,extra)=>{
+  [['summary'],['totals']].forEach(([k])=>{
+   let list=Array.isArray(schema[k])?schema[k]:[];if(!list.length)return;
+   list=relabel(list,map);
+   if(extra){const i=list.findIndex(m=>m.label===extra.after);if(i>=0)list.splice(i+1,0,reportMetric(extra.label,extra.value))}
+   schema[k]=list;
+  });
+ };
+ if(['teachers','staffRoster','teacherWorkload'].includes(id)&&rows.length&&rows.every(r=>'_home' in r)){
+  const home=new Map();rows.forEach(r=>{if(r._home&&r.teacherId)home.set(r.teacherId,r._paid===true||r.workType==='بالأجر')});
+  const all=new Set(rows.map(r=>r.teacherId).filter(Boolean)),incoming=[...all].filter(x=>!home.has(x)).length;
+  let perm=0,paid=0;home.forEach(p=>p?paid++:perm++);
+  const main='المعلمون (أصلهم في المدارس المعروضة)',inc='منتدبون من خارج المدارس المعروضة';
+  const map={'المعلمون الفريدون':[main,home.size],'المعلمون دون تكرار':[main,home.size],'عدد المعلمين':[main,home.size],'سجلات المدارس':['صفوف الكادر (المنتدب جزئيًا يتكرر)',rows.length]};
+  if(id==='staffRoster'){map['الثابت']=['الثابت',perm];map['بالأجر']=['بالأجر',paid]}
+  if(id==='teacherWorkload')map['بالأجر']=['بالأجر',paid];
+  const first=(schema.summary||[]).find(m=>map[m.label]&&map[m.label][0]===main);
+  apply(map,first?{after:main,label:inc,value:incoming}:null);
+  return schema;
+ }
+ if(id==='school'&&rows.length>1&&rows.every(r=>Array.isArray(r._teacherIds)&&Array.isArray(r._homeTeacherIds))){
+  const home=new Set(rows.flatMap(r=>r._homeTeacherIds)),all=new Set(rows.flatMap(r=>r._teacherIds)),incoming=[...all].filter(x=>!home.has(x)).length,main='المعلمون (أصلهم في المدارس المعروضة)';
+  apply({'المعلمون الفريدون':[main,home.size],'ظهور الكادر بالمدارس':['صفوف الكادر بالمدارس (المنتدب جزئيًا يتكرر)',rows.reduce((a,r)=>a+reportNumber(r.teachers),0)]},{after:main,label:'منتدبون من خارج المدارس المعروضة',value:incoming});
+  return schema;
+ }
+ if(id==='summaryPlan'&&rows.length&&rows.every(r=>'homePaid' in r)){
+  apply({'المعلمون بالأجر':['المعلمون بالأجر',reportSum(rows,'homePaid')]});
+  return schema;
+ }
+ return schema;
+}
+['teachers','staffRoster','teacherWorkload','school','summaryPlan'].forEach(k=>{
+ const base=ReportAdapters[k]&&ReportAdapters[k].load;if(!base)return;
+ ReportAdapters[k].load=async function(...a){return v206TeacherMetrics(await base.apply(this,a))};
+});
+const __v206RebuildMetrics=rebuildFilteredReportMetrics;
+rebuildFilteredReportMetrics=function(schema){return v206TeacherMetrics(__v206RebuildMetrics(schema))};
 </script>
 
 <div id="reportPreviewOverlay" class="report-preview-overlay" role="dialog" aria-modal="true" aria-label="معاينة التقرير" aria-hidden="true">
