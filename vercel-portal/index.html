@@ -316,7 +316,8 @@ summary{cursor:pointer;font-weight:600;padding:4px 0}
         role('👨‍🏫', 'معلم', 'راجع بياناتك وحدّثها، أو سجّل كمعلم جديد', function () { S.mode = 'registered'; go('gate'); }),
         role('🏫', 'مشرف مدرسة', 'اعرض معلمي مدرستك، وعدّل بياناتهم وفصولهم، وأضف معلمًا جديدًا', function () { go('supgate'); }),
         role('📝', 'معلم بالأجر — تقديم طلب', 'نموذج التقدم للتعاقد', function () { window.location.href = CFG.paid; }),
-        role('🧭', 'منسق المرحلة', 'راجع بيانات مدارس مرحلتك وفصولها ومعلميها، وأسند الفصول واعتمد البيانات', function () { window.location.href = '/coordinator/'; })
+        role('🧭', 'منسق المرحلة', 'راجع بيانات مدارس مرحلتك وفصولها ومعلميها، وأسند الفصول واعتمد البيانات', function () { window.location.href = '/coordinator/'; }),
+        role('✅', 'الاعتماد', 'افتح بوابة الاعتماد', function () { window.location.href = 'https://teacher-portal-admin.vercel.app/'; })
       ));
   };
 
