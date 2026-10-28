@@ -70,6 +70,8 @@ input[readonly]{background:#f1f5f9;color:var(--muted)}
 .chips{display:flex;flex-wrap:wrap;gap:8px;margin:6px 0 14px}
 .chip{background:#fff;border:2px solid var(--border);color:var(--text);padding:8px 14px;min-height:44px;font-size:.95rem;border-radius:999px}
 .chip[aria-pressed=true]{background:var(--primary);border-color:var(--primary);color:#fff}
+.chip.locked{background:#f1f5f9;border-style:dashed;color:var(--muted);cursor:not-allowed;text-align:right;border-radius:14px;line-height:1.4}
+.chip.locked small{display:block;font-size:.78rem;color:#92400e;font-weight:600}
 .grade{font-weight:700;margin:14px 0 2px;color:#334155}
 .list{border:1px solid var(--border);border-radius:12px;max-height:300px;overflow:auto;margin:8px 0}
 .list button{display:block;width:100%;text-align:right;background:#fff;border-bottom:1px solid var(--border);border-radius:0;font-weight:500;min-height:46px}
@@ -188,7 +190,7 @@ summary{cursor:pointer;font-weight:600;padding:4px 0}
         (r.remaining > 0 ? ' متبقي لك ' + plural(r.remaining, 'محاولة واحدة', 'محاولتان', 'محاولات') + '.' : ' كانت هذه آخر محاولة، وسيتوقف الدخول مؤقتًا.');
       case 'locked': return 'تم إيقاف الدخول مؤقتًا بسبب محاولات خاطئة متكررة. حاول بعد ' + (r.minutes || 15) + ' دقيقة.';
       case 'busy': return 'الخدمة مشغولة الآن، حاول بعد قليل.';
-      case 'closed': return 'فترة تعديل البيانات مغلقة حاليًا.';
+      case 'closed': return r.note || 'فترة تعديل البيانات مغلقة حاليًا.';
       case 'exists': return isSup() ? 'هذا الرقم المدني مسجّل بالفعل في النظام. إن كان معلمًا في مدرستك فابحث عنه في القائمة، وإن كان في مدرسة أخرى فتواصل مع إدارة التوجيه.'
         : 'هذا الرقم المدني مسجّل بالفعل. ارجع واختر «معلم مسجّل في النظام».';
       case 'forbidden': return 'هذا الإجراء غير متاح لك على هذا المعلم أو هذه المدرسة.';
@@ -391,7 +393,7 @@ summary{cursor:pointer;font-weight:600;padding:4px 0}
 
   async function enterRegistered(r, c, p) {
     S.auth = { civil: c, phone: p }; S.lookup = r; S.mode = 'registered'; S.limited = !!r.limited;
-    S.closed = r.editing_open === false;
+    S.closed = r.editing_open === false; S.closedNote = r.closed_note || '';
     var t = r.teacher || {};
     S.base = {}; S.person = {};
     PKEYS.forEach(function (k) { var v = t[k] == null ? '' : String(t[k]); S.base[k] = v; S.person[k] = v; });
@@ -410,7 +412,7 @@ summary{cursor:pointer;font-weight:600;padding:4px 0}
     go(S.limited ? 'flow' : 'confirm');
   }
   async function startNew() {
-    S.auth = null; S.lookup = null; S.mode = 'new'; S.limited = false; S.closed = false;
+    S.auth = null; S.lookup = null; S.mode = 'new'; S.limited = false; S.closed = false; S.closedNote = '';
     S.base = {}; S.person = { work_type: '' }; PKEYS.forEach(function (k) { S.person[k] = ''; }); S.person.civil_id = '';
     S.school = null; S.stageKey = null; S.baseSel = new Map(); S.sel = new Map(); S.step = 1; S.dbase = {}; S.dsel = {};
     S.draft = loadDraft(dkey()); go('flow');
@@ -496,7 +498,7 @@ summary{cursor:pointer;font-weight:600;padding:4px 0}
     return h('div', { class: 'card' }, topbar('بياناتك'),
       h('h2', null, 'أهلًا ' + (pv('full_name').split(' ')[0] || '')),
       h('p', { class: 'sub', style: 'text-align:right' }, 'راجع بياناتك المسجّلة. إن كانت صحيحة اضغط «بياناتي صحيحة»، وإلا عدّلها أو أكمل الناقص.'),
-      S.closed ? h('div', { class: 'warn', id: 'closed-banner' }, 'فترة تعديل البيانات مغلقة حاليًا، يمكنك المراجعة فقط.') : null,
+      S.closed ? h('div', { class: 'warn', id: 'closed-banner' }, S.closedNote || 'فترة تعديل البيانات مغلقة حاليًا، يمكنك المراجعة فقط.') : null,
       S.lookup.pending ? h('div', { class: 'note', id: 'pending-note' }, 'لديك طلب سابق قيد المراجعة (رقم ' + S.lookup.pending.ref + '). أي إرسال جديد يحلّ محله.') : null,
       otherN > 0 ? h('div', { class: 'note' }, 'لديك ' + otherN + ' فصل في مدرسة أخرى (انتداب/إعارة)؛ تُدار من المشرف ولا تتغير من هنا.') : null,
       d ? h('div', { class: 'warn', id: 'draft-note' }, 'لديك مسودة غير مرسلة محفوظة على هذا الجهاز. ',
@@ -563,7 +565,7 @@ summary{cursor:pointer;font-weight:600;padding:4px 0}
     wrap.appendChild(steps);
     wrap.appendChild(h('div', { class: 'stlabel', id: 'stlabel' }, STEP_N[stepKey(S.step)]));
     if (S.mode === 'registered' && S.limited && S.step === 1) wrap.appendChild(h('div', { class: 'warn', id: 'limited-note' }, 'لا يوجد رقم هاتف مسجّل لك في النظام، لذلك لا نعرض بياناتك. اكتب بياناتك كاملة وسيراجعها المشرف قبل اعتمادها.'));
-    if (S.closed) wrap.appendChild(h('div', { class: 'warn', id: 'closed-banner' }, 'فترة تعديل البيانات مغلقة حاليًا.'));
+    if (S.closed) wrap.appendChild(h('div', { class: 'warn', id: 'closed-banner' }, S.closedNote || 'فترة تعديل البيانات مغلقة حاليًا.'));
     if (S.draft && S.step === 1) {
       var d = S.draft;
       wrap.appendChild(h('div', { class: 'warn', id: 'draft-note' }, 'لديك مسودة غير مرسلة محفوظة على هذا الجهاز. ',
@@ -701,11 +703,17 @@ summary{cursor:pointer;font-weight:600;padding:4px 0}
     }
     function drawChips() {
       chips.replaceChildren();
+      var closedSt = (S.mode === 'new' && S.status && S.status.closed_stages) || {};
+      if (closedSt[S.stageKey]) { S.stageKey = null; S.school = null; S.sel = new Map(); }
       STAGES.forEach(function (s) {
+        if (closedSt[s.k]) return;
         chips.appendChild(h('button', { type: 'button', class: 'chip', 'data-stage': s.k, 'aria-pressed': S.stageKey === s.k ? 'true' : 'false', onclick: function () {
           if (S.school && S.school.stage_key !== s.k) { S.school = null; S.sel = new Map(); }
           S.stageKey = s.k; saveDraft(); drawChips(); drawPicked(); drawList();
         } }, s.t));
+      });
+      STAGES.forEach(function (s) {
+        if (closedSt[s.k]) chips.appendChild(h('div', { class: 'warn', style: 'width:100%;margin-top:8px' }, 'المرحلة ' + s.t + ': التسجيل غير متاح من البوابة — ' + String(closedSt[s.k]).replace(/^للعرض فقط — /, '')));
       });
     }
     function drawList() {
@@ -750,7 +758,13 @@ summary{cursor:pointer;font-weight:600;padding:4px 0}
       holder.replaceChildren();
       if (!list.length) { holder.appendChild(h('div', { class: 'warn' }, 'لا توجد فصول مسجّلة لهذه المدرسة بعد. يمكنك المتابعة وسيضيفها المشرف.')); return; }
       var known = {}; list.forEach(function (c) { known[c.id] = c; });
-      Array.from(S.sel.keys()).forEach(function (id) { if (!known[id]) S.sel.delete(id); });
+      // v1.8: الفصل المسند لمعلم آخر لا يُختار (لا ينطبق على مسار مشرف المدرسة ولا على من لا بيانات مسجّلة له)
+      function lockedFor(c) { return !isSup() && !S.limited && c.locked === true && !S.baseSel.has(c.id); }
+      var dropped = [];
+      Array.from(S.sel.keys()).forEach(function (id) {
+        if (!known[id]) S.sel.delete(id);
+        else if (lockedFor(known[id])) { dropped.push(known[id].label); S.sel.delete(id); }
+      });
       var grid = h('div', { id: 'grid' }), sum = h('div', { id: 'sum' });
       function draw() {
         grid.replaceChildren();
@@ -760,6 +774,8 @@ summary{cursor:pointer;font-weight:600;padding:4px 0}
           grid.appendChild(h('div', { class: 'grade' }, g.t));
           grid.appendChild(h('div', { class: 'chips' }, g.items.map(function (c) {
             var on = S.sel.has(c.id);
+            if (lockedFor(c)) return h('button', { type: 'button', class: 'chip locked', disabled: true, 'aria-disabled': 'true', 'data-class': c.id, 'data-locked': '1' },
+              c.class_label, h('small', null, 'مسندة لـ ' + ((c.taken_by || []).join('، ') || 'معلم آخر')));
             return h('button', { type: 'button', class: 'chip', 'data-class': c.id, 'aria-pressed': on ? 'true' : 'false', onclick: function () {
               if (S.sel.has(c.id)) S.sel.delete(c.id); else S.sel.set(c.id, S.baseSel.get(c.id) || c.periods);
               S._noClassOk = false; saveDraft(); draw();
@@ -787,6 +803,8 @@ summary{cursor:pointer;font-weight:600;padding:4px 0}
         });
         if (S.sel.size) sum.appendChild(h('div', { class: 'total', id: 'total' }, 'إجمالي الحصص الأسبوعية: ' + totalPeriods()));
       }
+      if (dropped.length) holder.appendChild(h('div', { class: 'warn', id: 'dropped-note' }, 'أُزيلت من اختيارك فصول أصبحت مسندة لمعلم آخر: ' + dropped.join('، ') + '.'));
+      if (list.some(lockedFor)) holder.appendChild(h('div', { class: 'note', id: 'locked-note' }, 'الفصول المعطّلة مسندة حاليًا لمعلمين آخرين ولا يمكن اختيارها. إن كان الإسناد غير صحيح فراجع المعلم المذكور ليطلب إلغاء إسناده، أو تواصل مع المنسق لتعديل الإسناد بين المعلمين.'));
       holder.appendChild(grid); holder.appendChild(sum); draw();
     }).catch(function (e) { holder.replaceChildren(); showErr(box, errMsg(e)); });
   }
@@ -892,7 +910,7 @@ summary{cursor:pointer;font-weight:600;padding:4px 0}
   function suptop(title, backLabel, backFn) {
     return h('div', { class: 'top' }, h('button', { type: 'button', class: 'link', id: 'sup-back', onclick: backFn }, backLabel), h('strong', null, title || ''));
   }
-  function closedBanner() { return S.closed ? h('div', { class: 'warn', id: 'closed-banner' }, 'فترة تعديل البيانات مغلقة حاليًا، يمكنك المراجعة فقط.') : null; }
+  function closedBanner() { return S.closed ? h('div', { class: 'warn', id: 'closed-banner' }, S.closedNote || 'فترة تعديل البيانات مغلقة حاليًا، يمكنك المراجعة فقط.') : null; }
   function wtLabel(w) { return w === 'permanent' ? 'معيّن (دائم)' : w === 'paid' ? 'بالأجر (عقد)' : ''; }
   function supTotal(t) { var n = 0; (t.classes || []).forEach(function (c) { n += c.periods; }); return n; }
 
@@ -900,7 +918,7 @@ summary{cursor:pointer;font-weight:600;padding:4px 0}
     var r = await rpc('teacher_portal_sup_school', { p_civil: S.sup.auth.civil, p_phone: S.sup.auth.phone, p_school_id: id, p_code: S.sup.auth.code });
     if (!r || r.ok !== true) throw (r || { reason: 'x' });
     S.sup.school = r.school; S.sup.classes = r.classes || []; S.sup.teachers = r.teachers || []; S.sup.q = ''; S.sup.t = null;
-    S.cache[r.school.id] = S.sup.classes; S.closed = r.editing_open === false; S.mode = 'sup';
+    S.cache[r.school.id] = S.sup.classes; S.closed = r.editing_open === false; S.closedNote = r.closed_note || ''; S.mode = 'sup';
     go('supschool');
   }
 
@@ -921,7 +939,7 @@ summary{cursor:pointer;font-weight:600;padding:4px 0}
         var r = await rpc('teacher_portal_sup_login', { p_civil: c, p_phone: p, p_code: k });
         if (!r || r.ok !== true) { r = r || {}; r.sup = true; showErr(box, reasonMsg(r)); btnBusy(btn, false); return; }
         S.sup = { auth: { civil: c, phone: p, code: k }, name: r.name || '', schools: r.schools || [], school: null, classes: [], teachers: [], t: null, q: '' };
-        S.closed = r.editing_open === false;
+        S.closed = r.editing_open === false; S.closedNote = r.closed_note || '';
         if (S.sup.schools.length === 1) await openSchool(S.sup.schools[0].id); else go('supschools');
       } catch (e) { showErr(box, errMsg(e)); btnBusy(btn, false); }
     } },
