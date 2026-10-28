@@ -190,6 +190,10 @@ summary{cursor:pointer;font-weight:600;padding:4px 0}
         (r.remaining > 0 ? ' متبقي لك ' + plural(r.remaining, 'محاولة واحدة', 'محاولتان', 'محاولات') + '.' : ' كانت هذه آخر محاولة، وسيتوقف الدخول مؤقتًا.');
       case 'locked': return 'تم إيقاف الدخول مؤقتًا بسبب محاولات خاطئة متكررة. حاول بعد ' + (r.minutes || 15) + ' دقيقة.';
       case 'busy': return 'الخدمة مشغولة الآن، حاول بعد قليل.';
+      case 'taken': return 'هذا الفصل بهذه المادة أُسند لمعلم آخر قبل إرسالك. ارجع إلى خطوة الفصول (ستتحدّث القائمة) واختر غيره.';
+      case 'pending_taken': return 'يوجد طلب معلّق من معلم آخر على هذا الفصل بهذه المادة. اختر مادة أو فصلًا آخر، أو انتظر البتّ في ذلك الطلب.';
+      case 'subject_required': return 'اختر المادة التي تدرّسها في كل فصل ثانوي اخترته.';
+      case 'invalid_subject': return 'المادة المختارة غير مقررة لهذا الفصل.';
       case 'closed': return r.note || 'فترة تعديل البيانات مغلقة حاليًا.';
       case 'exists': return isSup() ? 'هذا الرقم المدني مسجّل بالفعل في النظام. إن كان معلمًا في مدرستك فابحث عنه في القائمة، وإن كان في مدرسة أخرى فتواصل مع إدارة التوجيه.'
         : 'هذا الرقم المدني مسجّل بالفعل. ارجع واختر «معلم مسجّل في النظام».';
@@ -212,7 +216,7 @@ summary{cursor:pointer;font-weight:600;padding:4px 0}
   function reset() {
     S = { view: 'launcher', status: S.status || null, schools: S.schools || null, cache: S.cache || {}, auth: null, lookup: null,
       mode: 'registered', person: {}, base: {}, baseSel: new Map(), sel: new Map(), school: null, stageKey: null, q: '', step: 1,
-      busy: false, limited: false, closed: false, sup: null, supVisitor: false, sstep: 0, sstepKeys: [], dsel: {}, dbase: {} };
+      busy: false, limited: false, closed: false, sup: null, supVisitor: false, subj: new Map(), sstep: 0, sstepKeys: [], dsel: {}, dbase: {} };
   }
   reset();
 
@@ -248,7 +252,7 @@ summary{cursor:pointer;font-weight:600;padding:4px 0}
     S._dt = setTimeout(function () {
       try {
         localStorage.setItem(dkey(), JSON.stringify({ v: 1, ts: Date.now(), person: S.person, stage: S.stageKey,
-          school: S.school ? S.school.id : null, sel: Array.from(S.sel.entries()), step: isSup() ? S.sstep : S.step,
+          school: S.school ? S.school.id : null, sel: Array.from(S.sel.entries()), subj: Array.from(S.subj.entries()), step: isSup() ? S.sstep : S.step,
           dsel: isSup() ? null : Object.keys(S.dsel).reduce(function (o, k) { o[k] = Array.from(S.dsel[k].entries()); return o; }, {}) }));
       } catch (e) { /* التخزين غير متاح */ }
     }, 350);
@@ -265,9 +269,11 @@ summary{cursor:pointer;font-weight:600;padding:4px 0}
     S.schools = await rpc('teacher_portal_schools');
     return S.schools;
   }
-  async function loadClasses(id) {
-    if (S.cache[id]) return S.cache[id];
-    var r = await rpc('teacher_portal_classes', { p_school_id: id });
+  async function loadClasses(id, fresh) {
+    if (S.cache[id] && !fresh) return S.cache[id];
+    var civ = isSup() ? '' : (S.mode === 'new' ? digits(S.person.civil_id) : (S.auth ? S.auth.civil : ''));
+    var r = isSup() ? await rpc('teacher_portal_classes', { p_school_id: id })
+      : await rpc('teacher_portal_classes_v2', { p_school_id: id, p_civil: civ || null });
     S.cache[id] = r || [];
     return S.cache[id];
   }
@@ -401,7 +407,7 @@ summary{cursor:pointer;font-weight:600;padding:4px 0}
     S.baseSchoolId = S.school ? S.school.id : null;
     S.stageKey = S.school ? S.school.stage_key : null;
     S.baseSel = new Map((r.classes || []).map(function (x) { return [x.class_id, x.periods]; }));
-    S.sel = new Map(S.baseSel);
+    S.sel = new Map(S.baseSel); S.subj = new Map();
     S.dbase = {}; S.dsel = {};
     (r.delegations || []).forEach(function (d) {
       var m = new Map((d.selected || []).map(function (x) { return [x.class_id, x.periods]; }));
@@ -414,7 +420,7 @@ summary{cursor:pointer;font-weight:600;padding:4px 0}
   async function startNew() {
     S.auth = null; S.lookup = null; S.mode = 'new'; S.limited = false; S.closed = false; S.closedNote = '';
     S.base = {}; S.person = { work_type: '' }; PKEYS.forEach(function (k) { S.person[k] = ''; }); S.person.civil_id = '';
-    S.school = null; S.stageKey = null; S.baseSel = new Map(); S.sel = new Map(); S.step = 1; S.dbase = {}; S.dsel = {};
+    S.school = null; S.stageKey = null; S.baseSel = new Map(); S.sel = new Map(); S.subj = new Map(); S.step = 1; S.dbase = {}; S.dsel = {};
     S.draft = loadDraft(dkey()); go('flow');
   }
 
@@ -510,7 +516,7 @@ summary{cursor:pointer;font-weight:600;padding:4px 0}
   function restoreDraft(d) {
     Object.keys(d.person || {}).forEach(function (k) { S.person[k] = d.person[k]; });
     if (!isSup()) { S.stageKey = d.stage || null; S.school = d.school ? (schoolById(d.school) || null) : null; }
-    S.sel = new Map(d.sel || []);
+    S.sel = new Map(d.sel || []); S.subj = new Map(d.subj || []);
     if (!isSup() && d.dsel) Object.keys(S.dsel).forEach(function (k) { if (d.dsel[k]) S.dsel[k] = new Map(d.dsel[k]); });
   }
 
@@ -522,7 +528,11 @@ summary{cursor:pointer;font-weight:600;padding:4px 0}
       if (S.mode === 'new' && S.person.work_type) person.work_type = S.person.work_type;
     }
     var pl = { person: person, school_id: S.school ? S.school.id : null,
-      classes: Array.from(S.sel.entries()).map(function (e) { return { class_id: e[0], periods: e[1] }; }) };
+      classes: Array.from(S.sel.entries()).map(function (e) {
+        var it = { class_id: e[0], periods: e[1] };
+        if (!isSup() && S.subj.has(e[0]) && !S.baseSel.has(e[0])) it.subject_id = S.subj.get(e[0]);
+        return it;
+      }) };
     if (!confirmOnly && hasDeleg()) {
       var dc = [];
       delegs().forEach(function (d) {
@@ -687,6 +697,11 @@ summary{cursor:pointer;font-weight:600;padding:4px 0}
       }
     }
     if (step === 2 && !S.school) { showErr(box, 'اختر مدرستك أولًا.'); return false; }
+    if (!isSup() && S.school && stepKey(step) === 'classes') {
+      var cl = S.cache[S.school.id] || [], miss = [];
+      cl.forEach(function (c) { if (S.sel.has(c.id) && needSubject(c) && !S.subj.get(c.id)) miss.push(c.label); });
+      if (miss.length) { showErr(box, 'اختر المادة التي تدرّسها في: ' + miss.join('، ') + '.'); return false; }
+    }
     return true;
   }
 
@@ -743,6 +758,11 @@ summary{cursor:pointer;font-weight:600;padding:4px 0}
     if (!S.schools) loadSchools().then(function () { drawList(); }).catch(function (e) { showErr(box, errMsg(e)); });
   }
 
+  /* المواد داخل الفصل (الثانوي): يحتاج اختيار مادة إذا كان للفصل أكثر من مادة ولم يكن مسندًا للمعلم أصلًا */
+  function subsOf(c) { return c.subjects || []; }
+  function needSubject(c) { return !isSup() && subsOf(c).length > 1 && !S.baseSel.has(c.id); }
+  function subjFree(x) { return !(x.taken_by || x.pending_by); }
+
   /* الخطوة 3: الفصول */
   function renderStep3(body, box) {
     if (!S.school) {
@@ -754,7 +774,7 @@ summary{cursor:pointer;font-weight:600;padding:4px 0}
     body.appendChild(h('div', { class: 'note' }, isSup() ? 'اضغط على الفصول التي يدرّس لها المعلم مادة العلوم في ' + S.school.name + '.'
       : 'اضغط على الفصول التي تدرّس لها مادة العلوم، من فصول ' + S.school.name + '.'));
     body.appendChild(holder);
-    loadClasses(S.school.id).then(function (list) {
+    loadClasses(S.school.id, true).then(function (list) {
       holder.replaceChildren();
       if (!list.length) { holder.appendChild(h('div', { class: 'warn' }, 'لا توجد فصول مسجّلة لهذه المدرسة بعد. يمكنك المتابعة وسيضيفها المشرف.')); return; }
       var known = {}; list.forEach(function (c) { known[c.id] = c; });
@@ -764,6 +784,11 @@ summary{cursor:pointer;font-weight:600;padding:4px 0}
       Array.from(S.sel.keys()).forEach(function (id) {
         if (!known[id]) S.sel.delete(id);
         else if (lockedFor(known[id])) { dropped.push(known[id].label); S.sel.delete(id); }
+      });
+      // مادة محفوظة في المسودة أصبحت محجوزة: تُمسح ليختار المعلم غيرها
+      Array.from(S.subj.keys()).forEach(function (id) {
+        var c = known[id], sj = c && subsOf(c).filter(function (x) { return x.subject_id === S.subj.get(id); })[0];
+        if (!c || !S.sel.has(id) || !needSubject(c) || !sj || !subjFree(sj)) S.subj.delete(id);
       });
       var grid = h('div', { id: 'grid' }), sum = h('div', { id: 'sum' });
       function draw() {
@@ -775,9 +800,14 @@ summary{cursor:pointer;font-weight:600;padding:4px 0}
           grid.appendChild(h('div', { class: 'chips' }, g.items.map(function (c) {
             var on = S.sel.has(c.id);
             if (lockedFor(c)) return h('button', { type: 'button', class: 'chip locked', disabled: true, 'aria-disabled': 'true', 'data-class': c.id, 'data-locked': '1' },
-              c.class_label, h('small', null, 'مسندة لـ ' + ((c.taken_by || []).join('، ') || 'معلم آخر')));
+              c.class_label, h('small', null, (c.taken_by || []).length ? 'مسندة لـ ' + c.taken_by.join('، ')
+                : (c.pending_by || []).length ? 'طلب معلّق لـ ' + c.pending_by.join('، ') + ' (بانتظار الاعتماد)' : 'مسندة لمعلم آخر'));
             return h('button', { type: 'button', class: 'chip', 'data-class': c.id, 'aria-pressed': on ? 'true' : 'false', onclick: function () {
-              if (S.sel.has(c.id)) S.sel.delete(c.id); else S.sel.set(c.id, S.baseSel.get(c.id) || c.periods);
+              if (S.sel.has(c.id)) { S.sel.delete(c.id); S.subj.delete(c.id); }
+              else {
+                S.sel.set(c.id, S.baseSel.get(c.id) || c.periods);
+                if (needSubject(c)) { var fr = subsOf(c).filter(subjFree); if (fr.length === 1) S.subj.set(c.id, fr[0].subject_id); }
+              }
               S._noClassOk = false; saveDraft(); draw();
             } }, (on ? '✓ ' : '') + c.class_label);
           })));
@@ -793,8 +823,19 @@ summary{cursor:pointer;font-weight:600;padding:4px 0}
             sl.value = String(S.sel.get(c.id)); sl.addEventListener('change', function () { S.sel.set(c.id, +sl.value); saveDraft(); draw(); });
             row.appendChild(sl);
           } else row.appendChild(h('span', { class: 'sub', style: 'margin:0' }, '1 حصة'));
-          row.appendChild(h('button', { type: 'button', class: 'x', 'aria-label': 'إزالة', onclick: function () { S.sel.delete(c.id); saveDraft(); draw(); } }, '✕'));
+          row.appendChild(h('button', { type: 'button', class: 'x', 'aria-label': 'إزالة', onclick: function () { S.sel.delete(c.id); S.subj.delete(c.id); saveDraft(); draw(); } }, '✕'));
           sum.appendChild(row);
+          if (needSubject(c)) {
+            var sbs = h('select', { 'aria-label': 'المادة', 'data-subj': c.id, style: 'width:100%' }, h('option', { value: '' }, '— اختر المادة التي تدرّسها —'),
+              subsOf(c).map(function (x) {
+                return h('option', { value: x.subject_id, disabled: !subjFree(x) },
+                  x.name + (x.taken_by ? ' (مسندة لـ ' + x.taken_by + ')' : x.pending_by ? ' (طلب معلّق لـ ' + x.pending_by + ')' : ''));
+              }));
+            sbs.value = S.subj.get(c.id) || '';
+            sbs.addEventListener('change', function () { if (sbs.value) S.subj.set(c.id, sbs.value); else S.subj.delete(c.id); saveDraft(); draw(); });
+            sum.appendChild(h('div', { class: 'fg', style: 'margin:2px 0 10px' }, sbs,
+              S.subj.get(c.id) ? null : h('div', { class: 'warn', 'data-need-subj': c.id, style: 'margin:6px 0 0;font-size:.82rem' }, 'اختر المادة لهذا الفصل.')));
+          }
           if (isSup()) {
             var tot = (c.assigned || 0) - (S.baseSel.get(c.id) || 0) + S.sel.get(c.id);
             if (tot > c.periods) sum.appendChild(h('div', { class: 'warn over', 'data-over': c.id, style: 'margin:4px 0 8px;font-size:.82rem' },
