@@ -301,6 +301,15 @@ summary{cursor:pointer;font-weight:600;padding:4px 0}
   /* ---------- الشاشات ---------- */
   var VIEWS = {};
 
+  /* زر الاعتماد لصاحب البوابة فقط: يُفعَّل على جهازه مرة واحدة بفتح الرابط مع #owner (وللإلغاء #owner-off). الصفحة المقصودة محمية بدخولها الخاص. */
+  function ownerMode() {
+    try {
+      if (location.hash === '#owner') localStorage.setItem('portalOwner', '1');
+      else if (location.hash === '#owner-off') localStorage.removeItem('portalOwner');
+      return localStorage.getItem('portalOwner') === '1';
+    } catch (e) { return false; }
+  }
+
   VIEWS.launcher = function () {
     var st = S.status;
     function role(ic, t, s, fn, soon) {
@@ -317,7 +326,7 @@ summary{cursor:pointer;font-weight:600;padding:4px 0}
         role('🏫', 'مشرف مدرسة', 'اعرض معلمي مدرستك، وعدّل بياناتهم وفصولهم، وأضف معلمًا جديدًا', function () { go('supgate'); }),
         role('📝', 'معلم بالأجر — تقديم طلب', 'نموذج التقدم للتعاقد', function () { window.location.href = CFG.paid; }),
         role('🧭', 'منسق المرحلة', 'راجع بيانات مدارس مرحلتك وفصولها ومعلميها، وأسند الفصول واعتمد البيانات', function () { window.location.href = '/coordinator/'; }),
-        role('✅', 'الاعتماد', 'افتح بوابة الاعتماد', function () { window.location.href = 'https://teacher-portal-admin.vercel.app/'; })
+        ownerMode() ? role('✅', 'الاعتماد', 'افتح بوابة الاعتماد', function () { window.location.href = 'https://teacher-portal-admin.vercel.app/'; }) : null
       ));
   };
 
