@@ -1,4 +1,5 @@
 <!doctype html>
+<!-- v220: الموجه الأول عرض وتقارير فقط — سُحبت منه أزرار التعديل والإضافة والانتداب والإسناد وتوزيع العجز بالأجر وإعلان جديد وشاشة استكمال البيانات؛ الإعلانات للقراءة. الاعتماد والحسابات لمدير النظام. واجهة فقط، وتضييق قاعدة البيانات (المرحلة 3) بانتظار الموافقة. -->
 <!-- v219: حصر الثانوي في تقرير «نصاب الموجه…» عبر دالة القاعدة secondary_supervisor_census (قراءة فقط) ليعمل لمنسق الإعدادي أيضًا -->
 <!-- v218: تقرير «نصاب الموجه…» للثانوي على قاعدة موجه المادة (supervisor_school_subjects) والمعلم بما يدرّسه، بدل «غير مسندة» -->
 <!-- v217: إصلاح فلتر المرحلة في «نصاب الموجه من المدارس والمعلمين» (كان يعيد 0 نتائج لأن فلتر المدرسة المرافق لا ينطبق على الصفوف المجمّعة) -->
@@ -128,7 +129,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#152c43">
-<title>نظام توجيه العلوم — v219</title>
+<title>نظام توجيه العلوم — v220</title>
 <link rel="manifest" href="./manifest.webmanifest">
 <link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png">
 <link rel="apple-touch-icon" href="./icon-192.png">
@@ -2537,7 +2538,7 @@ async function usersPage(){
 
 async function openCreateUser(source){
  const {data:schools}=await sb.from('schools').select('id,name').order('name');
- let roles=[];if(profile.role==='admin')roles=[['first_supervisor','الموجه الأول'],['stage_coordinator','منسق مرحلة'],['supervisor','موجه'],['school_manager','مدير مدرسة']];if(profile.role==='first_supervisor')roles=[['stage_coordinator','منسق مرحلة'],['supervisor','موجه']];if(profile.role==='supervisor')roles=[['senior_teacher','أقدم معلم'],['teacher','معلم']];if(profile.role==='senior_teacher')roles=[['teacher','معلم']];
+ let roles=[];if(profile.role==='admin')roles=[['first_supervisor','الموجه الأول'],['stage_coordinator','منسق مرحلة'],['supervisor','موجه'],['school_manager','مدير مدرسة']];if(profile.role==='supervisor')roles=[['senior_teacher','أقدم معلم'],['teacher','معلم']];if(profile.role==='senior_teacher')roles=[['teacher','معلم']];
  modal(`<h3>إنشاء حساب جديد</h3><form onsubmit="createUser(event)"><div class="form-grid"><div class="field"><label>الدور</label><select name="role" onchange="toggleUserFields(this.value)" required>${roles.map(r=>`<option value="${r[0]}">${r[1]}</option>`).join('')}</select></div><div class="field"><label>الاسم الكامل</label><input name="full_name" required></div><div class="field"><label>الرقم القومي</label><input name="civil_id" inputmode="numeric" required></div><div class="field"><label>الهاتف</label><input name="phone"></div><div class="field stage-coordinator-only"><label>المرحلة</label><select name="stage"><option>ابتدائي</option><option>إعدادي</option><option>ثانوي</option></select></div><div class="field user-school"><label>المدرسة</label><select name="school_id"><option value="">— اختر —</option>${(schools||[]).map(s=>`<option value="${s.id}">${esc(s.name)}</option>`).join('')}</select></div><div class="field teacher-only"><label>الدرجة الوظيفية</label><select name="job_title"><option>معلم</option><option>معلم أول</option><option>معلم أول (أ)</option><option>معلم خبير</option><option>كبير معلمين</option></select><small>تحدد النصاب، ومنها يُحسب العجز أو الزيادة.</small></div><div class="field teacher-only"><label>نوع العمل</label><select name="work_type"><option value="permanent">ثابت</option><option value="paid">بالأجر</option></select></div><div class="field teacher-only"><label>تاريخ الحصول على الدرجة</label><input type="date" name="grade_acquired_date"></div><div class="field teacher-only"><label>تاريخ استلام العمل</label><input type="date" name="work_start_date"></div><div class="field teacher-only"><label>تاريخ التعيين</label><input type="date" name="appointment_date"></div></div><div class="actions"><button class="btn primary">إنشاء الحساب</button><button type="button" class="btn secondary" onclick="closeModal()">إلغاء</button></div></form>`);toggleUserFields(roles[0]?.[0]);
 }
 
@@ -2857,7 +2858,7 @@ async function supervisorHealthPage(){
 }
 
 
-async function announcementsPage({force=false}={}){const {data:a}=await cachedRead('page:announcements',async signal=>{let q=sb.from('announcements').select('id,message,audience,created_by,created_at').order('created_at',{ascending:false});q=abortable(q,signal);return await q},{ttl:30000,force});return `<div class="page-head"><div><h2>الإعلانات</h2><p>تنبيهات الإدارة للمستخدمين.</p></div><button class="btn primary" onclick="announcementForm()">+ إعلان جديد</button></div>${(a||[]).map(x=>`<div class="card"><div class="card-title"><h3>${esc(x.audience)}</h3><span class="badge info">${new Date(x.created_at).toLocaleDateString('ar-EG')}</span></div><p>${esc(x.message)}</p></div>`).join('')||'<div class="card">لا توجد إعلانات.</div>'}`}
+async function announcementsPage({force=false}={}){const {data:a}=await cachedRead('page:announcements',async signal=>{let q=sb.from('announcements').select('id,message,audience,created_by,created_at').order('created_at',{ascending:false});q=abortable(q,signal);return await q},{ttl:30000,force});return `<div class="page-head"><div><h2>الإعلانات</h2><p>تنبيهات الإدارة للمستخدمين.</p></div>${profile?.role==='first_supervisor'?'':'<button class="btn primary" onclick="announcementForm()">+ إعلان جديد</button>'}</div>${(a||[]).map(x=>`<div class="card"><div class="card-title"><h3>${esc(x.audience)}</h3><span class="badge info">${new Date(x.created_at).toLocaleDateString('ar-EG')}</span></div><p>${esc(x.message)}</p></div>`).join('')||'<div class="card">لا توجد إعلانات.</div>'}`}
 
 function announcementForm(){modal(`<h3>إعلان جديد</h3><form onsubmit="saveAnnouncement(event)"><div class="field"><label>نص الإعلان</label><textarea name="message" required></textarea></div><div class="field"><label>الجمهور</label><select name="audience"><option value="all">الجميع</option><option value="supervisors">الموجهون</option><option value="school_managers">مديرو المدارس</option><option value="senior_teachers">أقدم المعلمين</option></select></div><div class="actions"><button class="btn primary">نشر</button><button type="button" class="btn secondary" onclick="closeModal()">إلغاء</button></div></form>`)}
 
@@ -2894,9 +2895,9 @@ async function schoolsPage(){
  const totalClasses=schoolRows.reduce((sum,school)=>sum+visibleClassCount(school),0);
  const schoolsWithClasses=schoolRows.filter(school=>visibleClassCount(school)>0).length;
 
- const canAssign=['admin','first_supervisor','stage_coordinator'].includes(profile.role);
- const canEdit=['admin','first_supervisor','stage_coordinator'].includes(profile.role);
- const canConfigure=['admin','first_supervisor'].includes(profile.role);
+ const canAssign=['admin','stage_coordinator'].includes(profile.role);
+ const canEdit=['admin','stage_coordinator'].includes(profile.role);
+ const canConfigure=['admin'].includes(profile.role);
 
  const sups=allSupervisors.filter(sp=>sp.active!==false);
 
@@ -3231,7 +3232,7 @@ async function teachersPage({force=false}={}){
  },{ttl:30000,force});
  if(error)return `<div class="error">${esc(error.message)}</div>`;
  const teachers=(Array.isArray(teachersRaw)?teachersRaw:[]).filter(t=>v97StageMatches(v97TeacherStage(t,t._v142School||scopeSchool))&&v98SchoolMatches(scopeSchool?.id||v91ScopeSchoolId(t)));
- const canAdd=['supervisor','senior_teacher'].includes(profile.role),canEdit=['admin','first_supervisor','stage_coordinator','supervisor','senior_teacher'].includes(profile.role),canDelegate=['admin','first_supervisor','stage_coordinator','supervisor','senior_teacher'].includes(profile.role);
+ const canAdd=['supervisor','senior_teacher'].includes(profile.role),canEdit=['admin','stage_coordinator','supervisor','senior_teacher'].includes(profile.role),canDelegate=['admin','stage_coordinator','supervisor','senior_teacher'].includes(profile.role);
  const scopeNotice=allSchools?`<div class="notice info"><b>نطاق العرض: كل مدارسي (${allSchools.length})</b> — يظهر معلمو كل مدرسة والمنتدبون إليها، والمنتدب جزئيًا يظهر في المدرستين.</div>`:schoolScopedRole?(scopeSchool?`<div class="notice info"><b>نطاق العرض: ${esc(scopeSchool.name)}</b> — يظهر معلمو المدرسة والمنتدبون إليها فقط، وتطبق قاعدة الإشراف بحسب مدرسة العمل الحالية.</div>`:`<div class="notice warn">لا توجد مدرسة مرتبطة بالحساب.</div>`):'';
  const relationLabel=t=>{
    if(!schoolScopedRole){const relation=v91SchoolRelationText(t);return `${esc(t.scope_school_name||t.home_school_name||'—')}${relation?`<div class="cell-sub">${esc(relation)}</div>`:''}`;}
@@ -3572,7 +3573,7 @@ async function supervisorsPage(){
   ({data:sups,error}=await sb.from('supervisors').select('id,full_name,phone,profile:profiles!supervisors_profile_id_fkey(full_name,phone)').eq('profile_id',profile.id).order('full_name'));
  }else sups=[];
  if(error)return `<div class="error">${esc(error.message)}</div>`;
- const canEdit=fullAccess&&profile.role==='admin',canCreate=fullAccess&&['admin','first_supervisor'].includes(profile.role);
+ const canEdit=fullAccess&&profile.role==='admin',canCreate=fullAccess&&['admin'].includes(profile.role);
  const rows=(sups||[]).filter(s=>!fullAccess||(s.supervisor_stage_assignments||[]).some(a=>a.active));supervisorDirectoryRows=rows;supervisorDirectoryPermissions={canEdit,canCreate};
  if(supervisorDirectoryActiveId&&!rows.some(s=>String(s.id)===supervisorDirectoryActiveId))supervisorDirectoryActiveId='';
  const pageTitle=profile.role==='stage_coordinator'?'موجهو المرحلة':(fullAccess?'الموجهون':'الموجه المسؤول');
@@ -3900,7 +3901,7 @@ async function assignmentsPage({force=false}={}){
  <div class="card"><h3>الإسنادات</h3><div class="table-wrap"><table class="table"><thead><tr><th>المعلم</th><th>المرحلة</th><th>الصف</th><th>الفصل</th><th>المادة</th><th>الحصص</th>${canManage?'<th>إدارة</th>':''}</tr></thead><tbody>${(assigns||[]).map(a=>`<tr><td>${esc(a.teacher_records?.full_name)}</td><td>${esc(a.school_classes?.stage)}</td><td>${esc(gradeLabel(a.school_classes?.stage,a.school_classes?.grade))}</td><td>${esc(a.school_classes?.class_name)}</td><td><b>${esc(a.curriculum_subjects?.subject_name||'')}</b></td><td>${a.weekly_periods}</td>${canManage?`<td><button class="btn secondary" type="button" onclick="editAssignmentForm('${a.id}')">تعديل</button></td>`:''}</tr>`).join('')||`<tr><td colspan="${canManage?7:6}">لا توجد إسنادات.</td></tr>`}</tbody></table></div></div>`
 }
 
-function assignmentEditCanManage(){return ['admin','first_supervisor','senior_teacher'].includes(profile?.role)}
+function assignmentEditCanManage(){return ['admin','senior_teacher'].includes(profile?.role)}
 
 function assignmentEditClassLabel(a){
  const c=a?.school_classes||{};
@@ -4028,7 +4029,7 @@ function completionEntityRows(data){
  const rows=[];
  for(const s of data.schools)rows.push({entity:'school',id:s.id,name:s.name,meta:s.stage||'',schoolId:s.id,record:s});
  for(const t of data.teachers)rows.push({entity:'teacher',id:t.id,name:t.full_name,meta:data.smap.get(t.home_school_id)?.name||'',schoolId:t.home_school_id,record:t});
- if(['admin','first_supervisor','stage_coordinator','supervisor'].includes(profile.role))for(const u of data.supervisors)rows.push({entity:'supervisor',id:u.id,name:u.full_name||'موجه',meta:'بيانات الموجه',schoolId:null,record:u});
+ if(['admin','stage_coordinator','supervisor'].includes(profile.role))for(const u of data.supervisors)rows.push({entity:'supervisor',id:u.id,name:u.full_name||'موجه',meta:'بيانات الموجه',schoolId:null,record:u});
  return rows;
 }
 function completionEntityMissing(row){return (COMPLETION_FIELDS[row.entity]||[]).filter(([f])=>!completionOptional(row.entity,f,row.record)&&completionEmpty(row.record?.[f])).length}
@@ -4045,7 +4046,7 @@ function completionCardHtml(row,pmap){
  return `<div class="completion-card"><div class="completion-card-head"><div><h3>${esc(row.name)}</h3><small>${esc(row.meta||'')}</small></div><div>${miss?`<span class="badge danger">ناقص ${miss}</span>`:'<span class="badge ok">مكتمل</span>'}${pend?` <span class="badge warn">انتظار ${pend}</span>`:''}</div></div><div class="completion-fields">${(COMPLETION_FIELDS[row.entity]||[]).map(([f,l])=>completionFieldHtml(row,f,l,pmap)).join('')}</div></div>`;
 }
 function completionHierarchyHtml(data){
- if(!['admin','first_supervisor','stage_coordinator','supervisor'].includes(profile.role))return '';
+ if(!['admin','stage_coordinator','supervisor'].includes(profile.role))return '';
  const pmap=completionPendingMap(data.changes), rows=completionEntityRows(data).filter(x=>x.entity!=='supervisor');
  const bySchool=new Map();for(const s of data.schools)bySchool.set(s.id,{school:s,total:0,done:0,pending:0});
  for(const r of rows){const o=bySchool.get(r.schoolId);if(!o)continue;for(const [f] of COMPLETION_FIELDS[r.entity]){if(completionOptional(r.entity,f,r.record))continue;o.total++;if(!completionEmpty(r.record?.[f]))o.done++;if(pmap.has(`${r.entity}:${r.id}:${f}`))o.pending++;}}
@@ -4078,7 +4079,7 @@ async function saveCompletionAndNext(e,entity,id,field){e.preventDefault();const
 async function reviewCompletionChange(id,action){try{const {error}=await sb.rpc('review_data_completion_change',{p_change_id:id,p_action:action,p_note:null});if(error)throw error;toast(action==='approve'?'تم اعتماد التعديل':'تم رفض التعديل وإرجاع القيمة السابقة');await refreshCurrentPage({invalidate:['completion','schools','teachers','supervisors','dashboard','page:reports']})}catch(err){moneySafeError(err)}}
 async function reviewAllCompletionChanges(action){if(profile.role!=='admin')return;const {data,error}=await sb.from('data_completion_changes').select('id').eq('status','pending_admin_approval');if(error)return moneySafeError(error);for(const x of data||[]){const r=await sb.rpc('review_data_completion_change',{p_change_id:x.id,p_action:action,p_note:null});if(r.error)return moneySafeError(r.error)}toast('تم اعتماد جميع التعديلات المعلقة');refreshCurrentPage({invalidate:['completion','schools','teachers','supervisors','dashboard','page:reports']}).catch(moneySafeError)}
 async function injectCompletionDashboardCards(root){
- if(!root||!['admin','first_supervisor','stage_coordinator','supervisor','school_manager','senior_teacher'].includes(profile?.role))return;
+ if(!root||!['admin','stage_coordinator','supervisor','school_manager','senior_teacher'].includes(profile?.role))return;
  const data=await loadCompletionData(),pmap=completionPendingMap(data.changes),rows=completionEntityRows(data),missing=rows.filter(r=>completionEntityMissing(r)>0).length,pending=data.changes.filter(x=>x.status==='pending_admin_approval').length;
  if(root.querySelector('.completion-quick'))return;const box=document.createElement('div');box.className='completion-quick';box.innerHTML=`<button class="cq missing" onclick="completionTab='missing';go('completion')"><b>${missing}</b><span>🔴 بيانات تحتاج استكمال</span><small>افتح الحقول الناقصة في نطاق مسؤوليتك</small></button><button class="cq pending" onclick="completionTab='pending';go('completion')"><b>${pending}</b><span>🟡 تعديلات بانتظار الاعتماد</span><small>${profile.role==='admin'?'راجع واعتمد التعديلات':'متابعة حالة التعديلات المسجلة'}</small></button>`;root.prepend(box);
 }
@@ -6413,7 +6414,7 @@ if(window.visualViewport)window.visualViewport.addEventListener('resize',()=>{if
 /* === الإصدار 2026.08.26.44: الخطط الدراسية + إزالة تكرار عناصر قائمة الموبايل === */
 const NAV={
  admin:[['dashboard','لوحة النظام','▦'],['alerts','التنبيهات','🔔'],['completion','استكمال البيانات','✎'],['users','الحسابات','◌'],['supervisors','الموجهون','◎'],['schools','المدارس','⌂'],['teachers','المعلمون','◉'],['approval','الاعتماد','✓'],['incoming','البيانات الواردة','⇩'],['workload','الأنصبة','Σ'],['supervisorHealth','فحص شاشة الموجه','⌁'],['statistics','الإحصائيات','◫'],['reports','التقارير','▤']],
- first_supervisor:[['dashboard','لوحة الإدارة','▦'],['alerts','التنبيهات','🔔'],['completion','استكمال البيانات','✎'],['supervisors','الموجهون','◎'],['schools','المدارس','⌂'],['teachers','المعلمون','◉'],['statistics','الإحصائيات','◫'],['reports','التقارير العامة','▤'],['announcements','الإعلانات','◈']],
+ first_supervisor:[['dashboard','لوحة الإدارة','▦'],['alerts','التنبيهات','🔔'],['supervisors','الموجهون','◎'],['schools','المدارس','⌂'],['teachers','المعلمون','◉'],['statistics','الإحصائيات','◫'],['reports','التقارير العامة','▤'],['announcements','الإعلانات','◈']],
  stage_coordinator:[['dashboard','لوحة منسق المرحلة','▦'],['alerts','التنبيهات','🔔'],['completion','استكمال البيانات','✎'],['supervisors','موجهو المرحلة','◎'],['schools','مدارس المرحلة','⌂'],['teachers','معلمو المرحلة','◉'],['statistics','الإحصائيات','◫'],['reports','تقارير المرحلة','▤']],
  supervisor:[['dashboard','لوحة الموجه','▦'],['alerts','التنبيهات','🔔'],['completion','استكمال البيانات','✎'],['supervisors','بيانات الموجه','◎'],['schools','مدارسي','⌂'],['teachers','معلمو مدارسي','◉'],['approval','الاعتمادات','✓'],['statistics','الإحصائيات','◫'],['reports','التقارير','▤']],
  school_manager:[['dashboard','لوحة المدرسة','▦'],['alerts','التنبيهات','🔔'],['completion','استكمال البيانات','✎'],['supervisors','موجه المدرسة','◎'],['schools','بيانات المدرسة','⌂'],['teachers','معلمو المدرسة','◉'],['approval','اعتماد البيانات','✓'],['statistics','الإحصائيات','◫'],['reports','تقارير المدرسة','▤']],
@@ -7451,7 +7452,7 @@ async function savePaidShortageAllocations(schoolId){
  try{const {data,error}=await sb.rpc('replace_school_paid_shortage_allocations',{p_school_id:schoolId,p_academic_year_id:activeYear.id,p_term_id:activeTerm.id,p_items:items});if(error)return moneySafeError(error);invalidateData('page:reports','dashboard','teachers');toast(`تم الحفظ. المتبقي لمعلمي الأجر: ${data?.remaining_paid_teacher_periods??Math.max(shortage-total,0)} حصة`);await loadPaidShortageSchool(schoolId)}finally{if(btn instanceof HTMLButtonElement){btn.disabled=false;btn.textContent='حفظ توزيع العجز'}}
 }
 const __teachersPageV72=teachersPage;
-teachersPage=async function(opts={}){let h=await __teachersPageV72(opts);if(['admin','first_supervisor','stage_coordinator','supervisor','senior_teacher'].includes(profile?.role)){h=h.replace('</div><div class="card">',`<div class="actions"><button class="btn primary" onclick="openPaidShortageCenter()">توزيع العجز بالأجر</button><button class="btn secondary" onclick="openReportById('officialShortageAdmin')">تقرير الإدارة</button></div></div><div class="card">`)}return h};
+teachersPage=async function(opts={}){let h=await __teachersPageV72(opts);if(['admin','first_supervisor','stage_coordinator','supervisor','senior_teacher'].includes(profile?.role)){h=h.replace('</div><div class="card">',`<div class="actions">${profile?.role==='first_supervisor'?'':'<button class="btn primary" onclick="openPaidShortageCenter()">توزيع العجز بالأجر</button>'}<button class="btn secondary" onclick="openReportById('officialShortageAdmin')">تقرير الإدارة</button></div></div><div class="card">`)}return h};
 
 
 /* === v73 Financial Guidance + Annually Renewed Long Leaves — 2026.08.29 === */
@@ -9791,7 +9792,7 @@ ReportAdapters.schoolTeachersData={async load(ctx){
  const single=typeof v115SingleSchoolRole==='function'&&v115SingleSchoolRole();
  return v103BaseReport('schoolTeachersData',ctx,[reportColumn('index','م',.3,{numeric:true}),reportColumn('name','المعلم',1.6),reportColumn('civil','الرقم القومي',1.1,{id:true,nowrap:true}),reportColumn('phone','الهاتف',.95,{id:true,nowrap:true}),reportColumn('job','الدرجة',.8),reportColumn('workType','نوع التعاقد',.6),reportColumn('specialty','التخصص',.8),reportColumn('qualification','المؤهل',1.1),reportColumn('code','الكود',.5),reportColumn('residence','محل الإقامة',.9),reportColumn('appointment','التعيين',.75,{nowrap:true}),...(single?[]:[reportColumn('school','المدرسة',1.3)])],rows,'البيانات كما هي مسجلة في قاعدة البيانات للمعلمين على قوة المدرسة والمنتدبين إليها.');
 }};
-function v120CanEditTeacher(row){if(!['admin','first_supervisor','stage_coordinator','supervisor','senior_teacher'].includes(profile?.role))return false;return profile.role!=='senior_teacher'||row._home}
+function v120CanEditTeacher(row){if(!['admin','stage_coordinator','supervisor','senior_teacher'].includes(profile?.role))return false;return profile.role!=='senior_teacher'||row._home}
 const v120BaseInline=v117RenderInlineResults;
 v117RenderInlineResults=async function(){
  const cfg=v117Cfg();if(cfg?.adapter!=='schoolTeachersData')return v120BaseInline();
