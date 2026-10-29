@@ -1,5 +1,5 @@
 <!doctype html>
-<!-- v216: تقرير جديد «حصر موجهي المرحلة الإعدادية» في قوالب التقارير لمدير النظام ومنسق المرحلة (الموجه، عدد المدارس، الفصول، المعلمون الثابتون والأجر، الإجمالي) — عرض فقط -->
+<!-- v216: تقرير جديد «نصاب الموجه من المدارس والمعلمين» (فلتر الكل/المرحلة) في قوالب التقارير لمدير النظام ومنسق المرحلة (الموجه، عدد المدارس، الفصول، المعلمون الثابتون والأجر، الإجمالي) — عرض فقط -->
 <!-- v215: نموذج الانتداب — اختيار المدرسة المنتدب إليها بشريط بحث (حقل كتابة + قائمة مقترحة) بدل القائمة الطويلة؛ لا تغيير في الحفظ -->
 <!-- v211: إصلاح «Cannot coerce the result to a single JSON object» عند تحديث الصفحة: قراءة profiles صارت بصف المستخدم نفسه (كانت تُرجع صفوف كثيرة للدور النشط المستعاد فيفشل single) -->
 <!-- v192: تقرير «الموجهين ومدارسهم»: لا يظهر سجل موجه بلا مدارس إن كان لنفس الاسم سجل آخر له مدارس (سجلّا شيماء محمد فرج محمد). -->
@@ -2668,7 +2668,7 @@ window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();window.v152
 window.addEventListener('appinstalled',()=>{window.v152InstallPrompt=null;v152SyncInstallBtn()});
 if('serviceWorker' in navigator&&location.protocol!=='file:')window.addEventListener('load',()=>navigator.serviceWorker.register('./service-worker.js').catch(()=>{}));
 const V145_NEWS=[
- ['v216','تقرير جديد «حصر موجهي المرحلة الإعدادية» في التقارير لمدير النظام ومنسق المرحلة.'],
+ ['v216','تقرير جديد «نصاب الموجه من المدارس والمعلمين» (الكل أو مرحلة معينة) في التقارير لمدير النظام ومنسق المرحلة.'],
  ['v210','توزيع الموجهين: المدرسة الصناعية لا تعرض سطر «غير مسند» لموجه الأحياء.'],
  ['v209','توزيع الموجهين: المدارس الثانوية تعرض موجهيها الثلاثة (فيزياء/كيمياء/أحياء) بدل «بلا موجه».'],
  ['v208','الخطة الملخصة للثانوي: موجه كل مادة (فيزياء/كيمياء/أحياء) بجانب المدرسة؛ والموجه يرى مدارسه في كل المراحل.'],
@@ -10951,31 +10951,40 @@ rebuildFilteredReportMetrics=function(schema){return v206TeacherMetrics(__v206Re
 
 /* v216: تقرير «حصر موجهي المرحلة الإعدادية» (مدير النظام ومنسق المرحلة): لكل موجه مدارسه وفصوله ومعلموه من أصل مدارسه (ثابت/أجر، كل معلم مرة واحدة). المدرسة المربوطة تُحسب مع الأساسية. */
 V103_PURPOSE_REPORTS.push('prepSupervisorsCensus');
-STATISTICS_REPORTS.prepSupervisorsCensus={title:'حصر موجهي المرحلة الإعدادية',subtitle:'لكل موجه: عدد المدارس والفصول والمعلمين الثابتين وبالأجر',icon:'◆',adapter:'prepSupervisorsCensus',filters:[],purpose:true,note:'المعلمون المحسوبون لكل موجه هم من أصل مدارسهم، وكل معلم يُحسب مرة واحدة؛ ولا يشمل المنتدبين إليها من مدارس أخرى.'};
+STATISTICS_REPORTS.prepSupervisorsCensus={title:'نصاب الموجه من المدارس والمعلمين',subtitle:'لكل موجه: عدد المدارس والفصول والمعلمين الثابتين وبالأجر (الكل أو مرحلة معينة)',icon:'◆',adapter:'prepSupervisorsCensus',filters:['stage'],purpose:true,note:'المعلمون المحسوبون لكل موجه هم من أصل مدارسهم، وكل معلم يُحسب مرة واحدة؛ ولا يشمل المنتدبين إليها من مدارس أخرى.'};
 const __v216CanView=v103CanViewReport;
 v103CanViewReport=function(id){return id==='prepSupervisorsCensus'?['admin','stage_coordinator'].includes(profile?.role):__v216CanView(id)};
 ReportAdapters.prepSupervisorsCensus={async load(ctx){
- const [data,sr,links]=await Promise.all([v91LoadReportsDataset(),sb.from('schools').select('id,name,stage,supervisor_id,class_count').eq('stage','إعدادي'),v161AggregateLinks()]);
+ const [data,sr,links]=await Promise.all([v91LoadReportsDataset(),sb.from('schools').select('id,name,stage,supervisor_id,class_count'),v161AggregateLinks()]);
  if(sr.error)throw sr.error;
  const sn=await sb.from('supervisors').select('id,full_name');if(sn.error)throw sn.error;
  const names=new Map((sn.data||[]).map(x=>[String(x.id),String(x.full_name||'').trim()]));
  const schools=v161MergeSchools(sr.data||[],links),bySchool=new Map(schools.map(x=>[String(x.id),x]));
  const groups=new Map();
- schools.forEach(x=>{const k=String(x.supervisor_id||'');const g=groups.get(k)||{name:names.get(k)||'غير مسندة',schools:0,classes:0,perm:new Set(),paid:new Set()};g.schools++;g.classes+=reportNumber(x.class_count);groups.set(k,g)});
+ schools.forEach(x=>{const k=String(x.supervisor_id||'')+'|'+x.stage;const g=groups.get(k)||{name:names.get(String(x.supervisor_id||''))||'غير مسندة',stage:x.stage||'—',schools:0,classes:0,perm:new Set(),paid:new Set()};g.schools++;g.classes+=reportNumber(x.class_count);groups.set(k,g)});
  v103ScopeRows(data).forEach(t=>{
   if(!['home','delegated_out_partial'].includes(String(t.school_relation||'home')))return;
   const sc=bySchool.get(v91ScopeSchoolId(t));if(!sc)return;
-  const g=groups.get(String(sc.supervisor_id||''));if(!g)return;
+  const g=groups.get(String(sc.supervisor_id||'')+'|'+sc.stage);if(!g)return;
   (isPaidTeacher(t)?g.paid:g.perm).add(v91TeacherId(t));
  });
- const list=[...groups.values()].sort((a,b)=>b.schools-a.schools||a.name.localeCompare(b.name,'ar'));
- const rows=list.map((g,i)=>({index:i+1,name:reportCellValue(g.name),schools:g.schools,classes:g.classes,perm:g.perm.size,paid:g.paid.size,total:g.perm.size+g.paid.size,_search:g.name}));
+ const order=['ابتدائي','إعدادي','ثانوي'],rank=st=>{const i=order.indexOf(st);return i<0?9:i};
+ const list=[...groups.values()].sort((a,b)=>rank(a.stage)-rank(b.stage)||b.schools-a.schools||a.name.localeCompare(b.name,'ar'));
+ const rows=list.map((g,i)=>({index:i+1,name:reportCellValue(g.name),stage:reportCellValue(g.stage),_stage:g.stage,_stages:[g.stage],schools:g.schools,classes:g.classes,perm:g.perm.size,paid:g.paid.size,total:g.perm.size+g.paid.size,_search:g.name+' '+g.stage}));
  const sum=k=>rows.reduce((n,r)=>n+r[k],0);
- return makeReportSchema({reportId:'prepSupervisorsCensus',title:'حصر موجهي المرحلة الإعدادية',subtitle:'المعلمون من أصل مدارس الموجه (ثابت + بالأجر) وكل معلم مرة واحدة، والمدرسة ذات الفترتين مدرسة واحدة',period:ctx.period,
+ return makeReportSchema({reportId:'prepSupervisorsCensus',title:'نصاب الموجه من المدارس والمعلمين',subtitle:'المعلمون من أصل مدارس الموجه (ثابت + بالأجر) وكل معلم مرة واحدة، والمدرسة ذات الفترتين مدرسة واحدة',period:ctx.period,
   summary:[reportMetric('عدد الموجهين',rows.length),reportMetric('عدد المدارس',sum('schools')),reportMetric('عدد الفصول الدراسية',sum('classes')),reportMetric('إجمالي المعلمين',sum('total'))],
-  columns:[reportColumn('index','م',.3,{numeric:true}),reportColumn('name','الموجه',2),reportColumn('schools','عدد المدارس',.7,{numeric:true}),reportColumn('classes','عدد الفصول الدراسية',.9,{numeric:true}),reportColumn('perm','معلمون ثابتون',.8,{numeric:true}),reportColumn('paid','معلمون بالأجر',.8,{numeric:true}),reportColumn('total','إجمالي المعلمين',.8,{numeric:true})],
+  columns:[reportColumn('index','م',.3,{numeric:true}),reportColumn('name','الموجه',2),reportColumn('stage','المرحلة',.7),reportColumn('schools','عدد المدارس',.7,{numeric:true}),reportColumn('classes','عدد الفصول الدراسية',.9,{numeric:true}),reportColumn('perm','معلمون ثابتون',.8,{numeric:true}),reportColumn('paid','معلمون بالأجر',.8,{numeric:true}),reportColumn('total','إجمالي المعلمين',.8,{numeric:true})],
   rows,totals:[reportTotalsMetric('عدد الموجهين',rows.length),reportTotalsMetric('عدد المدارس',sum('schools')),reportTotalsMetric('عدد الفصول الدراسية',sum('classes')),reportTotalsMetric('معلمون ثابتون',sum('perm')),reportTotalsMetric('معلمون بالأجر',sum('paid')),reportTotalsMetric('إجمالي المعلمين',sum('total'))],issuer:ctx.issuer});
 }};
+const __v216Rebuild=rebuildFilteredReportMetrics;
+rebuildFilteredReportMetrics=function(schema){
+ if(schema?.reportId!=='prepSupervisorsCensus')return __v216Rebuild(schema);
+ const rows=schema.rows||[],sum=k=>rows.reduce((n,r)=>n+reportNumber(r[k]),0),names=new Set(rows.map(r=>r.name)).size;
+ schema.summary=[reportMetric('عدد الموجهين',names),reportMetric('عدد المدارس',sum('schools')),reportMetric('عدد الفصول الدراسية',sum('classes')),reportMetric('إجمالي المعلمين',sum('total'))];
+ schema.totals=[reportTotalsMetric('عدد الموجهين',names),reportTotalsMetric('عدد المدارس',sum('schools')),reportTotalsMetric('عدد الفصول الدراسية',sum('classes')),reportTotalsMetric('معلمون ثابتون',sum('perm')),reportTotalsMetric('معلمون بالأجر',sum('paid')),reportTotalsMetric('إجمالي المعلمين',sum('total'))];
+ return schema;
+};
 
 /* v207: الثانوي في الخطة الملخصة — الفصول الفعلية + حصص المواد */
 const V207_SUBJECTS=[['الكيمياء','chem','الكيمياء'],['الفيزياء','phys','الفيزياء'],['الأحياء','bio','الأحياء'],['علوم متكاملة','integ','علوم متكاملة']];
