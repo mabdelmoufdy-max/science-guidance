@@ -1,4 +1,5 @@
 <!doctype html>
+<!-- v221: الموجه الأول يرى «لوحة قرارات المرحلة» (لوحة المنسق v168: العجز والتغطية ومقترح الانتداب وحالة الموجهين وعدالة الكادر) أعلى «لوحة الإدارة» لكل المراحل باختيار المرحلة — عرض وتقارير فقط، بلا تعديل قاعدة بيانات. -->
 <!-- v220: الموجه الأول عرض وتقارير فقط — سُحبت منه أزرار التعديل والإضافة والانتداب والإسناد وتوزيع العجز بالأجر وإعلان جديد وشاشة استكمال البيانات؛ الإعلانات للقراءة. الاعتماد والحسابات لمدير النظام. واجهة فقط، وقاعدة البيانات ودالتا الحافة ضُيّقت (المرحلة 3). نافذة الإجازات للموجه الأول عرض وطباعة فقط. -->
 <!-- v219: حصر الثانوي في تقرير «نصاب الموجه…» عبر دالة القاعدة secondary_supervisor_census (قراءة فقط) ليعمل لمنسق الإعدادي أيضًا -->
 <!-- v218: تقرير «نصاب الموجه…» للثانوي على قاعدة موجه المادة (supervisor_school_subjects) والمعلم بما يدرّسه، بدل «غير مسندة» -->
@@ -129,7 +130,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#152c43">
-<title>نظام توجيه العلوم — v220</title>
+<title>نظام توجيه العلوم — v221</title>
 <link rel="manifest" href="../../manifest.webmanifest">
 <link rel="icon" type="image/png" sizes="192x192" href="../../icon-192.png">
 <link rel="apple-touch-icon" href="../../icon-192.png">
@@ -2672,6 +2673,7 @@ window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();window.v152
 window.addEventListener('appinstalled',()=>{window.v152InstallPrompt=null;v152SyncInstallBtn()});
 if('serviceWorker' in navigator&&location.protocol!=='file:')window.addEventListener('load',()=>navigator.serviceWorker.register('../../service-worker.js').catch(()=>{}));
 const V145_NEWS=[
+ ['v221','الموجه الأول: «لوحة قرارات المرحلة» في لوحته لكل المراحل (العجز والتغطية ومقترح الانتداب وحالة الموجهين) — عرض وتقارير فقط.'],
  ['v220','الموجه الأول: عرض وتقارير فقط — بلا تعديل أو إضافة أو انتداب أو إسناد أو إعلان جديد؛ الاعتماد والحسابات لمدير النظام.'],
  ['v216','تقرير جديد «نصاب الموجه من المدارس والمعلمين» (الكل أو مرحلة معينة) في التقارير لمدير النظام ومنسق المرحلة.'],
  ['v210','توزيع الموجهين: المدرسة الصناعية لا تعرض سطر «غير مسند» لموجه الأحياء.'],
@@ -10194,6 +10196,14 @@ dashboardPage=async function(options={}){
  if(profile?.role!=='stage_coordinator')return v155BaseDashboard(options);
  let board='';try{board=await v168StageBoard(!!options.force)}catch(error){board=`<div class="notice danger">تعذر تحميل لوحة قرارات المرحلة: ${esc(error?.message||error)}</div>`}
  return board; // v168: حُذف «مرحبًا» و«ملخص الحصص والعجز» من لوحة المنسق (مكرران)
+};
+/* v221: الموجه الأول — لوحة قرارات المرحلة (كل المراحل) أعلى «لوحة الإدارة»؛ عرض فقط، أزرارها تفتح تقارير. */
+const v221BaseDashboard=dashboardPage;
+dashboardPage=async function(options={}){
+ if(profile?.role!=='first_supervisor')return v221BaseDashboard(options);
+ let board='';try{board=await v168StageBoard(!!options.force)}catch(error){board=`<div class="notice danger">تعذر تحميل لوحة قرارات المرحلة: ${esc(error?.message||error)}</div>`}
+ let base='';try{base=await v221BaseDashboard(options)}catch(_){}
+ return board+base;
 };
 
 /* v156: بحث المعلم في نافذة الإجازات الطويلة بالاسم أو الرقم القومي */
