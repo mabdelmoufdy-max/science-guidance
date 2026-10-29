@@ -3,7 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>إدخال بيانات المنسق — v176</title>
+<!-- v177: الموجه الأول لا يدخل بوابة المنسق (عرض وتقارير فقط في البرنامج الرئيسي)؛ الدخول لمنسق المرحلة ومدير النظام. -->
+<title>إدخال بيانات المنسق — v177</title>
 <!-- v175: اسم الفصل في بطاقة المعلم وقوائم الإسناد يعرض الصف أولًا للمجموعات الثانوية («الأول — عام — مجموعة 1») لأن اسم المجموعة يتكرر في كل صف. عرض فقط. -->
 <!-- v174: تحسين الشكل — تبويبات المدرسة (البيانات | الموجهون | الفصول والمجموعات | المعلمون) بأعداد ونواقص، عدّادات +/− لكل نوع مجموعة في الثانوي (شريط المسند والأسماء مطوية)، بطاقة معلم مضغوطة (النصاب والمحتسب والمتبقي والموجه المسؤول) والبيانات الشخصية مطوية، ومنع خروج البريد الطويل عن الإطار. لا تغيير في البيانات أو الصلاحيات أو منطق الحفظ. -->
 <!-- v173: المرحلة الثانوية — (1) أربع قوائم لموجه الفيزياء والكيمياء والأحياء والعلوم المتكاملة يختارها المنسق (الصناعي: الفيزياء والكيمياء فقط)؛ (2) إضافة المجموعات بقائمة نوع (حسب الصف ونوع المدرسة) بحصص جاهزة وحذف مجموعة غير مسندة بقائمة؛ (3) «الموجه المسؤول» عن المعلم بقائمة في تعديل بيانات المعلم (جدول teacher_responsible_supervisor) ويظهر في بطاقته؛ (4) إلغاء إسناد فصول المعلم وإسناد المتاح من داخل تعديل بياناته. -->
@@ -231,7 +232,7 @@ async function boot(){
   const prof=await q(sb.from('profiles').select('id,full_name,civil_id,must_change_password,is_active').eq('id',uid).single());
   if(!prof.is_active){await sb.auth.signOut();return renderLogin('الحساب غير مفعل')}
   const roles=(await q(sb.from('user_roles').select('role').eq('profile_id',uid).eq('is_active',true))).map(r=>r.role);
-  activeRole=['admin','first_supervisor','stage_coordinator'].find(r=>roles.includes(r))||'';
+  activeRole=['admin','stage_coordinator'].find(r=>roles.includes(r))||'';
   if(!activeRole){await sb.auth.signOut();return renderLogin('هذا الرابط لمنسقي المراحل فقط')}
   S.me={...prof,id:uid};
   if(prof.must_change_password)return renderChangePassword();

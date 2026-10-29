@@ -37,7 +37,7 @@ Deno.serve(async (req: Request) => {
   try { body = await req.json(); } catch { return json({ error: "صيغة الطلب غير صحيحة" }, 400); }
 
   const requestedRole = txt(req.headers.get("x-app-role") || body.role, 50);
-  const allowed = new Set(["admin", "first_supervisor", "stage_coordinator", "supervisor", "senior_teacher"]);
+  const allowed = new Set(["admin", "stage_coordinator", "supervisor", "senior_teacher"]); // v220: الموجه الأول عرض فقط
   if (!allowed.has(requestedRole)) return json({ error: "لا توجد صلاحية لتنفيذ الانتداب" }, 403);
 
   const { data: roleRow, error: roleError } = await admin
@@ -92,7 +92,7 @@ Deno.serve(async (req: Request) => {
   }
 
   async function canTouchSchoolPair(fromId: string, toId: string) {
-    if (requestedRole === "admin" || requestedRole === "first_supervisor") return true;
+    if (requestedRole === "admin") return true;
     if (requestedRole === "senior_teacher") return fromId === seniorHomeSchoolId || toId === seniorHomeSchoolId;
     if (requestedRole === "stage_coordinator") return (await schoolInCoordinatorStage(fromId)) || (await schoolInCoordinatorStage(toId));
     if (requestedRole === "supervisor") {
