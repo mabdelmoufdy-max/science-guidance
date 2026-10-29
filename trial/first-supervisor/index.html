@@ -1,5 +1,5 @@
 <!doctype html>
-<!-- v220: الموجه الأول عرض وتقارير فقط — سُحبت منه أزرار التعديل والإضافة والانتداب والإسناد وتوزيع العجز بالأجر وإعلان جديد وشاشة استكمال البيانات؛ الإعلانات للقراءة. الاعتماد والحسابات لمدير النظام. واجهة فقط، وتضييق قاعدة البيانات (المرحلة 3) بانتظار الموافقة. -->
+<!-- v220: الموجه الأول عرض وتقارير فقط — سُحبت منه أزرار التعديل والإضافة والانتداب والإسناد وتوزيع العجز بالأجر وإعلان جديد وشاشة استكمال البيانات؛ الإعلانات للقراءة. الاعتماد والحسابات لمدير النظام. واجهة فقط، وقاعدة البيانات ودالتا الحافة ضُيّقت (المرحلة 3). نافذة الإجازات للموجه الأول عرض وطباعة فقط. -->
 <!-- v219: حصر الثانوي في تقرير «نصاب الموجه…» عبر دالة القاعدة secondary_supervisor_census (قراءة فقط) ليعمل لمنسق الإعدادي أيضًا -->
 <!-- v218: تقرير «نصاب الموجه…» للثانوي على قاعدة موجه المادة (supervisor_school_subjects) والمعلم بما يدرّسه، بدل «غير مسندة» -->
 <!-- v217: إصلاح فلتر المرحلة في «نصاب الموجه من المدارس والمعلمين» (كان يعيد 0 نتائج لأن فلتر المدرسة المرافق لا ينطبق على الصفوف المجمّعة) -->
@@ -10247,7 +10247,7 @@ function v180LeaveTableRows(rows){
   <td>${financialLeaveStatusBadge(r)}${v180LeaveFlags(r)?'<br>'+v180LeaveFlags(r):''}</td>
   <td>${esc(r.decision_number||'—')}${r.decision_date?`<br><small class="muted">${esc(r.decision_date)}</small>`:''}</td>
   <td><small>${esc(r.effective_from||'—')}<br>${esc(r.effective_to||'—')}</small></td>
-  <td><button type="button" class="btn secondary" onclick="financialLeaveEdit('${r.teacher_id}')">تعديل</button></td>
+  <td>${profile?.role==='first_supervisor'?'—':`<button type="button" class="btn secondary" onclick="financialLeaveEdit('${r.teacher_id}')">تعديل</button>`}</td>
  </tr>`).join('');
 }
 function v180LeaveRender(){
@@ -10279,7 +10279,7 @@ openLongLeaveCenter=async function(){
  modal(`<div class="modal-head"><div><h3>الإجازات الطويلة وتجديدها</h3><div class="muted">${esc(activeYear.label||'')} • نطاق البيانات حسب دورك ومدارسك</div></div><button class="close" type="button" onclick="closeModal()">×</button></div>
   <div class="notice info"><b>قاعدة الاحتساب:</b> «بانتظار التجديد» يحسب النصاب كاملًا، و«إجازة مجددة» يظهر اسم المعلم ونوع الإجازة وتكون جميع حصصه المالية صفرًا. تاريخ نهاية الإجازة للتنبيه فقط ولا يغيّر الحالة تلقائيًا.</div>
   <div id="v180LeaveTabs" class="approval-center-summary v180-leave-tabs"></div>
-  <div class="actions"><button type="button" class="btn primary" onclick="v180LeaveShowForm(true)">+ تسجيل إجازة</button><button type="button" id="v180LeaveReportBtn" class="btn secondary" onclick="openReportById('longLeaves',{section:__v180LeaveTab,filterState:{active:false}})">طباعة كشف الإجازات</button><button type="button" class="btn danger" onclick="closeModal()">إغلاق</button></div>
+  <div class="actions">${profile?.role==='first_supervisor'?'':'<button type="button" class="btn primary" onclick="v180LeaveShowForm(true)">+ تسجيل إجازة</button>'}<button type="button" id="v180LeaveReportBtn" class="btn secondary" onclick="openReportById('longLeaves',{section:__v180LeaveTab,filterState:{active:false}})">طباعة كشف الإجازات</button><button type="button" class="btn danger" onclick="closeModal()">إغلاق</button></div>
   <div class="table-wrap" style="margin-top:10px;max-height:42vh;overflow:auto"><table class="table"><thead><tr><th>المعلم / الرقم القومي</th><th>المدرسة</th><th>الحالة</th><th>القرار</th><th>من / إلى</th><th>إجراء</th></tr></thead><tbody id="v180LeaveBody"></tbody></table></div>
   <div id="v180LeaveFormBox" class="card" style="display:none;margin-top:12px">
   <form id="financialLeaveForm" onsubmit="saveLongLeaveStatus(event)">
