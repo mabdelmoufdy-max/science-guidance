@@ -1,4 +1,5 @@
 <!doctype html>
+<!-- v218: تقرير «نصاب الموجه…» للثانوي على قاعدة موجه المادة (supervisor_school_subjects) والمعلم بما يدرّسه، بدل «غير مسندة» -->
 <!-- v217: إصلاح فلتر المرحلة في «نصاب الموجه من المدارس والمعلمين» (كان يعيد 0 نتائج لأن فلتر المدرسة المرافق لا ينطبق على الصفوف المجمّعة) -->
 <!-- v216: تقرير جديد «نصاب الموجه من المدارس والمعلمين» (فلتر الكل/المرحلة) في قوالب التقارير لمدير النظام ومنسق المرحلة (الموجه، عدد المدارس، الفصول، المعلمون الثابتون والأجر، الإجمالي) — عرض فقط -->
 <!-- v215: نموذج الانتداب — اختيار المدرسة المنتدب إليها بشريط بحث (حقل كتابة + قائمة مقترحة) بدل القائمة الطويلة؛ لا تغيير في الحفظ -->
@@ -126,7 +127,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#152c43">
-<title>نظام توجيه العلوم — v217</title>
+<title>نظام توجيه العلوم — v218</title>
 <link rel="manifest" href="./manifest.webmanifest">
 <link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png">
 <link rel="apple-touch-icon" href="./icon-192.png">
@@ -10962,13 +10963,40 @@ ReportAdapters.prepSupervisorsCensus={async load(ctx){
  const names=new Map((sn.data||[]).map(x=>[String(x.id),String(x.full_name||'').trim()]));
  const schools=v161MergeSchools(sr.data||[],links),bySchool=new Map(schools.map(x=>[String(x.id),x]));
  const groups=new Map();
- schools.forEach(x=>{const k=String(x.supervisor_id||'')+'|'+x.stage;const g=groups.get(k)||{name:names.get(String(x.supervisor_id||''))||'غير مسندة',stage:x.stage||'—',schools:0,classes:0,perm:new Set(),paid:new Set()};g.schools++;g.classes+=reportNumber(x.class_count);groups.set(k,g)});
+ schools.filter(x=>x.stage!=='ثانوي').forEach(x=>{const k=String(x.supervisor_id||'')+'|'+x.stage;const g=groups.get(k)||{name:names.get(String(x.supervisor_id||''))||'غير مسندة',stage:x.stage||'—',schools:0,classes:0,perm:new Set(),paid:new Set()};g.schools++;g.classes+=reportNumber(x.class_count);groups.set(k,g)});
  v103ScopeRows(data).forEach(t=>{
   if(!['home','delegated_out_partial'].includes(String(t.school_relation||'home')))return;
   const sc=bySchool.get(v91ScopeSchoolId(t));if(!sc)return;
   const g=groups.get(String(sc.supervisor_id||'')+'|'+sc.stage);if(!g)return;
   (isPaidTeacher(t)?g.paid:g.perm).add(v91TeacherId(t));
  });
+ // الثانوي: المدرسة بلا موجه واحد؛ يتبع كل موجه بالمادة (supervisor_school_subjects) والمعلم بما يدرّسه فعلًا، والعلوم المتكاملة تتبع موجهَي الكيمياء والأحياء.
+ const secSchools=schools.filter(x=>x.stage==='ثانوي');
+ if(secSchools.length&&activeTerm?.id){
+  const [sss,cls,asg]=await Promise.all([
+   v103ReadAll(()=>sb.from('supervisor_school_subjects').select('school_id,supervisor_id,subject_name').eq('active',true).order('school_id')),
+   v103ReadAll(()=>sb.from('school_classes').select('id,school_id,class_subject_requirements(weekly_periods,curriculum_subjects(subject_name))').eq('stage','ثانوي').eq('term_id',activeTerm.id).order('id')),
+   v103ReadAll(()=>sb.from('teaching_assignments').select('id,class_id,teacher_id,curriculum_subjects(subject_name)').eq('term_id',activeTerm.id).order('id'))]);
+  const base=id=>links.get(String(id))||String(id),secIds=new Set(secSchools.map(x=>String(x.id)));
+  const subs=new Map(); // school -> sup -> Set(subjects)
+  sss.forEach(x=>{const b=base(x.school_id);if(!secIds.has(b))return;const m=subs.get(b)||new Map(),st=m.get(String(x.supervisor_id))||new Set();st.add(x.subject_name);m.set(String(x.supervisor_id),st);subs.set(b,m)});
+  subs.forEach(m=>m.forEach(st=>{if(st.has('الكيمياء')||st.has('الأحياء'))st.add('علوم متكاملة')}));
+  const classSubj=new Map(),classSchool=new Map(),schoolClasses=new Map();
+  cls.forEach(c=>{const b=base(c.school_id);if(!secIds.has(b))return;classSchool.set(String(c.id),b);
+   classSubj.set(String(c.id),new Set((c.class_subject_requirements||[]).filter(q=>reportNumber(q.weekly_periods)>0).map(q=>q.curriculum_subjects?.subject_name)));
+   (schoolClasses.get(b)||schoolClasses.set(b,[]).get(b)).push(String(c.id))});
+  const home=new Map(); // school -> teacherId -> paid
+  v103ScopeRows(data).forEach(t=>{if(!['home','delegated_out_partial'].includes(String(t.school_relation||'home')))return;const b=v91ScopeSchoolId(t);if(!secIds.has(b))return;(home.get(b)||home.set(b,new Map()).get(b)).set(v91TeacherId(t),isPaidTeacher(t))});
+  const teaches=new Map(); // school -> teacherId -> Set(subjects)
+  asg.forEach(a=>{const b=classSchool.get(String(a.class_id));if(!b)return;const m=teaches.get(b)||teaches.set(b,new Map()).get(b),st=m.get(String(a.teacher_id))||m.set(String(a.teacher_id),new Set()).get(String(a.teacher_id));st.add(a.curriculum_subjects?.subject_name)});
+  const sg=new Map();
+  secSchools.forEach(x=>{const b=String(x.id),m=subs.get(b);
+   if(!m||!m.size){const k='|ثانوي',g=sg.get(k)||sg.set(k,{name:'غير مسندة',stage:'ثانوي',schools:0,classes:0,perm:new Set(),paid:new Set()}).get(k);g.schools++;g.classes+=(schoolClasses.get(b)||[]).length;return}
+   m.forEach((S,sup)=>{const k=sup+'|ثانوي',g=sg.get(k)||sg.set(k,{name:names.get(sup)||'غير مسندة',stage:'ثانوي',schools:0,classes:0,perm:new Set(),paid:new Set()}).get(k);
+    g.schools++;g.classes+=(schoolClasses.get(b)||[]).filter(id=>[...classSubj.get(id)].some(n=>S.has(n))).length;
+    (teaches.get(b)||new Map()).forEach((ts,tid)=>{if(!home.get(b)?.has(tid)||![...ts].some(n=>S.has(n)))return;(home.get(b).get(tid)?g.paid:g.perm).add(tid)})})});
+  sg.forEach((g,k)=>groups.set(k,g));
+ }
  const order=['ابتدائي','إعدادي','ثانوي'],rank=st=>{const i=order.indexOf(st);return i<0?9:i};
  const list=[...groups.values()].sort((a,b)=>rank(a.stage)-rank(b.stage)||b.schools-a.schools||a.name.localeCompare(b.name,'ar'));
  const rows=list.map((g,i)=>({index:i+1,name:reportCellValue(g.name),stage:reportCellValue(g.stage),_stage:g.stage,_stages:[g.stage],schools:g.schools,classes:g.classes,perm:g.perm.size,paid:g.paid.size,total:g.perm.size+g.paid.size,_search:g.name+' '+g.stage}));
