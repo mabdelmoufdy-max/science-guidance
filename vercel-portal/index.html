@@ -339,7 +339,7 @@ summary{cursor:pointer;font-weight:600;padding:4px 0}
   };
 
   VIEWS.gate = function () {
-    var isNew = S.mode === 'new';
+    var isNew = false;
     var civil = h('input', { type: 'tel', id: 'g_civil', inputmode: 'numeric', maxlength: '20', autocomplete: 'off', dir: 'ltr' });
     var phone = h('input', { type: 'tel', id: 'g_phone', inputmode: 'numeric', maxlength: '20', autocomplete: 'off', dir: 'ltr' });
     var hintC = h('div', { class: 'hint' }), hintP = h('div', { class: 'hint' }), box = errbox();
@@ -371,11 +371,13 @@ summary{cursor:pointer;font-weight:600;padding:4px 0}
       topbar('معلم'),
       h('div', { class: 'tabs' },
         h('button', { type: 'button', class: 'tab' + (isNew ? '' : ' on'), id: 'tab-reg', onclick: function () { S.mode = 'registered'; render(); } }, 'معلم مسجّل في النظام'),
-        h('button', { type: 'button', class: 'tab' + (isNew ? ' on' : ''), id: 'tab-new', onclick: function () { S.mode = 'new'; render(); } }, 'معلم جديد')),
+        h('button', { type: 'button', class: 'tab', id: 'tab-new', disabled: true, 'aria-disabled': 'true', style: 'opacity:.5;cursor:not-allowed' }, 'معلم جديد')),
+      h('div', { class: 'warn', id: 'new-disabled-note' }, 'تسجيل معلم جديد متوقف حاليًا. للإضافة تواصل مع المشرف.'),
       S.status && S.status.editing_open === false ? h('div', { class: 'warn' }, 'فترة تعديل البيانات مغلقة حاليًا.') : null,
-      isNew ? newBox : form);
+      form);
   };
 
+  var NEW_TEACHER_DISABLED = true; /* إيقاف تسجيل معلم جديد من شاشة المعلم */
   function topbar(title) {
     return h('div', { class: 'top' },
       h('button', { type: 'button', class: 'link', id: 'back-home', onclick: function () { var s = S.status, sc = S.schools, ca = S.cache; reset(); S.status = s; S.schools = sc; S.cache = ca; go('launcher'); } }, '‹ الرئيسية'),
@@ -418,6 +420,7 @@ summary{cursor:pointer;font-weight:600;padding:4px 0}
     go(S.limited ? 'flow' : 'confirm');
   }
   async function startNew() {
+    if (NEW_TEACHER_DISABLED) return;
     S.auth = null; S.lookup = null; S.mode = 'new'; S.limited = false; S.closed = false; S.closedNote = '';
     S.base = {}; S.person = { work_type: '' }; PKEYS.forEach(function (k) { S.person[k] = ''; }); S.person.civil_id = '';
     S.school = null; S.stageKey = null; S.baseSel = new Map(); S.sel = new Map(); S.subj = new Map(); S.step = 1; S.dbase = {}; S.dsel = {};
