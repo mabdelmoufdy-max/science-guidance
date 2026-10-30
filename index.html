@@ -1,4 +1,5 @@
 <!doctype html>
+<!-- v223: فصل «ثانوي عام» عن «ثانوي صناعي» مرحلتين مستقلتين (قاعدة البيانات v223 + الواجهة): قوائم المراحل والفلاتر والنماذج، الأنصبة (عمودان)، منهج كل مرحلة، حصر موجهي الثانوي حسب المرحلة (secondary_supervisor_census_by_stage)، والخطة الملخصة وتوزيع الموجهين للمرحلتين. -->
 <!-- v222: تنظيف بلا تغيير في السلوك — حُذفت 57 دالة/متغيرًا ميتًا (نسخ قديمة استُبدلت ولا يستدعيها شيء، ودوال بلا استدعاء)، و135 قاعدة CSS لـ63 صنفًا لا يظهر في أي شاشة، ونُقلت تعليقات الإصدارات الأقدم من v191 إلى CHANGELOG.md. تحقق: 233 لقطة (7 أدوار × كمبيوتر/هاتف × الشاشات والتقارير) متطابقة المحتوى وبصمة التنسيق. -->
 <!-- v221: الموجه الأول يرى «لوحة قرارات المرحلة» (لوحة المنسق v168: العجز والتغطية ومقترح الانتداب وحالة الموجهين وعدالة الكادر) أعلى «لوحة الإدارة» لكل المراحل باختيار المرحلة — عرض وتقارير فقط، بلا تعديل قاعدة بيانات. -->
 <!-- v220: الموجه الأول عرض وتقارير فقط — سُحبت منه أزرار التعديل والإضافة والانتداب والإسناد وتوزيع العجز بالأجر وإعلان جديد وشاشة استكمال البيانات؛ الإعلانات للقراءة. الاعتماد والحسابات لمدير النظام. واجهة فقط، وقاعدة البيانات ودالتا الحافة ضُيّقت (المرحلة 3). نافذة الإجازات للموجه الأول عرض وطباعة فقط. -->
@@ -16,7 +17,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#152c43">
-<title>نظام توجيه العلوم — v222</title>
+<title>نظام توجيه العلوم — v223</title>
 <link rel="manifest" href="./manifest.webmanifest">
 <link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png">
 <link rel="apple-touch-icon" href="./icon-192.png">
@@ -2074,7 +2075,7 @@ async function usersPage(){
 async function openCreateUser(source){
  const {data:schools}=await sb.from('schools').select('id,name').order('name');
  let roles=[];if(profile.role==='admin')roles=[['first_supervisor','الموجه الأول'],['stage_coordinator','منسق مرحلة'],['supervisor','موجه'],['school_manager','مدير مدرسة']];if(profile.role==='supervisor')roles=[['senior_teacher','أقدم معلم'],['teacher','معلم']];if(profile.role==='senior_teacher')roles=[['teacher','معلم']];
- modal(`<h3>إنشاء حساب جديد</h3><form onsubmit="createUser(event)"><div class="form-grid"><div class="field"><label>الدور</label><select name="role" onchange="toggleUserFields(this.value)" required>${roles.map(r=>`<option value="${r[0]}">${r[1]}</option>`).join('')}</select></div><div class="field"><label>الاسم الكامل</label><input name="full_name" required></div><div class="field"><label>الرقم القومي</label><input name="civil_id" inputmode="numeric" required></div><div class="field"><label>الهاتف</label><input name="phone"></div><div class="field stage-coordinator-only"><label>المرحلة</label><select name="stage"><option>ابتدائي</option><option>إعدادي</option><option>ثانوي</option></select></div><div class="field user-school"><label>المدرسة</label><select name="school_id"><option value="">— اختر —</option>${(schools||[]).map(s=>`<option value="${s.id}">${esc(s.name)}</option>`).join('')}</select></div><div class="field teacher-only"><label>الدرجة الوظيفية</label><select name="job_title"><option>معلم</option><option>معلم أول</option><option>معلم أول (أ)</option><option>معلم خبير</option><option>كبير معلمين</option></select><small>تحدد النصاب، ومنها يُحسب العجز أو الزيادة.</small></div><div class="field teacher-only"><label>نوع العمل</label><select name="work_type"><option value="permanent">ثابت</option><option value="paid">بالأجر</option></select></div><div class="field teacher-only"><label>تاريخ الحصول على الدرجة</label><input type="date" name="grade_acquired_date"></div><div class="field teacher-only"><label>تاريخ استلام العمل</label><input type="date" name="work_start_date"></div><div class="field teacher-only"><label>تاريخ التعيين</label><input type="date" name="appointment_date"></div></div><div class="actions"><button class="btn primary">إنشاء الحساب</button><button type="button" class="btn secondary" onclick="closeModal()">إلغاء</button></div></form>`);toggleUserFields(roles[0]?.[0]);
+ modal(`<h3>إنشاء حساب جديد</h3><form onsubmit="createUser(event)"><div class="form-grid"><div class="field"><label>الدور</label><select name="role" onchange="toggleUserFields(this.value)" required>${roles.map(r=>`<option value="${r[0]}">${r[1]}</option>`).join('')}</select></div><div class="field"><label>الاسم الكامل</label><input name="full_name" required></div><div class="field"><label>الرقم القومي</label><input name="civil_id" inputmode="numeric" required></div><div class="field"><label>الهاتف</label><input name="phone"></div><div class="field stage-coordinator-only"><label>المرحلة</label><select name="stage"><option>ابتدائي</option><option>إعدادي</option><option>ثانوي عام</option><option>ثانوي صناعي</option></select></div><div class="field user-school"><label>المدرسة</label><select name="school_id"><option value="">— اختر —</option>${(schools||[]).map(s=>`<option value="${s.id}">${esc(s.name)}</option>`).join('')}</select></div><div class="field teacher-only"><label>الدرجة الوظيفية</label><select name="job_title"><option>معلم</option><option>معلم أول</option><option>معلم أول (أ)</option><option>معلم خبير</option><option>كبير معلمين</option></select><small>تحدد النصاب، ومنها يُحسب العجز أو الزيادة.</small></div><div class="field teacher-only"><label>نوع العمل</label><select name="work_type"><option value="permanent">ثابت</option><option value="paid">بالأجر</option></select></div><div class="field teacher-only"><label>تاريخ الحصول على الدرجة</label><input type="date" name="grade_acquired_date"></div><div class="field teacher-only"><label>تاريخ استلام العمل</label><input type="date" name="work_start_date"></div><div class="field teacher-only"><label>تاريخ التعيين</label><input type="date" name="appointment_date"></div></div><div class="actions"><button class="btn primary">إنشاء الحساب</button><button type="button" class="btn secondary" onclick="closeModal()">إلغاء</button></div></form>`);toggleUserFields(roles[0]?.[0]);
 }
 
 function toggleUserFields(role){document.querySelectorAll('.teacher-only').forEach(x=>x.style.display=['senior_teacher','teacher'].includes(role)?'block':'none');document.querySelectorAll('.user-school').forEach(x=>x.style.display=['school_manager','senior_teacher','teacher'].includes(role)?'block':'none');document.querySelectorAll('.stage-coordinator-only').forEach(x=>x.style.display=role==='stage_coordinator'?'block':'none')}
@@ -2205,6 +2206,7 @@ window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();window.v152
 window.addEventListener('appinstalled',()=>{window.v152InstallPrompt=null;v152SyncInstallBtn()});
 if('serviceWorker' in navigator&&location.protocol!=='file:')window.addEventListener('load',()=>navigator.serviceWorker.register('./service-worker.js').catch(()=>{}));
 const V145_NEWS=[
+ ['v223','الثانوي العام والثانوي الصناعي مرحلتان مستقلتان في كل الفلاتر والتقارير والأنصبة وحصر الموجهين (النصاب واحد، ومنسقو الثانوي للمرحلتين).'],
  ['v222','تنظيف داخلي للبرنامج (أكواد وتنسيقات قديمة غير مستخدمة) — الملف أخف بنحو 13% بلا أي تغيير في الشاشات.'],
  ['v221','الموجه الأول: «لوحة قرارات المرحلة» في لوحته لكل المراحل (العجز والتغطية ومقترح الانتداب وحالة الموجهين) — عرض وتقارير فقط.'],
  ['v220','الموجه الأول: عرض وتقارير فقط — بلا تعديل أو إضافة أو انتداب أو إسناد أو إعلان جديد؛ الاعتماد والحسابات لمدير النظام.'],
@@ -2521,7 +2523,7 @@ async function schoolsPage(){
  </div>`;
 }
 
-function schoolForm(){if(profile?.role!=='admin')return toast('إضافة المدارس متاحة لمدير النظام فقط');modal(`<h3>إضافة مدرسة</h3><div class="notice info">سيُنشئ النظام معرفًا داخليًا ثابتًا وفريدًا للمدرسة تلقائيًا. لا يوجد كود مدرسة يدوي.</div><form onsubmit="saveSchool(event)"><div class="form-grid"><div class="field"><label>اسم المدرسة الرسمي</label><input name="name" required></div><div class="field"><label>المرحلة</label><select name="stage"><option>ابتدائي</option><option>إعدادي</option><option>ثانوي</option></select></div><div class="field"><label>النوع</label><select name="gender_type"><option>بنين</option><option>بنات</option><option>مشترك</option></select></div><div class="field"><label>عدد الفصول</label><input name="class_count" type="number" min="0" value="0"></div><div class="field"><label>جهة الاعتماد النهائي</label><select name="approval_authority"><option value="school_manager">مدير المدرسة</option><option value="supervisor">موجه المدرسة</option><option value="admin">مدير النظام</option></select></div><div class="field"><label>العنوان</label><input name="address"></div><div class="field"><label>الهاتف</label><input name="phone"></div></div><div class="actions"><button class="btn primary">حفظ</button><button type="button" class="btn secondary" onclick="closeModal()">إلغاء</button></div></form>`)}
+function schoolForm(){if(profile?.role!=='admin')return toast('إضافة المدارس متاحة لمدير النظام فقط');modal(`<h3>إضافة مدرسة</h3><div class="notice info">سيُنشئ النظام معرفًا داخليًا ثابتًا وفريدًا للمدرسة تلقائيًا. لا يوجد كود مدرسة يدوي.</div><form onsubmit="saveSchool(event)"><div class="form-grid"><div class="field"><label>اسم المدرسة الرسمي</label><input name="name" required></div><div class="field"><label>المرحلة</label><select name="stage"><option>ابتدائي</option><option>إعدادي</option><option>ثانوي عام</option><option>ثانوي صناعي</option></select></div><div class="field"><label>النوع</label><select name="gender_type"><option>بنين</option><option>بنات</option><option>مشترك</option></select></div><div class="field"><label>عدد الفصول</label><input name="class_count" type="number" min="0" value="0"></div><div class="field"><label>جهة الاعتماد النهائي</label><select name="approval_authority"><option value="school_manager">مدير المدرسة</option><option value="supervisor">موجه المدرسة</option><option value="admin">مدير النظام</option></select></div><div class="field"><label>العنوان</label><input name="address"></div><div class="field"><label>الهاتف</label><input name="phone"></div></div><div class="actions"><button class="btn primary">حفظ</button><button type="button" class="btn secondary" onclick="closeModal()">إلغاء</button></div></form>`)}
 
 async function saveSchool(e){e.preventDefault();if(profile?.role!=='admin')return toast('غير مصرح بإضافة مدرسة');const f=Object.fromEntries(new FormData(e.target).entries());f.class_count=Number(f.class_count||0);const {error}=await sb.from('schools').insert(f);if(error)return moneySafeError(error);closeModal();toast('تمت إضافة المدرسة');refreshCurrentPage({invalidate:['schools','hierarchy','dashboard','page:reports']}).catch(moneySafeError)}
 
@@ -3154,7 +3156,7 @@ async function classesPage(){
    .eq('school_id',s.id).eq('term_id',activeTerm.id).order('grade_order').order('class_name');
  if(error)return `<div class="error">${esc(error.message)}</div>`;
  return `<div class="page-head"><div><h2>الفصول والمواد</h2><p>${esc(s.name)} — العلوم تبدأ من الصف الرابع الابتدائي، وتحدد مواد كل صف تلقائيًا من المنهج.</p></div><button id="addClassButton" type="button" class="btn primary add-class-action" data-action="add-class" data-school-id="${s.id}">+ إضافة فصل</button></div>
- <div class="notice"><b>الثانوي:</b> الأول «علوم متكاملة»، والثاني والثالث «الكيمياء + الفيزياء + الأحياء».</div>
+ <div class="notice"><b>الثانوي العام:</b> الأول «علوم متكاملة»، والثاني والثالث «الكيمياء + الفيزياء + الأحياء». <b>الثانوي الصناعي:</b> الأول «الفيزياء + الكيمياء»، والثاني والثالث «الفيزياء».</div>
  ${v119GradeSummaryCard(classes||[])}<details class="card v119-class-details"><summary><b>عرض الفصول تفصيليًا وتعديلها</b> <small class="muted">(${(classes||[]).length} فصل)</small></summary><div class="table-wrap v118-plain-wrap"><table class="table no-compact-directory v118-plain-table v118-classes-table"><thead><tr><th>المرحلة</th><th>الصف</th><th>الفصل</th><th>المواد / الحصص</th><th>إجمالي حصص العلوم</th><th></th></tr></thead><tbody>${(classes||[]).map(c=>{
    const reqs=(c.class_subject_requirements||[]).sort((a,b)=>(a.curriculum_subjects?.sort_order||0)-(b.curriculum_subjects?.sort_order||0));
    const subjects=reqs.map(r=>`<span class="chip">${esc(r.curriculum_subjects?.subject_name||'مادة')} <b>${r.weekly_periods}</b></span>`).join('');
@@ -3972,7 +3974,7 @@ function canvasToBlobAsync(canvas,type='image/png',quality=1){
 }
 
 
-async function workloadPage(){const {data:r}=await sb.from('workload_rules').select(WORKLOAD_RULE_FIELDS).eq('active',true);const titles=['معلم مساعد + معلم','معلم أول','معلم أول (أ)','معلم خبير','كبير معلمين'];const m=Object.fromEntries((r||[]).map(x=>[`${x.job_title}:${x.stage}`,x]));return `<div class="page-head"><div><h2>الأنصبة الأسبوعية</h2><p>النصاب القانوني حسب الدرجة الوظيفية والمرحلة التعليمية.</p></div></div><div class="card"><div class="table-wrap"><table class="table"><thead><tr><th>الدرجة الوظيفية</th><th>المرحلة الابتدائية</th><th>المرحلة الإعدادية</th><th>المرحلة الثانوية</th></tr></thead><tbody>${titles.map(j=>`<tr><td><b>${esc(workloadJobLabel(j))}</b></td><td><b>${m[`${j}:ابتدائي`]?.weekly_norm??'—'}</b> حصة</td><td><b>${m[`${j}:إعدادي`]?.weekly_norm??'—'}</b> حصة</td><td><b>${m[`${j}:ثانوي`]?.weekly_norm??'—'}</b> حصة</td></tr>`).join('')}</tbody></table></div></div><div class="notice"><b>قاعدة توزيع العلوم:</b> الفصل الإعدادي = 4 حصص أسبوعيًا، لذا التدريس الفعلي للمعلم يكون بمضاعفات 4 فقط (مثل 16، 20، 24). حصتا إشراف أقدم معلم تدخلان في النصاب الشخصي أولًا، ثم يحول المتبقي إلى أقرب حمل صالح من الفصول الكاملة. مثال: نصاب 21 − إشراف 2 = 19 نظريًا → 20 تدريس + 2 إشراف = 22 في إجمالي المعلم، ولا تُحتسب حصتا الإشراف زيادة (الزيادة = التدريس − النصاب). معلم الأجر بلا حد أدنى أو أعلى؛ تُحسب حصصه وفق إسناد المدرسة، ويمكن انتدابه، ولا يُحسب له عجز أو زيادة.</div>`}
+async function workloadPage(){const {data:r}=await sb.from('workload_rules').select(WORKLOAD_RULE_FIELDS).eq('active',true);const titles=['معلم مساعد + معلم','معلم أول','معلم أول (أ)','معلم خبير','كبير معلمين'];const m=Object.fromEntries((r||[]).map(x=>[`${x.job_title}:${x.stage}`,x]));return `<div class="page-head"><div><h2>الأنصبة الأسبوعية</h2><p>النصاب القانوني حسب الدرجة الوظيفية والمرحلة التعليمية.</p></div></div><div class="card"><div class="table-wrap"><table class="table"><thead><tr><th>الدرجة الوظيفية</th><th>المرحلة الابتدائية</th><th>المرحلة الإعدادية</th><th>الثانوي العام</th><th>الثانوي الصناعي</th></tr></thead><tbody>${titles.map(j=>`<tr><td><b>${esc(workloadJobLabel(j))}</b></td><td><b>${m[`${j}:ابتدائي`]?.weekly_norm??'—'}</b> حصة</td><td><b>${m[`${j}:إعدادي`]?.weekly_norm??'—'}</b> حصة</td><td><b>${m[`${j}:ثانوي عام`]?.weekly_norm??'—'}</b> حصة</td><td><b>${m[`${j}:ثانوي صناعي`]?.weekly_norm??'—'}</b> حصة</td></tr>`).join('')}</tbody></table></div></div><div class="notice"><b>قاعدة توزيع العلوم:</b> الفصل الإعدادي = 4 حصص أسبوعيًا، لذا التدريس الفعلي للمعلم يكون بمضاعفات 4 فقط (مثل 16، 20، 24). حصتا إشراف أقدم معلم تدخلان في النصاب الشخصي أولًا، ثم يحول المتبقي إلى أقرب حمل صالح من الفصول الكاملة. مثال: نصاب 21 − إشراف 2 = 19 نظريًا → 20 تدريس + 2 إشراف = 22 في إجمالي المعلم، ولا تُحتسب حصتا الإشراف زيادة (الزيادة = التدريس − النصاب). معلم الأجر بلا حد أدنى أو أعلى؛ تُحسب حصصه وفق إسناد المدرسة، ويمكن انتدابه، ولا يُحسب له عجز أو زيادة.</div>`}
 
 /* v95: عرض بيانات ميزانيتي الثانوية المدخلة، ضمن صلاحيات القراءة الحالية. */
 const SECONDARY_BUDGET_LABELS_V95={sep_2026_general_secondary_qous:'سبتمبر 2026 — ثانوي عام',sep_2026_industrial_secondary_qous:'سبتمبر 2026 — ثانوي صناعي'};
@@ -5044,17 +5046,21 @@ const VirtualTableStore=new Map();
 const ROLE_LABELS={admin:'مدير النظام',first_supervisor:'الموجه الأول',stage_coordinator:'منسق المرحلة',supervisor:'الموجه',school_manager:'مدير المدرسة',senior_teacher:'مشرف المادة',teacher:'المعلم'};
 const STATUS_LABELS={not_started:'لم تبدأ',in_progress:'جاري الإدخال',pending_manager_approval:'بانتظار الاعتماد',approved:'معتمدة',returned_for_edit:'معادة للتعديل'};
 const INTAKE_STATUS_LABELS={received:'وارد',under_review:'قيد المراجعة',approved_for_import:'جاهز للترحيل',rejected:'مرفوض',imported:'تم الترحيل'};
-const STAGES=['ابتدائي','إعدادي','ثانوي'];
+const STAGES=['ابتدائي','إعدادي','ثانوي عام','ثانوي صناعي'];
 const APP_BUILD='2026.10.09.124-trial';
 const GRADE_OPTIONS={
   'ابتدائي':[{value:'الرابع',label:'الصف الرابع',order:4},{value:'الخامس',label:'الصف الخامس',order:5},{value:'السادس',label:'الصف السادس',order:6}],
   'إعدادي':[{value:'الأول',label:'الصف الأول',order:7},{value:'الثاني',label:'الصف الثاني',order:8},{value:'الثالث',label:'الصف الثالث',order:9}],
-  'ثانوي':[{value:'الأول',label:'الصف الأول',order:10},{value:'الثاني',label:'الصف الثاني',order:11},{value:'الثالث',label:'الصف الثالث',order:12}]
+  'ثانوي':[{value:'الأول',label:'الصف الأول',order:10},{value:'الثاني',label:'الصف الثاني',order:11},{value:'الثالث',label:'الصف الثالث',order:12}],
+  'ثانوي عام':[{value:'الأول',label:'الصف الأول',order:10},{value:'الثاني',label:'الصف الثاني',order:11},{value:'الثالث',label:'الصف الثالث',order:12}],
+  'ثانوي صناعي':[{value:'الأول',label:'الصف الأول',order:10},{value:'الثاني',label:'الصف الثاني',order:11},{value:'الثالث',label:'الصف الثالث',order:12}]
 };
 const SCIENCE_CURRICULUM={
   'ابتدائي':{'الرابع':['علوم'],'الخامس':['علوم'],'السادس':['علوم']},
   'إعدادي':{'الأول':['علوم'],'الثاني':['علوم'],'الثالث':['علوم']},
-  'ثانوي':{'الأول':['علوم متكاملة'],'الثاني':['الكيمياء','الفيزياء','الأحياء'],'الثالث':['الكيمياء','الفيزياء','الأحياء']}
+  'ثانوي':{'الأول':['علوم متكاملة'],'الثاني':['الكيمياء','الفيزياء','الأحياء'],'الثالث':['الكيمياء','الفيزياء','الأحياء']},
+  'ثانوي عام':{'الأول':['علوم متكاملة'],'الثاني':['الكيمياء','الفيزياء','الأحياء'],'الثالث':['الكيمياء','الفيزياء','الأحياء']},
+  'ثانوي صناعي':{'الأول':['الفيزياء','الكيمياء'],'الثاني':['الفيزياء'],'الثالث':['الفيزياء']}
 };
 
 
@@ -5489,9 +5495,9 @@ function formatSupervisorsReport(raw,ctx){
  return makeReportSchema({reportId:'supervisors',title:full?'تقرير الموجهين':'بيانات الموجه المسؤول',subtitle:full?'الدليل المهني للموجهين':'بيانات التواصل المسموح بها حسب الصلاحية',period:ctx.period,summary:[reportMetric('عدد الموجهين',rows.length)],columns,rows,totals:[reportTotalsMetric('الإجمالي',rows.length)],issuer:ctx.issuer});
 }
 function formatWorkloadReport(raw,ctx){
- const map={};(raw.rules||[]).forEach(r=>{const k=r.job_title||'غير محدد';map[k]=map[k]||{job:k,primary:'—',prep:'—',secondary:'—'};if(r.stage==='ابتدائي')map[k].primary=reportCellValue(r.weekly_norm);if(r.stage==='إعدادي')map[k].prep=reportCellValue(r.weekly_norm);if(r.stage==='ثانوي')map[k].secondary=reportCellValue(r.weekly_norm)});
+ const map={};(raw.rules||[]).forEach(r=>{const k=r.job_title||'غير محدد';map[k]=map[k]||{job:k,primary:'—',prep:'—',secondary:'—',secondaryInd:'—'};if(r.stage==='ابتدائي')map[k].primary=reportCellValue(r.weekly_norm);if(r.stage==='إعدادي')map[k].prep=reportCellValue(r.weekly_norm);if(r.stage==='ثانوي عام')map[k].secondary=reportCellValue(r.weekly_norm);if(r.stage==='ثانوي صناعي')map[k].secondaryInd=reportCellValue(r.weekly_norm)});
  const order=['معلم','معلم أول','معلم أول (أ)','معلم خبير','كبير معلمين'];const rows=Object.values(map).sort((a,b)=>(order.indexOf(a.job)<0?99:order.indexOf(a.job))-(order.indexOf(b.job)<0?99:order.indexOf(b.job)));
- return makeReportSchema({reportId:'workload',title:'تقرير الأنصبة القانونية',subtitle:'الأنصبة القانونية حسب المرحلة والدرجة الوظيفية',period:ctx.period,summary:[reportMetric('عدد الدرجات',rows.length),reportMetric('عدد قواعد الأنصبة',raw.rules?.length||0)],columns:[reportColumn('job','الدرجة الوظيفية',1.6),reportColumn('primary','ابتدائي',1,{numeric:true}),reportColumn('prep','إعدادي',1,{numeric:true}),reportColumn('secondary','ثانوي',1,{numeric:true})],rows,totals:[reportTotalsMetric('قواعد نشطة',raw.rules?.length||0)],issuer:ctx.issuer});
+ return makeReportSchema({reportId:'workload',title:'تقرير الأنصبة القانونية',subtitle:'الأنصبة القانونية حسب المرحلة والدرجة الوظيفية',period:ctx.period,summary:[reportMetric('عدد الدرجات',rows.length),reportMetric('عدد قواعد الأنصبة',raw.rules?.length||0)],columns:[reportColumn('job','الدرجة الوظيفية',1.6),reportColumn('primary','ابتدائي',1,{numeric:true}),reportColumn('prep','إعدادي',1,{numeric:true}),reportColumn('secondary','ثانوي عام',1,{numeric:true}),reportColumn('secondaryInd','ثانوي صناعي',1,{numeric:true})],rows,totals:[reportTotalsMetric('قواعد نشطة',raw.rules?.length||0)],issuer:ctx.issuer});
 }
 function formatDistributionReport(raw,ctx){
  const tmap=Object.fromEntries((raw.teachers||[]).map(t=>[t.id,t.full_name]));const cmap=Object.fromEntries((raw.classes||[]).map(c=>[c.id,c]));const smap=Object.fromEntries((raw.subjects||[]).map(s=>[s.id,s.subject_name]));
@@ -7197,7 +7203,7 @@ function v97FilterDataset(source,stage=v97Stage()){
   aug_ref:(!stage||stage==='إعدادي')?(source.aug_ref||[]).filter(r=>v98SchoolMatches(r.school_id)):[],oct_ref:(!stage||stage==='إعدادي')?(source.oct_ref||[]).filter(r=>v98SchoolMatches(r.school_id)):[]};
 }
 function v97StageOptions(selected=v97Stage()){
- return [['','المرحلة: الكل'],...(currentPage==='budget'?[]:[['ابتدائي','ابتدائي']]),['إعدادي','إعدادي'],['ثانوي','ثانوي']].map(([value,label])=>`<option value="${value}" ${value===selected?'selected':''}>${label}</option>`).join('');
+ return [['','المرحلة: الكل'],...(currentPage==='budget'?[]:[['ابتدائي','ابتدائي']]),['إعدادي','إعدادي'],['ثانوي عام','ثانوي عام'],['ثانوي صناعي','ثانوي صناعي']].map(([value,label])=>`<option value="${value}" ${value===selected?'selected':''}>${label}</option>`).join('');
 }
 function v97InstallStageFilter(root){
  if(!v97StagePages.has(currentPage)||!root)return;
@@ -7213,14 +7219,14 @@ function v97InstallStageFilter(root){
  bar.innerHTML=`<div class="auto-filter-options-row"><div class="auto-filter-field"><label for="v97Stage">المرحلة</label><select id="v97Stage" aria-label="المرحلة" onchange="v97SetStage(this.value)">${v97StageOptions()}</select></div>${v98SchoolFilterHtml()}<span class="muted">العرض وتقارير الطباعة حسب الفلاتر المختارة.</span></div>`;
  root.prepend(bar);
 }
-function v97BudgetStage(snapshot=budgetSnapshot){return SECONDARY_BUDGET_LABELS_V95[snapshot]?'ثانوي':(['oct_2026_preparatory_qous','aug_2026_preparatory_qous'].includes(snapshot)?'إعدادي':'')}
+function v97BudgetStage(snapshot=budgetSnapshot){return SECONDARY_BUDGET_LABELS_V95[snapshot]?(String(snapshot).includes('industrial')?'ثانوي صناعي':'ثانوي عام'):(['oct_2026_preparatory_qous','aug_2026_preparatory_qous'].includes(snapshot)?'إعدادي':'')}
 async function v97SetStage(value){
  v111CloseSidebar();
- if(!['','ابتدائي','إعدادي','ثانوي'].includes(value)||(value==='ابتدائي'&&currentPage==='budget'))return;
+ if(!['','ابتدائي','إعدادي','ثانوي عام','ثانوي صناعي'].includes(value)||(value==='ابتدائي'&&currentPage==='budget'))return;
  v97StageRevision++;
  v97StageSelections.set(v97StageKey(),value);
  v98SchoolSelections.delete(v97StageKey());
- if(currentPage==='budget'&&value&&!v97StageMatches(v97BudgetStage(),value))budgetSnapshot=value==='ثانوي'?'sep_2026_general_secondary_qous':'oct_2026_preparatory_qous';
+ if(currentPage==='budget'&&value&&!v97StageMatches(v97BudgetStage(),value))budgetSnapshot=value==='ثانوي صناعي'?'sep_2026_industrial_secondary_qous':value==='ثانوي عام'?'sep_2026_general_secondary_qous':'oct_2026_preparatory_qous';
  // Close stale print output immediately; the next preview captures the new scope.
  if(__activeReportSchema)closeReportPreview();
  __activeReportSchema=null;__activeReportSignature='';resetReportShareCache();
@@ -8595,7 +8601,7 @@ async function v155LoadModel(force=false){
  __v155Model=v155BuildModel(data,subs);return __v155Model;
 }
 function v155BuildModel(data,subs){
- const h=data.hierarchy||{},all=h.schools||[],stages=['ابتدائي','إعدادي','ثانوي'].filter(x=>all.some(s=>s.stage===x));
+ const h=data.hierarchy||{},all=h.schools||[],stages=['ابتدائي','إعدادي','ثانوي عام','ثانوي صناعي'].filter(x=>all.some(s=>s.stage===x));
  if(!stages.includes(v155StageSel))v155StageSel=stages[0]||'';
  const stage=v155StageSel,schools=all.filter(s=>s.stage===stage),ids=new Set(schools.map(s=>String(s.id)));
  const sups=new Map((h.sups||[]).map(s=>[String(s.id),s.full_name])),recs=new Map((data.teacher_records||[]).map(t=>[v91TeacherId(t),t])),status=new Map((subs||[]).map(r=>[String(r.school_id),r.status]));
@@ -9480,7 +9486,7 @@ ReportAdapters.prepSupervisorsCensus={async load(ctx){
  const names=new Map((sn.data||[]).map(x=>[String(x.id),String(x.full_name||'').trim()]));
  const schools=v161MergeSchools(sr.data||[],links),bySchool=new Map(schools.map(x=>[String(x.id),x]));
  const groups=new Map();
- schools.filter(x=>x.stage!=='ثانوي').forEach(x=>{const k=String(x.supervisor_id||'')+'|'+x.stage;const g=groups.get(k)||{name:names.get(String(x.supervisor_id||''))||'غير مسندة',stage:x.stage||'—',schools:0,classes:0,perm:new Set(),paid:new Set()};g.schools++;g.classes+=reportNumber(x.class_count);groups.set(k,g)});
+ schools.filter(x=>!String(x.stage||'').startsWith('ثانوي')).forEach(x=>{const k=String(x.supervisor_id||'')+'|'+x.stage;const g=groups.get(k)||{name:names.get(String(x.supervisor_id||''))||'غير مسندة',stage:x.stage||'—',schools:0,classes:0,perm:new Set(),paid:new Set()};g.schools++;g.classes+=reportNumber(x.class_count);groups.set(k,g)});
  v103ScopeRows(data).forEach(t=>{
   if(!['home','delegated_out_partial'].includes(String(t.school_relation||'home')))return;
   const sc=bySchool.get(v91ScopeSchoolId(t));if(!sc)return;
@@ -9488,11 +9494,11 @@ ReportAdapters.prepSupervisorsCensus={async load(ctx){
   (isPaidTeacher(t)?g.paid:g.perm).add(v91TeacherId(t));
  });
  // الثانوي: المدرسة بلا موجه واحد؛ الحصر بالمادة تحسبه دالة القاعدة secondary_supervisor_census (منسق الإعدادي لا يقرأ جداول الثانوي مباشرة).
- if(schools.some(x=>x.stage==='ثانوي')&&activeTerm?.id){
-  const rp=await sb.rpc('secondary_supervisor_census',{p_term_id:activeTerm.id});if(rp.error)throw rp.error;
-  (rp.data||[]).forEach(r=>groups.set(String(r.supervisor_id||'')+'|ثانوي',{name:r.supervisor_name||'غير مسندة',stage:'ثانوي',schools:r.schools,classes:r.classes,perm:{size:r.perm_teachers},paid:{size:r.paid_teachers}}));
+ if(schools.some(x=>String(x.stage||'').startsWith('ثانوي'))&&activeTerm?.id){
+  const rp=await sb.rpc('secondary_supervisor_census_by_stage',{p_term_id:activeTerm.id});if(rp.error)throw rp.error;
+  (rp.data||[]).filter(r=>schools.some(x=>x.stage===r.stage)).forEach(r=>groups.set(String(r.supervisor_id||'')+'|'+r.stage,{name:r.supervisor_name||'غير مسندة',stage:r.stage,schools:r.schools,classes:r.classes,perm:{size:r.perm_teachers},paid:{size:r.paid_teachers}}));
  }
- const order=['ابتدائي','إعدادي','ثانوي'],rank=st=>{const i=order.indexOf(st);return i<0?9:i};
+ const order=['ابتدائي','إعدادي','ثانوي عام','ثانوي صناعي'],rank=st=>{const i=order.indexOf(st);return i<0?9:i};
  const list=[...groups.values()].sort((a,b)=>rank(a.stage)-rank(b.stage)||b.schools-a.schools||a.name.localeCompare(b.name,'ar'));
  const rows=list.map((g,i)=>({index:i+1,name:reportCellValue(g.name),stage:reportCellValue(g.stage),_stage:g.stage,_stages:[g.stage],schools:g.schools,classes:g.classes,perm:g.perm.size,paid:g.paid.size,total:g.perm.size+g.paid.size,_search:g.name+' '+g.stage}));
  const sum=k=>rows.reduce((n,r)=>n+r[k],0);
@@ -9516,7 +9522,7 @@ rebuildFilteredReportMetrics=function(schema){
 const V207_SUBJECTS=[['الكيمياء','chem','الكيمياء'],['الفيزياء','phys','الفيزياء'],['الأحياء','bio','الأحياء'],['علوم متكاملة','integ','علوم متكاملة']];
 async function v207SecondarySubjects(){
  const out=new Map();out.sups=new Map();if(!activeTerm?.id)return out;
- const [r,links,sr,nr]=await Promise.all([sb.from('school_classes').select('id,school_id,class_subject_requirements(weekly_periods,curriculum_subjects(subject_name))').eq('stage','ثانوي').eq('term_id',activeTerm.id),v161AggregateLinks(),sb.from('supervisor_school_subjects').select('school_id,supervisor_id,subject_name').eq('active',true),sb.from('supervisors').select('id,full_name')]);
+ const [r,links,sr,nr]=await Promise.all([sb.from('school_classes').select('id,school_id,class_subject_requirements(weekly_periods,curriculum_subjects(subject_name))').in('stage',['ثانوي عام','ثانوي صناعي']).eq('term_id',activeTerm.id),v161AggregateLinks(),sb.from('supervisor_school_subjects').select('school_id,supervisor_id,subject_name').eq('active',true),sb.from('supervisors').select('id,full_name')]);
  try{if(!sr.error&&!nr.error){const nm=new Map((nr.data||[]).map(x=>[String(x.id),String(x.full_name||'').trim().split(/\s+/).slice(0,2).join(' ')]));
   (sr.data||[]).forEach(x=>{const base=links.get(String(x.school_id))||String(x.school_id),m=out.sups.get(base)||{};if(['الفيزياء','الكيمياء','الأحياء'].includes(x.subject_name)){const k=V207_SUBJECTS.find(y=>y[0]===x.subject_name)[1];m[k]=m[k]?m[k]+'، '+(nm.get(String(x.supervisor_id))||''):(nm.get(String(x.supervisor_id))||'')}out.sups.set(base,m)})}}catch(_){}
  if(r.error)return out;
@@ -9563,7 +9569,7 @@ rebuildFilteredReportMetrics=function(schema){const o=__v207Rebuild(schema);retu
 
 /* v209: توزيع الموجهين — الثانوي بثلاثة موجهين مواد (عرض فقط) */
 const V209_SUB=[['الفيزياء','phys'],['الكيمياء','chem'],['الأحياء','bio']];
-function v209IsSec(s){return String(s.stage||'')==='ثانوي'}
+function v209IsSec(s){return String(s.stage||'').startsWith('ثانوي')}
 function v209SubOf(s){return (v202State.subj&&v202State.subj[s.id])||{}}
 function v209Ids(s){return [s.supervisor_id,...Object.values(v209SubOf(s))].filter(Boolean).map(String)}
 v202Load=async function(){
