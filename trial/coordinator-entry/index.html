@@ -3,6 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<!-- v184: فصول الإعدادي والابتدائي بشكل الثانوي (بطلب المستخدم «نفذ ١»): بطاقة لكل صف بمربعات أرقام الفصول (المسند أخضر باسم المعلم، غير المسند برتقالي أولًا)، سطر «N مسند · M ينتظر الإسناد»، «+ إضافة فصل» يملأ أصغر رقم ناقص، لمس الفصل: المعلم وإلغاء الإسناد أو حذف الفصل بعينه، و«تحديد» لحذف عدة فصول؛ حُذف «−» والجدول القديم. بلا تعديل قاعدة بيانات. -->
 <!-- v183: اسم الحساب ظاهر دائمًا في الشريط العلوي على الهاتف (كان مخفيًا على الهاتف): الشريط سطران على الهاتف — الشعار والعنوان، ثم شارة الاسم («…» إن طال، وكاملًا في التلميح) مع «البرنامج» و«خروج»، كي لا يلتبس الحساب (بلاغ دخول بحساب آخر محفوظ في المتصفح). -->
 <!-- v182: الاسم الجديد «إدخال بيانات المدارس» (بقرار المستخدم بدل «صفحة المنسق»/«إدخال بيانات المنسق» لأنه يلتبس بدور «منسق المرحلة» في البرنامج): عنوان التبويب والشريط العلوي وشاشة الدخول. -->
 <!-- v181: زر «🖥 البرنامج» في الشريط العلوي يفتح البرنامج الرئيسي: على نطاق البوابة /app/ (نفس تسجيل الدخول)، وعلى github.io رابط البرنامج المنشور. -->
@@ -10,7 +11,7 @@
 <!-- v179: إدارة المجموعات الثانوية بلا رجوع للمطور — لكل مجموعة غير مسندة «تغيير النوع» (يُعاد تسميتها «النوع — مجموعة N» وتُضبط موادها وحصصها حسب النوع) و«حذف» لها بعينها؛ و«تعليم مزدوج» للصف الثاني الصناعي (فيزياء حصة واحدة). للمنسق ضمن مرحلته ولمدير النظام. -->
 <!-- v178: الثانوي العام والثانوي الصناعي مرحلتان مستقلتان (قاعدة البيانات v223): قائمة المرحلة تعرضهما منفصلتين، ونوع المدرسة الثانوية ثابت على مرحلتها، وكل فحوص «ثانوي» صارت للمرحلتين. -->
 <!-- v177: الموجه الأول لا يدخل بوابة المنسق (عرض وتقارير فقط في البرنامج الرئيسي)؛ الدخول لمنسق المرحلة ومدير النظام. -->
-<title>إدخال بيانات المدارس — v183</title>
+<title>إدخال بيانات المدارس — v184</title>
 <!-- v175: اسم الفصل في بطاقة المعلم وقوائم الإسناد يعرض الصف أولًا للمجموعات الثانوية («الأول — عام — مجموعة 1») لأن اسم المجموعة يتكرر في كل صف. عرض فقط. -->
 <!-- v174: تحسين الشكل — تبويبات المدرسة (البيانات | الموجهون | الفصول والمجموعات | المعلمون) بأعداد ونواقص، عدّادات +/− لكل نوع مجموعة في الثانوي (شريط المسند والأسماء مطوية)، بطاقة معلم مضغوطة (النصاب والمحتسب والمتبقي والموجه المسؤول) والبيانات الشخصية مطوية، ومنع خروج البريد الطويل عن الإطار. لا تغيير في البيانات أو الصلاحيات أو منطق الحفظ. -->
 <!-- v173: المرحلة الثانوية — (1) أربع قوائم لموجه الفيزياء والكيمياء والأحياء والعلوم المتكاملة يختارها المنسق (الصناعي: الفيزياء والكيمياء فقط)؛ (2) إضافة المجموعات بقائمة نوع (حسب الصف ونوع المدرسة) بحصص جاهزة وحذف مجموعة غير مسندة بقائمة؛ (3) «الموجه المسؤول» عن المعلم بقائمة في تعديل بيانات المعلم (جدول teacher_responsible_supervisor) ويظهر في بطاقته؛ (4) إلغاء إسناد فصول المعلم وإسناد المتاح من داخل تعديل بياناته. -->
@@ -428,8 +429,8 @@ function renderMain(){
    <div class="notice n-info" style="font-size:13px">يرى كل موجه المدرسة كاملة بمعلميها. «الموجه المسؤول» عن كل معلم يُحدَّد من تبويب «المعلمون» ← تعديل البيانات.</div>
    <div class="actions"><button class="btn primary" id="supSave">حفظ الموجهين</button></div></form>`;
  }else if(S.tab==='cls'){
-  pane=`<h3>الفصول والمجموعات (${nCls})</h3><p class="hint">التغييرات تُحفظ فورًا.</p>${sec?secCounters(s,groups)+selBar(s):classTable(groups,true)}
-   <div class="notice n-info" style="margin-top:8px;font-size:13px">${sec?'اضغط رقم المجموعة: غير المسندة (الإطار البرتقالي) تغيّر نوعها أو تحذفها، والمسندة (الخضراء) تعرض معلمها وإلغاء الإسناد. «تحديد» في رأس الصف لتحويل أو حذف عدة مجموعات معًا. «+ إضافة» تضيف مجموعة بحصصها المقررة. لا تُحذف مجموعة مسندة لمعلم.':'لا يُحذف فصل عليه إسناد لمعلم؛ يُحذف آخر فصل غير مسند في الصف. الفصول المسندة باللون الأخضر.'}</div>`;
+  pane=`<h3>الفصول والمجموعات (${nCls})</h3><p class="hint">التغييرات تُحفظ فورًا.</p>${(sec?secCounters(s,groups):classCards(s,groups))+selBar(s)}
+   <div class="notice n-info" style="margin-top:8px;font-size:13px">${sec?'اضغط رقم المجموعة: غير المسندة (الإطار البرتقالي) تغيّر نوعها أو تحذفها، والمسندة (الخضراء) تعرض معلمها وإلغاء الإسناد. «تحديد» في رأس الصف لتحويل أو حذف عدة مجموعات معًا. «+ إضافة» تضيف مجموعة بحصصها المقررة. لا تُحذف مجموعة مسندة لمعلم.':'اضغط رقم الفصل: غير المسند (الإطار البرتقالي) تحذفه، والمسند (الأخضر) يعرض معلمه وإلغاء الإسناد. «تحديد» في رأس الصف لحذف عدة فصول معًا. «+ إضافة فصل» يضيف أصغر رقم فصل ناقص. لا يُحذف فصل مسند لمعلم.'}</div>`;
  }else{
   pane=teachersCard(s);
  }
@@ -453,7 +454,7 @@ function renderMain(){
  if($('selConv'))$('selConv').onclick=()=>bulkConvert(s);
  if($('selDel'))$('selDel').onclick=()=>bulkDelete(s);
  if($('selEnd'))$('selEnd').onclick=()=>{S.selG=null;S.selSet=new Set();renderMain()};
- m.querySelectorAll('[data-add]').forEach(b=>b.onclick=()=>addClass(s,b.dataset.add));m.querySelectorAll('[data-del]').forEach(b=>b.onclick=()=>delClass(s,b.dataset.del));
+ m.querySelectorAll('[data-add]').forEach(b=>b.onclick=()=>addClass(s,b.dataset.add));
 }
 function saveSup(s){guard(async()=>{await saveSubjectSups(s);toast('تم حفظ الموجهين')},true)}
 const kindOf=c=>String(c.class_name).split(' — ')[0];
@@ -482,13 +483,13 @@ function chipHtml(c,ready,inSel){
  const as=S.assigned.has(c.id),no=grpNo(c),label=no<1e6?no:c.class_name;
  if(!ready)return `<button type="button" class="chip" disabled title="${esc(c.class_name)}"><b>${esc(label)}</b><small>…</small></button>`;
  if(as){const ts=[...new Set(S.classTa.filter(a=>a.class_id===c.id).map(a=>a.teacher_id))],nm=shortName(tName(ts[0]))+(ts.length>1?` +${ts.length-1}`:'');
-  return `<button type="button" class="chip as" data-chip="${c.id}" ${inSel?'disabled':''} title="${esc(c.class_name)} — ${esc(ts.map(tName).join('، '))}" aria-label="${esc(c.class_name)}، مسندة إلى ${esc(ts.map(tName).join('، '))}"><b>${esc(label)}</b><small>${esc(nm)}</small></button>`}
- const on=inSel&&S.selSet&&S.selSet.has(c.id);
- return `<button type="button" class="chip ${on?'sel':'free'}" data-chip="${c.id}" title="${esc(c.class_name)}" aria-label="${esc(c.class_name)}، غير مسندة"${inSel?` aria-pressed="${on}"`:''}><b>${esc(label)}</b><small>${on?'✔ محددة':'غير مسندة'}</small></button>`;
+  return `<button type="button" class="chip as" data-chip="${c.id}" ${inSel?'disabled':''} title="${esc(cn(c.class_name))} — ${esc(ts.map(tName).join('، '))}" aria-label="${esc(cn(c.class_name))}، مسندة إلى ${esc(ts.map(tName).join('، '))}"><b>${esc(label)}</b><small>${esc(nm)}</small></button>`}
+ const on=inSel&&S.selSet&&S.selSet.has(c.id),cls=/^\d+\s*\/\s*\d+$/.test(String(c.class_name).trim());
+ return `<button type="button" class="chip ${on?'sel':'free'}" data-chip="${c.id}" title="${esc(cn(c.class_name))}" aria-label="${esc(cn(c.class_name))}، ${cls?'غير مسند':'غير مسندة'}"${inSel?` aria-pressed="${on}"`:''}><b>${esc(label)}</b><small>${on?(cls?'✔ محدد':'✔ محددة'):(cls?'غير مسند':'غير مسندة')}</small></button>`;
 }
 function selG(s){return S.selG&&S.selG.startsWith(s.id+'|')?S.selG.slice(s.id.length+1):null}
 function selBar(s){
- const g=selG(s);if(!g)return '';const n=selCids(s).length,presets=SEC_TYPES(s,g);
+ const g=selG(s);if(!g)return '';const n=selCids(s).length,presets=isSec(s)?SEC_TYPES(s,g):[];
  if(!presets.some(t=>t[0]===S.selType))S.selType=presets[0]?.[0]||'';
  return `<div class="selbar" role="region" aria-label="المجموعات المحددة"><b>الصف ${esc(g)} — محدد: ${n}</b>
   ${presets.length?`<select id="selType" aria-label="النوع الجديد">${presets.map(t=>`<option value="${esc(t[0])}" ${t[0]===S.selType?'selected':''}>${esc(t[0])} ${esc(secTypeSub(t))}</option>`).join('')}</select><button type="button" class="btn sm" id="selConv" ${n?'':'disabled'}>تحويل المحدد</button>`:''}
@@ -532,13 +533,13 @@ function openSheet(html,wire){closeSheet();const bg=document.createElement('div'
  document.body.appendChild(bg);document.addEventListener('keydown',sheetKey);wire(bg);bg.querySelector('.sh-act .btn,.sh-row .btn')?.focus()}
 function groupSheet(s,cid,step){
  const c=classesOf(s.id).find(x=>x.id===cid);if(!c)return closeSheet();
- const kind=kindOf(c),others=SEC_TYPES(s,c.grade).filter(t=>t[0]!==kind),tas=S.classTa.filter(a=>a.class_id===c.id);
- const head=`<div class="sh-h"><b>الصف ${esc(c.grade)} — ${esc(c.class_name)}</b><small>${tas.length?'مسندة':'غير مسندة'} · ${esc(reqText(c))}</small></div>`;
+ const kind=kindOf(c),others=isSec(s)?SEC_TYPES(s,c.grade).filter(t=>t[0]!==kind):[],tas=S.classTa.filter(a=>a.class_id===c.id);
+ const head=`<div class="sh-h"><b>${isSec(s)?`الصف ${esc(c.grade)} — ${esc(c.class_name)}`:esc(cn(c.class_name))}</b><small>${isSec(s)?(tas.length?'مسندة':'غير مسندة'):(tas.length?'مسند':'غير مسند')} · ${esc(reqText(c))}</small></div>`;
  let body;
  if(tas.length)body=`<div>${tas.map(a=>`<div class="sh-row"><span><b>${esc(subjName(a.subject_id))}</b> — ${esc(tName(a.teacher_id))}</span><button type="button" class="btn sm danger-o" data-un="${a.id}">إلغاء الإسناد</button></div>`).join('')}</div>
-  <p class="sh-note">لتغيير نوع المجموعة أو حذفها ألغِ إسنادها أولًا.</p><div class="sh-act"><button type="button" class="btn ghost" data-x>إغلاق</button></div>`;
+  <p class="sh-note">${isSec(s)?'لتغيير نوع المجموعة أو حذفها ألغِ إسنادها أولًا.':'لحذف الفصل ألغِ إسناده أولًا.'}</p><div class="sh-act"><button type="button" class="btn ghost" data-x>إغلاق</button></div>`;
  else if(step==='type')body=`<p class="sh-note">اختر النوع الجديد:</p><div class="sh-act">${others.map((t,i)=>`<button type="button" class="btn" data-t="${i}">${esc(t[0])} <small>${esc(secTypeSub(t))}</small></button>`).join('')}<button type="button" class="btn ghost" data-back>رجوع</button></div>`;
- else body=`<div class="sh-act">${others.length?'<button type="button" class="btn" data-type>✎ تغيير النوع</button>':''}<button type="button" class="btn danger" data-del>🗑 حذف المجموعة</button><button type="button" class="btn ghost" data-x>إلغاء</button></div>`;
+ else body=`<div class="sh-act">${others.length?'<button type="button" class="btn" data-type>✎ تغيير النوع</button>':''}<button type="button" class="btn danger" data-del>🗑 حذف ${isSec(s)?'المجموعة':'الفصل'}</button><button type="button" class="btn ghost" data-x>إلغاء</button></div>`;
  openSheet(head+body,bg=>{
   bg.querySelectorAll('[data-x]').forEach(b=>b.onclick=closeSheet);
   bg.querySelectorAll('[data-back]').forEach(b=>b.onclick=()=>groupSheet(s,cid,'main'));
@@ -582,8 +583,8 @@ function convertOne(s,c,t){
  guard(async()=>{const name=await convertGroup(s,c,t);toast(`صارت «${name}» ${secTypeSub(t)}`);await loadTeachers(s.id)});
 }
 function deleteOne(s,c){
- if(!confirm(`حذف «${c.class_name}» (الصف ${c.grade}) من ${s.name}؟`))return;
- guard(async()=>{await deleteGroup(s,c);await syncClassCount(s);toast(`حُذفت «${c.class_name}»`);await loadTeachers(s.id)});
+ if(!confirm(`حذف «${cn(c.class_name)}»${isSec(s)?` (الصف ${c.grade})`:''} من ${s.name}؟`))return;
+ guard(async()=>{await deleteGroup(s,c);await syncClassCount(s);toast(`${isSec(s)?'حُذفت':'حُذف'} «${cn(c.class_name)}»`);await loadTeachers(s.id)});
 }
 async function runBulk(s,cs,fn,doneMsg,changesCount){
  let n=0,err=null;for(const c of cs){try{await fn(c);n++}catch(e){err=e;break}}
@@ -593,8 +594,9 @@ async function runBulk(s,cs,fn,doneMsg,changesCount){
 }
 function bulkDelete(s){
  const cs=selCids(s);if(!cs.length)return toast('حدد مجموعة واحدة على الأقل',true);
- if(!confirm(`حذف ${cs.length} من المجموعات غير المسندة في ${s.name}؟\n${cs.map(c=>'• '+c.class_name).join('\n')}`))return;
- guard(()=>runBulk(s,cs,c=>deleteGroup(s,c),n=>`حُذفت ${n} مجموعة`,true));
+ const [u,adj,done]=isSec(s)?['مجموعة','غير مسندة','حُذفت']:['فصل','غير مسند','حُذف'];
+ if(!confirm(`حذف ${cs.length} ${u} ${adj} في ${s.name}؟\n${cs.map(c=>'• '+cn(c.class_name)).join('\n')}`))return;
+ guard(()=>runBulk(s,cs,c=>deleteGroup(s,c),n=>`${done} ${n} ${u}`,true));
 }
 function bulkConvert(s){
  const g=selG(s),t=SEC_TYPES(s,g).find(x=>x[0]===($('selType')?.value||S.selType));if(!t)return;
@@ -603,10 +605,15 @@ function bulkConvert(s){
  if(!confirm(`تحويل ${cs.length} مجموعة إلى «${t[0]}» ${secTypeSub(t)}؟${all.length>cs.length?`\n(${all.length-cs.length} من النوع نفسه أصلًا ستبقى كما هي)`:''}\n${cs.map(c=>'• '+c.class_name).join('\n')}`))return;
  guard(()=>runBulk(s,cs.sort((a,b)=>grpNo(a)-grpNo(b)),c=>convertGroup(s,c,t),n=>`حُوّلت ${n} مجموعة إلى «${t[0]}»`,false));
 }
-function classTable(groups,edit){
- return `<table class="cls"><thead><tr><th>الصف</th><th>العدد</th><th>الفصول</th></tr></thead><tbody>${groups.map(({g,list})=>`<tr><td><b>${esc(g)}</b></td>
-  <td>${edit?`<span class="stepper"><button type="button" class="btn" data-del="${esc(g)}" ${list.length?'':'disabled'} aria-label="حذف فصل">−</button><b>${list.length}</b><button type="button" class="btn" data-add="${esc(g)}" aria-label="إضافة فصل">+</button></span>`:`<b>${list.length}</b>`}</td>
-  <td><div class="names">${list.map(c=>`<span class="${S.assigned.has(c.id)?'as':''}">${esc(cn(c.class_name))}</span>`).join('')||'<small style="color:var(--muted)">—</small>'}</div></td></tr>`).join('')}</tbody></table>`;
+/* v184: فصول الإعدادي والابتدائي بشكل مربعات الثانوي */
+function classCards(s,groups){
+ const ready=Array.isArray(S.roster),sg=selG(s);
+ return groups.map(({g,list})=>{
+  const ks=[...list].sort((x,y)=>(S.assigned.has(x.id)-S.assigned.has(y.id))||(grpNo(x)-grpNo(y))),a=ks.filter(c=>S.assigned.has(c.id)).length,f=ks.length-a,inSel=sg===norm(g)||sg===g;
+  const stat=!ready?`${ks.length} فصل`:!ks.length?'لا توجد فصول':`<span><b>${a}</b> مسند${f?` · <b class="w">${f}</b> ينتظر الإسناد`:' ✔'}</span><span class="bar ${f?'part':''}"><span style="width:${Math.round(a*100/ks.length)}%"></span></span>`;
+  return `<div class="gcard"><div class="gh"><b>الصف ${esc(g)}</b><span class="ghr"><span>${list.length} فصل${ready?` • ${a} مسند`:''}</span>${(ready&&f)||inSel?`<button type="button" class="btn sm ${inSel?'primary':'ghost'}" data-selg="${esc(g)}">${inSel?'إنهاء التحديد':'تحديد'}</button>`:''}</span></div>
+   <div class="trow"><div class="th"><div class="ts" style="margin:0">${stat}</div><button type="button" class="btn sm" data-add="${esc(g)}">+ إضافة فصل</button></div>
+   ${ks.length?`<div class="chips" style="margin-top:10px">${ks.map(c=>chipHtml(c,ready,inSel)).join('')}</div>`:''}</div></div>`}).join('');
 }
 
 /* ---------- المعلمون ---------- */
@@ -768,23 +775,11 @@ async function syncClassCount(s){const n=classesOf(s.id).length;try{const r=awai
 function addClass(s,grade){guard(async()=>{
  const num=(GRADES[s.stage]||[]).find(x=>x[0]===grade)?.[1];
  const list=classesOf(s.id).filter(c=>norm(c.grade)===norm(grade));
- const used=new Set(list.map(c=>c.class_name));let max=0;
- list.forEach(c=>{const mm=String(c.class_name).match(/(\d+)\s*$/);if(mm)max=Math.max(max,+mm[1])});
- let k=Math.max(max,list.length)+1;while(used.has(`${num}/${k}`))k++;
+ const used=new Set(list.map(c=>c.class_name)),nums=new Set(list.map(c=>(String(c.class_name).match(/(\d+)\s*$/)||[])[1]).filter(Boolean).map(Number));
+ let k=1;while(nums.has(k)||used.has(`${num}/${k}`))k++;  // v184: أصغر رقم فصل ناقص
  const row=await q(sb.from('school_classes').insert({school_id:s.id,academic_year_id:S.year.id,term_id:S.term.id,stage:s.stage,grade,class_name:`${num}/${k}`,science_periods:0}).select('id,school_id,grade,class_name,grade_order').single());
- S.classes.push(row);await syncClassCount(s);toast(`أضيف ${cn(row.class_name)}`);
+ S.classes.push(row);await syncClassCount(s);toast(`أضيف ${cn(row.class_name)}`);await loadTeachers(s.id);
 })}
-function delClass(s,grade){
- const list=classesOf(s.id).filter(c=>norm(c.grade)===norm(grade)).sort((a,b)=>b.class_name.localeCompare(a.class_name,'ar',{numeric:true}));
- const c=list.find(x=>!S.assigned.has(x.id));
- if(!c)return toast('كل فصول هذا الصف مسندة لمعلمين؛ فكّ الإسناد أولًا ثم احذف',true);
- if(!confirm(`حذف ${cn(c.class_name)} من ${s.name}؟`))return;
- guard(async()=>{
-  const r=await q(sb.from('school_classes').delete().eq('id',c.id).select('id'));
-  if(!r?.length)throw new Error('لم يُحذف الفصل (قد يكون عليه إسناد أو جدول)');
-  S.classes=S.classes.filter(x=>x.id!==c.id);await syncClassCount(s);toast(`حُذف ${cn(c.class_name)}`);
- });
-}
 function approve(s){
  const miss=missingOf(s);
  if(miss.length&&!confirm(`البيانات ناقصة (${miss.join('، ')}). اعتماد رغم ذلك؟`))return;
