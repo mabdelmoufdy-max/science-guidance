@@ -1,4 +1,5 @@
 <!doctype html>
+<!-- v226: العنوان الموحد — فتح البرنامج المنشور من github.io (الجذر أو index.html) ينقل تلقائيًا إلى teachers-data-portal.vercel.app/app/ فيصير للجميع عنوان واحد وحساب واحد مع «إدخال بيانات المدارس» (الاسم الجديد لصفحة المنسق). نسخ trial/ لا تُنقل، و?stay يُبقي الصفحة على github.io عند الحاجة. -->
 <!-- v225: التنقل بين البرنامج والبوابات: زر «🔗» في الشريط العلوي يفتح قائمة: بوابة المعلمين، صفحة المنسق (لمن لحسابه دور مدير النظام أو منسق المرحلة)، صفحة الاعتماد (مدير النظام)، و«البرنامج من عنوان البوابة» عند الفتح من github.io. الروابط نسبية على نطاق البوابة (البرنامج يُفتح أيضًا من teachers-data-portal.vercel.app/app/ فيشارك صفحة المنسق تسجيل الدخول). -->
 <!-- v224: أدوات مدير النظام بدل طلبات SQL — «النصاب المخفض» في تعديل بيانات المعلم (admin_set_teacher_weekly_target؛ فارغ = نصاب الدرجة)، و«المعلمون الموقوفون» في شاشة المعلمين مع «إعادة تفعيل». -->
 <!-- v223: فصل «ثانوي عام» عن «ثانوي صناعي» مرحلتين مستقلتين (قاعدة البيانات v223 + الواجهة): قوائم المراحل والفلاتر والنماذج، الأنصبة (عمودان)، منهج كل مرحلة، حصر موجهي الثانوي حسب المرحلة (secondary_supervisor_census_by_stage)، والخطة الملخصة وتوزيع الموجهين للمرحلتين. -->
@@ -8,14 +9,14 @@
 <!-- v219: حصر الثانوي في تقرير «نصاب الموجه…» عبر دالة القاعدة secondary_supervisor_census (قراءة فقط) ليعمل لمنسق الإعدادي أيضًا -->
 <!-- v218: تقرير «نصاب الموجه…» للثانوي على قاعدة موجه المادة (supervisor_school_subjects) والمعلم بما يدرّسه، بدل «غير مسندة» -->
 <!-- v217: إصلاح فلتر المرحلة في «نصاب الموجه من المدارس والمعلمين» (كان يعيد 0 نتائج لأن فلتر المدرسة المرافق لا ينطبق على الصفوف المجمّعة) -->
-<!-- v216: تقرير جديد «نصاب الموجه من المدارس والمعلمين» (فلتر الكل/المرحلة) في قوالب التقارير لمدير النظام ومنسق المرحلة (الموجه، عدد المدارس، الفصول، المعلمون الثابتون والأجر، الإجمالي) — عرض فقط -->
 <html lang="ar" dir="rtl">
 <head>
 <!-- إعداد: أ/ محمود عبدالمفدي محمد أبوالنجا | الصفة: معلم -->
 <meta charset="utf-8">
+<script>/* v226: العنوان الموحد — انظر التعليق أعلى الملف */(function(){try{if(/\.github\.io$/.test(location.hostname)&&/^\/science-guidance\/?(index\.html)?$/.test(location.pathname)&&!/[?&]stay\b/.test(location.search))location.replace('https://teachers-data-portal.vercel.app/app/'+location.hash)}catch(e){}})();</script>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#152c43">
-<title>نظام توجيه العلوم — v225</title>
+<title>نظام توجيه العلوم — v226</title>
 <link rel="manifest" href="../../manifest.webmanifest">
 <link rel="icon" type="image/png" sizes="192x192" href="../../icon-192.png">
 <link rel="apple-touch-icon" href="../../icon-192.png">
@@ -2211,6 +2212,7 @@ window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();window.v152
 window.addEventListener('appinstalled',()=>{window.v152InstallPrompt=null;v152SyncInstallBtn()});
 if('serviceWorker' in navigator&&location.protocol!=='file:')window.addEventListener('load',()=>navigator.serviceWorker.register('../../service-worker.js').catch(()=>{}));
 const V145_NEWS=[
+ ['v226','عنوان واحد للبرنامج: teachers-data-portal.vercel.app/app/ (الرابط القديم ينقلك إليه تلقائيًا؛ ادخل مرة واحدة). وصار اسم صفحة المنسق «إدخال بيانات المدارس».'],
  ['v225','زر «🔗» أعلى الشاشة للتنقل بضغطة إلى بوابة المعلمين وصفحة المنسق وصفحة الاعتماد. افتح البرنامج من teachers-data-portal.vercel.app/app/ لتدخل مرة واحدة للبرنامج وصفحة المنسق معًا.'],
  ['v224','مدير النظام: «النصاب المخفض» في تعديل بيانات المعلم، وقائمة «المعلمون الموقوفون» مع إعادة التفعيل في شاشة المعلمين. والمنسق (بوابة المنسق): تغيير نوع المجموعة غير المسندة وحذفها بعينها.'],
  ['v223','الثانوي العام والثانوي الصناعي مرحلتان مستقلتان في كل الفلاتر والتقارير والأنصبة وحصر الموجهين (النصاب واحد، ومنسقو الثانوي للمرحلتين).'],
@@ -9676,9 +9678,9 @@ function v225OnPortal(){return /\.vercel\.app$/.test(location.hostname)}
 function v225Links(){
  const base=v225OnPortal()?'':V225_PORTAL,r=Array.isArray(userRoles)?userRoles:[];
  const L=[['👨‍🏫','بوابة المعلمين','بيانات المعلمين ومشرفي المدارس',base+'/']];
- if(r.includes('admin')||r.includes('stage_coordinator'))L.push(['🧭','صفحة المنسق','مدارس المرحلة وفصولها ومجموعاتها وإسنادها',base+'/coordinator/']);
+ if(r.includes('admin')||r.includes('stage_coordinator'))L.push(['🧭','إدخال بيانات المدارس','مدارس المرحلة وفصولها ومجموعاتها ومعلموها وإسنادها',base+'/coordinator/']);
  if(r.includes('admin'))L.push(['✅','صفحة الاعتماد','اعتماد طلبات بوابة المعلمين','https://teacher-portal-admin.vercel.app/']);
- if(!v225OnPortal())L.push(['🔑','البرنامج من عنوان البوابة','دخول واحد للبرنامج وصفحة المنسق',V225_PORTAL+'/app/']);
+ if(!v225OnPortal())L.push(['🔑','البرنامج من عنوان البوابة','دخول واحد للبرنامج و«إدخال بيانات المدارس»',V225_PORTAL+'/app/']);
  return L;
 }
 function v225Close(){document.getElementById('v225Menu')?.remove();document.removeEventListener('click',v225Outside,true);document.removeEventListener('keydown',v225Esc)}
