@@ -1,4 +1,5 @@
 <!doctype html>
+<!-- v224: أدوات مدير النظام بدل طلبات SQL — «النصاب المخفض» في تعديل بيانات المعلم (admin_set_teacher_weekly_target؛ فارغ = نصاب الدرجة)، و«المعلمون الموقوفون» في شاشة المعلمين مع «إعادة تفعيل». -->
 <!-- v223: فصل «ثانوي عام» عن «ثانوي صناعي» مرحلتين مستقلتين (قاعدة البيانات v223 + الواجهة): قوائم المراحل والفلاتر والنماذج، الأنصبة (عمودان)، منهج كل مرحلة، حصر موجهي الثانوي حسب المرحلة (secondary_supervisor_census_by_stage)، والخطة الملخصة وتوزيع الموجهين للمرحلتين. -->
 <!-- v222: تنظيف بلا تغيير في السلوك — حُذفت 57 دالة/متغيرًا ميتًا (نسخ قديمة استُبدلت ولا يستدعيها شيء، ودوال بلا استدعاء)، و135 قاعدة CSS لـ63 صنفًا لا يظهر في أي شاشة، ونُقلت تعليقات الإصدارات الأقدم من v191 إلى CHANGELOG.md. تحقق: 233 لقطة (7 أدوار × كمبيوتر/هاتف × الشاشات والتقارير) متطابقة المحتوى وبصمة التنسيق. -->
 <!-- v221: الموجه الأول يرى «لوحة قرارات المرحلة» (لوحة المنسق v168: العجز والتغطية ومقترح الانتداب وحالة الموجهين وعدالة الكادر) أعلى «لوحة الإدارة» لكل المراحل باختيار المرحلة — عرض وتقارير فقط، بلا تعديل قاعدة بيانات. -->
@@ -17,7 +18,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#152c43">
-<title>نظام توجيه العلوم — v223</title>
+<title>نظام توجيه العلوم — v224</title>
 <link rel="manifest" href="./manifest.webmanifest">
 <link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png">
 <link rel="apple-touch-icon" href="./icon-192.png">
@@ -2206,6 +2207,7 @@ window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();window.v152
 window.addEventListener('appinstalled',()=>{window.v152InstallPrompt=null;v152SyncInstallBtn()});
 if('serviceWorker' in navigator&&location.protocol!=='file:')window.addEventListener('load',()=>navigator.serviceWorker.register('./service-worker.js').catch(()=>{}));
 const V145_NEWS=[
+ ['v224','مدير النظام: «النصاب المخفض» في تعديل بيانات المعلم، وقائمة «المعلمون الموقوفون» مع إعادة التفعيل في شاشة المعلمين. والمنسق (بوابة المنسق): تغيير نوع المجموعة غير المسندة وحذفها بعينها.'],
  ['v223','الثانوي العام والثانوي الصناعي مرحلتان مستقلتان في كل الفلاتر والتقارير والأنصبة وحصر الموجهين (النصاب واحد، ومنسقو الثانوي للمرحلتين).'],
  ['v222','تنظيف داخلي للبرنامج (أكواد وتنسيقات قديمة غير مستخدمة) — الملف أخف بنحو 13% بلا أي تغيير في الشاشات.'],
  ['v221','الموجه الأول: «لوحة قرارات المرحلة» في لوحته لكل المراحل (العجز والتغطية ومقترح الانتداب وحالة الموجهين) — عرض وتقارير فقط.'],
@@ -9607,6 +9609,61 @@ v202Render=function(){
   const opts=`<option value="">— بلا موجه —</option>`+list.map(x=>`<option value="${esc(x.id)}"${String(x.id)===String(s.supervisor_id||'')?' selected':''}>${esc(x.full_name)}</option>`).join('');
   return `<div class="v202-box${s.supervisor_id?'':' v202-empty'}">${head}<select onchange="v202Change('${esc(s.id)}',this)">${opts}</select></div>`;
  }).join('')}</div>`;
+};
+/* v224: أدوات مدير النظام — النصاب المخفض، وإعادة تفعيل المعلم الموقوف (بدل طلبات SQL) */
+const __v224BaseEditTeacherForm=editTeacherForm;
+editTeacherForm=async function(id){
+ await __v224BaseEditTeacherForm(id);
+ if(profile?.role!=='admin')return;
+ const form=document.querySelector('#modal form');if(!form||form.elements.namedItem('v224_target'))return;
+ try{
+  const {data:t,error}=await sb.from('teacher_records').select('weekly_target_override,work_type').eq('id',id).maybeSingle();if(error)throw error;
+  const v=t?.weekly_target_override??'';
+  const box=document.createElement('div');box.className='field v224-target-field';
+  box.innerHTML=`<label for="v224Target">النصاب المخفض (لمدير النظام)</label><input id="v224Target" name="v224_target" type="number" min="0" max="40" step="1" inputmode="numeric" value="${esc(String(v))}" data-initial="${esc(String(v))}" placeholder="فارغ = نصاب الدرجة"><small class="muted">يُستخدم لحالات مثل إجازة نصف الأجر. اتركه فارغًا ليُحسب النصاب القانوني حسب الدرجة والمرحلة.</small>`;
+  (form.querySelector('.form-grid')||form).appendChild(box);
+ }catch(error){console.warn('v224 target field',error)}
+};
+const __v224BaseSaveTeacherEdit=saveTeacherEdit;
+saveTeacherEdit=async function(e,id,...rest){
+ const form=e?.target,inp=form?.elements?.namedItem('v224_target');
+ const initial=inp?String(inp.dataset.initial||''):'',next=inp?String(inp.value||'').trim():'';
+ await __v224BaseSaveTeacherEdit(e,id,...rest);
+ if(!inp||initial===next||document.body.contains(form))return;
+ try{
+  const val=next===''?null:Number(next);
+  if(val!==null&&(!Number.isInteger(val)||val<0||val>40))throw new Error('النصاب المخفض يجب أن يكون عددًا صحيحًا بين 0 و40، أو فارغًا');
+  const {error}=await sb.rpc('admin_set_teacher_weekly_target',{p_teacher_id:id,p_target:val});if(error)throw error;
+  invalidateData('teachers','workload','reports');toast(val===null?'أُلغي النصاب المخفض؛ يُحسب نصاب الدرجة':`النصاب المخفض = ${val} حصة`);
+  loadPage(true).catch(()=>{});
+ }catch(error){moneySafeError(error)}
+};
+async function v224InactiveTeachers(){
+ if(profile?.role!=='admin')return toast('هذه القائمة لمدير النظام فقط',true);
+ try{
+  const [tr,sr]=await Promise.all([sb.from('teacher_records').select('id,full_name,civil_id,work_type,job_title,home_school_id,updated_at').eq('active',false).order('full_name'),sb.from('schools').select('id,name')]);
+  if(tr.error)throw tr.error;if(sr.error)throw sr.error;
+  const names=new Map((sr.data||[]).map(x=>[String(x.id),x.name]));const rows=tr.data||[];
+  modal(`<div class="modal-head"><div><h3>المعلمون الموقوفون (${rows.length})</h3><div class="muted">المعلم الموقوف لا يظهر في الكشوف ولا التقارير. إعادة التفعيل تعيده كما كان، ثم يُسند له من «المعلمون».</div></div><button class="close" type="button" onclick="closeModal()">×</button></div>
+  <div class="table-wrap" style="max-height:60vh;overflow:auto"><table class="table"><thead><tr><th>المعلم / الرقم القومي</th><th>المدرسة الأصلية</th><th>النوع</th><th>إجراء</th></tr></thead><tbody>${rows.map(x=>`<tr><td><b>${esc(x.full_name||'')}</b><br><small class="muted" style="direction:ltr;display:inline-block">${esc(x.civil_id||'')}</small></td><td>${esc(names.get(String(x.home_school_id))||'—')}</td><td>${x.work_type==='paid'?'بالأجر':'ثابت'}${x.job_title?`<br><small class="muted">${esc(x.job_title)}</small>`:''}</td><td><button type="button" class="btn secondary" onclick="v224Reactivate('${x.id}',this)">إعادة تفعيل</button></td></tr>`).join('')||'<tr><td colspan="4" class="muted">لا يوجد معلمون موقوفون.</td></tr>'}</tbody></table></div>`);
+ }catch(error){moneySafeError(error)}
+}
+async function v224Reactivate(id,btn){
+ const row=btn?.closest('tr'),name=row?.querySelector('b')?.textContent||'المعلم';
+ if(!confirm(`إعادة تفعيل «${name}»؟ سيعود إلى كشف مدرسته الأصلية وتقاريرها.`))return;
+ try{
+  if(btn)btn.disabled=true;
+  const {data,error}=await sb.from('teacher_records').update({active:true}).eq('id',id).select('id');if(error)throw error;
+  if(!data?.length)throw new Error('لم تتم إعادة التفعيل (تحقق من الصلاحية)');
+  invalidateData('teachers','workload','reports');toast(`أُعيد تفعيل «${name}»`);row?.remove();loadPage(true).catch(()=>{});
+ }catch(error){if(btn)btn.disabled=false;moneySafeError(error)}
+}
+const __v224BaseTeachersPage=teachersPage;
+teachersPage=async function(opts={}){
+ const h=await __v224BaseTeachersPage(opts);
+ if(profile?.role!=='admin'||typeof h!=='string')return h;
+ const a=`onclick="openReportById('officialShortageAdmin')">تقرير الإدارة</button>`;
+ return h.includes(a)?h.replace(a,a+`<button class="btn secondary" type="button" onclick="v224InactiveTeachers()">المعلمون الموقوفون</button>`):h;
 };
 </script>
 
