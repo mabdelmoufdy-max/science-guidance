@@ -24,6 +24,12 @@
       "headers": [
         { "key": "Cache-Control", "value": "no-cache" }
       ]
+    },
+    {
+      "source": "/coordinator(.*)",
+      "headers": [
+        { "key": "Cache-Control", "value": "no-cache" }
+      ]
     }
   ]
 }
