@@ -1,5 +1,10 @@
 {
+  "redirects": [
+    { "source": "/app", "destination": "/app/", "permanent": false }
+  ],
   "rewrites": [
+    { "source": "/app/", "destination": "https://mabdelmoufdy-max.github.io/science-guidance/" },
+    { "source": "/app/:path*", "destination": "https://mabdelmoufdy-max.github.io/science-guidance/:path*" },
     { "source": "/coordinator", "destination": "https://mabdelmoufdy-max.github.io/science-guidance/trial/coordinator-entry/" },
     { "source": "/coordinator/", "destination": "https://mabdelmoufdy-max.github.io/science-guidance/trial/coordinator-entry/" }
   ],

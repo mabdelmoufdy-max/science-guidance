@@ -1,4 +1,5 @@
 <!doctype html>
+<!-- v225: التنقل بين البرنامج والبوابات: زر «🔗» في الشريط العلوي يفتح قائمة: بوابة المعلمين، صفحة المنسق (لمن لحسابه دور مدير النظام أو منسق المرحلة)، صفحة الاعتماد (مدير النظام)، و«البرنامج من عنوان البوابة» عند الفتح من github.io. الروابط نسبية على نطاق البوابة (البرنامج يُفتح أيضًا من teachers-data-portal.vercel.app/app/ فيشارك صفحة المنسق تسجيل الدخول). -->
 <!-- v224: أدوات مدير النظام بدل طلبات SQL — «النصاب المخفض» في تعديل بيانات المعلم (admin_set_teacher_weekly_target؛ فارغ = نصاب الدرجة)، و«المعلمون الموقوفون» في شاشة المعلمين مع «إعادة تفعيل». -->
 <!-- v223: فصل «ثانوي عام» عن «ثانوي صناعي» مرحلتين مستقلتين (قاعدة البيانات v223 + الواجهة): قوائم المراحل والفلاتر والنماذج، الأنصبة (عمودان)، منهج كل مرحلة، حصر موجهي الثانوي حسب المرحلة (secondary_supervisor_census_by_stage)، والخطة الملخصة وتوزيع الموجهين للمرحلتين. -->
 <!-- v222: تنظيف بلا تغيير في السلوك — حُذفت 57 دالة/متغيرًا ميتًا (نسخ قديمة استُبدلت ولا يستدعيها شيء، ودوال بلا استدعاء)، و135 قاعدة CSS لـ63 صنفًا لا يظهر في أي شاشة، ونُقلت تعليقات الإصدارات الأقدم من v191 إلى CHANGELOG.md. تحقق: 233 لقطة (7 أدوار × كمبيوتر/هاتف × الشاشات والتقارير) متطابقة المحتوى وبصمة التنسيق. -->
@@ -8,17 +9,13 @@
 <!-- v218: تقرير «نصاب الموجه…» للثانوي على قاعدة موجه المادة (supervisor_school_subjects) والمعلم بما يدرّسه، بدل «غير مسندة» -->
 <!-- v217: إصلاح فلتر المرحلة في «نصاب الموجه من المدارس والمعلمين» (كان يعيد 0 نتائج لأن فلتر المدرسة المرافق لا ينطبق على الصفوف المجمّعة) -->
 <!-- v216: تقرير جديد «نصاب الموجه من المدارس والمعلمين» (فلتر الكل/المرحلة) في قوالب التقارير لمدير النظام ومنسق المرحلة (الموجه، عدد المدارس، الفصول، المعلمون الثابتون والأجر، الإجمالي) — عرض فقط -->
-<!-- v215: نموذج الانتداب — اختيار المدرسة المنتدب إليها بشريط بحث (حقل كتابة + قائمة مقترحة) بدل القائمة الطويلة؛ لا تغيير في الحفظ -->
-<!-- v211: إصلاح «Cannot coerce the result to a single JSON object» عند تحديث الصفحة: قراءة profiles صارت بصف المستخدم نفسه (كانت تُرجع صفوف كثيرة للدور النشط المستعاد فيفشل single) -->
-<!-- v192: تقرير «الموجهين ومدارسهم»: لا يظهر سجل موجه بلا مدارس إن كان لنفس الاسم سجل آخر له مدارس (سجلّا شيماء محمد فرج محمد). -->
-<!-- v191: تقرير «الموجهين ومدارسهم»: سطر لكل مدرسة (بدل قائمة أسماء مكدسة في خانة واحدة)؛ اسم الموجه وهاتفه وعدد مدارسه في أول سطر من مجموعته فقط. -->
 <html lang="ar" dir="rtl">
 <head>
 <!-- إعداد: أ/ محمود عبدالمفدي محمد أبوالنجا | الصفة: معلم -->
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#152c43">
-<title>نظام توجيه العلوم — v224</title>
+<title>نظام توجيه العلوم — v225</title>
 <link rel="manifest" href="./manifest.webmanifest">
 <link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png">
 <link rel="apple-touch-icon" href="./icon-192.png">
@@ -1865,6 +1862,13 @@ td .btn,.report-preview-toolbar .btn{min-height:var(--ctl-h-sm);padding:4px 10px
 .v202-box select{width:100%}
 @media (max-width:800px){.v202-filters{grid-template-columns:1fr}.v202-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media (max-width:380px){.v202-grid{grid-template-columns:1fr}}
+/* v225: قائمة التنقل بين البرنامج والبوابات */
+.v225-menu{position:fixed;z-index:1200;width:min(310px,calc(100vw - 16px));background:#fff;border:1px solid #dfe4ee;border-radius:12px;box-shadow:0 12px 32px rgba(15,33,77,.22);padding:6px}
+.v225-menu .v225-head{font-size:12px;color:#5d6b85;padding:6px 10px 4px;font-weight:700}
+.v225-menu a{display:flex;gap:10px;align-items:center;min-height:52px;padding:8px 10px;border-radius:8px;color:#0f214d;text-decoration:none}
+.v225-menu a:hover,.v225-menu a:focus-visible{background:#eef3fb;outline:none}
+.v225-menu .ic{flex:0 0 28px;font-size:20px;text-align:center}
+.v225-menu b{display:block;font-size:14px}.v225-menu small{display:block;font-size:12px;color:#5d6b85}
 </style>
 </head>
 <body>
@@ -2207,6 +2211,7 @@ window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();window.v152
 window.addEventListener('appinstalled',()=>{window.v152InstallPrompt=null;v152SyncInstallBtn()});
 if('serviceWorker' in navigator&&location.protocol!=='file:')window.addEventListener('load',()=>navigator.serviceWorker.register('./service-worker.js').catch(()=>{}));
 const V145_NEWS=[
+ ['v225','زر «🔗» أعلى الشاشة للتنقل بضغطة إلى بوابة المعلمين وصفحة المنسق وصفحة الاعتماد. افتح البرنامج من teachers-data-portal.vercel.app/app/ لتدخل مرة واحدة للبرنامج وصفحة المنسق معًا.'],
  ['v224','مدير النظام: «النصاب المخفض» في تعديل بيانات المعلم، وقائمة «المعلمون الموقوفون» مع إعادة التفعيل في شاشة المعلمين. والمنسق (بوابة المنسق): تغيير نوع المجموعة غير المسندة وحذفها بعينها.'],
  ['v223','الثانوي العام والثانوي الصناعي مرحلتان مستقلتان في كل الفلاتر والتقارير والأنصبة وحصر الموجهين (النصاب واحد، ومنسقو الثانوي للمرحلتين).'],
  ['v222','تنظيف داخلي للبرنامج (أكواد وتنسيقات قديمة غير مستخدمة) — الملف أخف بنحو 13% بلا أي تغيير في الشاشات.'],
@@ -2278,7 +2283,7 @@ function renderShell(){
  const nav=NAV[profile.role]||NAV.teacher;if(!nav.some(x=>x[0]===currentPage))currentPage='dashboard';
  appNavApplyInitial();
  const switchBtn=userRoles.length>1?`<button class="text-btn role-switch-side" onclick="switchRole()">⇄ تبديل الدور</button>`:'';
- app.innerHTML=`<div class="app-shell"><aside id="appSidebar" aria-label="القائمة الرئيسية" class="sidebar ${sidebarOpen?'open':''}"><button class="v111-sidebar-close" type="button" onclick="v111CloseSidebar(true)">× إغلاق القائمة</button><div class="side-logo"><img class="mini side-brand-logo" src="${BRAND_LOGO_SRC}" width="40" height="40" alt="شعار توجيه العلوم"><div><strong>${profile.role==='senior_teacher'?(profile.school_name||'مدرستي'):'توجيه العلوم'}</strong><small>${esc(activeYear?.label||'')} • ${esc(activeTerm?.name||'')}</small></div></div><div class="nav">${nav.map(n=>`<button class="${currentPage===n[0]?'active':''}" data-page="${n[0]}" onclick="go('${n[0]}')"><span class="nav-icon">${n[2]}</span><span class="nav-label" data-short="${esc(mobileNavShort(n[1]))}">${n[1]}</span></button>`).join('')}</div><div class="side-footer"><div class="side-user"><strong>${esc(profile.full_name)}</strong><br>${esc(ROLE_LABELS[profile.role])}<br>${switchBtn}<br><button class="text-btn side-logout" onclick="logout()">تسجيل الخروج</button></div></div></aside><button class="v111-sidebar-backdrop no-print" type="button" tabindex="-1" aria-label="إغلاق القائمة" onclick="v111CloseSidebar(true)"></button><main class="main"><header class="topbar"><div class="topbar-right"><button class="icon-btn mobile-menu" onclick="toggleSidebar()">☰</button><div class="userchip"><span class="top-avatar"></span><div class="top-title"><strong>${esc(ROLE_LABELS[profile.role])}</strong><small>${esc(profile.full_name)}</small></div></div>${userRoles.length>1?`<button class="btn secondary role-switch-top" onclick="switchRole()">⇄ تبديل الدور</button>`:''}<button class="alert-bell v152-install-btn" type="button" onclick="v152Install()" title="تثبيت التطبيق" aria-label="تثبيت التطبيق" ${window.v152InstallPrompt?'':'hidden'}>⬇</button><button class="alert-bell v145-help-btn" type="button" onclick="v145OpenHelp()" title="المساعدة وما الجديد" aria-label="المساعدة وما الجديد">؟</button>${profile.role!=='teacher'?`<button class="alert-bell" type="button" onclick="go('alerts')" title="مركز التنبيهات" aria-label="مركز التنبيهات">🔔<span id="alertBellCount" class="alert-bell-count"></span></button>`:''}</div><div class="topbar-context">${esc(activeYear?.label||'')} - ${esc(activeTerm?.name||'')}</div></header><div id="appNavTrail" class="app-nav-strip no-print"></div><section id="content" class="content"><div class="card">جاري تحميل البيانات...</div></section></main><nav id="mobileActionBar" class="mobile-action-bar no-print" aria-label="الإجراءات السريعة"></nav></div>`;
+ app.innerHTML=`<div class="app-shell"><aside id="appSidebar" aria-label="القائمة الرئيسية" class="sidebar ${sidebarOpen?'open':''}"><button class="v111-sidebar-close" type="button" onclick="v111CloseSidebar(true)">× إغلاق القائمة</button><div class="side-logo"><img class="mini side-brand-logo" src="${BRAND_LOGO_SRC}" width="40" height="40" alt="شعار توجيه العلوم"><div><strong>${profile.role==='senior_teacher'?(profile.school_name||'مدرستي'):'توجيه العلوم'}</strong><small>${esc(activeYear?.label||'')} • ${esc(activeTerm?.name||'')}</small></div></div><div class="nav">${nav.map(n=>`<button class="${currentPage===n[0]?'active':''}" data-page="${n[0]}" onclick="go('${n[0]}')"><span class="nav-icon">${n[2]}</span><span class="nav-label" data-short="${esc(mobileNavShort(n[1]))}">${n[1]}</span></button>`).join('')}</div><div class="side-footer"><div class="side-user"><strong>${esc(profile.full_name)}</strong><br>${esc(ROLE_LABELS[profile.role])}<br>${switchBtn}<br><button class="text-btn side-logout" onclick="logout()">تسجيل الخروج</button></div></div></aside><button class="v111-sidebar-backdrop no-print" type="button" tabindex="-1" aria-label="إغلاق القائمة" onclick="v111CloseSidebar(true)"></button><main class="main"><header class="topbar"><div class="topbar-right"><button class="icon-btn mobile-menu" onclick="toggleSidebar()">☰</button><div class="userchip"><span class="top-avatar"></span><div class="top-title"><strong>${esc(ROLE_LABELS[profile.role])}</strong><small>${esc(profile.full_name)}</small></div></div>${userRoles.length>1?`<button class="btn secondary role-switch-top" onclick="switchRole()">⇄ تبديل الدور</button>`:''}<button class="alert-bell v152-install-btn" type="button" onclick="v152Install()" title="تثبيت التطبيق" aria-label="تثبيت التطبيق" ${window.v152InstallPrompt?'':'hidden'}>⬇</button><button class="alert-bell v225-portals-btn" type="button" onclick="v225ToggleMenu(event)" title="التنقل بين البرنامج والبوابات" aria-label="التنقل بين البرنامج والبوابات" aria-haspopup="menu">🔗</button><button class="alert-bell v145-help-btn" type="button" onclick="v145OpenHelp()" title="المساعدة وما الجديد" aria-label="المساعدة وما الجديد">؟</button>${profile.role!=='teacher'?`<button class="alert-bell" type="button" onclick="go('alerts')" title="مركز التنبيهات" aria-label="مركز التنبيهات">🔔<span id="alertBellCount" class="alert-bell-count"></span></button>`:''}</div><div class="topbar-context">${esc(activeYear?.label||'')} - ${esc(activeTerm?.name||'')}</div></header><div id="appNavTrail" class="app-nav-strip no-print"></div><section id="content" class="content"><div class="card">جاري تحميل البيانات...</div></section></main><nav id="mobileActionBar" class="mobile-action-bar no-print" aria-label="الإجراءات السريعة"></nav></div>`;
  v111SyncSidebar();
  appNavRenderStrip();
  loadPage().catch(moneySafeError);
@@ -9665,6 +9670,29 @@ teachersPage=async function(opts={}){
  const a=`onclick="openReportById('officialShortageAdmin')">تقرير الإدارة</button>`;
  return h.includes(a)?h.replace(a,a+`<button class="btn secondary" type="button" onclick="v224InactiveTeachers()">المعلمون الموقوفون</button>`):h;
 };
+/* v225: التنقل بين البرنامج والبوابات — على نطاق البوابة (…vercel.app/app/) تكون الروابط نسبية فتشارك صفحة المنسق تسجيل الدخول */
+const V225_PORTAL='https://teachers-data-portal.vercel.app';
+function v225OnPortal(){return /\.vercel\.app$/.test(location.hostname)}
+function v225Links(){
+ const base=v225OnPortal()?'':V225_PORTAL,r=Array.isArray(userRoles)?userRoles:[];
+ const L=[['👨‍🏫','بوابة المعلمين','بيانات المعلمين ومشرفي المدارس',base+'/']];
+ if(r.includes('admin')||r.includes('stage_coordinator'))L.push(['🧭','صفحة المنسق','مدارس المرحلة وفصولها ومجموعاتها وإسنادها',base+'/coordinator/']);
+ if(r.includes('admin'))L.push(['✅','صفحة الاعتماد','اعتماد طلبات بوابة المعلمين','https://teacher-portal-admin.vercel.app/']);
+ if(!v225OnPortal())L.push(['🔑','البرنامج من عنوان البوابة','دخول واحد للبرنامج وصفحة المنسق',V225_PORTAL+'/app/']);
+ return L;
+}
+function v225Close(){document.getElementById('v225Menu')?.remove();document.removeEventListener('click',v225Outside,true);document.removeEventListener('keydown',v225Esc)}
+function v225Outside(e){const m=document.getElementById('v225Menu');if(m&&!m.contains(e.target)&&!e.target.closest('.v225-portals-btn'))v225Close()}
+function v225Esc(e){if(e.key==='Escape')v225Close()}
+function v225ToggleMenu(ev){
+ if(document.getElementById('v225Menu'))return v225Close();
+ const rc=ev?.currentTarget?.getBoundingClientRect(),m=document.createElement('div');
+ m.id='v225Menu';m.className='v225-menu';m.setAttribute('role','menu');m.setAttribute('aria-label','التنقل بين البرنامج والبوابات');
+ m.innerHTML=`<div class="v225-head">التنقل السريع</div>${v225Links().map(([i,t,d,u])=>`<a role="menuitem" href="${esc(u)}"><span class="ic" aria-hidden="true">${i}</span><span><b>${esc(t)}</b><small>${esc(d)}</small></span></a>`).join('')}`;
+ document.body.appendChild(m);
+ const top=rc?rc.bottom+6:60,left=rc?Math.max(8,Math.min(rc.left,innerWidth-m.offsetWidth-8)):8;m.style.top=Math.round(top)+'px';m.style.left=Math.round(left)+'px';
+ document.addEventListener('click',v225Outside,true);document.addEventListener('keydown',v225Esc);m.querySelector('a')?.focus();
+}
 </script>
 
 <div id="reportPreviewOverlay" class="report-preview-overlay" role="dialog" aria-modal="true" aria-label="معاينة التقرير" aria-hidden="true">
