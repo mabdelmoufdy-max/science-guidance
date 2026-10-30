@@ -3,6 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<!-- v185: فصول المعلم المسندة (بطاقته وتعديل بياناته، كل المراحل) بمربعات مجمّعة حسب الصف بدل الأسطر الطويلة: الرقم كبيرًا وتحته الحصص (والنوع/المادة في الثانوي)، وفصول المدارس الأخرى بلون مختلف تحت اسم مدرستها؛ لمس المربع ← قائمة سفلية بالتفاصيل و«إلغاء الإسناد» (حُذفت «×» منعًا للإلغاء بالخطأ). بلا تعديل قاعدة بيانات. -->
 <!-- v184: فصول الإعدادي والابتدائي بشكل الثانوي (بطلب المستخدم «نفذ ١»): بطاقة لكل صف بمربعات أرقام الفصول (المسند أخضر باسم المعلم، غير المسند برتقالي أولًا)، سطر «N مسند · M ينتظر الإسناد»، «+ إضافة فصل» يملأ أصغر رقم ناقص، لمس الفصل: المعلم وإلغاء الإسناد أو حذف الفصل بعينه، و«تحديد» لحذف عدة فصول؛ حُذف «−» والجدول القديم. بلا تعديل قاعدة بيانات. -->
 <!-- v183: اسم الحساب ظاهر دائمًا في الشريط العلوي على الهاتف (كان مخفيًا على الهاتف): الشريط سطران على الهاتف — الشعار والعنوان، ثم شارة الاسم («…» إن طال، وكاملًا في التلميح) مع «البرنامج» و«خروج»، كي لا يلتبس الحساب (بلاغ دخول بحساب آخر محفوظ في المتصفح). -->
 <!-- v182: الاسم الجديد «إدخال بيانات المدارس» (بقرار المستخدم بدل «صفحة المنسق»/«إدخال بيانات المنسق» لأنه يلتبس بدور «منسق المرحلة» في البرنامج): عنوان التبويب والشريط العلوي وشاشة الدخول. -->
@@ -11,7 +12,7 @@
 <!-- v179: إدارة المجموعات الثانوية بلا رجوع للمطور — لكل مجموعة غير مسندة «تغيير النوع» (يُعاد تسميتها «النوع — مجموعة N» وتُضبط موادها وحصصها حسب النوع) و«حذف» لها بعينها؛ و«تعليم مزدوج» للصف الثاني الصناعي (فيزياء حصة واحدة). للمنسق ضمن مرحلته ولمدير النظام. -->
 <!-- v178: الثانوي العام والثانوي الصناعي مرحلتان مستقلتان (قاعدة البيانات v223): قائمة المرحلة تعرضهما منفصلتين، ونوع المدرسة الثانوية ثابت على مرحلتها، وكل فحوص «ثانوي» صارت للمرحلتين. -->
 <!-- v177: الموجه الأول لا يدخل بوابة المنسق (عرض وتقارير فقط في البرنامج الرئيسي)؛ الدخول لمنسق المرحلة ومدير النظام. -->
-<title>إدخال بيانات المدارس — v184</title>
+<title>إدخال بيانات المدارس — v185</title>
 <!-- v175: اسم الفصل في بطاقة المعلم وقوائم الإسناد يعرض الصف أولًا للمجموعات الثانوية («الأول — عام — مجموعة 1») لأن اسم المجموعة يتكرر في كل صف. عرض فقط. -->
 <!-- v174: تحسين الشكل — تبويبات المدرسة (البيانات | الموجهون | الفصول والمجموعات | المعلمون) بأعداد ونواقص، عدّادات +/− لكل نوع مجموعة في الثانوي (شريط المسند والأسماء مطوية)، بطاقة معلم مضغوطة (النصاب والمحتسب والمتبقي والموجه المسؤول) والبيانات الشخصية مطوية، ومنع خروج البريد الطويل عن الإطار. لا تغيير في البيانات أو الصلاحيات أو منطق الحفظ. -->
 <!-- v173: المرحلة الثانوية — (1) أربع قوائم لموجه الفيزياء والكيمياء والأحياء والعلوم المتكاملة يختارها المنسق (الصناعي: الفيزياء والكيمياء فقط)؛ (2) إضافة المجموعات بقائمة نوع (حسب الصف ونوع المدرسة) بحصص جاهزة وحذف مجموعة غير مسندة بقائمة؛ (3) «الموجه المسؤول» عن المعلم بقائمة في تعديل بيانات المعلم (جدول teacher_responsible_supervisor) ويظهر في بطاقته؛ (4) إلغاء إسناد فصول المعلم وإسناد المتاح من داخل تعديل بياناته. -->
@@ -192,6 +193,14 @@ body:has(.selbar) .toast{bottom:calc(130px + env(safe-area-inset-bottom))}
 .sh-act{display:flex;flex-direction:column;gap:8px;margin-top:14px}.sh-act .btn{width:100%;height:48px}.sh-act .btn small{font-weight:400}
 .sh-row{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:10px 0;border-bottom:1px solid #eef0f6;font-size:14px}
 .sh-note{margin:10px 0 0;font-size:13px;color:var(--muted)}
+/* v185: مربعات فصول المعلم */
+.tchips{margin-top:10px;display:flex;flex-direction:column;gap:8px}
+.tgrp{display:flex;gap:10px;align-items:flex-start}
+.tgrp>.gl{flex:0 0 58px;font-size:13px;font-weight:700;color:var(--navy);padding-top:14px}
+.tgrp .chips{flex:1;min-width:0;grid-template-columns:repeat(auto-fill,minmax(66px,1fr))}
+.tgrp .chip{min-height:48px}
+.chip.ext{background:var(--info-bg);border-color:#c9d6ec}.chip.ext b,.chip.ext small{color:var(--info)}
+.tsch{font-size:12px;color:var(--muted);margin-top:4px}
 </style>
 </head>
 <body>
@@ -654,7 +663,7 @@ function teacherCard(s,{r,t,miss}){
  return `<div class="tcard c2 ${miss.length?'bad':''}"><div class="t1"><b>${esc(t.full_name)}</b><span class="bds"><span class="badge ${perm?'b-info':'b-warn'}">${perm?'ثابت':'بالأجر'}</span>${rel?`<span class="badge ${rel.c}">${esc(rel.t)}</span>`:''}${r.on_renewed_leave?'<span class="badge b-warn">إجازة</span>':''}${r.scope_is_senior_teacher||r.is_senior_teacher?'<span class="badge b-ok">مشرف المادة</span>':''}${st&&!r.on_renewed_leave?`<span class="badge ${stc}">${esc(st)}</span>`:''}</span></div>
   <div class="t2">${sub||'—'}${isSec(s)?` • الموجه المسؤول: <b class="${respName?'':'miss'}">${respName?esc(respName):'— غير محدد —'}</b>`:''}</div>
   <div class="nums"><span>النصاب <b>${esc(r.weekly_target??'—')}</b></span><span>المحتسب <b>${r.total_counted_periods!=null?esc(r.total_counted_periods):'—'}</b> <small>(${parts.join(' + ')})</small></span><span>المتبقي <b class="${Number(rem)>0?'bad':''}">${esc(rem??'—')}</b></span></div>
-  <div class="tcls">${cls.map(a=>{const ext=a.school_classes?.school_id&&a.school_classes.school_id!==s.id,subj=a.curriculum_subjects?.subject_name;return `<span class="${ext?'ext':''}">${esc(cng(a.school_classes)||'—')}${subj&&!/^علوم$/.test(subj)?' '+esc(subj):''} • ${Number(a.weekly_periods||0)} ح${ext?' — '+esc(schoolName(a.school_classes.school_id)):`<button type="button" class="x" data-unassign="${a.id}" data-label="${esc(cng(a.school_classes))}" title="إلغاء إسناد هذا الفصل من المعلم" aria-label="إلغاء إسناد ${esc(cng(a.school_classes))}">×</button>`}</span>`}).join('')||'<span class="sub">لا فصول مسندة</span>'}</div>
+  ${teacherClassChips(s,cls)}
   ${S.tAssign===id?assignRow(s,r):''}
   ${miss.length?`<div class="notice n-bad" style="margin-top:10px;font-size:13px">ناقص: ${miss.map(esc).join('، ')}</div>`:''}
   <div class="tact">${r.on_renewed_leave?'':`<button type="button" class="btn gold sm" data-tassign="${id}" ${S.tEdit||S.tAssign===id?'disabled':''}>+ إسناد فصل</button>`}${editable?`<button type="button" class="btn primary sm" data-tedit="${id}" ${S.tEdit?'disabled':''}>تعديل</button>`:'<span class="sub">سجله الأصلي خارج مرحلتك؛ يعدّله منسق مرحلته.</span>'}</div>
@@ -708,7 +717,7 @@ function teacherForm(s,t){
  </div>
  ${isNew?'':(()=>{const tid=t.id,r=(S.roster||[]).find(x=>(x.teacher_id||x.id)===tid),cls=(S.tassign[tid]||[]).slice().sort((a,b)=>String(a.school_classes?.class_name).localeCompare(String(b.school_classes?.class_name),'ar',{numeric:true}));
   return `<div class="notice n-info" style="font-size:13px;margin-bottom:8px">احفظ التعديلات أعلاه أولًا قبل إسناد أو إلغاء إسناد فصل، لأن الشاشة تُحدَّث بعدهما.</div>
-  <div class="tcls" style="margin-bottom:8px"><span class="sub">الفصول المسندة:</span>${cls.map(a=>{const ext=a.school_classes?.school_id&&a.school_classes.school_id!==s.id,subj=a.curriculum_subjects?.subject_name;return `<span class="${ext?'ext':''}">${esc(cng(a.school_classes)||'—')}${subj&&!/^علوم$/.test(subj)?' '+esc(subj):''} • ${Number(a.weekly_periods||0)} ح${ext?' — '+esc(schoolName(a.school_classes.school_id)):`<button type="button" class="x" data-unassign="${a.id}" data-label="${esc(cng(a.school_classes))}" aria-label="إلغاء الإسناد">×</button>`}</span>`}).join('')||'<small style="color:var(--muted)">لا فصول مسندة</small>'}</div>
+  <div style="margin-bottom:8px"><span class="sub">الفصول المسندة:</span>${teacherClassChips(s,cls)}</div>
   ${r&&!r.on_renewed_leave?assignRow(s,r):''}`})()}
  ${isNew?'':'<div class="notice n-info" style="font-size:13px">تاريخ استلام العمل وتاريخ الحصول على الدرجة يُدخلان عند إضافة المعلم فقط، وبعدها يعدّلهما مدير النظام.</div>'}
  <div class="actions"><button class="btn primary" id="tSave">${isNew?'إضافة المعلم':'حفظ بيانات المعلم'}</button><button type="button" class="btn ghost" id="tCancel">إلغاء</button></div></form>`;
@@ -720,7 +729,7 @@ function wireTeachers(s){
  on('tMissOnly',()=>{S.tMissOnly=!S.tMissOnly;renderMain()});
  on('tCancel',()=>{S.tEdit=null;renderMain()});
  document.querySelectorAll('[data-tassign]').forEach(b=>b.onclick=()=>{S.tAssign=b.dataset.tassign;renderMain()});
- document.querySelectorAll('[data-unassign]').forEach(b=>b.onclick=()=>unassignClass(s,b.dataset.unassign,b.dataset.label));
+ document.querySelectorAll('[data-tcls]').forEach(b=>b.onclick=()=>assignSheet(s,b.dataset.tcls));
  on('aCancel',()=>{S.tAssign=null;renderMain()});
  const go=$('aGo');if(go)go.onclick=()=>assignClass(s,go);
  document.querySelectorAll('[data-tedit]').forEach(b=>b.onclick=()=>{S.tEdit=b.dataset.tedit;renderMain();$('teacherForm')?.scrollIntoView({block:'start'})});
@@ -780,6 +789,37 @@ function addClass(s,grade){guard(async()=>{
  const row=await q(sb.from('school_classes').insert({school_id:s.id,academic_year_id:S.year.id,term_id:S.term.id,stage:s.stage,grade,class_name:`${num}/${k}`,science_periods:0}).select('id,school_id,grade,class_name,grade_order').single());
  S.classes.push(row);await syncClassCount(s);toast(`أضيف ${cn(row.class_name)}`);await loadTeachers(s.id);
 })}
+/* v185: فصول المعلم المسندة بمربعات مجمّعة حسب الصف + قائمة سفلية لكل إسناد */
+const GRADE_RANK=['الاول','الثاني','الثالث','الرابع','الخامس','السادس'];
+const gradeRank=g=>{const i=GRADE_RANK.indexOf(norm(g));return i<0?99:i};
+const subjShort=x=>String(x||'').replace(/^ال/,'');
+function teacherClassChips(s,cls){
+ if(!cls.length)return '<div class="tchips"><span class="sub">لا فصول مسندة</span></div>';
+ const bySchool=new Map();
+ cls.forEach(a=>{const sid=a.school_classes?.school_id||s.id;if(!bySchool.has(sid))bySchool.set(sid,[]);bySchool.get(sid).push(a)});
+ const order=[...bySchool.keys()].sort((x,y)=>(x===s.id?-1:y===s.id?1:0));
+ return `<div class="tchips">${order.map(sid=>{
+  const ext=sid!==s.id,list=bySchool.get(sid),grades=new Map();
+  list.forEach(a=>{const g=a.school_classes?.grade||'—';if(!grades.has(g))grades.set(g,[]);grades.get(g).push(a)});
+  const rows=[...grades.keys()].sort((x,y)=>gradeRank(x)-gradeRank(y)).map(g=>{
+   const items=grades.get(g).sort((x,y)=>grpNo(x.school_classes||{})-grpNo(y.school_classes||{}));
+   return `<div class="tgrp"><div class="gl">${esc(g)}</div><div class="chips">${items.map(a=>{
+    const c=a.school_classes||{},no=grpNo(c),subj=a.curriculum_subjects?.subject_name,p=Number(a.weekly_periods||0),sec=!/^\d+\s*\/\s*\d+$/.test(String(c.class_name||'').trim());
+    const dup=sec&&subj&&subjShort(kindOf(c))===subjShort(subj),line2=`${subj&&!dup&&!/^علوم$|^العلوم$/.test(subj)?esc(subjShort(subj))+' ':''}${p} ح`;
+    return `<button type="button" class="chip ${ext?'ext':'as'}" data-tcls="${a.id}" title="${esc(cng(c))}${subj?' — '+esc(subj):''} • ${p} ح${ext?' — '+esc(schoolName(sid)):''}"><b>${no<1e6?no:'•'}</b>${sec?`<small>${esc(kindOf(c))}</small>`:''}<small>${line2}</small></button>`}).join('')}</div></div>`}).join('');
+  return `${ext?`<div class="tsch">في ${esc(schoolName(sid))} (للعرض)</div>`:''}${rows}`}).join('')}</div>`;
+}
+function assignSheet(s,aid){
+ const a=Object.values(S.tassign).flat().find(x=>x.id===aid);if(!a)return;
+ const c=a.school_classes||{},ext=c.school_id&&c.school_id!==s.id,subj=a.curriculum_subjects?.subject_name||'العلوم',p=Number(a.weekly_periods||0);
+ const tch=tName(a.teacher_id),label=cng(c);
+ openSheet(`<div class="sh-h"><b>${esc(label||'—')}</b><small>${esc(subj)} · ${p} حصص · ${esc(tch)}${ext?' · '+esc(schoolName(c.school_id)):''}</small></div>
+  ${ext?'<p class="sh-note">هذا الفصل في مدرسة أخرى؛ يُدار من مدرسته.</p><div class="sh-act"><button type="button" class="btn ghost" data-x>إغلاق</button></div>'
+   :'<div class="sh-act"><button type="button" class="btn danger-o" data-un>إلغاء الإسناد</button><button type="button" class="btn ghost" data-x>إغلاق</button></div>'}`,bg=>{
+  bg.querySelectorAll('[data-x]').forEach(b=>b.onclick=closeSheet);
+  bg.querySelectorAll('[data-un]').forEach(b=>b.onclick=()=>{closeSheet();unassignClass(s,aid,label)});
+ });
+}
 function approve(s){
  const miss=missingOf(s);
  if(miss.length&&!confirm(`البيانات ناقصة (${miss.join('، ')}). اعتماد رغم ذلك؟`))return;
