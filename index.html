@@ -1,4 +1,5 @@
 <!doctype html>
+<!-- v232: تقرير «نصاب الموجه من المدارس والمعلمين» كان يظهر فارغًا (النتائج 0) عند اختيار أي مرحلة في «تقارير المرحلة»: الفلتر يرسل أسماء مدارس المرحلة وصفوف التقرير بلا أسماء مدارس. كل صف يحمل الآن مدارسه (الإعدادي/الابتدائي: مدارس الموجه في المرحلة؛ الثانوي: مدارس المرحلة)، والمربعات تُحسب بعد الفلترة. عرض فقط. -->
 <!-- v230: فتح فوري — service-worker.js يعرض صفحة البرنامج من نسخة محفوظة على الجهاز ويحدّثها في الخلفية؛ وبعد التحميل (وعند العودة للتبويب) يقارن البرنامج رقم إصداره بالمنشور (`v230CheckUpdate`، من عنوان الصفحة) فيُظهر شريط «نسخة جديدة — تحديث الآن» ويضع النسخة الجديدة في الذاكرة قبل إعادة التحميل. البيانات من الشبكة دائمًا. (v227–v229 أرقام قاعدة البيانات.) -->
 <!-- v226: العنوان الموحد — فتح البرنامج المنشور من github.io (الجذر أو index.html) ينقل تلقائيًا إلى teachers-data-portal.vercel.app/app/ فيصير للجميع عنوان واحد وحساب واحد مع «إدخال بيانات المدارس» (الاسم الجديد لصفحة المنسق). نسخ trial/ لا تُنقل، و?stay يُبقي الصفحة على github.io عند الحاجة. -->
 <!-- v225: التنقل بين البرنامج والبوابات: زر «🔗» في الشريط العلوي يفتح قائمة: بوابة المعلمين، صفحة المنسق (لمن لحسابه دور مدير النظام أو منسق المرحلة)، صفحة الاعتماد (مدير النظام)، و«البرنامج من عنوان البوابة» عند الفتح من github.io. الروابط نسبية على نطاق البوابة (البرنامج يُفتح أيضًا من teachers-data-portal.vercel.app/app/ فيشارك صفحة المنسق تسجيل الدخول). -->
@@ -8,7 +9,6 @@
 <!-- v221: الموجه الأول يرى «لوحة قرارات المرحلة» (لوحة المنسق v168: العجز والتغطية ومقترح الانتداب وحالة الموجهين وعدالة الكادر) أعلى «لوحة الإدارة» لكل المراحل باختيار المرحلة — عرض وتقارير فقط، بلا تعديل قاعدة بيانات. -->
 <!-- v220: الموجه الأول عرض وتقارير فقط — سُحبت منه أزرار التعديل والإضافة والانتداب والإسناد وتوزيع العجز بالأجر وإعلان جديد وشاشة استكمال البيانات؛ الإعلانات للقراءة. الاعتماد والحسابات لمدير النظام. واجهة فقط، وقاعدة البيانات ودالتا الحافة ضُيّقت (المرحلة 3). نافذة الإجازات للموجه الأول عرض وطباعة فقط. -->
 <!-- v219: حصر الثانوي في تقرير «نصاب الموجه…» عبر دالة القاعدة secondary_supervisor_census (قراءة فقط) ليعمل لمنسق الإعدادي أيضًا -->
-<!-- v218: تقرير «نصاب الموجه…» للثانوي على قاعدة موجه المادة (supervisor_school_subjects) والمعلم بما يدرّسه، بدل «غير مسندة» -->
 <html lang="ar" dir="rtl">
 <head>
 <!-- إعداد: أ/ محمود عبدالمفدي محمد أبوالنجا | الصفة: معلم -->
@@ -16,7 +16,7 @@
 <script>/* v226: العنوان الموحد — انظر التعليق أعلى الملف */(function(){try{if(/\.github\.io$/.test(location.hostname)&&/^\/science-guidance\/?(index\.html)?$/.test(location.pathname)&&!/[?&]stay\b/.test(location.search))location.replace('https://teachers-data-portal.vercel.app/app/'+location.hash)}catch(e){}})();</script>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#152c43">
-<title>نظام توجيه العلوم — v230</title>
+<title>نظام توجيه العلوم — v232</title>
 <link rel="manifest" href="./manifest.webmanifest">
 <link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png">
 <link rel="apple-touch-icon" href="./icon-192.png">
@@ -9500,7 +9500,7 @@ ReportAdapters.prepSupervisorsCensus={async load(ctx){
  const names=new Map((sn.data||[]).map(x=>[String(x.id),String(x.full_name||'').trim()]));
  const schools=v161MergeSchools(sr.data||[],links),bySchool=new Map(schools.map(x=>[String(x.id),x]));
  const groups=new Map();
- schools.filter(x=>!String(x.stage||'').startsWith('ثانوي')).forEach(x=>{const k=String(x.supervisor_id||'')+'|'+x.stage;const g=groups.get(k)||{name:names.get(String(x.supervisor_id||''))||'غير مسندة',stage:x.stage||'—',schools:0,classes:0,perm:new Set(),paid:new Set()};g.schools++;g.classes+=reportNumber(x.class_count);groups.set(k,g)});
+ schools.filter(x=>!String(x.stage||'').startsWith('ثانوي')).forEach(x=>{const k=String(x.supervisor_id||'')+'|'+x.stage;const g=groups.get(k)||{name:names.get(String(x.supervisor_id||''))||'غير مسندة',stage:x.stage||'—',schools:0,classes:0,perm:new Set(),paid:new Set(),schoolNames:[]};g.schools++;g.schoolNames.push(String(x.name||'').trim());g.classes+=reportNumber(x.class_count);groups.set(k,g)});
  v103ScopeRows(data).forEach(t=>{
   if(!['home','delegated_out_partial'].includes(String(t.school_relation||'home')))return;
   const sc=bySchool.get(v91ScopeSchoolId(t));if(!sc)return;
@@ -9510,11 +9510,11 @@ ReportAdapters.prepSupervisorsCensus={async load(ctx){
  // الثانوي: المدرسة بلا موجه واحد؛ الحصر بالمادة تحسبه دالة القاعدة secondary_supervisor_census (منسق الإعدادي لا يقرأ جداول الثانوي مباشرة).
  if(schools.some(x=>String(x.stage||'').startsWith('ثانوي'))&&activeTerm?.id){
   const rp=await sb.rpc('secondary_supervisor_census_by_stage',{p_term_id:activeTerm.id});if(rp.error)throw rp.error;
-  (rp.data||[]).filter(r=>schools.some(x=>x.stage===r.stage)).forEach(r=>groups.set(String(r.supervisor_id||'')+'|'+r.stage,{name:r.supervisor_name||'غير مسندة',stage:r.stage,schools:r.schools,classes:r.classes,perm:{size:r.perm_teachers},paid:{size:r.paid_teachers}}));
+  (rp.data||[]).filter(r=>schools.some(x=>x.stage===r.stage)).forEach(r=>groups.set(String(r.supervisor_id||'')+'|'+r.stage,{name:r.supervisor_name||'غير مسندة',stage:r.stage,schools:r.schools,classes:r.classes,perm:{size:r.perm_teachers},paid:{size:r.paid_teachers},schoolNames:schools.filter(x=>x.stage===r.stage).map(x=>String(x.name||'').trim())}));
  }
  const order=['ابتدائي','إعدادي','ثانوي عام','ثانوي صناعي'],rank=st=>{const i=order.indexOf(st);return i<0?9:i};
  const list=[...groups.values()].sort((a,b)=>rank(a.stage)-rank(b.stage)||b.schools-a.schools||a.name.localeCompare(b.name,'ar'));
- const rows=list.map((g,i)=>({index:i+1,name:reportCellValue(g.name),stage:reportCellValue(g.stage),_stage:g.stage,_stages:[g.stage],schools:g.schools,classes:g.classes,perm:g.perm.size,paid:g.paid.size,total:g.perm.size+g.paid.size,_search:g.name+' '+g.stage}));
+ const rows=list.map((g,i)=>({index:i+1,name:reportCellValue(g.name),stage:reportCellValue(g.stage),_stage:g.stage,_stages:[g.stage],schools:g.schools,classes:g.classes,perm:g.perm.size,paid:g.paid.size,total:g.perm.size+g.paid.size,_schools:g.schoolNames||[],_search:g.name+' '+g.stage}));
  const sum=k=>rows.reduce((n,r)=>n+r[k],0);
  return makeReportSchema({reportId:'prepSupervisorsCensus',title:'نصاب الموجه من المدارس والمعلمين',subtitle:'المعلمون من أصل مدارس الموجه (ثابت + بالأجر) وكل معلم مرة واحدة، والمدرسة ذات الفترتين مدرسة واحدة',period:ctx.period,
   summary:[reportMetric('عدد الموجهين',rows.length),reportMetric('عدد المدارس',sum('schools')),reportMetric('عدد الفصول الدراسية',sum('classes')),reportMetric('إجمالي المعلمين',sum('total'))],
@@ -9531,6 +9531,10 @@ rebuildFilteredReportMetrics=function(schema){
  schema.totals=[reportTotalsMetric('عدد الموجهين',names),reportTotalsMetric('عدد المدارس',sum('schools')),reportTotalsMetric('عدد الفصول الدراسية',sum('classes')),reportTotalsMetric('معلمون ثابتون',sum('perm')),reportTotalsMetric('معلمون بالأجر',sum('paid')),reportTotalsMetric('إجمالي المعلمين',sum('total'))];
  return schema;
 };
+
+/* v232: فلتر المرحلة يرسل أسماء مدارسها؛ صفوف التقرير تحمل مدارسها (_schools)، والمربعات تُعاد بعد الفلترة. */
+const __v232Rebuild=v103RebuildMetrics;
+v103RebuildMetrics=function(schema){return schema?.reportId==='prepSupervisorsCensus'&&schema.filterState?.active?rebuildFilteredReportMetrics(schema):__v232Rebuild(schema)};
 
 /* v207: الثانوي في الخطة الملخصة — الفصول الفعلية + حصص المواد */
 const V207_SUBJECTS=[['الكيمياء','chem','الكيمياء'],['الفيزياء','phys','الفيزياء'],['الأحياء','bio','الأحياء'],['علوم متكاملة','integ','علوم متكاملة']];
