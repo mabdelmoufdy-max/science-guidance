@@ -1,4 +1,6 @@
 <!doctype html>
+<!-- v237: شاشة «إدخال بيانات المدارس»: الإطار يملأ المساحة المتاحة تلقائيًا حتى شريط الأزرار السفلي (ويُعاد حسابه عند تغيير الحجم)، وعلى الهاتف بلا حواف وبلا سطر «فتح في نافذة مستقلة»؛ وزر «⛶» لملء الشاشة يغطي شريطي البرنامج أثناء الإدخال، و«✕» يُرجعهما. والبند في آخر القائمة الجانبية بعرض زرين وباسمه كاملًا. -->
+<!-- v236: شاشة «إدخال بيانات المدارس» داخل البرنامج لمدير النظام ومنسق المرحلة: تعرض الصفحة نفسها (/coordinator/) في إطار بوضع embed (بلا شريطها العلوي)، بنفس الحساب لأن البرنامج والصفحة على نطاق واحد. الصفحة في بوابة المعلمين ورابطها المباشر بلا تغيير. (v235 رقم قاعدة البيانات.) -->
 <!-- v234: نافذة «إضافة انتداب»: حقل «المدرسة المنتدب إليها» (نفسه) صار يعرض قائمة البرنامج تحته بدل قائمة المتصفح (datalist لا تظهر في كثير من الهواتف والتطبيق المثبّت): لمس الحقل يعرض كل المدارس المتاحة مجمّعة بالمرحلة، والكتابة تضيّقها ببحث v233 (ع/ث/ت أ، الهمزات، الكلمات بأي ترتيب)، ولمس المدرسة يختارها (✓). الحفظ والتحقق (v215PickDelegSchool) بلا تغيير. بلا تعديل قاعدة بيانات. -->
 <!-- v233: البحث الموحد — زر «🔍» في الشريط العلوي (أو Ctrl+K أو «/») لكل الأدوار عدا المعلم: مدارس ومعلمون وموجهون (تطبيع عربي واختصارات ع/ث/ت أ، الكلمات بأي ترتيب، الرقم القومي كاملًا أو آخر 4 أرقام ويُعرض مخفيًا ••••1234، الهاتف 01…)، الشاشات والتقارير بأسمائها، وكلمات الحالة (عجز/زيادة/إجازة/منتدب/بالأجر/مشرف/مكتمل/بلا موجه) مع المرحلة. المصدر بيانات التقارير المحمّلة أصلًا (نطاق الدور، v228) + هواتف المعلمين من teacher_records عند البحث بهاتف فقط؛ النتيجة تفتح الشاشات الموجودة؛ «رجوع» يغلق النافذة؛ آخر 6 مفتوحة في المتصفح. أزرار المعلم (تعديل/إضافة انتداب/إلغاء الانتداب/إيقاف معلم الأجر) من ثابت واحد TEACHER_ACTION_ROLES تقرأ منه شاشة المعلمين أيضًا (سلوكها بلا تغيير). بلا تعديل قاعدة بيانات. -->
 <!-- v232: تقرير «نصاب الموجه من المدارس والمعلمين» كان يظهر فارغًا (النتائج 0) عند اختيار أي مرحلة في «تقارير المرحلة»: الفلتر يرسل أسماء مدارس المرحلة وصفوف التقرير بلا أسماء مدارس. كل صف يحمل الآن مدارسه (الإعدادي/الابتدائي: مدارس الموجه في المرحلة؛ الثانوي: مدارس المرحلة)، والمربعات تُحسب بعد الفلترة. عرض فقط. -->
@@ -7,8 +9,6 @@
 <!-- v225: التنقل بين البرنامج والبوابات: زر «🔗» في الشريط العلوي يفتح قائمة: بوابة المعلمين، صفحة المنسق (لمن لحسابه دور مدير النظام أو منسق المرحلة)، صفحة الاعتماد (مدير النظام)، و«البرنامج من عنوان البوابة» عند الفتح من github.io. الروابط نسبية على نطاق البوابة (البرنامج يُفتح أيضًا من teachers-data-portal.vercel.app/app/ فيشارك صفحة المنسق تسجيل الدخول). -->
 <!-- v224: أدوات مدير النظام بدل طلبات SQL — «النصاب المخفض» في تعديل بيانات المعلم (admin_set_teacher_weekly_target؛ فارغ = نصاب الدرجة)، و«المعلمون الموقوفون» في شاشة المعلمين مع «إعادة تفعيل». -->
 <!-- v223: فصل «ثانوي عام» عن «ثانوي صناعي» مرحلتين مستقلتين (قاعدة البيانات v223 + الواجهة): قوائم المراحل والفلاتر والنماذج، الأنصبة (عمودان)، منهج كل مرحلة، حصر موجهي الثانوي حسب المرحلة (secondary_supervisor_census_by_stage)، والخطة الملخصة وتوزيع الموجهين للمرحلتين. -->
-<!-- v222: تنظيف بلا تغيير في السلوك — حُذفت 57 دالة/متغيرًا ميتًا (نسخ قديمة استُبدلت ولا يستدعيها شيء، ودوال بلا استدعاء)، و135 قاعدة CSS لـ63 صنفًا لا يظهر في أي شاشة، ونُقلت تعليقات الإصدارات الأقدم من v191 إلى CHANGELOG.md. تحقق: 233 لقطة (7 أدوار × كمبيوتر/هاتف × الشاشات والتقارير) متطابقة المحتوى وبصمة التنسيق. -->
-<!-- v221: الموجه الأول يرى «لوحة قرارات المرحلة» (لوحة المنسق v168: العجز والتغطية ومقترح الانتداب وحالة الموجهين وعدالة الكادر) أعلى «لوحة الإدارة» لكل المراحل باختيار المرحلة — عرض وتقارير فقط، بلا تعديل قاعدة بيانات. -->
 <html lang="ar" dir="rtl">
 <head>
 <!-- إعداد: أ/ محمود عبدالمفدي محمد أبوالنجا | الصفة: معلم -->
@@ -16,7 +16,7 @@
 <script>/* v226: العنوان الموحد — انظر التعليق أعلى الملف */(function(){try{if(/\.github\.io$/.test(location.hostname)&&/^\/science-guidance\/?(index\.html)?$/.test(location.pathname)&&!/[?&]stay\b/.test(location.search))location.replace('https://teachers-data-portal.vercel.app/app/'+location.hash)}catch(e){}})();</script>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#152c43">
-<title>نظام توجيه العلوم — v234</title>
+<title>نظام توجيه العلوم — v237</title>
 <link rel="manifest" href="./manifest.webmanifest">
 <link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png">
 <link rel="apple-touch-icon" href="./icon-192.png">
@@ -1923,6 +1923,20 @@ body.v233-lock{overflow:hidden}
 .v234-opt small{color:var(--muted);font-size:12px;white-space:nowrap}
 .v234-opt.on,.v234-opt:hover{background:#eef3fb}
 .v234-empty{padding:12px;color:var(--muted);font-size:13px}
+/* v236: إطار «إدخال بيانات المدارس» */
+.v236-wrap{display:flex;flex-direction:column;gap:6px}
+.v236-frame{width:100%;height:calc(100dvh - 150px);min-height:520px;border:1px solid var(--line,#dde3ee);border-radius:var(--radius,12px);background:#fff}
+.v236-note{font-size:12px;color:#64748b}
+/* v237 */
+.v236-wrap{position:relative}
+.v237-fs{position:absolute;bottom:14px;left:14px;z-index:5;width:42px;height:42px;border-radius:50%;border:0;background:rgba(15,33,77,.85);color:#fff;font-size:20px;line-height:42px;padding:0;box-shadow:0 2px 8px rgba(0,0,0,.25);cursor:pointer}
+.v236-wrap.v237-full{position:fixed;inset:0;z-index:2147483000;background:#fff;gap:0}
+.v236-wrap.v237-full .v236-frame{height:100dvh!important;min-height:0;border:0;border-radius:0}
+.v236-wrap.v237-full .v236-note{display:none}
+.v236-wrap.v237-full .v237-fs{bottom:calc(14px + env(safe-area-inset-bottom,0px))}
+html.v237-lock,html.v237-lock body{overflow:hidden}
+.sidebar .nav button[data-page="schoolEntry"]{grid-column:1/-1}
+@media (max-width:800px){.v236-note{display:none}.v236-frame{border:0;border-radius:0;min-height:380px}}
 </style>
 </head>
 <body>
@@ -2231,7 +2245,7 @@ function mobileNavShort(label){
  const exact={
   'لوحة النظام':'الرئيسية','لوحة الإدارة':'الرئيسية','لوحة منسق المرحلة':'الرئيسية','لوحة الموجه':'الرئيسية','لوحة المدرسة':'الرئيسية','لوحة مشرف المادة':'الرئيسية','بياناتي':'الرئيسية',
   'إضافة وإدارة المعلمين':'المعلمون','توزيع المعلمين على الفصول':'التوزيع','الإرسال للاعتماد':'الاعتماد','اعتماد البيانات':'الاعتماد','التقارير العامة':'التقارير','تقارير المرحلة':'التقارير','تقارير المدرسة':'التقارير','تقاريري':'التقارير',
-  'التنبيهات':'التنبيهات','الإحصائيات':'الإحصائيات','الميزانية المرجعية':'الميزانية','الخطط الدراسية':'الخطط','فحص شاشة الموجه':'فحص الموجه','الموجهون ومدارسهم':'التوزيع','توزيع المرحلة':'التوزيع','مدارسي ومعلميها':'المدارس','المدرسة والمعلمون':'الكادر','قسم العلوم':'القسم','مدارسي':'المدارس','مدرستي':'الزملاء','حصصي وفصولي':'حصصي'
+  'إدخال بيانات المدارس':'إدخال بيانات المدارس','التنبيهات':'التنبيهات','الإحصائيات':'الإحصائيات','الميزانية المرجعية':'الميزانية','الخطط الدراسية':'الخطط','فحص شاشة الموجه':'فحص الموجه','الموجهون ومدارسهم':'التوزيع','توزيع المرحلة':'التوزيع','مدارسي ومعلميها':'المدارس','المدرسة والمعلمون':'الكادر','قسم العلوم':'القسم','مدارسي':'المدارس','مدرستي':'الزملاء','حصصي وفصولي':'حصصي'
  };
  return exact[label]||String(label||'').replace(/^لوحة\s+/,'').replace(/^بيانات\s+/,'').slice(0,14);
 }
@@ -2353,7 +2367,7 @@ async function loadPage(force=false){
  if(currentPage==='studyPlans'||currentPage==='budget')currentPage='dashboard';
  if(currentPage==='reports'&&typeof V186_MERGED!=='undefined'&&V186_MERGED.has(profile?.role))currentPage='statistics'; // v186
  __pageLoadController?.abort();__pageLoadController=new AbortController();const local=__pageLoadController;
- const pages={teacherTimetable:teacherTimetablePage,dashboard:dashboardPage,users:usersPage,supervisors:supervisorsPage,schools:schoolsPage,incoming:incomingDataPage,teachers:teachersPage,classes:classesPage,assignments:assignmentsPage,approval:approvalPage,myAssignments:myAssignmentsPage,workload:workloadPage,budget:budgetPage,completion:dataCompletionPage,alerts:alertsPage,statistics:statisticsPage,reports:reportsPage,announcements:announcementsPage,supervisorHealth:supervisorHealthPage,supDistribution:supDistributionPage};
+ const pages={teacherTimetable:teacherTimetablePage,dashboard:dashboardPage,users:usersPage,supervisors:supervisorsPage,schools:schoolsPage,incoming:incomingDataPage,teachers:teachersPage,classes:classesPage,assignments:assignmentsPage,approval:approvalPage,myAssignments:myAssignmentsPage,workload:workloadPage,budget:budgetPage,completion:dataCompletionPage,alerts:alertsPage,statistics:statisticsPage,reports:reportsPage,announcements:announcementsPage,supervisorHealth:supervisorHealthPage,supDistribution:supDistributionPage,schoolEntry:v236SchoolEntryPage};
  const renderPage=pages[currentPage]||dashboardPage;
  const html=await v97RenderPage(renderPage,{force,signal:local.signal});if(local.signal.aborted)return;
  c.innerHTML=html;appNavRenderStrip();initializeCurrentPageUi(c);v97InstallStageFilter(c);enhanceMobileWorkspace(c);refreshMobileActionBar(c);if(currentPage==='dashboard')injectCompletionDashboardCards(c).catch(()=>{});
@@ -10163,6 +10177,33 @@ function v234InitDelegPicker(){
  });
  inp.addEventListener('blur',()=>setTimeout(()=>{if(document.activeElement!==inp)close()},150));
 }
+
+/* v236: «إدخال بيانات المدارس» داخل البرنامج — انظر التعليق أعلى الملف */
+const V236_ROLES=['admin','stage_coordinator'];
+const V236_URL=/\.vercel\.app$/.test(location.hostname)?'/coordinator/?embed=1':'https://mabdelmoufdy-max.github.io/science-guidance/trial/coordinator-entry/?embed=1';
+for(const role of V236_ROLES){
+ const items=NAV[role];if(!items||items.some(n=>n[0]==='schoolEntry'))continue;
+ items.push(['schoolEntry','إدخال بيانات المدارس','✎']); // v237: آخر القائمة
+}
+async function v236SchoolEntryPage(){
+ if(!V236_ROLES.includes(profile?.role))return '<div class="error">هذه الشاشة لمدير النظام ومنسق المرحلة فقط.</div>';
+ setTimeout(v237Fit,0);return `<div class="v236-wrap" id="v237Wrap"><button type="button" class="v237-fs" id="v237Fs" onclick="v237Toggle()" title="ملء الشاشة" aria-label="ملء الشاشة">⛶</button><iframe class="v236-frame" src="${V236_URL}" title="إدخال بيانات المدارس" loading="eager"></iframe><div class="v236-note">الشاشة نفسها متاحة أيضًا من بوابة المعلمين. <a href="${V236_URL.replace(/[?&]embed=1$/,'')}" target="_blank" rel="noopener">فتح في نافذة مستقلة ↗</a></div></div>`;
+}
+/* v237: ملء المساحة وملء الشاشة */
+function v237Fit(){
+ const w=document.getElementById('v237Wrap'),f=w&&w.querySelector('iframe');if(!f||w.classList.contains('v237-full'))return;
+ const top=f.getBoundingClientRect().top;const bar=document.getElementById('mobileActionBar');
+ let bottom=window.innerHeight;if(bar&&getComputedStyle(bar).display!=='none'){const r=bar.getBoundingClientRect();if(r.height&&r.top>top&&r.top<bottom)bottom=r.top}
+ const note=w.querySelector('.v236-note');const nh=note&&note.offsetParent!==null?note.offsetHeight+6:0;
+ f.style.height=Math.max(380,Math.floor(bottom-top-nh-8))+'px';
+}
+function v237Toggle(){
+ const w=document.getElementById('v237Wrap'),b=document.getElementById('v237Fs');if(!w)return;
+ const on=w.classList.toggle('v237-full');document.documentElement.classList.toggle('v237-lock',on);
+ if(b){b.textContent=on?'✕':'⛶';b.title=on?'إغلاق ملء الشاشة':'ملء الشاشة';b.setAttribute('aria-label',b.title)}
+ const f=w.querySelector('iframe');if(on){f.style.height=''}else v237Fit();
+}
+window.addEventListener('resize',()=>{clearTimeout(window.__v237T);window.__v237T=setTimeout(v237Fit,120)});
 </script>
 
 <div id="reportPreviewOverlay" class="report-preview-overlay" role="dialog" aria-modal="true" aria-label="معاينة التقرير" aria-hidden="true">
