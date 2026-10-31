@@ -1,5 +1,5 @@
 <!doctype html>
-<!-- v233: البحث الموحد — زر «🔍» في الشريط العلوي (أو Ctrl+K أو «/») لكل الأدوار عدا المعلم: مدارس ومعلمون وموجهون (تطبيع عربي واختصارات ع/ث/ت أ، الكلمات بأي ترتيب، الرقم القومي كاملًا أو آخر 4 أرقام ويُعرض مخفيًا ••••1234، الهاتف 01…)، الشاشات والتقارير بأسمائها، وكلمات الحالة (عجز/زيادة/إجازة/منتدب/بالأجر/مشرف/مكتمل/بلا موجه) مع المرحلة. المصدر بيانات التقارير المحمّلة أصلًا (نطاق الدور، v228) + هواتف المعلمين من teacher_records عند البحث بهاتف فقط؛ النتيجة تفتح الشاشات الموجودة؛ «رجوع» يغلق النافذة؛ آخر 6 مفتوحة في المتصفح. بلا تعديل قاعدة بيانات. -->
+<!-- v233: البحث الموحد — زر «🔍» في الشريط العلوي (أو Ctrl+K أو «/») لكل الأدوار عدا المعلم: مدارس ومعلمون وموجهون (تطبيع عربي واختصارات ع/ث/ت أ، الكلمات بأي ترتيب، الرقم القومي كاملًا أو آخر 4 أرقام ويُعرض مخفيًا ••••1234، الهاتف 01…)، الشاشات والتقارير بأسمائها، وكلمات الحالة (عجز/زيادة/إجازة/منتدب/بالأجر/مشرف/مكتمل/بلا موجه) مع المرحلة. المصدر بيانات التقارير المحمّلة أصلًا (نطاق الدور، v228) + هواتف المعلمين من teacher_records عند البحث بهاتف فقط؛ النتيجة تفتح الشاشات الموجودة؛ «رجوع» يغلق النافذة؛ آخر 6 مفتوحة في المتصفح. أزرار المعلم (تعديل/إضافة انتداب/إلغاء الانتداب/إيقاف معلم الأجر) من ثابت واحد TEACHER_ACTION_ROLES تقرأ منه شاشة المعلمين أيضًا (سلوكها بلا تغيير). بلا تعديل قاعدة بيانات. -->
 <!-- v232: تقرير «نصاب الموجه من المدارس والمعلمين» كان يظهر فارغًا (النتائج 0) عند اختيار أي مرحلة في «تقارير المرحلة»: الفلتر يرسل أسماء مدارس المرحلة وصفوف التقرير بلا أسماء مدارس. كل صف يحمل الآن مدارسه (الإعدادي/الابتدائي: مدارس الموجه في المرحلة؛ الثانوي: مدارس المرحلة)، والمربعات تُحسب بعد الفلترة. عرض فقط. -->
 <!-- v230: فتح فوري — service-worker.js يعرض صفحة البرنامج من نسخة محفوظة على الجهاز ويحدّثها في الخلفية؛ وبعد التحميل (وعند العودة للتبويب) يقارن البرنامج رقم إصداره بالمنشور (`v230CheckUpdate`، من عنوان الصفحة) فيُظهر شريط «نسخة جديدة — تحديث الآن» ويضع النسخة الجديدة في الذاكرة قبل إعادة التحميل. البيانات من الشبكة دائمًا. (v227–v229 أرقام قاعدة البيانات.) -->
 <!-- v226: العنوان الموحد — فتح البرنامج المنشور من github.io (الجذر أو index.html) ينقل تلقائيًا إلى teachers-data-portal.vercel.app/app/ فيصير للجميع عنوان واحد وحساب واحد مع «إدخال بيانات المدارس» (الاسم الجديد لصفحة المنسق). نسخ trial/ لا تُنقل، و?stay يُبقي الصفحة على github.io عند الحاجة. -->
@@ -2252,7 +2252,7 @@ window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();window.v152
 window.addEventListener('appinstalled',()=>{window.v152InstallPrompt=null;v152SyncInstallBtn()});
 if('serviceWorker' in navigator&&location.protocol!=='file:')window.addEventListener('load',()=>navigator.serviceWorker.register('./service-worker.js').catch(()=>{}));
 const V145_NEWS=[
- ['v233','زر «🔍» أعلى الشاشة (أو Ctrl+K): ابحث عن مدرسة أو معلم أو موجه بالاسم أو الرقم القومي أو الهاتف، أو اكتب «عجز» أو «إجازة» أو «بلا موجه»، أو اسم شاشة أو تقرير لفتحه مباشرة.'],
+ ['v233','زر «🔍» أعلى الشاشة (أو Ctrl+K): ابحث عن مدرسة أو معلم أو موجه بالاسم أو الرقم القومي أو الهاتف، أو اكتب «عجز» أو «إجازة» أو «بلا موجه»، أو اسم شاشة أو تقرير لفتحه مباشرة. ومن نتيجة المعلم: تعديل، إضافة انتداب، إلغاء الانتداب، إيقاف معلم الأجر — بصلاحيات دورك نفسها في شاشة المعلمين.'],
  ['v230','البرنامج المثبّت يفتح فورًا من نسخة محفوظة على الهاتف، وعند نشر إصدار جديد يظهر شريط «نسخة جديدة — تحديث الآن».'],
  ['v226','عنوان واحد للبرنامج: teachers-data-portal.vercel.app/app/ (الرابط القديم ينقلك إليه تلقائيًا؛ ادخل مرة واحدة). وصار اسم صفحة المنسق «إدخال بيانات المدارس».'],
  ['v225','زر «🔗» أعلى الشاشة للتنقل بضغطة إلى بوابة المعلمين وصفحة المنسق وصفحة الاعتماد. افتح البرنامج من teachers-data-portal.vercel.app/app/ لتدخل مرة واحدة للبرنامج وصفحة المنسق معًا.'],
@@ -2785,6 +2785,8 @@ function v130TotalCell(t){
  return `<b>${bd.total}</b><div class="cell-sub v132-split">هنا ${bd.here} + ${esc(bd.otherName)} ${bd.other}${bd.sup?` + إشراف ${bd.sup}`:''}</div>`;
 }
 
+/* v233: أدوار أزرار المعلم — مصدر واحد لشاشة المعلمين والبحث الموحد (مشرف المادة: معلمو مدرسته فقط في الاثنين) */
+const TEACHER_ACTION_ROLES={edit:['admin','stage_coordinator','supervisor','senior_teacher'],delegate:['admin','stage_coordinator','supervisor','senior_teacher'],cancelDelegation:['admin','stage_coordinator'],stopPaid:['admin','stage_coordinator']};
 async function teachersPage({force=false}={}){
  let scopeSchool=null;
  const schoolScopedRole=['senior_teacher','school_manager','supervisor'].includes(profile.role);
@@ -2804,7 +2806,7 @@ async function teachersPage({force=false}={}){
  },{ttl:30000,force});
  if(error)return `<div class="error">${esc(error.message)}</div>`;
  const teachers=(Array.isArray(teachersRaw)?teachersRaw:[]).filter(t=>v97StageMatches(v97TeacherStage(t,t._v142School||scopeSchool))&&v98SchoolMatches(scopeSchool?.id||v91ScopeSchoolId(t)));
- const canAdd=['supervisor','senior_teacher'].includes(profile.role),canEdit=['admin','stage_coordinator','supervisor','senior_teacher'].includes(profile.role),canDelegate=['admin','stage_coordinator','supervisor','senior_teacher'].includes(profile.role);
+ const canAdd=['supervisor','senior_teacher'].includes(profile.role),canEdit=TEACHER_ACTION_ROLES.edit.includes(profile.role),canDelegate=TEACHER_ACTION_ROLES.delegate.includes(profile.role);
  const scopeNotice=allSchools?`<div class="notice info"><b>نطاق العرض: كل مدارسي (${allSchools.length})</b> — يظهر معلمو كل مدرسة والمنتدبون إليها، والمنتدب جزئيًا يظهر في المدرستين.</div>`:schoolScopedRole?(scopeSchool?`<div class="notice info"><b>نطاق العرض: ${esc(scopeSchool.name)}</b> — يظهر معلمو المدرسة والمنتدبون إليها فقط، وتطبق قاعدة الإشراف بحسب مدرسة العمل الحالية.</div>`:`<div class="notice warn">لا توجد مدرسة مرتبطة بالحساب.</div>`):'';
  const relationLabel=t=>{
    if(!schoolScopedRole){const relation=v91SchoolRelationText(t);return `${esc(t.scope_school_name||t.home_school_name||'—')}${relation?`<div class="cell-sub">${esc(relation)}</div>`:''}`;}
@@ -2820,8 +2822,8 @@ async function teachersPage({force=false}={}){
    const editBtn=ownTeacher?`<button class="btn secondary" onclick="editTeacherForm('${t.teacher_id}')">تعديل</button>`:'';
    const delegateBtn=canDelegate&&ownTeacher?`<button class="btn primary" title="فتح نموذج إضافة انتداب للمعلم" onclick="openTeacherDelegationForm('${t.teacher_id}')">إضافة انتداب</button>`:'';
    const delegatedBadge=!ownTeacher?`<span class="badge info">منتدب للمدرسة</span>`:'';
-   const cancelDelegBtn=['admin','stage_coordinator'].includes(profile.role)&&String(t.school_relation||'').startsWith('delegated_')?`<button class="btn secondary" title="إنهاء الانتداب النشط وإعادة ربط المعلم بمدرسته الأصلية" onclick="adminCancelDelegationForm('${t.teacher_id}')">إلغاء الانتداب</button>`:'';
-   const stopPaidBtn=['admin','stage_coordinator'].includes(profile.role)&&ownTeacher&&isPaidTeacher(t)?`<button class="btn danger" title="إيقاف معلم الأجر (لا يُحذف سجله)" onclick="v205StopPaidTeacher('${t.teacher_id}')">إيقاف معلم الأجر</button>`:''; // v205
+   const cancelDelegBtn=TEACHER_ACTION_ROLES.cancelDelegation.includes(profile.role)&&String(t.school_relation||'').startsWith('delegated_')?`<button class="btn secondary" title="إنهاء الانتداب النشط وإعادة ربط المعلم بمدرسته الأصلية" onclick="adminCancelDelegationForm('${t.teacher_id}')">إلغاء الانتداب</button>`:'';
+   const stopPaidBtn=TEACHER_ACTION_ROLES.stopPaid.includes(profile.role)&&ownTeacher&&isPaidTeacher(t)?`<button class="btn danger" title="إيقاف معلم الأجر (لا يُحذف سجله)" onclick="v205StopPaidTeacher('${t.teacher_id}')">إيقاف معلم الأجر</button>`:''; // v205
    return `<td><div class="actions" style="gap:5px;flex-wrap:wrap">${editBtn}${delegateBtn}${cancelDelegBtn}${stopPaidBtn}${delegatedBadge}</div></td>`;
  };
  let specMap=new Map();
@@ -9803,7 +9805,12 @@ function v233PhoneDigits(p){let d=v233Digits(p).replace(/\D/g,'');if(d.startsWit
 function v233Wa(p){const d=v233PhoneDigits(p);return d.length===11&&d.startsWith('01')?'https://wa.me/2'+d:''}
 function v233Num(v){const n=Number(v);return Number.isFinite(n)?n:0}
 function v233IsSec(stage){return String(stage||'').startsWith('ثانوي')}
-function v233CanEditTeacher(){return ['admin','stage_coordinator','supervisor','school_manager','senior_teacher'].includes(profile?.role)}
+/* أزرار المعلم في البحث بشروط شاشة المعلمين نفسها (TEACHER_ACTION_ROLES)؛ «معلمه» لمشرف المادة = مدرسته الأصلية ضمن نطاقه */
+function v233TeacherPerms(it){
+ const r=profile?.role,own=r!=='senior_teacher'||(!!it.schoolId&&!!v233Index?.schools.some(s=>s.id===it.schoolId));
+ return {edit:TEACHER_ACTION_ROLES.edit.includes(r)&&own,delegate:TEACHER_ACTION_ROLES.delegate.includes(r)&&own,
+  cancel:TEACHER_ACTION_ROLES.cancelDelegation.includes(r)&&it.rel.some(x=>x.k.startsWith('delegated_')),stop:TEACHER_ACTION_ROLES.stopPaid.includes(r)&&own&&it.paid};
+}
 
 /* ---------- بناء الفهرس ---------- */
 async function v233BuildIndex(){
@@ -9934,7 +9941,7 @@ function v233Sub(it){
 function v233Acts(it,i){
  const b=(a,t)=>`<button type="button" class="v233-act" onclick="event.stopPropagation();v233Do(${i},'${a}')">${t}</button>`;
  if(it.type==='school')return b('teachers','معلموها')+(it.supId&&v233Index?.sups.some(s=>s.id===it.supId)?b('sup','موجهها'):'');
- if(it.type==='teacher')return (v233CanEditTeacher()?b('edit','تعديل'):'')+(appNavAllowed('teacherTimetable')&&it.schoolId?b('table','جدوله'):'')+(it.schoolId&&v233Index?.schools.some(s=>s.id===it.schoolId)?b('school','مدرسته'):'');
+ if(it.type==='teacher'){const P=v233TeacherPerms(it);return (P.edit?b('edit','تعديل'):'')+(P.delegate?b('deleg','إضافة انتداب'):'')+(P.cancel?b('cancel','إلغاء الانتداب'):'')+(P.stop?b('stop','إيقاف معلم الأجر'):'')+(appNavAllowed('teacherTimetable')&&it.schoolId?b('table','جدوله'):'')+(it.schoolId&&v233Index?.schools.some(s=>s.id===it.schoolId)?b('school','مدرسته'):'')}
  if(it.type==='sup'){const w=v233Wa(it.phone),d=v233PhoneDigits(it.phone);return b('schools','مدارسه')+(d?`<a class="v233-act" href="tel:${esc(d)}" onclick="event.stopPropagation()">اتصال</a>`:'')+(w?`<a class="v233-act" href="${esc(w)}" target="_blank" rel="noopener" onclick="event.stopPropagation()">واتساب</a>`:'')}
  return '';
 }
@@ -10003,7 +10010,12 @@ function v233Do(i,action=''){
   return v233OpenPage('schools',{schoolId:it.id,stage:it.stage});
  }
  if(it.type==='teacher'){
-  if(action==='edit')return editTeacherForm(it.id);
+  const P=v233TeacherPerms(it);
+  if(['edit','deleg','cancel','stop'].includes(action))v233IndexAt=0; // بعد أي تعديل يُحدَّث الفهرس عند الفتح التالي
+  if(action==='edit'&&P.edit)return editTeacherForm(it.id);
+  if(action==='deleg'&&P.delegate)return openTeacherDelegationForm(it.id);
+  if(action==='cancel'&&P.cancel)return adminCancelDelegationForm(it.id);
+  if(action==='stop'&&P.stop)return v205StopPaidTeacher(it.id);
   if(action==='school'){const s=v233Index?.schools.find(x=>x.id===it.schoolId);return v233OpenPage('schools',{schoolId:it.schoolId,stage:s?.stage||it.stage})}
   if(action==='table'){if(typeof v166Stage!=='undefined')v166Stage='';v101SchoolId=it.schoolId;v101TeacherId=it.id;return go('teacherTimetable')}
   return v233OpenPage('teachers',{search:[it.civil,it.name].filter(Boolean)});
