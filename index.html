@@ -1,4 +1,5 @@
 <!doctype html>
+<!-- v233: البحث الموحد — زر «🔍» في الشريط العلوي (أو Ctrl+K أو «/») لكل الأدوار عدا المعلم: مدارس ومعلمون وموجهون (تطبيع عربي واختصارات ع/ث/ت أ، الكلمات بأي ترتيب، الرقم القومي كاملًا أو آخر 4 أرقام ويُعرض مخفيًا ••••1234، الهاتف 01…)، الشاشات والتقارير بأسمائها، وكلمات الحالة (عجز/زيادة/إجازة/منتدب/بالأجر/مشرف/مكتمل/بلا موجه) مع المرحلة. المصدر بيانات التقارير المحمّلة أصلًا (نطاق الدور، v228) + هواتف المعلمين من teacher_records عند البحث بهاتف فقط؛ النتيجة تفتح الشاشات الموجودة؛ «رجوع» يغلق النافذة؛ آخر 6 مفتوحة في المتصفح. بلا تعديل قاعدة بيانات. -->
 <!-- v232: تقرير «نصاب الموجه من المدارس والمعلمين» كان يظهر فارغًا (النتائج 0) عند اختيار أي مرحلة في «تقارير المرحلة»: الفلتر يرسل أسماء مدارس المرحلة وصفوف التقرير بلا أسماء مدارس. كل صف يحمل الآن مدارسه (الإعدادي/الابتدائي: مدارس الموجه في المرحلة؛ الثانوي: مدارس المرحلة)، والمربعات تُحسب بعد الفلترة. عرض فقط. -->
 <!-- v230: فتح فوري — service-worker.js يعرض صفحة البرنامج من نسخة محفوظة على الجهاز ويحدّثها في الخلفية؛ وبعد التحميل (وعند العودة للتبويب) يقارن البرنامج رقم إصداره بالمنشور (`v230CheckUpdate`، من عنوان الصفحة) فيُظهر شريط «نسخة جديدة — تحديث الآن» ويضع النسخة الجديدة في الذاكرة قبل إعادة التحميل. البيانات من الشبكة دائمًا. (v227–v229 أرقام قاعدة البيانات.) -->
 <!-- v226: العنوان الموحد — فتح البرنامج المنشور من github.io (الجذر أو index.html) ينقل تلقائيًا إلى teachers-data-portal.vercel.app/app/ فيصير للجميع عنوان واحد وحساب واحد مع «إدخال بيانات المدارس» (الاسم الجديد لصفحة المنسق). نسخ trial/ لا تُنقل، و?stay يُبقي الصفحة على github.io عند الحاجة. -->
@@ -8,7 +9,6 @@
 <!-- v222: تنظيف بلا تغيير في السلوك — حُذفت 57 دالة/متغيرًا ميتًا (نسخ قديمة استُبدلت ولا يستدعيها شيء، ودوال بلا استدعاء)، و135 قاعدة CSS لـ63 صنفًا لا يظهر في أي شاشة، ونُقلت تعليقات الإصدارات الأقدم من v191 إلى CHANGELOG.md. تحقق: 233 لقطة (7 أدوار × كمبيوتر/هاتف × الشاشات والتقارير) متطابقة المحتوى وبصمة التنسيق. -->
 <!-- v221: الموجه الأول يرى «لوحة قرارات المرحلة» (لوحة المنسق v168: العجز والتغطية ومقترح الانتداب وحالة الموجهين وعدالة الكادر) أعلى «لوحة الإدارة» لكل المراحل باختيار المرحلة — عرض وتقارير فقط، بلا تعديل قاعدة بيانات. -->
 <!-- v220: الموجه الأول عرض وتقارير فقط — سُحبت منه أزرار التعديل والإضافة والانتداب والإسناد وتوزيع العجز بالأجر وإعلان جديد وشاشة استكمال البيانات؛ الإعلانات للقراءة. الاعتماد والحسابات لمدير النظام. واجهة فقط، وقاعدة البيانات ودالتا الحافة ضُيّقت (المرحلة 3). نافذة الإجازات للموجه الأول عرض وطباعة فقط. -->
-<!-- v219: حصر الثانوي في تقرير «نصاب الموجه…» عبر دالة القاعدة secondary_supervisor_census (قراءة فقط) ليعمل لمنسق الإعدادي أيضًا -->
 <html lang="ar" dir="rtl">
 <head>
 <!-- إعداد: أ/ محمود عبدالمفدي محمد أبوالنجا | الصفة: معلم -->
@@ -16,7 +16,7 @@
 <script>/* v226: العنوان الموحد — انظر التعليق أعلى الملف */(function(){try{if(/\.github\.io$/.test(location.hostname)&&/^\/science-guidance\/?(index\.html)?$/.test(location.pathname)&&!/[?&]stay\b/.test(location.search))location.replace('https://teachers-data-portal.vercel.app/app/'+location.hash)}catch(e){}})();</script>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#152c43">
-<title>نظام توجيه العلوم — v232</title>
+<title>نظام توجيه العلوم — v233</title>
 <link rel="manifest" href="./manifest.webmanifest">
 <link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png">
 <link rel="apple-touch-icon" href="./icon-192.png">
@@ -1874,6 +1874,42 @@ td .btn,.report-preview-toolbar .btn{min-height:var(--ctl-h-sm);padding:4px 10px
 .v230-update{position:fixed;z-index:1300;left:50%;transform:translateX(-50%);bottom:calc(16px + env(safe-area-inset-bottom));display:flex;align-items:center;gap:10px;flex-wrap:wrap;justify-content:center;max-width:calc(100vw - 24px);background:#0f214d;color:#fff;border-radius:12px;padding:10px 14px;box-shadow:0 10px 30px rgba(0,0,0,.25);font-size:14px}
 .v230-update .btn.ghost{color:#fff;border-color:rgba(255,255,255,.45);background:transparent}
 @media(max-width:800px){.v230-update{bottom:calc(84px + env(safe-area-inset-bottom))}}
+/* v233: البحث الموحد */
+.v233-search-btn{font-size:16px}
+body.v233-lock{overflow:hidden}
+.v233-ov{position:fixed;inset:0;z-index:1300;background:rgba(15,33,77,.45);display:flex;justify-content:center;align-items:flex-start;padding:8vh 16px 16px}
+.v233-panel{width:min(720px,100%);max-height:80vh;display:flex;flex-direction:column;background:var(--card,#fff);border:1px solid var(--line);border-radius:var(--radius-lg,12px);box-shadow:0 20px 50px rgba(15,33,77,.3);overflow:hidden}
+.v233-bar{display:flex;align-items:center;gap:8px;padding:8px 12px;border-bottom:1px solid var(--line-soft)}
+#v233Input{flex:1;min-width:0;width:auto;height:var(--ctl-h);border:0!important;box-shadow:none!important;outline:0;background:transparent;font-size:16px;color:var(--ink);padding:0}
+.v233-x{flex:0 0 auto;width:36px;height:36px;border:0;background:transparent;font-size:24px;line-height:1;cursor:pointer;color:var(--muted)}
+.v233-res{flex:1;overflow:auto;padding:6px;overscroll-behavior:contain}
+.v233-gh{padding:10px 8px 4px;font-size:12px;font-weight:800;color:var(--muted)}
+.v233-gh small{font-weight:400;margin-inline-start:4px}
+.v233-item{display:flex;align-items:center;flex-wrap:wrap;gap:6px 10px;padding:8px 10px;border-radius:9px;cursor:pointer}
+.v233-item.on{background:#eef3fb;box-shadow:inset 0 0 0 1px #c9d7ee}
+.v233-ic{flex:0 0 26px;font-size:18px;text-align:center}
+.v233-main{flex:1 1 220px;min-width:0;display:flex;flex-direction:column;gap:2px}
+.v233-main b{font-size:14px;color:var(--ink);overflow-wrap:anywhere}
+.v233-main small{font-size:12px;color:var(--muted);overflow-wrap:anywhere}
+.v233-b{padding:2px 8px;border-radius:999px;font-size:11.5px;font-weight:700;white-space:nowrap}
+.v233-b.bad{background:#fde8e8;color:#9b1c1c}.v233-b.ok{background:#e6f4ea;color:#1e6b3a}.v233-b.warn{background:#fff4dc;color:#8a5a00}.v233-b.mute{background:#eef1f5;color:#4b5b6e}
+.v233-acts{display:flex;flex-wrap:wrap;gap:6px}
+.v233-acts:empty{display:none}
+.v233-act{padding:4px 10px;border:1px solid var(--line);border-radius:8px;background:#fff;color:var(--primary);font:inherit;font-size:12px;cursor:pointer;text-decoration:none;white-space:nowrap}
+.v233-act:hover,.v233-act:focus-visible{border-color:var(--primary)}
+.v233-more{display:block;margin:2px 8px 6px;padding:4px 0;border:0;background:transparent;color:var(--primary);font:inherit;font-size:13px;font-weight:700;cursor:pointer}
+.v233-empty{padding:14px 10px;font-size:13px;color:var(--muted)}
+.v233-tips{padding:12px 10px;font-size:12.5px;line-height:1.9;color:var(--muted)}
+.v233-tips b{color:var(--ink)}
+.v233-foot{display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;padding:8px 12px;border-top:1px solid var(--line-soft);font-size:11.5px;color:var(--muted)}
+.v233-foot kbd{display:inline-block;min-width:18px;margin:0 2px;padding:0 4px;border:1px solid var(--line);border-radius:4px;background:#f7f9fb;font:inherit;font-size:11px;text-align:center}
+@media (max-width:800px){
+ .v233-ov{padding:0}
+ .v233-panel{width:100%;height:100%;height:100dvh;max-height:none;border:0;border-radius:0}
+ .v233-foot span:first-child{display:none}
+ .v233-acts{width:100%;padding-inline-start:36px}
+ .v233-act{padding:7px 12px;font-size:13px}
+}
 </style>
 </head>
 <body>
@@ -2216,6 +2252,7 @@ window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();window.v152
 window.addEventListener('appinstalled',()=>{window.v152InstallPrompt=null;v152SyncInstallBtn()});
 if('serviceWorker' in navigator&&location.protocol!=='file:')window.addEventListener('load',()=>navigator.serviceWorker.register('./service-worker.js').catch(()=>{}));
 const V145_NEWS=[
+ ['v233','زر «🔍» أعلى الشاشة (أو Ctrl+K): ابحث عن مدرسة أو معلم أو موجه بالاسم أو الرقم القومي أو الهاتف، أو اكتب «عجز» أو «إجازة» أو «بلا موجه»، أو اسم شاشة أو تقرير لفتحه مباشرة.'],
  ['v230','البرنامج المثبّت يفتح فورًا من نسخة محفوظة على الهاتف، وعند نشر إصدار جديد يظهر شريط «نسخة جديدة — تحديث الآن».'],
  ['v226','عنوان واحد للبرنامج: teachers-data-portal.vercel.app/app/ (الرابط القديم ينقلك إليه تلقائيًا؛ ادخل مرة واحدة). وصار اسم صفحة المنسق «إدخال بيانات المدارس».'],
  ['v225','زر «🔗» أعلى الشاشة للتنقل بضغطة إلى بوابة المعلمين وصفحة المنسق وصفحة الاعتماد. افتح البرنامج من teachers-data-portal.vercel.app/app/ لتدخل مرة واحدة للبرنامج وصفحة المنسق معًا.'],
@@ -2290,7 +2327,7 @@ function renderShell(){
  const nav=NAV[profile.role]||NAV.teacher;if(!nav.some(x=>x[0]===currentPage))currentPage='dashboard';
  appNavApplyInitial();
  const switchBtn=userRoles.length>1?`<button class="text-btn role-switch-side" onclick="switchRole()">⇄ تبديل الدور</button>`:'';
- app.innerHTML=`<div class="app-shell"><aside id="appSidebar" aria-label="القائمة الرئيسية" class="sidebar ${sidebarOpen?'open':''}"><button class="v111-sidebar-close" type="button" onclick="v111CloseSidebar(true)">× إغلاق القائمة</button><div class="side-logo"><img class="mini side-brand-logo" src="${BRAND_LOGO_SRC}" width="40" height="40" alt="شعار توجيه العلوم"><div><strong>${profile.role==='senior_teacher'?(profile.school_name||'مدرستي'):'توجيه العلوم'}</strong><small>${esc(activeYear?.label||'')} • ${esc(activeTerm?.name||'')}</small></div></div><div class="nav">${nav.map(n=>`<button class="${currentPage===n[0]?'active':''}" data-page="${n[0]}" onclick="go('${n[0]}')"><span class="nav-icon">${n[2]}</span><span class="nav-label" data-short="${esc(mobileNavShort(n[1]))}">${n[1]}</span></button>`).join('')}</div><div class="side-footer"><div class="side-user"><strong>${esc(profile.full_name)}</strong><br>${esc(ROLE_LABELS[profile.role])}<br>${switchBtn}<br><button class="text-btn side-logout" onclick="logout()">تسجيل الخروج</button></div></div></aside><button class="v111-sidebar-backdrop no-print" type="button" tabindex="-1" aria-label="إغلاق القائمة" onclick="v111CloseSidebar(true)"></button><main class="main"><header class="topbar"><div class="topbar-right"><button class="icon-btn mobile-menu" onclick="toggleSidebar()">☰</button><div class="userchip"><span class="top-avatar"></span><div class="top-title"><strong>${esc(ROLE_LABELS[profile.role])}</strong><small>${esc(profile.full_name)}</small></div></div>${userRoles.length>1?`<button class="btn secondary role-switch-top" onclick="switchRole()">⇄ تبديل الدور</button>`:''}<button class="alert-bell v152-install-btn" type="button" onclick="v152Install()" title="تثبيت التطبيق" aria-label="تثبيت التطبيق" ${window.v152InstallPrompt?'':'hidden'}>⬇</button><button class="alert-bell v225-portals-btn" type="button" onclick="v225ToggleMenu(event)" title="التنقل بين البرنامج والبوابات" aria-label="التنقل بين البرنامج والبوابات" aria-haspopup="menu">🔗</button><button class="alert-bell v145-help-btn" type="button" onclick="v145OpenHelp()" title="المساعدة وما الجديد" aria-label="المساعدة وما الجديد">؟</button>${profile.role!=='teacher'?`<button class="alert-bell" type="button" onclick="go('alerts')" title="مركز التنبيهات" aria-label="مركز التنبيهات">🔔<span id="alertBellCount" class="alert-bell-count"></span></button>`:''}</div><div class="topbar-context">${esc(activeYear?.label||'')} - ${esc(activeTerm?.name||'')}</div></header><div id="appNavTrail" class="app-nav-strip no-print"></div><section id="content" class="content"><div class="card">جاري تحميل البيانات...</div></section></main><nav id="mobileActionBar" class="mobile-action-bar no-print" aria-label="الإجراءات السريعة"></nav></div>`;
+ app.innerHTML=`<div class="app-shell"><aside id="appSidebar" aria-label="القائمة الرئيسية" class="sidebar ${sidebarOpen?'open':''}"><button class="v111-sidebar-close" type="button" onclick="v111CloseSidebar(true)">× إغلاق القائمة</button><div class="side-logo"><img class="mini side-brand-logo" src="${BRAND_LOGO_SRC}" width="40" height="40" alt="شعار توجيه العلوم"><div><strong>${profile.role==='senior_teacher'?(profile.school_name||'مدرستي'):'توجيه العلوم'}</strong><small>${esc(activeYear?.label||'')} • ${esc(activeTerm?.name||'')}</small></div></div><div class="nav">${nav.map(n=>`<button class="${currentPage===n[0]?'active':''}" data-page="${n[0]}" onclick="go('${n[0]}')"><span class="nav-icon">${n[2]}</span><span class="nav-label" data-short="${esc(mobileNavShort(n[1]))}">${n[1]}</span></button>`).join('')}</div><div class="side-footer"><div class="side-user"><strong>${esc(profile.full_name)}</strong><br>${esc(ROLE_LABELS[profile.role])}<br>${switchBtn}<br><button class="text-btn side-logout" onclick="logout()">تسجيل الخروج</button></div></div></aside><button class="v111-sidebar-backdrop no-print" type="button" tabindex="-1" aria-label="إغلاق القائمة" onclick="v111CloseSidebar(true)"></button><main class="main"><header class="topbar"><div class="topbar-right"><button class="icon-btn mobile-menu" onclick="toggleSidebar()">☰</button><div class="userchip"><span class="top-avatar"></span><div class="top-title"><strong>${esc(ROLE_LABELS[profile.role])}</strong><small>${esc(profile.full_name)}</small></div></div>${userRoles.length>1?`<button class="btn secondary role-switch-top" onclick="switchRole()">⇄ تبديل الدور</button>`:''}<button class="alert-bell v152-install-btn" type="button" onclick="v152Install()" title="تثبيت التطبيق" aria-label="تثبيت التطبيق" ${window.v152InstallPrompt?'':'hidden'}>⬇</button>${profile.role!=='teacher'?`<button class="alert-bell v233-search-btn" type="button" onclick="v233Open()" title="بحث (Ctrl+K)" aria-label="بحث: مدرسة، معلم، موجه">🔍</button>`:''}<button class="alert-bell v225-portals-btn" type="button" onclick="v225ToggleMenu(event)" title="التنقل بين البرنامج والبوابات" aria-label="التنقل بين البرنامج والبوابات" aria-haspopup="menu">🔗</button><button class="alert-bell v145-help-btn" type="button" onclick="v145OpenHelp()" title="المساعدة وما الجديد" aria-label="المساعدة وما الجديد">؟</button>${profile.role!=='teacher'?`<button class="alert-bell" type="button" onclick="go('alerts')" title="مركز التنبيهات" aria-label="مركز التنبيهات">🔔<span id="alertBellCount" class="alert-bell-count"></span></button>`:''}</div><div class="topbar-context">${esc(activeYear?.label||'')} - ${esc(activeTerm?.name||'')}</div></header><div id="appNavTrail" class="app-nav-strip no-print"></div><section id="content" class="content"><div class="card">جاري تحميل البيانات...</div></section></main><nav id="mobileActionBar" class="mobile-action-bar no-print" aria-label="الإجراءات السريعة"></nav></div>`;
  v111SyncSidebar();
  appNavRenderStrip();
  loadPage().catch(moneySafeError);
@@ -9721,6 +9758,347 @@ async function v230CheckUpdate(){
 }
 window.addEventListener('load',()=>setTimeout(v230CheckUpdate,2500));
 document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')v230CheckUpdate()});
+/* v233: البحث الموحد (🔍 أو Ctrl+K أو «/») — مدارس، معلمون، موجهون، شاشات، تقارير، وكلمات الحالة.
+   المصدر: بيانات التقارير المحمّلة أصلًا (محصورة بنطاق الدور) فلا صلاحيات جديدة؛ الهاتف للمعلمين يُقرأ مرة واحدة عند البحث برقم هاتف.
+   لإضافة نوع جديد: أضف مصدرًا في V233_SOURCES. */
+const V233_ABBR={'ع':'اعدادي','ث':'ثانوي','ت':'تعليم','س':'اساسي','ا':'اساسي'};
+const V233_STAGE_WORDS=Object.fromEntries([['ابتدائي','ابتدائي'],['إعدادي','إعدادي'],['ثانوي','ثانوي'],['عام','ثانوي عام'],['صناعي','ثانوي صناعي']].map(([k,v])=>[v233Tokens(k)[0],v]));
+const V233_KEYWORDS=[
+ {k:'عجز',label:'بها عجز'},{k:'زياد',label:'بها زيادة'},{k:'اجاز',label:'في إجازة'},{k:'منتدب',label:'منتدبون'},{k:'انتداب',label:'منتدبون',as:'منتدب'},
+ {k:'بالاجر',label:'بالأجر',as:'اجر'},{k:'اجر',label:'بالأجر'},{k:'مشرف',label:'مشرفو المادة'},{k:'مكتمل',label:'مكتمل النصاب'}
+];
+const V233_NONE_WORDS=['بلا','بدون','غير'];
+let v233State={open:false,q:'',items:[],active:0,expanded:'',pushed:false};
+let v233Index=null,v233IndexAt=0,v233Loading=null,v233Phones=null,v233PhonesLoading=null,v233Pending=null;
+
+function v233Digits(s){return String(s??'').replace(/[٠-٩]/g,d=>String(d.charCodeAt(0)-1632)).replace(/[۰-۹]/g,d=>String(d.charCodeAt(0)-1776))}
+function v233Word(w){
+ if(w.length>4&&w.startsWith('ال'))w=w.slice(2);else if(w.length>5&&(w.startsWith('بال')||w.startsWith('وال')))w=w.slice(3);
+ if(w.length>3&&w.endsWith('ه'))w=w.slice(0,-1);
+ return w;
+}
+function v233Tokens(s){return filterNormalize(v233Digits(s)).replace(/[^\p{L}\p{N}]+/gu,' ').trim().split(' ').filter(Boolean).map(v233Word)}
+function v233Compact(s){return v233Tokens(s).join('')}
+function v233TokScore(q,w){
+ if(w===q)return 3;if(w.startsWith(q))return 2;
+ const a=V233_ABBR[q];if(a&&w.startsWith(a))return 2;
+ const b=V233_ABBR[w];if(b&&q.length>=2&&b.startsWith(q))return 2;
+ if(q.length>=3&&w.includes(q))return 1;
+ return 0;
+}
+function v233Score(qt,cq,it){
+ let s=0;
+ for(let i=0;i<qt.length;i++){
+  const q=qt[i];let best=0;
+  it.w.forEach((w,j)=>{const v=v233TokScore(q,w);if(v){const sc=v*10+(j===0?5:0)+(j===i?2:0);if(sc>best)best=sc}});
+  if(!best&&it.x)it.x.forEach(w=>{if(v233TokScore(q,w)>=2)best=Math.max(best,4)});
+  if(!best)return cq.length>=3&&it.c.includes(cq)?15:0;
+  s+=best;
+ }
+ if(it.c===cq)s+=40;else if(it.c.startsWith(cq))s+=15;
+ return s;
+}
+function v233MaskCivil(c){c=String(c||'');return '\u2066'+(c.length>4?'••••'+c.slice(-4):c)+'\u2069'}
+function v233PhoneDigits(p){let d=v233Digits(p).replace(/\D/g,'');if(d.startsWith('20')&&d.length===12)d='0'+d.slice(2);return d}
+function v233Wa(p){const d=v233PhoneDigits(p);return d.length===11&&d.startsWith('01')?'https://wa.me/2'+d:''}
+function v233Num(v){const n=Number(v);return Number.isFinite(n)?n:0}
+function v233IsSec(stage){return String(stage||'').startsWith('ثانوي')}
+function v233CanEditTeacher(){return ['admin','stage_coordinator','supervisor','school_manager','senior_teacher'].includes(profile?.role)}
+
+/* ---------- بناء الفهرس ---------- */
+async function v233BuildIndex(){
+ const raw=await v162ReportsDatasetRaw();if(raw.error)throw raw.error;
+ const data=raw.data||{},h=data.hierarchy||{};
+ let plan={};
+ try{
+  const agg=await v91LoadReportsDataset(),ah=agg.hierarchy||{};
+  const p=buildOperationalSchoolPlanData({schools:ah.schools||[],classes:agg.classes||[],teachers:agg.teacher_records||[],schoolTeacherRosters:v91ScopeRows(agg),rules:agg.rules||[],assignments:agg.assignments||[],includeAllStages:true});
+  (p.rows||[]).forEach(r=>{if(r.calculation_ready!==false)plan[r.school_id]={deficit:v233Num(r.remaining_deficit),paid:v233Num(r.paid_assigned)}});
+ }catch(_){plan={}}
+ const sups={};(h.sups||[]).forEach(s=>sups[s.id]=s);
+ const schoolById={};(h.schools||[]).forEach(s=>schoolById[s.id]=s);
+ const supSchools={};(h.schools||[]).forEach(s=>{if(s.supervisor_id)supSchools[s.supervisor_id]=(supSchools[s.supervisor_id]||0)+1});
+ const rel={};(data.school_teacher_rosters||[]).forEach(r=>{const id=v91TeacherId(r),k=String(r.school_relation||'');if(!id||!k||k==='home')return;(rel[id]=rel[id]||[]).push({k,school:r.scope_school_name||schoolById[r.scope_school_id]?.name||''})});
+ const schools=(h.schools||[]).map(s=>{const pl=plan[s.id],sup=sups[s.supervisor_id];return {type:'school',id:s.id,name:s.name||'',stage:s.stage||'',sup:sup?.full_name||'',supId:sup?s.supervisor_id:'',classes:v233Num(s.class_count),deficit:pl?pl.deficit:null,paid:pl?pl.paid:0,
+  w:v233Tokens(s.name),x:v233Tokens(s.stage),c:v233Compact(s.name)}});
+ const teachers=(h.teachers||[]).map(t=>{const id=String(t.teacher_id||'');const st=String(t.workload_status||'');return {type:'teacher',id,name:t.full_name||'',civil:String(t.civil_id||''),school:t.home_school_name||'',schoolId:t.home_school_id||'',stage:t.home_school_stage||'',
+  paid:t.work_type==='paid',senior:!!t.is_senior_teacher,target:v233Num(t.weekly_target),counted:v233Num(t.total_counted_periods),deficit:v233Num(t.deficit_periods),surplus:v233Num(t.surplus_periods),status:st,leave:st.includes('إجازة'),rel:rel[id]||[],
+  w:v233Tokens(t.full_name),x:v233Tokens((t.home_school_name||'')+' '+(t.home_school_stage||'')),c:v233Compact(t.full_name)}}).filter(t=>t.id);
+ const supList=Object.values(sups).filter(s=>s.active!==false).map(s=>{const stages=[...new Set((s.supervisor_stage_assignments||[]).filter(a=>a.active!==false).map(a=>a.stage).filter(Boolean))];return {type:'sup',id:s.id,name:s.full_name||'',civil:String(s.civil_id||''),phone:s.phone||'',stages,schools:supSchools[s.id]||0,
+  w:v233Tokens(s.full_name),x:v233Tokens(stages.join(' ')),c:v233Compact(s.full_name)}});
+ return {role:profile?.role,term:activeTerm?.id,schools,teachers,sups:supList};
+}
+function v233IndexOk(){return !!v233Index&&v233Index.role===profile?.role&&v233Index.term===activeTerm?.id}
+function v233Ensure(){
+ if(v233Loading)return v233Loading;
+ v233Loading=v233BuildIndex().then(ix=>{v233Index=ix;v233IndexAt=Date.now();return ix}).finally(()=>{v233Loading=null});
+ return v233Loading;
+}
+async function v233LoadPhones(){
+ if(v233Phones)return v233Phones;if(v233PhonesLoading)return v233PhonesLoading;
+ v233PhonesLoading=(async()=>{const r=await sb.from('teacher_records').select('id,phone').eq('active',true);if(r.error)throw r.error;const m={};(r.data||[]).forEach(x=>{if(x.phone)m[x.id]=v233PhoneDigits(x.phone)});v233Phones=m;return m})().finally(()=>{v233PhonesLoading=null});
+ return v233PhonesLoading;
+}
+
+/* ---------- الشاشات والتقارير ---------- */
+function v233Screens(){return (NAV[profile?.role]||[]).map(n=>({type:'screen',id:n[0],name:n[1],icon:n[2],w:v233Tokens(n[1]),c:v233Compact(n[1])}))}
+function v233Reports(){
+ if(!appNavAllowed('statistics'))return [];
+ let keys=['schools','teachers','classes','deficitSurplus','workload','supervisors','schoolsComprehensive',...v103AvailableReports().filter(k=>!V186_HIDDEN_REPORTS.includes(k))];
+ if(v115SingleSchoolRole())keys=keys.filter(k=>!V115_DISTRICT_ONLY_REPORTS.includes(k));
+ if(!canViewFinancialGuidanceReport())keys=keys.filter(k=>k!=='financialGuidance');
+ return [...new Set(keys)].filter(k=>STATISTICS_REPORTS[k]).map(k=>{const r=STATISTICS_REPORTS[k],t='تقرير '+r.title;return {type:'report',id:k,name:r.title,sub:r.subtitle||'',icon:r.icon||'▤',w:v233Tokens(t+' '+(r.subtitle||'')),c:v233Compact(r.title)}});
+}
+
+/* ---------- البحث ---------- */
+/* كلمة الحالة تعمل إن جاءت أول البحث أو كان ما معها مراحل فقط («عجز إعدادي»، «إعدادي عجز»)؛ وإلا فهي نص عادي («تقرير العجز») */
+function v233Parse(q){
+ const qt=v233Tokens(q);let kw='',stage='',at=-1;const rest=[];
+ qt.forEach((t,i)=>{
+  if(kw)return rest.push(t);
+  if(V233_NONE_WORDS.includes(t)&&qt[i+1]&&qt[i+1].startsWith('موج')){kw='none';at=i;qt[i+1]='';return}
+  const k=V233_KEYWORDS.find(x=>t.startsWith(x.k));
+  if(k){kw=k.as||k.k;at=i;return}
+  rest.push(t);
+ });
+ const left=[];rest.filter(Boolean).forEach(t=>{const s=V233_STAGE_WORDS[t];if(s&&(!stage||stage==='ثانوي'))stage=s;else left.push(t)});
+ if(kw&&(at===0||!left.length))return {qt:left,kw,stage};
+ return {qt:qt.filter(Boolean),kw:'',stage:''};
+}
+function v233StageOk(stage,f){return !f||(f==='ثانوي'?v233IsSec(stage):stage===f)}
+function v233Search(q){
+ const ix=v233Index;if(!ix)return [];
+ const raw=v233Digits(q).trim(),digits=raw.replace(/[\s\-–]/g,'');
+ const groups=[];
+ if(/^\d{4,}$/.test(digits)){
+  const phone=digits.startsWith('01')||(digits.length===10&&digits.startsWith('1'));
+  const d=phone&&!digits.startsWith('0')?'0'+digits:digits;
+  if(phone){
+   const ph=v233Phones||{};
+   groups.push(['teacher','المعلمون',ix.teachers.filter(t=>(ph[t.id]||'').includes(d))]);
+   groups.push(['sup','الموجهون',ix.sups.filter(s=>v233PhoneDigits(s.phone).includes(d))]);
+   if(!v233Phones)groups.push(['note','',[{type:'note',name:'جارٍ تحميل هواتف المعلمين…'}]]);
+  }else{
+   const m=x=>x.civil&&(x.civil===d||(d.length>=4&&x.civil.endsWith(d))||(d.length>=6&&x.civil.includes(d)));
+   groups.push(['teacher','المعلمون',ix.teachers.filter(m)]);
+   groups.push(['sup','الموجهون',ix.sups.filter(m)]);
+  }
+  return groups.filter(g=>g[2].length);
+ }
+ const {qt,kw,stage}=v233Parse(q),cq=qt.join('');
+ const rank=(list)=>qt.length?list.map(it=>[it,v233Score(qt,cq,it)]).filter(x=>x[1]>0).sort((a,b)=>b[1]-a[1]||a[0].name.localeCompare(b[0].name,'ar')).map(x=>x[0]):list;
+ if(kw){
+  let sc=[],tc=[];const T=ix.teachers.filter(t=>v233StageOk(t.stage,stage)),S=ix.schools.filter(s=>v233StageOk(s.stage,stage));
+  if(kw==='عجز'){sc=S.filter(s=>s.deficit>0).sort((a,b)=>b.deficit-a.deficit);tc=T.filter(t=>t.deficit>0).sort((a,b)=>b.deficit-a.deficit)}
+  else if(kw==='زياد')tc=T.filter(t=>t.surplus>0).sort((a,b)=>b.surplus-a.surplus);
+  else if(kw==='اجاز')tc=T.filter(t=>t.leave);
+  else if(kw==='منتدب')tc=T.filter(t=>t.rel.some(r=>r.k.startsWith('delegated')));
+  else if(kw==='اجر')tc=T.filter(t=>t.paid);
+  else if(kw==='مشرف')tc=T.filter(t=>t.senior);
+  else if(kw==='مكتمل')tc=T.filter(t=>!t.leave&&t.target>0&&!t.deficit&&!t.surplus);
+  else if(kw==='none')sc=S.filter(s=>!s.supId&&!v233IsSec(s.stage));
+  if(qt.length){sc=rank(sc);tc=rank(tc)}
+  const lbl=(kw==='none'?'بلا موجه':(V233_KEYWORDS.find(x=>(x.as||x.k)===kw)?.label||''))+(stage?' — '+stage:'');
+  groups.push(['school','المدارس — '+lbl,sc],['teacher','المعلمون — '+lbl,tc]);
+  if(kw==='none'&&!stage)groups.push(['note','',[{type:'note',name:'مدارس الثانوي لا تظهر هنا: موجهوها حسب المادة.'}]]);
+  if(!sc.length&&!tc.length)groups.push(['note','',[{type:'note',name:'لا توجد حالات مطابقة.'}]]);
+  return groups.filter(g=>g[2].length);
+ }
+ if(!qt.length)return [];
+ groups.push(['school','المدارس',rank(ix.schools)],['teacher','المعلمون',rank(ix.teachers)],['sup','الموجهون',rank(ix.sups)],['screen','الشاشات',rank(v233Screens())],['report','التقارير',rank(v233Reports())]);
+ return groups.filter(g=>g[2].length);
+}
+
+/* ---------- العرض ---------- */
+function v233Badge(it){
+ if(it.type==='school'){if(it.deficit==null)return '';return it.deficit>0?`<span class="v233-b bad">عجز ${it.deficit}${it.paid?` · بعد الأجر ${Math.max(it.deficit-it.paid,0)}`:''}</span>`:'<span class="v233-b ok">بلا عجز</span>'}
+ if(it.type==='teacher'){
+  if(it.leave)return '<span class="v233-b mute">إجازة</span>';
+  if(it.deficit>0)return `<span class="v233-b bad">عجز ${it.deficit}</span>`;
+  if(it.surplus>0)return `<span class="v233-b warn">زيادة ${it.surplus}</span>`;
+  return it.target?'<span class="v233-b ok">مكتمل</span>':'';
+ }
+ return '';
+}
+function v233Sub(it){
+ if(it.type==='school')return [it.stage,it.sup?'الموجه: '+it.sup:(v233IsSec(it.stage)?'':'بلا موجه'),it.classes?it.classes+' فصل':''].filter(Boolean).join(' · ');
+ if(it.type==='teacher'){
+  const d=it.rel.map(r=>r.k==='delegated_out_partial'?'منتدب جزئيًا':r.k==='delegated_in_partial'?'منتدب جزئيًا إلى '+r.school:r.k==='delegated_in_full'?'منتدب كليًا إلى '+r.school:'').filter(Boolean);
+  return [it.school||'بلا مدرسة أصلية',it.paid?'بالأجر':'ثابت',it.senior?'مشرف المادة':'',!it.leave&&it.target?`${it.counted}/${it.target} حصة`:'',...d,it.civil?v233MaskCivil(it.civil):''].filter(Boolean).join(' · ');
+ }
+ if(it.type==='sup')return [it.stages.join('، ')||'—',it.schools?it.schools+' مدرسة':'',it.phone?'\u2066'+v233PhoneDigits(it.phone)+'\u2069':''].filter(Boolean).join(' · ');
+ if(it.type==='report')return it.sub;
+ if(it.type==='screen')return 'فتح الشاشة';
+ return '';
+}
+function v233Acts(it,i){
+ const b=(a,t)=>`<button type="button" class="v233-act" onclick="event.stopPropagation();v233Do(${i},'${a}')">${t}</button>`;
+ if(it.type==='school')return b('teachers','معلموها')+(it.supId&&v233Index?.sups.some(s=>s.id===it.supId)?b('sup','موجهها'):'');
+ if(it.type==='teacher')return (v233CanEditTeacher()?b('edit','تعديل'):'')+(appNavAllowed('teacherTimetable')&&it.schoolId?b('table','جدوله'):'')+(it.schoolId&&v233Index?.schools.some(s=>s.id===it.schoolId)?b('school','مدرسته'):'');
+ if(it.type==='sup'){const w=v233Wa(it.phone),d=v233PhoneDigits(it.phone);return b('schools','مدارسه')+(d?`<a class="v233-act" href="tel:${esc(d)}" onclick="event.stopPropagation()">اتصال</a>`:'')+(w?`<a class="v233-act" href="${esc(w)}" target="_blank" rel="noopener" onclick="event.stopPropagation()">واتساب</a>`:'')}
+ return '';
+}
+const V233_ICON={school:'🏫',teacher:'👨‍🏫',sup:'🧭'};
+function v233Render(){
+ const box=document.getElementById('v233Results');if(!box)return;
+ const q=v233State.q.trim();
+ if(!q){
+  const rec=v233Recent();v233State.items=rec;v233State.active=0;
+  box.innerHTML=rec.length?`<div class="v233-gh">آخر ما فتحته</div>`+rec.map((it,i)=>v233Row(it,i)).join('')+`<div class="v233-tips">${V233_TIPS}</div>`:`<div class="v233-tips">${V233_TIPS}</div>`;
+  return v233Mark();
+ }
+ if(!v233Index){box.innerHTML='<div class="v233-empty">جارٍ تحميل البيانات…</div>';return}
+ const groups=v233Search(q);let html='',items=[];
+ groups.forEach(([type,label,list])=>{
+  if(type==='note'){html+=list.map(n=>`<div class="v233-empty">${esc(n.name)}</div>`).join('');return}
+  const lim=v233State.expanded===type?60:(groups.filter(g=>g[0]!=='note').length===1?20:6);
+  html+=`<div class="v233-gh">${esc(label)} <small>${list.length}</small></div>`;
+  list.slice(0,lim).forEach(it=>{html+=v233Row(it,items.length);items.push(it)});
+  if(list.length>lim)html+=`<button type="button" class="v233-more" onclick="v233Expand('${type}')">عرض ${Math.min(list.length,60)-lim>0?'المزيد':'الكل'} (${list.length})</button>`;
+ });
+ v233State.items=items;if(v233State.active>=items.length)v233State.active=0;
+ box.innerHTML=html||'<div class="v233-empty">لا توجد نتائج. جرّب جزءًا من الاسم، أو الرقم القومي، أو «عجز».</div>';
+ v233Mark();
+}
+const V233_TIPS='اكتب جزءًا من الاسم بأي ترتيب («نجع غلاب ع»)، أو الرقم القومي أو آخر 4 أرقام منه، أو هاتفًا يبدأ بـ01، أو كلمة حالة: <b>عجز</b>، <b>زيادة</b>، <b>إجازة</b>، <b>منتدب</b>، <b>بالأجر</b>، <b>مشرف</b>، <b>بلا موجه</b> — ومعها المرحلة: «عجز إعدادي». ويفتح الشاشات والتقارير بأسمائها: «تقرير العجز».';
+function v233Row(it,i){
+ const ic=it.icon||V233_ICON[it.type]||'•';
+ return `<div class="v233-item" role="option" id="v233o${i}" data-i="${i}" onclick="v233Do(${i})" onmousemove="v233Hover(${i})"><span class="v233-ic">${ic}</span><span class="v233-main"><b>${esc(it.name)}</b><small>${esc(v233Sub(it))}</small></span>${v233Badge(it)}<span class="v233-acts">${v233Acts(it,i)}</span></div>`;
+}
+function v233Mark(){
+ document.querySelectorAll('#v233Results .v233-item').forEach(e=>e.classList.toggle('on',+e.dataset.i===v233State.active));
+ const a=document.getElementById('v233o'+v233State.active);document.getElementById('v233Input')?.setAttribute('aria-activedescendant',a?a.id:'');
+ a?.scrollIntoView({block:'nearest'});
+}
+function v233Hover(i){if(v233State.active!==i){v233State.active=i;v233Mark()}}
+function v233Expand(t){v233State.expanded=t;v233Render()}
+
+/* ---------- آخر ما فُتح (في المتصفح فقط) ---------- */
+function v233RecentKey(){return 'v233Recent:'+(profile?.id||'')+':'+(profile?.role||'')}
+function v233Recent(){
+ let r=[];try{r=JSON.parse(localStorage.getItem(v233RecentKey())||'[]')}catch(_){r=[]}
+ if(!Array.isArray(r))return [];
+ const ix=v233Index,find=(x)=>{
+  if(x.type==='school')return ix?.schools.find(s=>s.id===x.id);
+  if(x.type==='teacher')return ix?.teachers.find(s=>s.id===x.id);
+  if(x.type==='sup')return ix?.sups.find(s=>s.id===x.id);
+  if(x.type==='screen')return v233Screens().find(s=>s.id===x.id);
+  if(x.type==='report')return v233Reports().find(s=>s.id===x.id);
+ };
+ return ix?r.map(find).filter(Boolean).slice(0,6):[];
+}
+function v233Remember(it){
+ try{const k=v233RecentKey();let r=JSON.parse(localStorage.getItem(k)||'[]');if(!Array.isArray(r))r=[];r=[{type:it.type,id:it.id},...r.filter(x=>!(x.type===it.type&&x.id===it.id))].slice(0,6);localStorage.setItem(k,JSON.stringify(r))}catch(_){}
+}
+
+/* ---------- التنفيذ: يفتح الشاشات الموجودة فقط ---------- */
+function v233Do(i,action=''){
+ const it=v233State.items[i];if(!it||it.type==='note')return;
+ v233Remember(it);v233Close({nav:true});
+ if(it.type==='screen')return go(it.id);
+ if(it.type==='report'){go('statistics');return v233After(()=>currentPage==='statistics'&&document.querySelector('#content .statistics-report-card'),()=>statisticsOpenReport(it.id))}
+ if(it.type==='school'){
+  if(action==='teachers')return v233OpenPage('teachers',{schoolId:it.id,stage:it.stage});
+  if(action==='sup')return v233OpenSup(it.supId);
+  return v233OpenPage('schools',{schoolId:it.id,stage:it.stage});
+ }
+ if(it.type==='teacher'){
+  if(action==='edit')return editTeacherForm(it.id);
+  if(action==='school'){const s=v233Index?.schools.find(x=>x.id===it.schoolId);return v233OpenPage('schools',{schoolId:it.schoolId,stage:s?.stage||it.stage})}
+  if(action==='table'){if(typeof v166Stage!=='undefined')v166Stage='';v101SchoolId=it.schoolId;v101TeacherId=it.id;return go('teacherTimetable')}
+  return v233OpenPage('teachers',{search:[it.civil,it.name].filter(Boolean)});
+ }
+ if(it.type==='sup'){
+  if(action==='schools')return v233OpenPage('schools',{search:[it.name]});
+  return v233OpenSup(it.id);
+ }
+}
+function v233OpenSup(id){
+ go('supervisors');
+ v233After(()=>currentPage==='supervisors'&&Array.isArray(supervisorDirectoryRows)&&supervisorDirectoryRows.some(x=>String(x.id)===String(id))&&document.getElementById('supervisorDirectoryDetails'),()=>openSupervisorDirectoryDetails(id));
+}
+function v233OpenPage(page,{schoolId='',stage='',search=null}={}){
+ if(!appNavAllowed(page))return toast('هذه الشاشة غير متاحة لدورك.');
+ const key=v97StageKey(page),multi=!['school_manager','senior_teacher'].includes(profile?.role);
+ if(multi){
+  v97StageSelections.set(key,schoolId?stage:'');
+  if(schoolId){v98SchoolSelections.set(key,schoolId);if(page==='teachers'&&profile?.role==='supervisor')v142SupervisorAllKeys.delete(key)}
+  else{v98SchoolSelections.delete(key);if(page==='teachers'&&profile?.role==='supervisor')v142SupervisorAllKeys.add(key)}
+ }
+ v233Pending={page,keep:true};
+ go(page);
+ if(search&&search.length)v233After(()=>currentPage===page&&document.querySelector('#content input[data-filter-type="search"]'),()=>v233ApplySearch(search));
+}
+function v233ApplySearch(list){
+ const inp=document.querySelector('#content input[data-filter-type="search"]');if(!inp)return;
+ const id=inp.dataset.filterTable,table=document.getElementById(id);
+ for(const v of list){
+  inp.value=v;try{applyAutoTableFilters(id)}catch(_){}
+  const vis=table?[...(table.tBodies?.[0]?.rows||[])].filter(r=>r.getClientRects().length&&!r.querySelector('td[colspan]')).length:1;
+  if(vis)break;
+ }
+ inp.scrollIntoView({block:'center'});
+}
+function v233After(cond,fn,ms=12000){
+ const t0=Date.now();const tick=()=>{let ok=false;try{ok=!!cond()}catch(_){}if(ok){setTimeout(()=>{try{fn()}catch(e){moneySafeError(e)}},60);return}if(Date.now()-t0<ms)setTimeout(tick,120)};tick();
+}
+/* اختيار المدرسة من البحث لا يُمسح عند دخول الشاشة (v163/v179 يفرّغانه عند الدخول) */
+const __v233BaseRenderPage=v97RenderPage;
+v97RenderPage=async function(renderPage,options){
+ if(v233Pending&&v233Pending.page===currentPage){__v163LastPage=currentPage;v233Pending=null}
+ return __v233BaseRenderPage(renderPage,options);
+};
+
+/* ---------- النافذة ---------- */
+function v233CanUse(){return !!profile&&profile.role!=='teacher'&&!!document.querySelector('.app-shell')}
+function v233Open(){
+ if(!v233CanUse()||document.getElementById('v233Overlay'))return;
+ v111CloseSidebar?.();
+ const ov=document.createElement('div');ov.id='v233Overlay';ov.className='v233-ov no-print';
+ ov.innerHTML=`<div class="v233-panel" role="dialog" aria-modal="true" aria-label="البحث"><div class="v233-bar"><span aria-hidden="true">🔍</span><input id="v233Input" type="text" inputmode="search" autocomplete="off" enterkeyhint="search" role="combobox" aria-expanded="true" aria-controls="v233Results" placeholder="ابحث: مدرسة، معلم، موجه، رقم قومي، هاتف، «عجز»…"><button type="button" class="v233-x" onclick="v233Close()" aria-label="إغلاق">×</button></div><div id="v233Results" class="v233-res" role="listbox"></div><div class="v233-foot"><span><kbd>↑</kbd><kbd>↓</kbd> تنقل · <kbd>Enter</kbd> فتح · <kbd>Esc</kbd> إغلاق</span><span>النتائج ضمن صلاحيات دورك</span></div></div>`;
+ ov.addEventListener('mousedown',e=>{if(e.target===ov)v233Close()});
+ document.body.appendChild(ov);document.body.classList.add('v233-lock');
+ v233State={open:true,q:'',items:[],active:0,expanded:'',pushed:false};
+ try{history.pushState({...(history.state||{}),v233Search:true},'',location.href);v233State.pushed=true}catch(_){}
+ const inp=document.getElementById('v233Input');
+ inp.addEventListener('input',()=>{v233State.q=inp.value;v233State.active=0;v233State.expanded='';v233Render();v233MaybePhones()});
+ inp.addEventListener('keydown',v233Key);
+ setTimeout(()=>inp.focus(),0);
+ if(!v233IndexOk())v233Index=null;
+ v233Render();
+ if(!v233Index||Date.now()-v233IndexAt>=60000){
+  const had=!!v233Index;
+  v233Ensure().then(()=>{if(document.getElementById('v233Overlay')&&v233IndexOk())v233Render()}).catch(e=>{if(!had){const b=document.getElementById('v233Results');if(b)b.innerHTML=`<div class="v233-empty">تعذر تحميل البيانات: ${esc(e?.message||e)}</div>`}});
+ }
+}
+function v233MaybePhones(){
+ const d=v233Digits(v233State.q).replace(/[\s\-–]/g,'');
+ if(/^0?1\d{2,}$/.test(d)&&!v233Phones)v233LoadPhones().then(()=>{if(document.getElementById('v233Overlay'))v233Render()}).catch(()=>{});
+}
+function v233Close({nav=false}={}){
+ const ov=document.getElementById('v233Overlay');if(!ov)return;
+ ov.remove();document.body.classList.remove('v233-lock');
+ const pushed=v233State.pushed;v233State.open=false;v233State.pushed=false;
+ if(pushed&&!nav&&history.state?.v233Search)history.back();
+ if(!nav)document.querySelector('.v233-search-btn')?.focus();
+}
+function v233Key(e){
+ const n=v233State.items.length;
+ if(e.key==='ArrowDown'){e.preventDefault();if(n){v233State.active=(v233State.active+1)%n;v233Mark()}}
+ else if(e.key==='ArrowUp'){e.preventDefault();if(n){v233State.active=(v233State.active-1+n)%n;v233Mark()}}
+ else if(e.key==='Enter'){e.preventDefault();if(n)v233Do(v233State.active)}
+ else if(e.key==='Escape'){e.preventDefault();v233Close()}
+}
+window.addEventListener('popstate',()=>{if(document.getElementById('v233Overlay')&&!history.state?.v233Search){v233State.pushed=false;v233Close({nav:true})}});
+document.addEventListener('keydown',e=>{
+ if(document.getElementById('v233Overlay')||!v233CanUse())return;
+ const typing=e.target.closest?.('input,textarea,select,[contenteditable="true"]');
+ if((e.ctrlKey||e.metaKey)&&(e.key==='k'||e.key==='K'||e.code==='KeyK')){e.preventDefault();v233Open()}
+ else if(e.key==='/'&&!typing&&!e.ctrlKey&&!e.metaKey&&!e.altKey&&!document.querySelector('.modal.open,#modal:not(.hidden),.report-preview-overlay.open')){e.preventDefault();v233Open()}
+});
+/* تحميل الفهرس في الخلفية بعد اكتمال الشاشة كي يفتح البحث فورًا */
+const __v233BaseRenderShell=renderShell;
+renderShell=function(...args){const r=__v233BaseRenderShell.apply(this,args);setTimeout(()=>{if(v233CanUse()&&!v233IndexOk())v233Ensure().catch(()=>{})},4000);return r};
 </script>
 
 <div id="reportPreviewOverlay" class="report-preview-overlay" role="dialog" aria-modal="true" aria-label="معاينة التقرير" aria-hidden="true">
