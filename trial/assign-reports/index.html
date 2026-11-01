@@ -1,5 +1,5 @@
 <!doctype html>
-<!-- v239: منع تكرار البيان في التقارير: عند معاينة أي تقرير، إن تكرر اسم الكيان (المدرسة/المعلم/الموجه/القسم) في أسطر متتالية تبقى الأسطر بأعمدتها (لكل معلم صف) وتُدمج خانة الكيان وخانة «م» (ترقيم المجموعات) عموديًا فيُكتب مرة واحدة، ومثلها كيان ثانٍ داخل المجموعة؛ الأرقام لا تُدمج، ولا تُدمج إلا الخانات المتطابقة نصًا؛ عند الانتقال لصفحة جديدة يتكرر الكيان بـ«(تابع)»؛ الجداول الأسبوعية وملفات Excel بلا تغيير، والحسابات كما هي؛ إن تعذّر العرض يُعرض التقرير بشكله السابق تلقائيًا. -->
+<!-- v239: تقارير بلا تكرار ولا تكدس: عند معاينة أي تقرير، إن تكرر اسم الكيان (المدرسة/المعلم/الموجه/القسم) في أسطر متتالية تبقى الأسطر بأعمدتها وتُدمج خانة الكيان وخانة «م» عموديًا فيُكتب مرة واحدة، ومثلها كيان ثانٍ داخل المجموعة؛ والخانة متعددة الأسطر تُفرد صفًا لكل سطر. تقارير الإسناد الثلاثة صارت صفًا لكل فصل (المعلم وبياناته مدمجة)، وتقرير الموجهين يُدمج عموديًا. الأرقام لا تُدمج إلا ما يخص الكيان صراحة، ولا تُدمج إلا الخانات المتطابقة نصًا ومعرّفًا؛ الجداول الأسبوعية وملفات Excel بلا تغيير؛ إن تعذّر العرض يُعرض التقرير بشكله السابق. -->
 <!-- v238: تقريران جديدان في «التقارير» للموجه فأعلى (عرض فقط، بنطاق الدور): «إسناد الفصول — كل المدارس (جدول)» سطر لكل معلم (المدرسة، النوع، النصاب، الفصول المسندة: الحصص، المسند، المتبقي/الزيادة) وبعد كل مدرسة سطر فصولها غير المسندة؛ و«إسناد الفصول — قسم لكل مدرسة» (المعلمون وفصولهم، الفصول غير المسندة، المعلمون بلا فصول). المنتدب جزئيًا يظهر في المدرستين بفصوله في كل منهما. بلا تعديل قاعدة بيانات. -->
 <!-- v237: شاشة «إدخال بيانات المدارس»: الإطار يملأ المساحة المتاحة تلقائيًا حتى شريط الأزرار السفلي (ويُعاد حسابه عند تغيير الحجم)، وعلى الهاتف بلا حواف وبلا سطر «فتح في نافذة مستقلة»؛ وزر «⛶» لملء الشاشة يغطي شريطي البرنامج أثناء الإدخال، و«✕» يُرجعهما. والبند في آخر القائمة الجانبية بعرض زرين وباسمه كاملًا. -->
 <!-- v236: شاشة «إدخال بيانات المدارس» داخل البرنامج لمدير النظام ومنسق المرحلة: تعرض الصفحة نفسها (/coordinator/) في إطار بوضع embed (بلا شريطها العلوي)، بنفس الحساب لأن البرنامج والصفحة على نطاق واحد. الصفحة في بوابة المعلمين ورابطها المباشر بلا تغيير. (v235 رقم قاعدة البيانات.) -->
@@ -10259,7 +10259,8 @@ async function v238Load(){
    else if(r&&!paid){const sur=reportNumber(r.surplus_periods),rem=reportNumber(r.remaining_periods);state=sur>0?`زيادة ${sur}`:rem>0?`متبقٍ ${rem}`:'مكتمل'}
    else if(paid)state=assigned?'أجر':'أجر — بلا فصول';
    return {id,name,kind,norm:r&&!paid&&!r.on_renewed_leave&&r.weekly_target!=null?reportNumber(r.weekly_target):'—',as,assigned,state,
-    classesText:as.map(a=>`${v238ClassLabel(classById.get(String(a.class_id)),a.curriculum_subjects?.subject_name)}: ${reportNumber(a.weekly_periods)}`).join('، ')};
+    classesText:as.map(a=>`${v238ClassLabel(classById.get(String(a.class_id)),a.curriculum_subjects?.subject_name)}: ${reportNumber(a.weekly_periods)}`).join('، '),
+    items:as.map(a=>({cls:v238ClassLabel(classById.get(String(a.class_id)),a.curriculum_subjects?.subject_name),p:reportNumber(a.weekly_periods)}))};
   }).sort((a,b)=>(b.as.length?1:0)-(a.as.length?1:0)||a.name.localeCompare(b.name,'ar'));
   const open=[];
   g.classes.forEach(c=>{(c.class_subject_requirements||[]).forEach(q=>{const req=reportNumber(q.weekly_periods);if(req<=0)return;
@@ -10280,19 +10281,6 @@ function v238Metrics(schema){
 }
 const __v238Rebuild=v103RebuildMetrics;
 v103RebuildMetrics=function(schema){return V238_IDS.includes(schema?.reportId)?v238Metrics(schema):__v238Rebuild(schema)};
-ReportAdapters.stageAssignB={async load(ctx){
- const data=await v238Load(),rows=[];
- data.forEach(x=>{
-  const m=v238Meta(x),withC=x.teachers.filter(t=>t.as.length),without=x.teachers.filter(t=>!t.as.length);
-  rows.push({...m,_group:true,_groupTitle:`${x.school.name} — ${x.stage}${x.sup?' — الموجه: '+x.sup:''} — الفصول: ${x.classCount}`,item:'',details:'',periods:' '});
-  withC.forEach((t,i)=>rows.push({...m,_tid:t.id,_assigned:t.assigned,item:`${i+1}. ${t.name}`,details:`${t.kind}${t.norm!=='—'?' — نصاب '+t.norm:''}${/^أجر/.test(t.state)?'':' — '+t.state} ← ${t.classesText}`,periods:String(t.assigned),_search:t.name}));
-  if(!withC.length)rows.push({...m,item:'—',details:'لم تُسند فصول لأي معلم بعد.',periods:'—'});
-  rows.push({...m,_openCount:x.open.length,_openPeriods:x.open.reduce((n,o)=>n+o.missing,0),item:`فصول غير مسندة (${x.open.length})`,details:x.open.length?x.open.map(o=>`${o.label}: ${o.missing}${o.partial?' (جزئي)':''}`).join('، '):(x.classCount?'كل الفصول مسندة بالكامل.':'لم تُدخل فصول بعد.'),periods:x.open.length?String(x.open.reduce((n,o)=>n+o.missing,0)):'0'});
-  const nc=without.filter(t=>t.kind!=='إجازة');
-  rows.push({...m,_noClassCount:nc.length,item:`معلمون بلا فصول (${without.length})`,details:without.length?without.map(t=>`${t.name} (${t.kind})`).join('، '):'كل المعلمين لهم فصول.',periods:'—'});
- });
- return v103BaseReport('stageAssignB',ctx,[reportColumn('item','المعلم / البند',1.6),reportColumn('details','النوع والنصاب — الفصول المسندة: الحصص',4.8),reportColumn('periods','الحصص',.6,{numeric:true})],rows,'لكل مدرسة: المعلمون وفصولهم، الفصول غير المسندة، والمعلمون بلا فصول');
-}};
 
 /* v239: منع تكرار البيان في التقارير (بطلب المستخدم: «لكل معلم صف»): عند المعاينة فقط (ملفات Excel كما هي)، إن تكررت قيمة عمود الكيان
    (المدرسة/المعلم/الموجه/القسم…) في أسطر متتالية تبقى الأسطر كما هي بأعمدتها، وتُدمج خانة الكيان (وخانة «م» بترقيم المجموعات) عموديًا
@@ -10301,67 +10289,96 @@ ReportAdapters.stageAssignB={async load(ctx){
    إن تعذّر العرض يُعرض التقرير بشكله السابق تلقائيًا. الحسابات والمربعات والإجماليات بلا تغيير. */
 const V239_KEY_RE=/^(المدرسة|اسم المدرسة|المعلم|اسم المعلم|الموجه|القسم)(\s|\/|$)/,V239_SKIP_RE=/timetable/i,V239_IK='__v239i';
 const v239Val=v=>String(reportCellValue(v)).replace(/\s+/g,' ').trim();
-const v239Empty=s=>!s||s==='—'||s==='-';
+const v239Empty=s=>!s||s==='—'||s==='-'||/^(لا|لم|كل)\s/.test(s); // عبارات مثل «لا توجد…» ليست كيانًا فلا تُدمج
 const v239IsIndex=c=>c.key==='index'||String(c.label||'').trim()==='م';
 const v239Base=v=>String(v).split(' — ')[0].trim(),v239Suffix=v=>String(v).split(' — ').slice(1).join(' — ').trim();
-function v239Runs(rows,key,useBase){
+const v239Id=(c,r)=>c&&c.v239Id?String(r[c.v239Id]??''):'';
+function v239Runs(rows,col,useBase){
  const list=[];let cur=null,seg=0;
  rows.forEach(r=>{
   if(r&&r._group){list.push({group:r});cur=null;seg++;return}
-  const full=v239Val(r[key]),v=useBase?v239Base(full):full;
-  if(cur&&!v239Empty(v)&&cur.v===v)cur.rows.push(r);else{cur={v,seg,rows:[r]};list.push(cur)}
+  const full=v239Val(r[col.key]),v=useBase?v239Base(full):full,id=v239Id(col,r);
+  if(cur&&!v239Empty(v)&&cur.v===v&&cur.id===id)cur.rows.push(r);else{cur={v,id,seg,rows:[r]};list.push(cur)}
  });
  return list;
 }
 function v239Candidates(schema){return schema.columns.filter(c=>!v239IsIndex(c)&&!c.numeric&&V239_KEY_RE.test(String(c.label||'').trim()))}
-function v239Sorted(runs){const seen=new Set();for(const x of runs){if(v239Empty(x.v))continue;const k=x.seg+'\u0001'+x.v;if(seen.has(k))return false;seen.add(k)}return true}
+function v239Sorted(runs){const seen=new Set();for(const x of runs){if(v239Empty(x.v))continue;const k=x.seg+'\u0001'+x.v+'\u0001'+(x.id||'');if(seen.has(k))return false;seen.add(k)}return true}
 function v239PickKey(schema,useBase){
  let best=null;
  for(const c of v239Candidates(schema)){
-  const list=v239Runs(schema.rows,c.key,useBase),runs=list.filter(x=>!x.group);
+  const list=v239Runs(schema.rows,c,useBase),runs=list.filter(x=>!x.group);
   if(!runs.some(x=>x.rows.length>1)||!v239Sorted(runs))continue;
   if(!best||runs.length<best.n)best={col:c,list,n:runs.length};
  }
  return best;
 }
-function v239SubRuns(rows,key){const out=[];let cur=null;rows.forEach((r,i)=>{const v=v239Val(r[key]);if(cur&&!v239Empty(v)&&cur.v===v)cur.idx.push(i);else{cur={v,idx:[i]};out.push(cur)}});return out}
+function v239SubRuns(rows,col){const out=[];let cur=null;rows.forEach((r,i)=>{const v=v239Val(r[col.key]),id=v239Id(col,r);if(cur&&!v239Empty(v)&&cur.v===v&&cur.id===id)cur.idx.push(i);else{cur={v,id,idx:[i]};out.push(cur)}});return out}
+// خانة من عدة أسطر ← صف لكل سطر، وبقية خانات السطر الأصلي تُدمج عموديًا (نصها مطابق)
+function v239Explode(schema){
+ let changed=false,xn=0;const out=[];
+ schema.rows.forEach(r=>{
+  if(!r||r._group){out.push(r);return}
+  const sep=c=>schema.reportId==='schoolDossier'&&c.key==='details'?/\n|؛ /:/\n/; // بيانات «تقرير المدرسة الشامل» مفصولة بـ«؛»
+  const multi=schema.columns.filter(c=>!c.numeric&&typeof r[c.key]==='string'&&sep(c).test(r[c.key]));
+  if(!multi.length){out.push(r);return}
+  const parts=multi.map(c=>r[c.key].split(sep(c)).map(x=>x.trim()).filter(x=>x!==''));
+  const n=Math.max(...parts.map(x=>x.length));
+  if(n<2||parts.some(x=>x.length!==n&&x.length>1)){out.push(r);return}
+  changed=true;const gid='x'+(++xn);
+  for(let i=0;i<n;i++){
+   const nr={...r},sp={};
+   multi.forEach((c,j)=>{nr[c.key]=parts[j].length===1?parts[j][0]:parts[j][i];if(parts[j].length===1)sp[c.key]={g:gid,s:i===0}});
+   schema.columns.forEach(c=>{if(!multi.includes(c))sp[c.key]={g:gid,s:i===0}});
+   Object.defineProperty(nr,'_v239',{value:sp,enumerable:false,configurable:true});
+   out.push(nr);
+  }
+ });
+ return changed?{...schema,rows:out}:null;
+}
 function v239Merge(schema){
  if(!schema||!Array.isArray(schema.rows)||!Array.isArray(schema.columns)||V239_SKIP_RE.test(String(schema.reportId||''))||schema.__v239Orig)return schema;
- if(schema.rows.filter(r=>!r?._group).length<2)return schema;
- return v239Build(schema,true)||v239Build(schema,false)||schema;
+ const ex=v239Explode(schema),base=ex||schema;
+ let res=null;
+ if(base.rows.filter(r=>!r?._group).length>=2)res=v239Build(base,true)||v239Build(base,false);
+ if(!res&&ex){res={...ex};delete res.__v239Merge}
+ if(!res)return schema;
+ Object.defineProperty(res,'__v239Orig',{value:{columns:schema.columns,rows:schema.rows},enumerable:false,configurable:true,writable:true});
+ return res;
 }
 function v239Build(schema,useBase){
  const pick=v239PickKey(schema,useBase);if(!pick)return null;
- const cols=schema.columns,key=pick.col,runs=pick.list.filter(x=>!x.group),idxCol=cols.find(v239IsIndex);
+ const keep=!!schema.v239KeepIndex,cols=schema.columns,key=pick.col,runs=pick.list.filter(x=>!x.group),idxCol=keep?null:cols.find(v239IsIndex);
  const data=schema.rows.filter(r=>!r?._group);
  const numLike=new Set(cols.filter(c=>c.numeric||data.every(r=>{const v=v239Val(r[c.key]);return v239Empty(v)||/^[-+]?[0-9٠-٩]/.test(v)})).map(c=>c.key));
- const textCols=cols.filter(c=>c!==key&&c!==idxCol&&!numLike.has(c.key));
+ const textCols=cols.filter(c=>c!==key&&c!==idxCol&&!numLike.has(c.key)&&!v239IsIndex(c));
  const constIn=(c,rows)=>new Set(rows.map(r=>v239Val(r[c.key]))).size<=1;
- const constant=runs.length>=3?textCols.filter(c=>runs.every(x=>constIn(c,x.rows))):[];
+ const constant=runs.length>=3?textCols.filter(c=>!c.spanWith&&runs.every(x=>constIn(c,x.rows))):[];
  let sub=null,subBest=Infinity;
  v239Candidates(schema).forEach(c=>{
   if(c===key||constant.includes(c))return;
-  const rr=runs.map(x=>v239SubRuns(x.rows,c.key));
+  const rr=runs.map(x=>v239SubRuns(x.rows,c));
   if(!rr.some(g=>g.some(y=>y.idx.length>1)))return;
-  if(!rr.every(g=>v239Sorted(g.map(y=>({v:y.v,seg:0})))))return;
+  if(!rr.every(g=>v239Sorted(g.map(y=>({v:y.v,id:y.id,seg:0})))))return;
   const n=rr.reduce((a,g)=>a+g.length,0);if(n<subBest){subBest=n;sub=c}
  });
  const ik=idxCol?idxCol.key:V239_IK,out=[];let gn=0;
  for(const x of pick.list){
-  if(x.group){out.push({...x.group,[V239_IK]:''});continue}
-  gn++;const gid='g'+gn,subs=sub?v239SubRuns(x.rows,sub.key):[];
-  const subOf=[];subs.forEach((y,si)=>{const sc=y.idx.length>1?textCols.filter(c=>c!==sub&&!constant.includes(c)&&constIn(c,y.idx.map(i=>x.rows[i]))):[];y.idx.forEach((i,k)=>subOf[i]={id:gid+'s'+si,first:k===0,sc})});
+  if(x.group){out.push(keep?x.group:{...x.group,[V239_IK]:''});continue}
+  gn++;const gid='g'+gn,subs=sub?v239SubRuns(x.rows,sub):[];
+  const subOf=[];subs.forEach((y,si)=>{const yr=y.idx.map(i=>x.rows[i]);const sc=y.idx.length>1?cols.filter(c=>c!==sub&&c!==key&&!constant.includes(c)&&c!==idxCol&&((c.spanWith&&c.spanWith===sub.key)||(!c.spanWith&&textCols.includes(c)))&&constIn(c,yr)):[];y.idx.forEach((i,k)=>subOf[i]={id:gid+'s'+si,first:k===0,sc})});
+  const keyWith=cols.filter(c=>c.spanWith===key.key&&constIn(c,x.rows));
   for(let ri=0;ri<x.rows.length;ri++){
-   const r0=x.rows[ri],r={...r0,[V239_IK]:gn},spans={};
-   r[ik]=gn;
-   spans[ik]={g:gid,s:ri===0};
+   const r0=x.rows[ri],r=keep?{...r0}:{...r0,[V239_IK]:gn},spans={...(r0._v239||{})};
+   if(!keep){r[ik]=gn;spans[ik]={g:gid,s:ri===0}}
    const full=v239Val(r0[key.key]),sf=useBase?v239Suffix(full):'';
    r[key.key]=useBase?(v239Base(full)||r0[key.key]):r0[key.key];
    spans[key.key]={g:gid,s:ri===0,k:1};
    constant.forEach(c=>spans[c.key]={g:gid,s:ri===0});
+   keyWith.forEach(c=>spans[c.key]={g:gid,s:ri===0});
    const so=subOf[ri];
    if(so){spans[sub.key]={g:so.id,s:so.first,k:1};so.sc.forEach(c=>spans[c.key]={g:so.id,s:so.first})}
-   if(sf){ // ما بعد « — » في خانة الكيان ينتقل إلى أول خانة نصية غير مدمجة في السطر نفسه
+   if(sf){
     const t=textCols.find(c=>!spans[c.key]);
     if(!t)return null;
     r[t.key]=`${v239Val(r0[t.key])} (${sf})`;
@@ -10370,9 +10387,8 @@ function v239Build(schema,useBase){
    out.push(r);
   }
  }
- const newCols=idxCol?[idxCol,...cols.filter(c=>c!==idxCol)]:[{key:V239_IK,label:'م',weight:.3,align:'right',numeric:true,id:false,nowrap:true},...cols];
+ const newCols=keep?cols:(idxCol?[idxCol,...cols.filter(c=>c!==idxCol)]:[{key:V239_IK,label:'م',weight:.3,align:'right',numeric:true,id:false,nowrap:true},...cols]);
  const res={...schema,columns:newCols,rows:out};delete res.__v239Merge;
- Object.defineProperty(res,'__v239Orig',{value:{columns:cols,rows:schema.rows},enumerable:false,configurable:true,writable:true});
  return res;
 }
 function v239ApplySpans(sheet){
@@ -10431,16 +10447,86 @@ reportRowNode=function(schema,row,index){
  (schema.columns||[]).forEach((c,i)=>{const s=sp[c.key],td=tr.children[i];if(!s||!td)return;td.dataset.v239c=c.key;td.dataset.v239g=s.g;td.dataset.v239s=s.s?'1':'0';td.dataset.v239t=td.textContent;if(s.k)td.dataset.v239k='1'});
  return tr;
 };
-/* v239: «إسناد الفصول — كل المدارس (جدول)»: سطر لكل معلم (والمدرسة تُدمج عموديًا عند المعاينة)، وبعد معلمي كل مدرسة سطر فصولها غير المسندة. */
+/* v239: تقارير بلا خانات مكدسة — صف لكل فصل، والمعلم وبياناته (النوع/النصاب/الإجمالي/المتبقي) والمدرسة تُدمج عموديًا عند المعاينة. */
 ReportAdapters.stageAssignA={async load(ctx){
  const data=await v238Load(),rows=[];
  data.forEach(x=>{
   const m=v238Meta(x);
-  x.teachers.forEach(t=>rows.push({...m,_tid:t.id,_assigned:t.assigned,_noClass:!t.as.length&&t.kind!=='إجازة',index:0,school:x.school.name,name:t.name,kind:t.kind,norm:t.norm===''?'—':String(t.norm),classes:t.classesText||'—',assigned:t.as.length?String(t.assigned):'0',state:t.state,_search:x.school.name+' '+t.name}));
-  if(x.open.length)rows.push({...m,_openCount:x.open.length,_openPeriods:x.open.reduce((n,o)=>n+o.missing,0),index:0,school:x.school.name,name:'فصول غير مسندة',kind:`عددها ${x.open.length}`,norm:'—',classes:x.open.map(o=>`${o.label}: ${o.missing}${o.partial?' (جزئي)':''}`).join('، '),assigned:'—',state:`${x.open.reduce((n,o)=>n+o.missing,0)} حصة`,_search:x.school.name});
+  x.teachers.forEach(t=>{
+   const base={...m,_tid:t.id,_nid:t.id,index:0,school:x.school.name,name:t.name,kind:t.kind,norm:t.norm===''?'—':String(t.norm),total:t.as.length?String(t.assigned):'0',state:t.state,_search:x.school.name+' '+t.name};
+   if(!t.as.length){rows.push({...base,_noClass:t.kind!=='إجازة',_assigned:0,cls:'—',p:'—'});return}
+   (t.items||[]).forEach(it=>rows.push({...base,_assigned:it.p,cls:it.cls,p:String(it.p)}));
+  });
+  const openP=x.open.reduce((n,o)=>n+o.missing,0);
+  x.open.forEach(o=>rows.push({...m,_nid:'open:'+x.school.id,_openCount:1,_openPeriods:o.missing,index:0,school:x.school.name,name:'فصول غير مسندة',kind:'—',norm:'—',total:String(openP),state:'—',cls:o.label+(o.partial?' (جزئي)':''),p:String(o.missing),_search:x.school.name}));
  });
- return v103BaseReport('stageAssignA',ctx,[reportColumn('index','م',.3,{numeric:true}),reportColumn('school','المدرسة',1.3),reportColumn('name','المعلم',1.5),reportColumn('kind','النوع',.9),reportColumn('norm','النصاب',.5,{numeric:true}),reportColumn('classes','الفصول المسندة: الحصص',3),reportColumn('assigned','الحصص المسندة',.6,{numeric:true}),reportColumn('state','المتبقي / الزيادة',.8)],rows,'المعلمون وفصولهم المسندة في كل مدارس النطاق، وبعد كل مدرسة فصولها غير المسندة');
+ const C=(k,l,w,o={},h={})=>({...reportColumn(k,l,w,o),...h});
+ return v103BaseReport('stageAssignA',ctx,[C('index','م',.3,{numeric:true}),C('school','المدرسة',1.3,{},{v239Id:'_schoolId'}),C('name','المعلم',1.5,{},{v239Id:'_nid'}),C('kind','النوع',.9,{},{spanWith:'name'}),C('norm','النصاب',.5,{numeric:true},{spanWith:'name'}),C('cls','الفصل',1.6),C('p','الحصص',.5,{numeric:true}),C('total','إجمالي المسند',.6,{numeric:true},{spanWith:'name'}),C('state','المتبقي / الزيادة',.8,{},{spanWith:'name'})],rows,'لكل معلم صف لكل فصل مسند، وبعد معلمي كل مدرسة فصولها غير المسندة');
 }};
+ReportAdapters.stageAssignB={async load(ctx){
+ const data=await v238Load(),rows=[];
+ data.forEach(x=>{
+  const m=v238Meta(x),withC=x.teachers.filter(t=>t.as.length),without=x.teachers.filter(t=>!t.as.length),openP=x.open.reduce((n,o)=>n+o.missing,0);
+  rows.push({...m,_group:true,_groupTitle:`${x.school.name} — ${x.stage}${x.sup?' — الموجه: '+x.sup:''} — الفصول: ${x.classCount}`,section:'',n:'',name:'',info:'',cls:'',p:' '});
+  const info=t=>`${t.kind}${t.norm!=='—'?' · نصاب '+t.norm:''}${/^أجر/.test(t.state)||t.state==='—'?'':' · '+t.state}`;
+  const secT=`المعلمون وفصولهم (${withC.length})`,secO=`فصول غير مسندة (${x.open.length})`,secN=`معلمون بلا فصول (${without.length})`;
+  withC.forEach((t,i)=>(t.items||[]).forEach(it=>rows.push({...m,_tid:t.id,_nid:t.id,_assigned:it.p,section:secT,n:String(i+1),name:t.name,info:info(t),cls:it.cls,p:String(it.p),_search:t.name})));
+  if(!withC.length)rows.push({...m,section:secT,n:'—',name:'—',info:'—',cls:'لم تُسند فصول لأي معلم بعد.',p:'—'});
+  x.open.forEach((o,i)=>rows.push({...m,_openCount:1,_openPeriods:o.missing,section:secO,n:String(i+1),name:'—',info:o.partial?'مسند جزئيًا':'غير مسند',cls:o.label,p:String(o.missing)}));
+  if(!x.open.length)rows.push({...m,section:secO,n:'—',name:'—',info:'—',cls:x.classCount?'كل الفصول مسندة بالكامل.':'لم تُدخل فصول بعد.',p:'0'});
+  without.forEach((t,i)=>rows.push({...m,_tid:t.id,_nid:t.id,_noClass:t.kind!=='إجازة',section:secN,n:String(i+1),name:t.name,info:info(t),cls:'—',p:'—',_search:t.name}));
+  if(!without.length)rows.push({...m,section:secN,n:'—',name:'—',info:'—',cls:'كل المعلمين لهم فصول.',p:'—'});
+ });
+ const C=(k,l,w,o={},h={})=>({...reportColumn(k,l,w,o),...h});
+ const sc=v103BaseReport('stageAssignB',ctx,[C('section','القسم',1.2),C('n','م',.3,{numeric:true},{spanWith:'name'}),C('name','المعلم',1.5,{},{v239Id:'_nid'}),C('info','النوع والنصاب',1.4,{},{spanWith:'name'}),C('cls','الفصل',1.8),C('p','الحصص',.5,{numeric:true})],rows,'لكل مدرسة: المعلمون وفصولهم (صف لكل فصل)، الفصول غير المسندة، والمعلمون بلا فصول');
+ sc.v239KeepIndex=true;return sc;
+}};
+/* v239: تقرير إسناد الفصول للمدرسة — صف لكل فصل، والمعلم مدمج عموديًا. */
+v174AssignmentReport=function(d,ctx){
+ const rows=[],meta={_schoolId:String(d.school.id),_schoolIds:[String(d.school.id)],_school:d.school.name,_schools:[d.school.name],_stage:d.school.stage,_stages:[d.school.stage]};
+ const classOrder=new Map(d.classes.map((c,i)=>[String(c.id),i])),{groups}=v112TeacherGroups(d);
+ const withC=[],without=[];groups.forEach(g=>(g.assignments.length?withC:without).push(g));
+ const kindOf=g=>g.teacher?(isPaidTeacher(g.teacher)?'بالأجر':'ثابت'):'غير ظاهر في الكادر';
+ const secT=`المعلمون وفصولهم (${withC.length})`;
+ withC.forEach((g,i)=>{
+  const as=[...g.assignments].sort((a,b)=>(classOrder.get(String(a.class_id))??1e9)-(classOrder.get(String(b.class_id))??1e9)),tot=as.reduce((n,a)=>n+reportNumber(a.weekly_periods),0);
+  as.forEach(a=>rows.push({...meta,section:secT,n:String(i+1),name:g.name,_nid:String(g.id),kind:kindOf(g),cls:`${v110ClassName(a)}${a.subject_name&&!/^علوم$/.test(a.subject_name)?' ('+a.subject_name+')':''}`,periods:String(reportNumber(a.weekly_periods)),total:String(tot),_search:g.name}));
+ });
+ if(!withC.length)rows.push({...meta,section:secT,n:'—',name:'—',kind:'—',cls:'لم تُسند فصول لأي معلم بعد.',periods:'—',total:'—'});
+ const open=[];
+ d.classes.forEach(c=>{const req=reportNumber(v110ClassRequired(c)),got=d.assignments.filter(a=>String(a.class_id)===String(c.id)).reduce((n,a)=>n+reportNumber(a.weekly_periods),0);if(req>0&&got<req)open.push({c,req,got})});
+ const secO=`الفصول غير المسندة أو المسندة جزئيًا (${open.length})`;
+ open.forEach(({c,req,got},i)=>rows.push({...meta,section:secO,n:String(i+1),name:'—',kind:got?`مسند جزئيًا: ${got} من ${req}`:'غير مسند',cls:v110ClassName(c),periods:String(req-got),total:'—'}));
+ if(!open.length)rows.push({...meta,section:secO,n:'—',name:'—',kind:'—',cls:d.classes.length?'كل الفصول مسندة بالكامل.':'لم تُدخل فصول لهذه المدرسة بعد.',periods:'—',total:'—'});
+ const secN=`معلمون لم تُسند لهم فصول (${without.length})`;
+ without.forEach((g,i)=>{const t=g.teacher;rows.push({...meta,section:secN,n:String(i+1),name:g.name,_nid:String(g.id),kind:t?[t.on_renewed_leave?'إجازة':'',isPaidTeacher(t)?'بالأجر':'ثابت',t.display_job||t.job_title||''].filter(Boolean).join(' — '):'—',cls:'—',periods:'0',total:'0',_search:g.name})});
+ if(!without.length)rows.push({...meta,section:secN,n:'—',name:'—',kind:'—',cls:'كل المعلمين لهم فصول مسندة.',periods:'—',total:'—'});
+ const openPeriods=open.reduce((n,x)=>n+x.req-x.got,0);
+ const C=(k,l,w,o={},h={})=>({...reportColumn(k,l,w,o),...h});
+ const sc=makeReportSchema({reportId:'schoolAssignments',title:'تقرير إسناد الفصول',subtitle:d.school.name+' — المعلمون وفصولهم المسندة، والفصول غير المسندة، والمعلمون بلا فصول',period:ctx.period,issuer:ctx.issuer,
+  columns:[C('section','القسم',1.3),C('n','م',.3,{numeric:true},{spanWith:'name'}),C('name','المعلم',1.6,{},{v239Id:'_nid'}),C('kind','النوع / الحالة',1.1,{},{spanWith:'name'}),C('cls','الفصل',1.8),C('periods','الحصص',.5,{numeric:true}),C('total','إجمالي المعلم',.6,{numeric:true},{spanWith:'name'})],rows,
+  summary:[reportMetric('المعلمون',groups.length),reportMetric('معلمون لهم فصول',withC.length),reportMetric('معلمون بلا فصول',without.length),reportMetric('الفصول',d.classes.length),reportMetric('فصول غير مسندة',open.length),reportMetric('حصص غير مسندة',openPeriods)],
+  totals:[reportTotalsMetric('الحصص المطلوبة',d.required),reportTotalsMetric('الحصص المسندة',d.assigned),reportTotalsMetric('حصص غير مسندة',openPeriods)],approval:{enabled:false}});
+ sc.v239KeepIndex=true;return sc;
+};
+/* v239: تقرير المدرسة الشامل — بلا ترقيم مضاف (أقسام)، وخاناته متعددة الأسطر تُفرد صفوفًا عند المعاينة. */
+{
+ const prevDossier=ReportAdapters.schoolDossier.load;
+ ReportAdapters.schoolDossier.load=async function(...x){const sc=await prevDossier.apply(this,x);if(sc&&typeof sc==='object')sc.v239KeepIndex=true;return sc};
+}
+/* v239: تقرير الموجهين ومدارسهم — تُملأ خانات الموجه في كل صف (كانت فارغة بعد الأول) ليُدمج عموديًا، وعدد مدارسه يُكتب مرة واحدة. */
+{
+ const prevSup=ReportAdapters.supervisors.load;
+ ReportAdapters.supervisors.load=async function(...x){
+  const sc=await prevSup.apply(this,x);
+  if(!sc||sc.reportId!=='supervisors'||!Array.isArray(sc.columns)||!sc.columns.some(c=>c.key==='n')||!sc.columns.some(c=>c.key==='name'))return sc;
+  let head=null,gi=0;
+  sc.rows.forEach(r=>{if(r._group)return;if(String(r.name)!==' '){head=r;gi++;r._gid='s'+gi}else if(head){r.name=head.name;r.phone=head.phone;r.count=head.count;r._gid='s'+gi}});
+  sc.columns=[{...reportColumn('index','م',.3,{numeric:true})},...sc.columns.map(c=>c.key==='name'?{...c,v239Id:'_gid'}:c.key==='count'?{...c,spanWith:'name'}:c.key==='phone'?{...c,spanWith:'name'}:c.key==='stage'?{...c,spanWith:'name'}:c)];
+  let k=0;sc.rows.forEach(r=>{if(!r._group){if(r._gid!==sc.rows[sc.rows.indexOf(r)-1]?._gid)k++;r.index=k}});
+  return sc;
+ };
+}
 </script>
 
 <div id="reportPreviewOverlay" class="report-preview-overlay" role="dialog" aria-modal="true" aria-label="معاينة التقرير" aria-hidden="true">
