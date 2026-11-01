@@ -10280,15 +10280,6 @@ function v238Metrics(schema){
 }
 const __v238Rebuild=v103RebuildMetrics;
 v103RebuildMetrics=function(schema){return V238_IDS.includes(schema?.reportId)?v238Metrics(schema):__v238Rebuild(schema)};
-ReportAdapters.stageAssignA={async load(ctx){
- const data=await v238Load(),rows=[];
- data.forEach(x=>{
-  const m=v238Meta(x);
-  x.teachers.forEach(t=>rows.push({...m,_tid:t.id,_assigned:t.assigned,_noClass:!t.as.length&&t.kind!=='إجازة',index:0,school:x.school.name,name:t.name,kind:t.kind,norm:t.norm===''?'—':String(t.norm),classes:t.classesText||'—',assigned:t.as.length?String(t.assigned):'0',state:t.state,_search:t.name}));
-  if(x.open.length)rows.push({...m,_openCount:x.open.length,_openPeriods:x.open.reduce((n,o)=>n+o.missing,0),index:'',school:x.school.name,name:'فصول غير مسندة',kind:`عددها ${x.open.length}`,norm:'—',classes:x.open.map(o=>`${o.label}: ${o.missing}${o.partial?' (جزئي)':''}`).join('، '),assigned:'—',state:`${x.open.reduce((n,o)=>n+o.missing,0)} حصة`});
- });
- return v103BaseReport('stageAssignA',ctx,[reportColumn('index','م',.3,{numeric:true}),reportColumn('school','المدرسة',1.3),reportColumn('name','المعلم',1.5),reportColumn('kind','النوع',.9),reportColumn('norm','النصاب',.5,{numeric:true}),reportColumn('classes','الفصول المسندة: الحصص',3),reportColumn('assigned','الحصص المسندة',.6,{numeric:true}),reportColumn('state','المتبقي / الزيادة',.8)],rows,'المعلمون وفصولهم المسندة في كل مدارس النطاق، وبعد كل مدرسة فصولها غير المسندة');
-}};
 ReportAdapters.stageAssignB={async load(ctx){
  const data=await v238Load(),rows=[];
  data.forEach(x=>{
@@ -10339,10 +10330,11 @@ function v239Merge(schema){
  const pick=v239PickKey(schema);if(!pick)return schema;
  const cols=schema.columns,key=pick.col,runs=pick.list.filter(x=>!x.group),idxCol=cols.find(v239IsIndex);
  const others=cols.filter(c=>c!==key&&c!==idxCol);
- const numLike=new Set(cols.filter(c=>c.numeric||schema.rows.filter(r=>!r?._group).every(r=>{const v=v239Val(r[c.key]);return v239Empty(v)||/^[-+]?\d+([.,]\d+)?%?$/.test(v)})).map(c=>c.key));
+ const numLike=new Set(cols.filter(c=>c.numeric||schema.rows.filter(r=>!r?._group).every(r=>{const v=v239Val(r[c.key]);return v239Empty(v)||/^[-+]?[0-9٠-٩]/.test(v)})).map(c=>c.key));
  const isConst=(c,groups)=>!numLike.has(c.key)&&groups.every(g=>new Set(g.map(r=>v239Val(r[c.key]))).size<=1);
- const constant=others.filter(c=>isConst(c,runs.map(x=>x.rows)));
+ const constant=runs.length>=3?others.filter(c=>isConst(c,runs.map(x=>x.rows))):[];
  let varying=others.filter(c=>!constant.includes(c));
+ if(!varying.length)return schema; // أسطر متطابقة: لا دمج كي لا يضيع عددها
  // مستوى ثانٍ: كيان آخر يتكرر متتاليًا داخل المجموعات (مثل المعلم داخل المدرسة) يُكتب مرة واحدة في سطره
  let sub=null,subBest=Infinity;
  v239Candidates(schema).forEach(c=>{
@@ -10358,9 +10350,11 @@ function v239Merge(schema){
   const head=v239Val(r[cs[0].key]),rest=cs.slice(1).map(c=>[lab(c),v239Val(r[c.key])]).filter(([,v])=>!v239Empty(v)).map(([l,v])=>`${l}: ${v}`);
   return cs.length===1?head:(rest.length?`${head} (${rest.join(' · ')})`:head);
  };
+ const kvPair=varying.length===2&&/^(القيمة|العدد)$/.test(lab(varying[1]));
  const plainLine=r=>{
   if(!varying.length)return '';
   if(varying.length===1)return v239Val(r[varying[0].key]);
+  if(kvPair)return `${v239Val(r[varying[0].key])}: ${v239Val(r[varying[1].key])}`;
   const head=v239Val(r[varying[0].key]),rest=varying.slice(1).map(c=>[lab(c),v239Val(r[c.key])]).filter(([,v])=>!v239Empty(v)).map(([l,v])=>`${l}: ${v}`);
   return rest.length?`${head} — ${rest.join(' · ')}`:head;
  };
@@ -10369,7 +10363,8 @@ function v239Merge(schema){
   if(!sub)return rows.map(r=>{const l=plainLine(r),x=sfx(r,key);if(!x)return l;const i=l.indexOf(' — ');return i<0?l+x:l.slice(0,i)+x+l.slice(i)});
   const rest=varying.filter(c=>c!==sub);
   return v239SubRuns(rows,sub.key).map(y=>{
-   const sc=rest.filter(c=>isConst(c,[y.rows])&&y.rows.length>1),sv=rest.filter(c=>!sc.includes(c));
+   let sc=rest.filter(c=>isConst(c,[y.rows])&&y.rows.length>1),sv=rest.filter(c=>!sc.includes(c));
+   if(!sv.length){sc=[];sv=rest}
    const attrs=sc.map(c=>[lab(c),v239Val(y.rows[0][c.key])]).filter(([,v])=>!v239Empty(v)).map(([l,v])=>`${l}: ${v}`);
    const items=y.rows.length>1?y.rows.map(r=>(item(r,sv)+sfx(r,key)+sfx(r,sub)).trim()).filter(Boolean):[];
    if(y.rows.length===1){const r0=y.rows[0],one=item(r0,rest);return `${y.v||'—'}${sfx(r0,sub)}${rest.length?' — '+one:''}${sfx(r0,key)}`}
@@ -10393,20 +10388,26 @@ function v239Merge(schema){
    out.push(r);
   }
  });
- return {...schema,columns:newCols,rows:out,__v239Orig:{columns:cols,rows:schema.rows}};
+ const res={...schema,columns:newCols,rows:out};delete res.__v239Merge;
+ Object.defineProperty(res,'__v239Orig',{value:{columns:cols,rows:schema.rows},enumerable:false,configurable:true,writable:true});
+ return res;
 }
 const __v239Apply=applyCurrentFiltersToReportSchema;
 applyCurrentFiltersToReportSchema=function(schema,state){
  const out=__v239Apply.apply(this,arguments);
  if(!schema||!schema.__v239Merge)return out;
+ try{delete schema.__v239Merge}catch{}
  try{const m=v239Merge(out);if(m&&m.reportId==='stageAssignA'){let i=0;m.rows.forEach(r=>{if(!r._group)r.index=r._cont?'\u00a0':++i})}return m}catch(e){console.warn('v239 merge skipped',e);return out}
 };
 const __v239Open=openReportById;
 openReportById=async function(reportId,options={}){
  const a=ReportAdapters[reportId];if(!a||typeof a.load!=='function')return __v239Open.apply(this,arguments);
- const orig=a.load;
- a.load=async function(...x){const r=await orig.apply(this,x);try{if(r&&typeof r==='object')r.__v239Merge=true}catch{}return r};
- try{return await __v239Open.apply(this,arguments)}finally{a.load=orig}
+ if(!a.__v239Wrapped){ // غلاف دائم لا يعلّم إلا طلبات المعاينة (علامة في الخيارات) — لا يمس Excel أو شاشة التقارير
+  const orig=a.load;
+  a.load=async function(ctx,opt,...rest){const r=await orig.call(this,ctx,opt,...rest);if(opt&&opt.__v239Preview&&r&&typeof r==='object')Object.defineProperty(r,'__v239Merge',{value:true,enumerable:false,configurable:true,writable:true});return r};
+  Object.defineProperty(a,'__v239Wrapped',{value:true,enumerable:false});
+ }
+ return __v239Open.call(this,reportId,{...(options||{}),__v239Preview:true});
 };
 const __v239Render=renderReportSchema;
 renderReportSchema=function(schema,sheet){
@@ -10418,6 +10419,12 @@ renderReportSchema=function(schema,sheet){
   if(__activeReportSchema===schema)__activeReportSignature=reportHash(schema);
   return __v239Render.apply(this,arguments);
  }
+};
+const __v239Desc=reportFilterDescription;
+reportFilterDescription=function(schema){
+ const t=__v239Desc.apply(this,arguments);if(!schema||!schema.__v239Orig)return t;
+ const k=schema.columns[0]?.key,n=schema.rows.filter(r=>!r._group&&r[k]!=='\u00a0').length;
+ return String(t).replace(/عدد النتائج: \d+$/,'عدد النتائج: '+n);
 };
 const __v239RowNode=reportRowNode;
 reportRowNode=function(schema,row,index){
