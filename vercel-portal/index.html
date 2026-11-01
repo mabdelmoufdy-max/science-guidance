@@ -190,6 +190,7 @@ summary{cursor:pointer;font-weight:600;padding:4px 0}
         (r.remaining > 0 ? ' متبقي لك ' + plural(r.remaining, 'محاولة واحدة', 'محاولتان', 'محاولات') + '.' : ' كانت هذه آخر محاولة، وسيتوقف الدخول مؤقتًا.');
       case 'locked': return 'تم إيقاف الدخول مؤقتًا بسبب محاولات خاطئة متكررة. حاول بعد ' + (r.minutes || 15) + ' دقيقة.';
       case 'busy': return 'الخدمة مشغولة الآن، حاول بعد قليل.';
+      case 'no_classes': return 'لا يمكن إرسال الطلب بدون فصول. اختر فصلًا واحدًا على الأقل من الفصول غير المسندة.';
       case 'taken': return 'هذا الفصل بهذه المادة أُسند لمعلم آخر قبل إرسالك. ارجع إلى خطوة الفصول (ستتحدّث القائمة) واختر غيره.';
       case 'pending_taken': return 'يوجد طلب معلّق من معلم آخر على هذا الفصل بهذه المادة. اختر مادة أو فصلًا آخر، أو انتظر البتّ في ذلك الطلب.';
       case 'subject_required': return 'اختر المادة التي تدرّسها في كل فصل ثانوي اخترته.';
@@ -295,6 +296,7 @@ summary{cursor:pointer;font-weight:600;padding:4px 0}
   var STEP_N = { person: 'بياناتك', school: 'المدرسة', classes: 'الفصول', deleg: 'فصول الانتداب', review: 'المراجعة' };
   function dTypeLabel(d) { return d.type === 'full' ? 'انتداب كلي' : 'انتداب جزئي'; }
   function dSel(id) { return S.dsel[id] || (S.dsel[id] = new Map()); }
+  function dCount() { return hasDeleg() ? delegs().reduce(function (n, d) { return n + dSel(d.school_id).size; }, 0) : 0; }
   function dClass(d, id) { var l = d.classes || []; for (var i = 0; i < l.length; i++) if (l[i].id === id) return l[i]; return null; }
   function dLines(d) {
     var out = []; dSel(d.school_id).forEach(function (p, id) { var c = dClass(d, id); out.push((c ? c.label : 'فصل غير معروف') + ' · ' + perLabel(p)); });
@@ -594,7 +596,7 @@ summary{cursor:pointer;font-weight:600;padding:4px 0}
     else nav.appendChild(mkBtn('btn-ok', S.mode === 'new' ? 'إرسال التسجيل' : 'إرسال التعديلات', async function (ev) {
       hideErr(box);
       if (S.closed) { showErr(box, reasonMsg({ reason: 'closed' })); return; }
-      if (S.sel.size === 0 && !S._noClassOk) { showErr(box, 'لم تختر أي فصل. إن كنت لا تدرّس أي فصل الآن اضغط «إرسال» مرة أخرى للتأكيد.'); S._noClassOk = true; return; }
+      if (S.sel.size + dCount() === 0) { showErr(box, 'لا يمكن إرسال الطلب بدون فصول. اختر فصلًا واحدًا على الأقل من الفصول غير المسندة.'); return; } // v2.0
       var b = ev.currentTarget; btnBusy(b, true, 'جارٍ الإرسال...');
       try { await doSubmit(false, box); } catch (e) { showErr(box, errMsg(e)); }
       if (document.body.contains(b)) btnBusy(b, false);
@@ -705,6 +707,7 @@ summary{cursor:pointer;font-weight:600;padding:4px 0}
       cl.forEach(function (c) { if (S.sel.has(c.id) && needSubject(c) && !S.subj.get(c.id)) miss.push(c.label); });
       if (miss.length) { showErr(box, 'اختر المادة التي تدرّسها في: ' + miss.join('، ') + '.'); return false; }
     }
+    if (!isSup() && stepKey(step) === 'classes' && !hasDeleg() && S.sel.size === 0) { showErr(box, 'لا يمكن إرسال الطلب بدون فصول. اختر فصلًا واحدًا على الأقل من الفصول غير المسندة.'); return false; } // v2.0
     return true;
   }
 
@@ -779,10 +782,10 @@ summary{cursor:pointer;font-weight:600;padding:4px 0}
     body.appendChild(holder);
     loadClasses(S.school.id, true).then(function (list) {
       holder.replaceChildren();
-      if (!list.length) { holder.appendChild(h('div', { class: 'warn' }, 'لا توجد فصول مسجّلة لهذه المدرسة بعد. يمكنك المتابعة وسيضيفها المشرف.')); return; }
+      if (!list.length) { holder.appendChild(h('div', { class: 'warn' }, 'لا توجد فصول مسجّلة لهذه المدرسة بعد، ولا يمكن إرسال الطلب بدون فصول. تواصل مع منسق المرحلة لإضافة فصول المدرسة.')); return; }
       var known = {}; list.forEach(function (c) { known[c.id] = c; });
-      // v1.8: الفصل المسند لمعلم آخر لا يُختار (لا ينطبق على مسار مشرف المدرسة ولا على من لا بيانات مسجّلة له)
-      function lockedFor(c) { return !isSup() && !S.limited && c.locked === true && !S.baseSel.has(c.id); }
+      // v2.0: الفصل المسند لمعلم آخر (أو عليه طلب معلّق لغيره) لا يُختار في كل المسارات؛ فصول المعلم نفسه مستثناة
+      function lockedFor(c) { return c.locked === true && !S.baseSel.has(c.id); }
       var dropped = [];
       Array.from(S.sel.keys()).forEach(function (id) {
         if (!known[id]) S.sel.delete(id);
@@ -868,6 +871,14 @@ summary{cursor:pointer;font-weight:600;padding:4px 0}
       var known = {}; list.forEach(function (c) { known[c.id] = c; });
       Array.from(sel.keys()).forEach(function (id) { if (!known[id]) sel.delete(id); });
       var grid = h('div', { class: 'dgrid' }), sum = h('div', { class: 'dsum' });
+      // v2.0: حالة الإسناد من قائمة فصول المدرسة؛ المسند لغيره مقفول (فصول المعلم نفسه مستثناة)
+      var lk = {}, own = S.dbase[d.school_id] || new Map();
+      function dLocked(c) { var x = lk[c.id]; return !!(x && x.locked === true && !own.has(c.id)); }
+      rpc('teacher_portal_classes_v2', { p_school_id: d.school_id, p_civil: S.auth ? S.auth.civil : null }).then(function (r) {
+        (r || []).forEach(function (x) { lk[x.id] = x; });
+        Array.from(sel.keys()).forEach(function (id) { if (known[id] && dLocked(known[id])) sel.delete(id); });
+        saveDraft(); draw();
+      }).catch(function () {});
       function draw() {
         grid.replaceChildren();
         var groups = [], idx = {};
@@ -876,6 +887,9 @@ summary{cursor:pointer;font-weight:600;padding:4px 0}
           grid.appendChild(h('div', { class: 'grade' }, g.t));
           grid.appendChild(h('div', { class: 'chips' }, g.items.map(function (c) {
             var on = sel.has(c.id);
+            if (dLocked(c)) { var x = lk[c.id]; return h('button', { type: 'button', class: 'chip locked', disabled: true, 'aria-disabled': 'true', 'data-dclass': c.id, 'data-locked': '1' },
+              c.class_label, h('small', null, (x.taken_by || []).length ? 'مسندة لـ ' + x.taken_by.join('، ')
+                : (x.pending_by || []).length ? 'طلب معلّق لـ ' + x.pending_by.join('، ') + ' (بانتظار الاعتماد)' : 'مسندة لمعلم آخر')); }
             return h('button', { type: 'button', class: 'chip', 'data-dclass': c.id, 'aria-pressed': on ? 'true' : 'false', onclick: function () {
               if (sel.has(c.id)) sel.delete(c.id); else sel.set(c.id, (S.dbase[d.school_id] && S.dbase[d.school_id].get(c.id)) || c.periods);
               saveDraft(); draw();
@@ -1106,11 +1120,14 @@ summary{cursor:pointer;font-weight:600;padding:4px 0}
     var nav = h('div', { class: 'row' });
     if (S.sstep > 0) nav.appendChild(mkBtn('btn2', 'السابق', function () { S.sstep--; saveDraft(); render(); }, { id: 'btn-prev' }));
     if (S.sstep < n - 1) nav.appendChild(mkBtn('btn', 'التالي', async function () {
-      hideErr(box); if (key !== 'person' || await stepOk(1, box)) { S.sstep++; saveDraft(); render(); }
+      hideErr(box);
+      if (key === 'classes' && S.sel.size === 0) { showErr(box, 'لا يمكن الإرسال بدون فصول. اختر للمعلم فصلًا واحدًا على الأقل من الفصول غير المسندة.'); return; } // v2.0
+      if (key !== 'person' || await stepOk(1, box)) { S.sstep++; saveDraft(); render(); }
     }, { id: 'btn-next' }));
     else nav.appendChild(mkBtn('btn-ok', 'إرسال للاعتماد', async function (ev) {
       hideErr(box);
       if (S.closed) { showErr(box, reasonMsg({ reason: 'closed' })); return; }
+      if (S.sel.size === 0) { showErr(box, 'لا يمكن الإرسال بدون فصول. اختر للمعلم فصلًا واحدًا على الأقل من الفصول غير المسندة.'); return; } // v2.0
       var b = ev.currentTarget; btnBusy(b, true, 'جارٍ الإرسال...');
       try { await doSupSubmit(box); } catch (e) { showErr(box, errMsg(e)); }
       if (document.body.contains(b)) btnBusy(b, false);
