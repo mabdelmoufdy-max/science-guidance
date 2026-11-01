@@ -1,4 +1,5 @@
 <!doctype html>
+<!-- v245: الكمبيوتر — رأس الصفحة: العنوان لا يصغر حتى يختفي (كان «المدارس» يتراكب على أول زر عند عرض أقل من ~1300)؛ الأزرار تلتف في المساحة الباقية يسارًا (≥801px وللرأس ذي .actions فقط). وحُذف سطر «العرض المختصر مفعّل… الإصدار …» (رسالة فنية برقم إصدار قديم)؛ رسالة الخطأ باقية. -->
 <!-- v241: الخطة التشغيلية/الملخصة للمرحلة الابتدائية: أعمدة الصفوف تعدّ فصول الرابع/الخامس/السادس (كانت تعدّ الأول/الثاني/الثالث فتظهر أصفارًا) وعناوينها «رابعة/خامسة/سادسة»؛ عند عرض الابتدائي مع مراحل أخرى «أولى / رابعة»… الإعدادي والثانوي بلا تغيير. عرض فقط. -->
 <!-- v239: تقارير بلا تكرار ولا تكدس: عند معاينة أي تقرير، إن تكرر اسم الكيان (المدرسة/المعلم/الموجه/القسم) في أسطر متتالية تبقى الأسطر بأعمدتها وتُدمج خانة الكيان وخانة «م» عموديًا فيُكتب مرة واحدة، ومثلها كيان ثانٍ داخل المجموعة؛ والخانة متعددة الأسطر تُفرد صفًا لكل سطر. تقارير الإسناد الثلاثة صارت صفًا لكل فصل (المعلم وبياناته مدمجة)، وتقرير الموجهين يُدمج عموديًا. الأرقام لا تُدمج إلا ما يخص الكيان صراحة، ولا تُدمج إلا الخانات المتطابقة نصًا ومعرّفًا؛ الجداول الأسبوعية وملفات Excel بلا تغيير؛ إن تعذّر العرض يُعرض التقرير بشكله السابق. -->
 <!-- v238: تقريران جديدان في «التقارير» للموجه فأعلى (عرض فقط، بنطاق الدور): «إسناد الفصول — كل المدارس (جدول)» سطر لكل معلم (المدرسة، النوع، النصاب، الفصول المسندة: الحصص، المسند، المتبقي/الزيادة) وبعد كل مدرسة سطر فصولها غير المسندة؛ و«إسناد الفصول — قسم لكل مدرسة» (المعلمون وفصولهم، الفصول غير المسندة، المعلمون بلا فصول). المنتدب جزئيًا يظهر في المدرستين بفصوله في كل منهما. بلا تعديل قاعدة بيانات. -->
@@ -8,7 +9,6 @@
 <!-- v233: البحث الموحد — زر «🔍» في الشريط العلوي (أو Ctrl+K أو «/») لكل الأدوار عدا المعلم: مدارس ومعلمون وموجهون (تطبيع عربي واختصارات ع/ث/ت أ، الكلمات بأي ترتيب، الرقم القومي كاملًا أو آخر 4 أرقام ويُعرض مخفيًا ••••1234، الهاتف 01…)، الشاشات والتقارير بأسمائها، وكلمات الحالة (عجز/زيادة/إجازة/منتدب/بالأجر/مشرف/مكتمل/بلا موجه) مع المرحلة. المصدر بيانات التقارير المحمّلة أصلًا (نطاق الدور، v228) + هواتف المعلمين من teacher_records عند البحث بهاتف فقط؛ النتيجة تفتح الشاشات الموجودة؛ «رجوع» يغلق النافذة؛ آخر 6 مفتوحة في المتصفح. أزرار المعلم (تعديل/إضافة انتداب/إلغاء الانتداب/إيقاف معلم الأجر) من ثابت واحد TEACHER_ACTION_ROLES تقرأ منه شاشة المعلمين أيضًا (سلوكها بلا تغيير). بلا تعديل قاعدة بيانات. -->
 <!-- v232: تقرير «نصاب الموجه من المدارس والمعلمين» كان يظهر فارغًا (النتائج 0) عند اختيار أي مرحلة في «تقارير المرحلة»: الفلتر يرسل أسماء مدارس المرحلة وصفوف التقرير بلا أسماء مدارس. كل صف يحمل الآن مدارسه (الإعدادي/الابتدائي: مدارس الموجه في المرحلة؛ الثانوي: مدارس المرحلة)، والمربعات تُحسب بعد الفلترة. عرض فقط. -->
 <!-- v230: فتح فوري — service-worker.js يعرض صفحة البرنامج من نسخة محفوظة على الجهاز ويحدّثها في الخلفية؛ وبعد التحميل (وعند العودة للتبويب) يقارن البرنامج رقم إصداره بالمنشور (`v230CheckUpdate`، من عنوان الصفحة) فيُظهر شريط «نسخة جديدة — تحديث الآن» ويضع النسخة الجديدة في الذاكرة قبل إعادة التحميل. البيانات من الشبكة دائمًا. (v227–v229 أرقام قاعدة البيانات.) -->
-<!-- v226: العنوان الموحد — فتح البرنامج المنشور من github.io (الجذر أو index.html) ينقل تلقائيًا إلى teachers-data-portal.vercel.app/app/ فيصير للجميع عنوان واحد وحساب واحد مع «إدخال بيانات المدارس» (الاسم الجديد لصفحة المنسق). نسخ trial/ لا تُنقل، و?stay يُبقي الصفحة على github.io عند الحاجة. -->
 <html lang="ar" dir="rtl">
 <head>
 <!-- إعداد: أ/ محمود عبدالمفدي محمد أبوالنجا | الصفة: معلم -->
@@ -16,7 +16,7 @@
 <script>/* v226: العنوان الموحد — انظر التعليق أعلى الملف */(function(){try{if(/\.github\.io$/.test(location.hostname)&&/^\/science-guidance\/?(index\.html)?$/.test(location.pathname)&&!/[?&]stay\b/.test(location.search))location.replace('https://teachers-data-portal.vercel.app/app/'+location.hash)}catch(e){}})();</script>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#152c43">
-<title>نظام توجيه العلوم — v241</title>
+<title>نظام توجيه العلوم — v245</title>
 <link rel="manifest" href="./manifest.webmanifest">
 <link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png">
 <link rel="apple-touch-icon" href="./icon-192.png">
@@ -1761,6 +1761,7 @@ td .btn,.report-preview-toolbar .btn{min-height:var(--ctl-h-sm);padding:4px 10px
 .page-head>.actions{display:flex;flex-wrap:wrap;gap:6px;justify-content:flex-start}
 .page-head>.actions>*{flex:0 0 auto;min-width:0}
 .page-head>.actions .btn{white-space:nowrap}
+@media(min-width:801px){.page-head:has(>.actions){grid-template-columns:minmax(min-content,max-content) minmax(min-content,1fr)!important}.page-head:has(>.actions)>.actions{justify-content:flex-end}} /* v245 */
 @media(max-width:800px){.page-head>.actions{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));width:100%}.page-head>.actions>*{width:100%}.page-head>.actions .btn,.page-head>.btn{padding-inline:8px;white-space:normal;width:100%}}
 @media(max-width:800px){.topbar .role-switch-top{display:none}}
 /* v148: سطر الانتداب الجزئي في بطاقة المعلم بشاشة التوزيع السريع */
@@ -4914,6 +4915,7 @@ function verifyCurrentPageUi(root){
 function showCompactModeStatus(root,check,errors=[]){
  root.querySelector('.compact-mode-hint')?.remove();
  if(!check.tables)return;
+ if(check.ok&&!errors.length)return; // v245: لا رسالة عند النجاح
  const hint=document.createElement('div');
  hint.className=`compact-mode-hint no-print ${check.ok&&!errors.length?'':'compact-mode-error'}`;
  hint.setAttribute('role',check.ok&&!errors.length?'status':'alert');
