@@ -37,12 +37,6 @@
       "headers": [
         { "key": "X-Frame-Options", "value": "SAMEORIGIN" }
       ]
-    },
-    {
-      "source": "/app/trial/coordinator-v190/(.*)",
-      "headers": [
-        { "key": "X-Frame-Options", "value": "SAMEORIGIN" }
-      ]
     }
   ]
 }
