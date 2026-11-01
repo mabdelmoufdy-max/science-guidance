@@ -118,9 +118,9 @@ summary{cursor:pointer;font-weight:600;padding:4px 0}
   var LBL = {
     full_name: 'الاسم', civil_id: 'الرقم المدني', phone: 'التليفون', email: 'البريد الإلكتروني', residence: 'محل الإقامة',
     job_title: 'الدرجة الوظيفية', specialty: 'التخصص', qualification: 'المؤهل', qualification_year: 'سنة المؤهل',
-    appointment_date: 'تاريخ التعيين', grade_acquired_date: 'تاريخ الحصول على الدرجة', work_start_date: 'تاريخ استلام العمل', work_type: 'نوع العمل'
+    appointment_date: 'تاريخ التعيين', grade_acquired_date: 'تاريخ الحصول على الدرجة', work_start_date: 'تاريخ استلام العمل', work_type: 'نوع العمل', teacher_code: 'كود المعلم'
   };
-  var PKEYS = ['full_name', 'phone', 'email', 'residence', 'job_title', 'specialty', 'qualification', 'qualification_year', 'appointment_date', 'grade_acquired_date', 'work_start_date'];
+  var PKEYS = ['full_name', 'phone', 'email', 'residence', 'job_title', 'specialty', 'qualification', 'qualification_year', 'appointment_date', 'grade_acquired_date', 'work_start_date', 'teacher_code'];
   var DIAC = new RegExp('[' + String.fromCharCode(0x64B) + '-' + String.fromCharCode(0x652) + String.fromCharCode(0x670) + String.fromCharCode(0x640) + ']', 'g');
 
   /* ---------- أدوات ---------- */
@@ -191,6 +191,7 @@ summary{cursor:pointer;font-weight:600;padding:4px 0}
       case 'locked': return 'تم إيقاف الدخول مؤقتًا بسبب محاولات خاطئة متكررة. حاول بعد ' + (r.minutes || 15) + ' دقيقة.';
       case 'busy': return 'الخدمة مشغولة الآن، حاول بعد قليل.';
       case 'no_classes': return 'لا يمكن إرسال الطلب بدون فصول. اختر فصلًا واحدًا على الأقل من الفصول غير المسندة.';
+      case 'code_taken': return 'كود المعلم هذا مسجّل لمعلم آخر. تأكد من الكود، أو تواصل مع منسق المرحلة.';
       case 'taken': return 'هذا الفصل بهذه المادة أُسند لمعلم آخر قبل إرسالك. ارجع إلى خطوة الفصول (ستتحدّث القائمة) واختر غيره.';
       case 'pending_taken': return 'يوجد طلب معلّق من معلم آخر على هذا الفصل بهذه المادة. اختر مادة أو فصلًا آخر، أو انتظر البتّ في ذلك الطلب.';
       case 'subject_required': return 'اختر المادة التي تدرّسها في كل فصل ثانوي اخترته.';
@@ -647,6 +648,12 @@ summary{cursor:pointer;font-weight:600;padding:4px 0}
     var em = h('input', { type: 'email', id: 'f_email', autocomplete: 'off', dir: 'ltr', value: S.person.email || '' });
     em.addEventListener('input', function () { var v = em.value.replace(/\s+/g, '').toLowerCase(); if (v !== em.value) em.value = v; S.person.email = v; em.classList.remove('invalid'); saveDraft(); });
     body.appendChild(fg('البريد الإلكتروني (اختياري)', em, 'f_email', false));
+    if (!isSup()) { // v2.2: كود المعلم
+      var tcd = h('input', { type: 'tel', id: 'f_teacher_code', inputmode: 'numeric', maxlength: '12', autocomplete: 'off', dir: 'ltr', value: digits(S.person.teacher_code || '') });
+      var htc = h('div', { class: 'hint' }); bindDigits(tcd, 8, htc);
+      tcd.addEventListener('input', function () { S.person.teacher_code = tcd.value; tcd.classList.remove('invalid'); saveDraft(); });
+      body.appendChild(fg('كود المعلم (من سجل المعلمين — اختياري)', tcd, 'f_teacher_code', false, htc));
+    }
     if (isNew) {
       body.appendChild(h('div', { class: 'fg' }, h('label', { class: 'req' }, 'نوع العمل'),
         h('div', { class: 'chips', role: 'group', 'aria-label': 'نوع العمل' },
@@ -694,6 +701,8 @@ summary{cursor:pointer;font-weight:600;padding:4px 0}
       S.person.phone = ph;
       var em = pv('email');
       if (em && !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(em)) { setInvalid('f_email', 'البريد الإلكتروني غير صحيح.'); return false; }
+      var tcv = digits(S.person.teacher_code || '');
+      if (!isSup() && tcv && !/^[0-9]{6,8}$/.test(tcv)) { setInvalid('f_teacher_code', 'كود المعلم من 6 إلى 8 أرقام.'); return false; }
       if ((S.mode === 'new' || S.mode === 'sup_new') && !S.person.work_type) { var er = document.getElementById('err_wt'); er.textContent = 'اختر نوع العمل.'; er.classList.add('on'); return false; }
       var qy = pv('qualification_year');
       if (qy && (!/^[0-9]{4}$/.test(qy) || +qy < 1960 || +qy > new Date().getFullYear())) { setInvalid('f_qualification_year', 'اكتب سنة صحيحة من 4 أرقام.'); return false; }
@@ -942,6 +951,7 @@ summary{cursor:pointer;font-weight:600;padding:4px 0}
       row('qualification', 'المؤهل', pv('qualification'), S.base.qualification);
       row('qualification_year', 'سنة المؤهل', pv('qualification_year'), S.base.qualification_year);
       row('residence', 'محل الإقامة', pv('residence'), S.base.residence);
+      if (!isSup() && (pv('teacher_code') || S.base.teacher_code)) row('teacher_code', 'كود المعلم', digits(pv('teacher_code')), digits(S.base.teacher_code || ''));
       ['appointment_date', 'grade_acquired_date', 'work_start_date'].forEach(function (k) { if (pv(k) || S.base[k]) row(k, LBL[k], fmtDate(pv(k)), fmtDate(S.base[k])); });
     }
     var schoolChanged = !isNew && S.school && S.school.id !== S.baseSchoolId;
