@@ -1,4 +1,5 @@
 <!doctype html>
+<!-- v249: نافذة «الإجازات وتجديدها»: بطاقة لكل معلم بدل الجدول (الاسم والرقم القومي وزر «تعديل»، المدرسة والشارات، القرار والمدة) — بلا تمرير أفقي ولا التفاف الزر. الأقسام والحفظ والطباعة بلا تغيير. -->
 <!-- v248: شاشة «المعلمون»: أزرار «الإجازات وتجديدها» و«توزيع العجز» و«تقرير الإدارة» و«المعلمون الموقوفون» كانت تُحقن داخل ملاحظة «صلاحية الانتداب المباشر» المخفية (.notice.info) فلا تظهر لمدير النظام والمنسق والموجه ومشرف المادة؛ صارت في رأس الشاشة. -->
 <!-- v247: مركز التنبيهات مجمّع حسب النوع لكل الأدوار: سطر واحد لكل نوع (عجز، فصول غير مسندة، زيادة، اعتماد، مكرر…) بعدده وزر «معالجة»، والأسماء مطوية (أول 5 ثم «عرض الكل»)؛ النواقص سطر واحد «بيانات ناقصة» يفتح «استكمال البيانات» بدل تكرار قائمتها؛ رقم الجرس = عدد الأنواع لا عدد الحالات. حساب التنبيهات بلا تغيير. -->
 <!-- v246: تقرير «المدارس» في التقارير: حُذف فلتر «الحالة» — كانت خياراته حالات أنصبة المعلمين (عجز/زيادة/مكتمل) بينما صفوف التقرير تحمل حالة اعتماد المدرسة، فكانت النتيجة 0 دائمًا. العجز من «تقرير العجز» و«تقرير المدارس الشامل». -->
@@ -8,7 +9,6 @@
 <!-- v238: تقريران جديدان في «التقارير» للموجه فأعلى (عرض فقط، بنطاق الدور): «إسناد الفصول — كل المدارس (جدول)» سطر لكل معلم (المدرسة، النوع، النصاب، الفصول المسندة: الحصص، المسند، المتبقي/الزيادة) وبعد كل مدرسة سطر فصولها غير المسندة؛ و«إسناد الفصول — قسم لكل مدرسة» (المعلمون وفصولهم، الفصول غير المسندة، المعلمون بلا فصول). المنتدب جزئيًا يظهر في المدرستين بفصوله في كل منهما. بلا تعديل قاعدة بيانات. -->
 <!-- v237: شاشة «إدخال بيانات المدارس»: الإطار يملأ المساحة المتاحة تلقائيًا حتى شريط الأزرار السفلي (ويُعاد حسابه عند تغيير الحجم)، وعلى الهاتف بلا حواف وبلا سطر «فتح في نافذة مستقلة»؛ وزر «⛶» لملء الشاشة يغطي شريطي البرنامج أثناء الإدخال، و«✕» يُرجعهما. والبند في آخر القائمة الجانبية بعرض زرين وباسمه كاملًا. -->
 <!-- v236: شاشة «إدخال بيانات المدارس» داخل البرنامج لمدير النظام ومنسق المرحلة: تعرض الصفحة نفسها (/coordinator/) في إطار بوضع embed (بلا شريطها العلوي)، بنفس الحساب لأن البرنامج والصفحة على نطاق واحد. الصفحة في بوابة المعلمين ورابطها المباشر بلا تغيير. (v235 رقم قاعدة البيانات.) -->
-<!-- v234: نافذة «إضافة انتداب»: حقل «المدرسة المنتدب إليها» (نفسه) صار يعرض قائمة البرنامج تحته بدل قائمة المتصفح (datalist لا تظهر في كثير من الهواتف والتطبيق المثبّت): لمس الحقل يعرض كل المدارس المتاحة مجمّعة بالمرحلة، والكتابة تضيّقها ببحث v233 (ع/ث/ت أ، الهمزات، الكلمات بأي ترتيب)، ولمس المدرسة يختارها (✓). الحفظ والتحقق (v215PickDelegSchool) بلا تغيير. بلا تعديل قاعدة بيانات. -->
 <html lang="ar" dir="rtl">
 <head>
 <!-- إعداد: أ/ محمود عبدالمفدي محمد أبوالنجا | الصفة: معلم -->
@@ -16,7 +16,7 @@
 <script>/* v226: العنوان الموحد — انظر التعليق أعلى الملف */(function(){try{if(/\.github\.io$/.test(location.hostname)&&/^\/science-guidance\/?(index\.html)?$/.test(location.pathname)&&!/[?&]stay\b/.test(location.search))location.replace('https://teachers-data-portal.vercel.app/app/'+location.hash)}catch(e){}})();</script>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#152c43">
-<title>نظام توجيه العلوم — v248</title>
+<title>نظام توجيه العلوم — v249</title>
 <link rel="manifest" href="./manifest.webmanifest">
 <link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png">
 <link rel="apple-touch-icon" href="./icon-192.png">
@@ -1945,6 +1945,16 @@ html.v237-lock,html.v237-lock body{overflow:hidden}
 .v247-name{all:unset;box-sizing:border-box;display:block;width:100%;cursor:pointer;padding:6px 8px;border:1px solid var(--line);border-radius:8px;background:#fff}
 .v247-name b{display:block;font-size:13px}.v247-name small{display:block;color:var(--muted);font-size:12px;overflow-wrap:anywhere}
 .v247-more{margin-top:6px}
+/* v249: الإجازات — بطاقات */
+.v249-leave-list{margin-top:10px;max-height:46vh;overflow-y:auto;overflow-x:hidden;display:grid;gap:8px;padding:2px}
+.v249-leave-card{border:1px solid var(--line);border-radius:var(--radius);background:#fff;padding:10px 12px;display:grid;gap:6px;min-width:0}
+.v249-lc-top{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
+.v249-lc-name{min-width:0}.v249-lc-name b{display:block;overflow-wrap:anywhere}.v249-lc-name small{display:block;color:var(--muted);text-align:right}
+.v249-lc-top .btn{flex:0 0 auto;white-space:nowrap;width:auto}
+.v249-lc-line{display:flex;flex-wrap:wrap;align-items:center;gap:6px}.v249-lc-school{font-weight:700;margin-inline-end:4px}
+.v249-lc-line br{display:none}
+.v249-lc-meta{display:flex;flex-wrap:wrap;gap:4px 18px;font-size:13px;color:var(--muted)}.v249-lc-meta span{white-space:nowrap}
+.v249-leave-empty{padding:12px}
 </style>
 </head>
 <body>
@@ -8880,21 +8890,19 @@ function v180LeaveFlags(row){
  return f.join(' ');
 }
 function v180LeaveTableRows(rows){
- return rows.map(r=>`<tr>
-  <td><b>${esc(r.full_name)}</b><br><small class="muted" style="direction:ltr;display:inline-block">${esc(r.civil_id)}</small></td>
-  <td>${esc(r.school_name||'—')}</td>
-  <td>${financialLeaveStatusBadge(r)}${v180LeaveFlags(r)?'<br>'+v180LeaveFlags(r):''}</td>
-  <td>${esc(r.decision_number||'—')}${r.decision_date?`<br><small class="muted">${esc(r.decision_date)}</small>`:''}</td>
-  <td><small>${esc(r.effective_from||'—')}<br>${esc(r.effective_to||'—')}</small></td>
-  <td>${profile?.role==='first_supervisor'?'—':`<button type="button" class="btn secondary" onclick="financialLeaveEdit('${r.teacher_id}')">تعديل</button>`}</td>
- </tr>`).join('');
+ /* v249: بطاقة لكل معلم بدل الجدول */
+ return rows.map(r=>{const dec=[r.decision_number,r.decision_date].filter(Boolean).join(' — ')||'—',per=(r.effective_from||r.effective_to)?`${r.effective_from||'—'} ← ${r.effective_to||'—'}`:'—';return `<div class="v249-leave-card">
+  <div class="v249-lc-top"><div class="v249-lc-name"><b>${esc(r.full_name)}</b><small dir="ltr">${esc(r.civil_id||'')}</small></div>${profile?.role==='first_supervisor'?'':`<button type="button" class="btn secondary" onclick="financialLeaveEdit('${r.teacher_id}')">تعديل</button>`}</div>
+  <div class="v249-lc-line"><span class="v249-lc-school">${esc(r.school_name||'—')}</span>${financialLeaveStatusBadge(r)}${v180LeaveFlags(r)}</div>
+  <div class="v249-lc-meta"><span><small>القرار:</small> ${esc(dec)}</span><span><small>المدة:</small> <bdi>${esc(per)}</bdi></span></div>
+ </div>`}).join('');
 }
 function v180LeaveRender(){
  const rows=window.__financialLeaveRows||[],leaves=rows.filter(r=>v180LeaveInTab(r,'all'));
  const tabs=document.getElementById('v180LeaveTabs');
  if(tabs)tabs.innerHTML=V180_LEAVE_TABS.map(([k,l])=>`<button type="button" class="approval-filter-card ${__v180LeaveTab===k?'active':''}" onclick="v180LeaveSetTab('${k}')"><b>${leaves.filter(r=>v180LeaveInTab(r,k)).length}</b><span>${l}</span></button>`).join('');
  const list=leaves.filter(r=>v180LeaveInTab(r,__v180LeaveTab)),body=document.getElementById('v180LeaveBody');
- if(body)body.innerHTML=v180LeaveTableRows(list)||`<tr><td colspan="6" class="muted">لا توجد إجازات في قسم «${esc(v180LeaveTabTitle(__v180LeaveTab))}».</td></tr>`;
+ if(body)body.innerHTML=v180LeaveTableRows(list)||`<div class="muted v249-leave-empty">لا توجد إجازات في قسم «${esc(v180LeaveTabTitle(__v180LeaveTab))}».</div>`;
  const btn=document.getElementById('v180LeaveReportBtn');if(btn)btn.textContent=`طباعة كشف الإجازات — ${v180LeaveTabTitle(__v180LeaveTab)}`;
 }
 function v180LeaveSetTab(tab){__v180LeaveTab=V180_LEAVE_TABS.some(t=>t[0]===tab)?tab:'all';v180LeaveRender()}
@@ -8919,7 +8927,7 @@ openLongLeaveCenter=async function(){
   <div class="notice info"><b>قاعدة الاحتساب:</b> «بانتظار التجديد» يحسب النصاب كاملًا، و«إجازة مجددة» يظهر اسم المعلم ونوع الإجازة وتكون جميع حصصه المالية صفرًا. تاريخ نهاية الإجازة للتنبيه فقط ولا يغيّر الحالة تلقائيًا.</div>
   <div id="v180LeaveTabs" class="approval-center-summary v180-leave-tabs"></div>
   <div class="actions">${profile?.role==='first_supervisor'?'':'<button type="button" class="btn primary" onclick="v180LeaveShowForm(true)">+ تسجيل إجازة</button>'}<button type="button" id="v180LeaveReportBtn" class="btn secondary" onclick="openReportById('longLeaves',{section:__v180LeaveTab,filterState:{active:false}})">طباعة كشف الإجازات</button><button type="button" class="btn danger" onclick="closeModal()">إغلاق</button></div>
-  <div class="table-wrap" style="margin-top:10px;max-height:42vh;overflow:auto"><table class="table"><thead><tr><th>المعلم / الرقم القومي</th><th>المدرسة</th><th>الحالة</th><th>القرار</th><th>من / إلى</th><th>إجراء</th></tr></thead><tbody id="v180LeaveBody"></tbody></table></div>
+  <div id="v180LeaveBody" class="v249-leave-list"></div>
   <div id="v180LeaveFormBox" class="card" style="display:none;margin-top:12px">
   <form id="financialLeaveForm" onsubmit="saveLongLeaveStatus(event)">
    <div class="form-grid">
