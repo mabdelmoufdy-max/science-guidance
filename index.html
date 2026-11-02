@@ -1974,7 +1974,7 @@ html.v237-lock,html.v237-lock body{overflow:hidden}
  .v250-toolbar>.btn.v250-main{grid-column:1/-1}
  .v250-sep{display:none}
  .v250-toolbar>.btn,.v250-toolbar>.v250-dd,.v250-toolbar>.v250-dd>.btn{width:100%!important;min-width:0}
- .v250-toolbar>.btn,.v250-toolbar>.v250-dd>.btn{justify-content:center;padding:0 8px!important;height:42px;min-height:42px;font-size:13px;overflow:hidden;text-overflow:ellipsis}
+ .v250-toolbar>.btn,.v250-toolbar>.v250-dd>.btn{justify-content:center;text-align:center;padding:4px 8px!important;height:auto;min-height:42px;font-size:13px;line-height:1.25;white-space:normal!important}
  .v250-item{white-space:normal;padding:12px}
 }
 </style>
@@ -10646,7 +10646,6 @@ function v250Short(b,kind){
  let t=String(b.textContent||'').replace(/\s+/g,' ').trim();
  if(kind==='export')t=t.replace(/^تصدير\s*/,'').replace(/^(Excel|CSV)\s*/i,'').replace(/^[—\-:–]\s*/,'');
  if(kind==='print')t=t.replace(/^طباعة\s*/,'').replace(/^[—\-:–]\s*/,'');
- if(kind==='report')t=t.replace(/^تقرير\s*/,'');
  return t||String(b.textContent||'').trim();
 }
 let __v250Busy=false,__v250Open=null;
@@ -10680,6 +10679,7 @@ function v250Build(bar){
  });
  preview.forEach(b=>frag.push(b));
  others.forEach(el=>frag.push(el));
+ if(main&&!frag.slice(2).some(el=>el.classList?.contains('v250-dd')||vis.get(el)!==false&&(vis.has(el)?vis.get(el):getComputedStyle(el).display!=='none')))frag.splice(1,1);
  frag.forEach(el=>bar.appendChild(el));
  bar.classList.add('v250-toolbar');
  bar.__v250sig=v250Sig([...bar.querySelectorAll('button.btn')].filter(b=>!b.classList.contains('v250-trigger')&&!b.classList.contains('v250-item')))+'#'+others.length;
