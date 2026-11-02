@@ -1,4 +1,5 @@
 <!doctype html>
+<!-- v247: مركز التنبيهات مجمّع حسب النوع لكل الأدوار: سطر واحد لكل نوع (عجز، فصول غير مسندة، زيادة، اعتماد، مكرر…) بعدده وزر «معالجة»، والأسماء مطوية (أول 5 ثم «عرض الكل»)؛ النواقص سطر واحد «بيانات ناقصة» يفتح «استكمال البيانات» بدل تكرار قائمتها؛ رقم الجرس = عدد الأنواع لا عدد الحالات. حساب التنبيهات بلا تغيير. -->
 <!-- v246: تقرير «المدارس» في التقارير: حُذف فلتر «الحالة» — كانت خياراته حالات أنصبة المعلمين (عجز/زيادة/مكتمل) بينما صفوف التقرير تحمل حالة اعتماد المدرسة، فكانت النتيجة 0 دائمًا. العجز من «تقرير العجز» و«تقرير المدارس الشامل». -->
 <!-- v245: الكمبيوتر — رأس الصفحة: العنوان لا يصغر حتى يختفي (كان «المدارس» يتراكب على أول زر عند عرض أقل من ~1300)؛ الأزرار تلتف في المساحة الباقية يسارًا (≥801px وللرأس ذي .actions فقط). وحُذف سطر «العرض المختصر مفعّل… الإصدار …» (رسالة فنية برقم إصدار قديم)؛ رسالة الخطأ باقية. -->
 <!-- v241: الخطة التشغيلية/الملخصة للمرحلة الابتدائية: أعمدة الصفوف تعدّ فصول الرابع/الخامس/السادس (كانت تعدّ الأول/الثاني/الثالث فتظهر أصفارًا) وعناوينها «رابعة/خامسة/سادسة»؛ عند عرض الابتدائي مع مراحل أخرى «أولى / رابعة»… الإعدادي والثانوي بلا تغيير. عرض فقط. -->
@@ -8,7 +9,6 @@
 <!-- v236: شاشة «إدخال بيانات المدارس» داخل البرنامج لمدير النظام ومنسق المرحلة: تعرض الصفحة نفسها (/coordinator/) في إطار بوضع embed (بلا شريطها العلوي)، بنفس الحساب لأن البرنامج والصفحة على نطاق واحد. الصفحة في بوابة المعلمين ورابطها المباشر بلا تغيير. (v235 رقم قاعدة البيانات.) -->
 <!-- v234: نافذة «إضافة انتداب»: حقل «المدرسة المنتدب إليها» (نفسه) صار يعرض قائمة البرنامج تحته بدل قائمة المتصفح (datalist لا تظهر في كثير من الهواتف والتطبيق المثبّت): لمس الحقل يعرض كل المدارس المتاحة مجمّعة بالمرحلة، والكتابة تضيّقها ببحث v233 (ع/ث/ت أ، الهمزات، الكلمات بأي ترتيب)، ولمس المدرسة يختارها (✓). الحفظ والتحقق (v215PickDelegSchool) بلا تغيير. بلا تعديل قاعدة بيانات. -->
 <!-- v233: البحث الموحد — زر «🔍» في الشريط العلوي (أو Ctrl+K أو «/») لكل الأدوار عدا المعلم: مدارس ومعلمون وموجهون (تطبيع عربي واختصارات ع/ث/ت أ، الكلمات بأي ترتيب، الرقم القومي كاملًا أو آخر 4 أرقام ويُعرض مخفيًا ••••1234، الهاتف 01…)، الشاشات والتقارير بأسمائها، وكلمات الحالة (عجز/زيادة/إجازة/منتدب/بالأجر/مشرف/مكتمل/بلا موجه) مع المرحلة. المصدر بيانات التقارير المحمّلة أصلًا (نطاق الدور، v228) + هواتف المعلمين من teacher_records عند البحث بهاتف فقط؛ النتيجة تفتح الشاشات الموجودة؛ «رجوع» يغلق النافذة؛ آخر 6 مفتوحة في المتصفح. أزرار المعلم (تعديل/إضافة انتداب/إلغاء الانتداب/إيقاف معلم الأجر) من ثابت واحد TEACHER_ACTION_ROLES تقرأ منه شاشة المعلمين أيضًا (سلوكها بلا تغيير). بلا تعديل قاعدة بيانات. -->
-<!-- v232: تقرير «نصاب الموجه من المدارس والمعلمين» كان يظهر فارغًا (النتائج 0) عند اختيار أي مرحلة في «تقارير المرحلة»: الفلتر يرسل أسماء مدارس المرحلة وصفوف التقرير بلا أسماء مدارس. كل صف يحمل الآن مدارسه (الإعدادي/الابتدائي: مدارس الموجه في المرحلة؛ الثانوي: مدارس المرحلة)، والمربعات تُحسب بعد الفلترة. عرض فقط. -->
 <html lang="ar" dir="rtl">
 <head>
 <!-- إعداد: أ/ محمود عبدالمفدي محمد أبوالنجا | الصفة: معلم -->
@@ -16,7 +16,7 @@
 <script>/* v226: العنوان الموحد — انظر التعليق أعلى الملف */(function(){try{if(/\.github\.io$/.test(location.hostname)&&/^\/science-guidance\/?(index\.html)?$/.test(location.pathname)&&!/[?&]stay\b/.test(location.search))location.replace('https://teachers-data-portal.vercel.app/app/'+location.hash)}catch(e){}})();</script>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#152c43">
-<title>نظام توجيه العلوم — v246</title>
+<title>نظام توجيه العلوم — v247</title>
 <link rel="manifest" href="./manifest.webmanifest">
 <link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png">
 <link rel="apple-touch-icon" href="./icon-192.png">
@@ -1938,6 +1938,13 @@ body.v233-lock{overflow:hidden}
 html.v237-lock,html.v237-lock body{overflow:hidden}
 .sidebar .nav button[data-page="schoolEntry"]{grid-column:1/-1}
 @media (max-width:800px){.v236-note{display:none}.v236-frame{border:0;border-radius:0;min-height:380px}}
+/* v247: التنبيهات المجمّعة */
+.v247-group .alert-copy small{display:block}
+.v247-names{margin-top:6px}.v247-names summary{cursor:pointer;color:var(--primary);font-weight:700;font-size:13px}
+.v247-names ul{list-style:none;margin:6px 0 0;padding:0;display:grid;gap:4px}.v247-names li.v247-hidden{display:none}
+.v247-name{all:unset;box-sizing:border-box;display:block;width:100%;cursor:pointer;padding:6px 8px;border:1px solid var(--line);border-radius:8px;background:#fff}
+.v247-name b{display:block;font-size:13px}.v247-name small{display:block;color:var(--muted);font-size:12px;overflow-wrap:anywhere}
+.v247-more{margin-top:6px}
 </style>
 </head>
 <body>
@@ -10543,6 +10550,57 @@ v174AssignmentReport=function(d,ctx){
   return out;
  };
 }
+/* v247: التنبيهات مجمّعة حسب النوع (كل الأدوار): سطر لكل نوع بعدده وزر «معالجة» يفتح الشاشة المناسبة، و«عرض الأسماء» مطوية (أول 5 ثم «عرض الكل»). النواقص (بيانات معلم/أساسية ناقصة) سطر واحد يفتح «استكمال البيانات» (بلا تكرار القائمة). رقم الجرس = عدد الأنواع. حساب التنبيهات نفسه (loadSmartAlerts) بلا تغيير. */
+const V247_GROUPS=[
+ ['approval-returned','بيانات معادة للتعديل','مدرسة','approval'],
+ ['uncovered','فصول غير مسندة','مدرسة','assignments'],
+ ['school-incomplete','لا يمكن حساب العجز (بيانات الفصول غير مكتملة)','مدرسة','schools'],
+ ['dup-civil','رقم قومي مكرر للمعلمين','رقم','teachers'],
+ ['dup-sup-civil','رقم قومي مكرر للموجهين','رقم','supervisors'],
+ ['missing','بيانات ناقصة','سجل','completion'],
+ ['leave-expiry','إجازات انتهت أو تنتهي خلال 30 يومًا','معلم','teachers'],
+ ['approval-pending','بيانات تنتظر اعتمادك','مدرسة','approval'],
+ ['school-deficit','مدارس بها عجز','مدرسة','workload'],
+ ['school-surplus','مدارس بها زيادة','مدرسة','workload'],
+ ['teacher-deficit','معلمون أقل من النصاب','معلم','teachers'],
+ ['teacher-surplus','معلمون عليهم زيادة','معلم','teachers'],
+ ['no-supervisor','مدارس بلا موجه','مدرسة','schools']
+];
+function v247KeyOf(a){const k=String(a?.key||'').split(':')[0];return k==='teacher-missing'||k==='school-fields'?'missing':k}
+function v247Groups(rows){
+ const order={danger:0,warn:1,info:2},by=new Map();
+ rows.forEach((a,i)=>{const k=v247KeyOf(a);(by.get(k)||by.set(k,[]).get(k)).push(i)});
+ const out=[];
+ V247_GROUPS.forEach(([k,label,unit,page])=>{const idx=by.get(k);if(idx){out.push({k,label,unit,page,idx});by.delete(k)}});
+ by.forEach((idx,k)=>out.push({k,label:rows[idx[0]].title||'تنبيه',unit:'حالة',page:rows[idx[0]].page||'dashboard',idx}));
+ out.forEach(g=>{g.level=g.idx.map(i=>rows[i].level).sort((a,b)=>order[a]-order[b])[0]||'info'});
+ out.sort((a,b)=>order[a.level]-order[b.level]);
+ return out;
+}
+function v247MissingText(g,rows){const t=g.idx.filter(i=>String(rows[i].key).startsWith('teacher-missing')).length,s=g.idx.length-t;return [t?`${t} معلم`:'',s?`${s} مدرسة`:''].filter(Boolean).join(' و')}
+function v247OpenGroup(n){
+ const g=(window.__v247Groups||[])[n];if(!g)return;
+ appNavSetReturn('العودة إلى التنبيهات','alerts');
+ if(g.k==='missing'&&alertHasNav('completion')){completionTab='missing';return go('completion')}
+ if(g.k==='leave-expiry'&&typeof openLongLeaveCenter==='function'&&alertHasNav('teachers')){go('teachers');return setTimeout(()=>{try{openLongLeaveCenter()}catch(e){}},400)}
+ go(alertTargetPage(g.page));
+}
+function v247More(btn){const box=btn.closest('.v247-names');box.querySelectorAll('.v247-hidden').forEach(x=>x.classList.remove('v247-hidden'));btn.remove()}
+alertsPage=async function({force=true}={}){
+ try{
+  const rows=await loadSmartAlerts({force:true}),groups=v247Groups(rows);window.__v247Groups=groups;
+  const cnt=l=>groups.filter(g=>g.level===l).length,counts={danger:cnt('danger'),warn:cnt('warn'),info:cnt('info')};
+  const items=groups.map((g,n)=>{const m=alertSeverityMeta(g.level),num=g.idx.length,head=g.k==='missing'?`${g.label}: ${v247MissingText(g,rows)}`:`${g.label}: ${num} ${g.unit}`;
+   const names=g.idx.map((i,j)=>{const a=rows[i];return `<li class="${j>=5?'v247-hidden':''}"><button type="button" class="v247-name" onclick="openSmartAlert(${i})"><b>${esc(a.title)}</b><small>${esc(a.message)}</small></button></li>`}).join('');
+   const btn=g.k==='missing'&&alertHasNav('completion')?'افتح استكمال البيانات':'معالجة';
+   return `<article class="alert-item v247-group ${g.level}" data-level="${g.level}"><div class="alert-icon">${m.icon}</div><div class="alert-copy"><b>${esc(head)}</b><small>${esc(m.label)}</small><details class="v247-names"><summary>عرض الأسماء (${num})</summary><ul>${names}</ul>${num>5?`<button type="button" class="btn secondary v247-more" onclick="v247More(this)">عرض الكل (${num})</button>`:''}</details></div><button class="btn ${g.level==='danger'?'primary':'secondary'}" onclick="v247OpenGroup(${n})">${btn}</button></article>`}).join('');
+  return `<div class="alert-center"><div class="page-head"><div><h2>مركز التنبيهات</h2><p>كل نوع في سطر واحد بعدده. «معالجة» تفتح الشاشة المناسبة، و«عرض الأسماء» للتفاصيل. النواقص تُستكمل من «استكمال البيانات».</p></div><button class="btn secondary" onclick="refreshCurrentPage({invalidate:['alerts']})">تحديث الآن</button></div><div class="alert-summary"><div class="alert-summary-card"><span>أنواع تحتاج إجراء</span><b>${groups.length}</b></div><div class="alert-summary-card danger"><span>عاجل</span><b>${counts.danger}</b></div><div class="alert-summary-card warn"><span>يحتاج متابعة</span><b>${counts.warn}</b></div><div class="alert-summary-card info"><span>معلومة</span><b>${counts.info}</b></div></div><div class="alert-toolbar"><button class="alert-filter active" data-level="all" onclick="alertFilter('all')">الكل (${groups.length})</button><button class="alert-filter" data-level="danger" onclick="alertFilter('danger')">عاجل (${counts.danger})</button><button class="alert-filter" data-level="warn" onclick="alertFilter('warn')">متابعة (${counts.warn})</button><button class="alert-filter" data-level="info" onclick="alertFilter('info')">معلومة (${counts.info})</button></div><div class="alert-list">${items||'<div class="alert-empty"><strong>لا توجد تنبيهات حاليًا ✓</strong><span class="muted">البيانات الظاهرة في نطاق صلاحيتك لا تحتوي حالات تستدعي التدخل.</span></div>'}</div><div class="alert-health-note">يُعاد الحساب عند فتح المركز وبعد الحفظ. التنبيهات تختفي تلقائيًا عند زوال سببها.</div></div>`;
+ }catch(e){return `<div class="error">تعذر تحميل مركز التنبيهات: ${esc(e?.message||e)}</div>`}
+};
+refreshAlertBadge=async function({force=false}={}){
+ const el=document.getElementById('alertBellCount');if(!el||!profile||profile.role==='teacher')return;
+ try{const rows=await loadSmartAlerts({force});if(!document.getElementById('alertBellCount'))return;const groups=v247Groups(rows),n=groups.length,urgent=groups.some(g=>g.level==='danger'),warn=groups.some(g=>g.level==='warn');el.textContent=String(n);el.className='alert-bell-count'+(n?' show':'')+(!urgent&&warn?' warn-only':!urgent&&!warn&&n?' info-only':'');el.title=`${n} نوع تنبيه (${rows.length} حالة)`;}catch(e){console.warn('alerts badge:',e)}
+};
 </script>
 
 <div id="reportPreviewOverlay" class="report-preview-overlay" role="dialog" aria-modal="true" aria-label="معاينة التقرير" aria-hidden="true">
