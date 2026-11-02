@@ -1,4 +1,5 @@
 <!doctype html>
+<!-- v250: شريط أدوات مجمّع في رؤوس كل الشاشات ولكل الأدوار: الزر الرئيسي (إضافة/تسجيل) بارز أولًا ثم فاصل، وبقية الأزرار مضغوطة بمقاس واحد في سطر، و«طباعة ▾» و«تصدير Excel ▾» و«تقارير ▾» قوائم صغيرة عند وجود زرين فأكثر من النوع؛ على الهاتف شبكة متساوية والزر الرئيسي بعرض كامل. الأزرار الأصلية باقية (مخفية في المجموعة) فلا يتغير عملها ولا صلاحياتها. -->
 <!-- v249: نافذة «الإجازات وتجديدها»: بطاقة لكل معلم بدل الجدول (الاسم والرقم القومي وزر «تعديل»، المدرسة والشارات، القرار والمدة) — بلا تمرير أفقي ولا التفاف الزر. الأقسام والحفظ والطباعة بلا تغيير. -->
 <!-- v248: شاشة «المعلمون»: أزرار «الإجازات وتجديدها» و«توزيع العجز» و«تقرير الإدارة» و«المعلمون الموقوفون» كانت تُحقن داخل ملاحظة «صلاحية الانتداب المباشر» المخفية (.notice.info) فلا تظهر لمدير النظام والمنسق والموجه ومشرف المادة؛ صارت في رأس الشاشة. -->
 <!-- v247: مركز التنبيهات مجمّع حسب النوع لكل الأدوار: سطر واحد لكل نوع (عجز، فصول غير مسندة، زيادة، اعتماد، مكرر…) بعدده وزر «معالجة»، والأسماء مطوية (أول 5 ثم «عرض الكل»)؛ النواقص سطر واحد «بيانات ناقصة» يفتح «استكمال البيانات» بدل تكرار قائمتها؛ رقم الجرس = عدد الأنواع لا عدد الحالات. حساب التنبيهات بلا تغيير. -->
@@ -8,7 +9,6 @@
 <!-- v239: تقارير بلا تكرار ولا تكدس: عند معاينة أي تقرير، إن تكرر اسم الكيان (المدرسة/المعلم/الموجه/القسم) في أسطر متتالية تبقى الأسطر بأعمدتها وتُدمج خانة الكيان وخانة «م» عموديًا فيُكتب مرة واحدة، ومثلها كيان ثانٍ داخل المجموعة؛ والخانة متعددة الأسطر تُفرد صفًا لكل سطر. تقارير الإسناد الثلاثة صارت صفًا لكل فصل (المعلم وبياناته مدمجة)، وتقرير الموجهين يُدمج عموديًا. الأرقام لا تُدمج إلا ما يخص الكيان صراحة، ولا تُدمج إلا الخانات المتطابقة نصًا ومعرّفًا؛ الجداول الأسبوعية وملفات Excel بلا تغيير؛ إن تعذّر العرض يُعرض التقرير بشكله السابق. -->
 <!-- v238: تقريران جديدان في «التقارير» للموجه فأعلى (عرض فقط، بنطاق الدور): «إسناد الفصول — كل المدارس (جدول)» سطر لكل معلم (المدرسة، النوع، النصاب، الفصول المسندة: الحصص، المسند، المتبقي/الزيادة) وبعد كل مدرسة سطر فصولها غير المسندة؛ و«إسناد الفصول — قسم لكل مدرسة» (المعلمون وفصولهم، الفصول غير المسندة، المعلمون بلا فصول). المنتدب جزئيًا يظهر في المدرستين بفصوله في كل منهما. بلا تعديل قاعدة بيانات. -->
 <!-- v237: شاشة «إدخال بيانات المدارس»: الإطار يملأ المساحة المتاحة تلقائيًا حتى شريط الأزرار السفلي (ويُعاد حسابه عند تغيير الحجم)، وعلى الهاتف بلا حواف وبلا سطر «فتح في نافذة مستقلة»؛ وزر «⛶» لملء الشاشة يغطي شريطي البرنامج أثناء الإدخال، و«✕» يُرجعهما. والبند في آخر القائمة الجانبية بعرض زرين وباسمه كاملًا. -->
-<!-- v236: شاشة «إدخال بيانات المدارس» داخل البرنامج لمدير النظام ومنسق المرحلة: تعرض الصفحة نفسها (/coordinator/) في إطار بوضع embed (بلا شريطها العلوي)، بنفس الحساب لأن البرنامج والصفحة على نطاق واحد. الصفحة في بوابة المعلمين ورابطها المباشر بلا تغيير. (v235 رقم قاعدة البيانات.) -->
 <html lang="ar" dir="rtl">
 <head>
 <!-- إعداد: أ/ محمود عبدالمفدي محمد أبوالنجا | الصفة: معلم -->
@@ -16,7 +16,7 @@
 <script>/* v226: العنوان الموحد — انظر التعليق أعلى الملف */(function(){try{if(/\.github\.io$/.test(location.hostname)&&/^\/science-guidance\/?(index\.html)?$/.test(location.pathname)&&!/[?&]stay\b/.test(location.search))location.replace('https://teachers-data-portal.vercel.app/app/'+location.hash)}catch(e){}})();</script>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#152c43">
-<title>نظام توجيه العلوم — v249</title>
+<title>نظام توجيه العلوم — v250</title>
 <link rel="manifest" href="./manifest.webmanifest">
 <link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png">
 <link rel="apple-touch-icon" href="./icon-192.png">
@@ -1955,6 +1955,28 @@ html.v237-lock,html.v237-lock body{overflow:hidden}
 .v249-lc-line br{display:none}
 .v249-lc-meta{display:flex;flex-wrap:wrap;gap:4px 18px;font-size:13px;color:var(--muted)}.v249-lc-meta span{white-space:nowrap}
 .v249-leave-empty{padding:12px}
+/* v250: شريط الأدوات المجمّع */
+#content .page-head>.actions.v250-toolbar,#content .v163-actions.v250-toolbar{display:flex!important;flex-wrap:wrap;align-items:center;justify-content:flex-end;gap:8px;width:auto;grid-template-columns:none!important}
+#content .v163-actions.v250-toolbar{justify-content:flex-start;margin:10px 0}
+.v250-toolbar>.btn,.v250-toolbar>.v250-dd>.btn{width:auto!important;flex:0 0 auto;min-height:38px;height:38px;padding:0 14px!important;font-size:13.5px;white-space:nowrap!important;border-radius:10px;display:inline-flex;align-items:center;gap:6px}
+.v250-toolbar>.btn.primary:not(.v250-main){background:#fff;color:var(--primary);border:1px solid var(--line);box-shadow:none}
+.v250-toolbar>.btn.v250-main{background:linear-gradient(180deg,#1f4274,#0f214d);color:#fff;border:1px solid #0f214d;box-shadow:inset 0 -2px 0 var(--gold,#ce9e48);font-weight:800}
+.v250-sep{width:1px;height:26px;background:var(--line);flex:0 0 auto}
+.v250-dd{position:relative;flex:0 0 auto}
+.v250-dd>.v250-src{display:none!important}
+.v250-caret{font-size:11px;opacity:.7}
+.v250-menu{display:none;position:fixed;z-index:4000;min-width:200px;max-width:calc(100vw - 16px);background:#fff;border:1px solid var(--line);border-radius:12px;box-shadow:0 12px 32px rgba(15,33,77,.18);padding:6px}
+.v250-dd.open>.v250-menu{display:grid;gap:2px}
+.v250-item{all:unset;box-sizing:border-box;display:block;cursor:pointer;padding:10px 12px;border-radius:8px;font-size:14px;font-weight:700;color:var(--primary);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.v250-item:hover,.v250-item:focus-visible{background:#eef3fb;outline:none}
+@media(max-width:800px){
+ #content .page-head>.actions.v250-toolbar,#content .v163-actions.v250-toolbar{display:grid!important;grid-template-columns:repeat(auto-fit,minmax(104px,1fr))!important;width:100%;gap:8px}
+ .v250-toolbar>.btn.v250-main{grid-column:1/-1}
+ .v250-sep{display:none}
+ .v250-toolbar>.btn,.v250-toolbar>.v250-dd,.v250-toolbar>.v250-dd>.btn{width:100%!important;min-width:0}
+ .v250-toolbar>.btn,.v250-toolbar>.v250-dd>.btn{justify-content:center;padding:0 8px!important;height:42px;min-height:42px;font-size:13px;overflow:hidden;text-overflow:ellipsis}
+ .v250-item{white-space:normal;padding:12px}
+}
 </style>
 </head>
 <body>
@@ -10609,6 +10631,79 @@ refreshAlertBadge=async function({force=false}={}){
  const el=document.getElementById('alertBellCount');if(!el||!profile||profile.role==='teacher')return;
  try{const rows=await loadSmartAlerts({force});if(!document.getElementById('alertBellCount'))return;const groups=v247Groups(rows),n=groups.length,urgent=groups.some(g=>g.level==='danger'),warn=groups.some(g=>g.level==='warn');el.textContent=String(n);el.className='alert-bell-count'+(n?' show':'')+(!urgent&&warn?' warn-only':!urgent&&!warn&&n?' info-only':'');el.title=`${n} نوع تنبيه (${rows.length} حالة)`;}catch(e){console.warn('alerts badge:',e)}
 };
+/* v250: شريط أدوات مجمّع لرؤوس كل الشاشات (كل الأدوار): الزر الرئيسي (إضافة/تسجيل/إنشاء) بارز أولًا، ثم بقية الأزرار مضغوطة، و«طباعة ▾» و«تصدير ▾» و«تقارير ▾» قوائم صغيرة عند وجود زرين فأكثر من النوع (زر واحد يبقى كما هو). الأزرار الأصلية تبقى في الصفحة (مخفية داخل المجموعة) وعناصر القائمة تضغطها، فلا يتغير عملها ولا صلاحياتها. يُطبَّق تلقائيًا بعد كل عرض (MutationObserver). */
+const V250_GROUPS={print:{icon:'🖨',label:'طباعة'},export:{icon:'⬇',label:'تصدير Excel'},report:{icon:'📄',label:'تقارير'}};
+function v250Kind(b){
+ const t=String(b.textContent||'').replace(/\s+/g,' ').trim();
+ if(/Excel|CSV|تصدير/i.test(t))return 'export';
+ if(/طباعة/.test(t))return 'print';
+ if(/معاينة/.test(t))return 'preview';
+ if(/^تقرير/.test(t))return 'report';
+ return 'other';
+}
+function v250IsMain(b){const t=String(b.textContent||'').trim();return b.classList.contains('primary')&&(/^[+＋]/.test(t)||/^(إضافة|تسجيل|إنشاء)/.test(t))}
+function v250Short(b,kind){
+ let t=String(b.textContent||'').replace(/\s+/g,' ').trim();
+ if(kind==='export')t=t.replace(/^تصدير\s*/,'').replace(/^(Excel|CSV)\s*/i,'').replace(/^[—\-:–]\s*/,'');
+ if(kind==='print')t=t.replace(/^طباعة\s*/,'').replace(/^[—\-:–]\s*/,'');
+ if(kind==='report')t=t.replace(/^تقرير\s*/,'');
+ return t||String(b.textContent||'').trim();
+}
+let __v250Busy=false,__v250Open=null;
+function v250Visible(b){if(b.hidden)return false;const cs=getComputedStyle(b);return cs.display!=='none'&&cs.visibility!=='hidden'}
+function v250Sig(btns){return btns.map(b=>(b.__v250id||(b.__v250id=Math.random().toString(36).slice(2)))+':'+String(b.textContent||'').trim()+':'+b.className.replace(/\bv250-\S+/g,'')+':'+(b.hidden?1:0)).join('|')}
+function v250Build(bar){
+ const others=[...bar.children].filter(el=>!el.matches('button.btn')&&!el.classList.contains('v250-dd')&&!el.classList.contains('v250-sep'));
+ const btns=[...bar.querySelectorAll('button.btn')].filter(b=>!b.classList.contains('v250-trigger')&&!b.classList.contains('v250-item'));
+ const sig=v250Sig(btns)+'#'+others.length;
+ if(bar.__v250sig===sig)return;
+ btns.forEach(b=>b.classList.remove('v250-src','v250-main'));
+ const vis=new Map(btns.map(b=>[b,v250Visible(b)]));
+ bar.querySelectorAll(':scope > .v250-dd, :scope > .v250-sep').forEach(x=>x.remove());
+ const main=btns.find(b=>vis.get(b)&&v250IsMain(b));
+ const kinds={print:[],export:[],report:[]},plain=[],preview=[];
+ btns.forEach(b=>{if(b===main)return;const k=v250Kind(b);if(kinds[k])kinds[k].push(b);else if(k==='preview')preview.push(b);else plain.push(b)});
+ const frag=[];
+ if(main){main.classList.add('v250-main');frag.push(main);const sep=document.createElement('span');sep.className='v250-sep';sep.setAttribute('aria-hidden','true');frag.push(sep)}
+ plain.forEach(b=>frag.push(b));
+ Object.entries(kinds).forEach(([k,list])=>{
+  const shown=list.filter(b=>vis.get(b));
+  if(shown.length<2){list.forEach(b=>frag.push(b));return}
+  const g=V250_GROUPS[k],dd=document.createElement('div');dd.className='v250-dd';
+  const trig=document.createElement('button');trig.type='button';trig.className='btn secondary v250-trigger';trig.setAttribute('aria-haspopup','menu');trig.setAttribute('aria-expanded','false');
+  trig.innerHTML=`<span aria-hidden="true">${g.icon}</span> ${esc(g.label)} <span class="v250-caret" aria-hidden="true">▾</span>`;
+  trig.onclick=e=>{e.stopPropagation();v250Toggle(dd)};
+  const menu=document.createElement('div');menu.className='v250-menu';menu.setAttribute('role','menu');
+  shown.forEach(b=>{const it=document.createElement('button');it.type='button';it.className='v250-item';it.setAttribute('role','menuitem');it.textContent=v250Short(b,k);it.title=String(b.textContent||'').trim();it.onclick=e=>{e.stopPropagation();v250Close();if(!b.disabled)b.click()};menu.appendChild(it)});
+  dd.append(trig,menu);list.forEach(b=>{b.classList.add('v250-src');dd.appendChild(b)});
+  frag.push(dd);
+ });
+ preview.forEach(b=>frag.push(b));
+ others.forEach(el=>frag.push(el));
+ frag.forEach(el=>bar.appendChild(el));
+ bar.classList.add('v250-toolbar');
+ bar.__v250sig=v250Sig([...bar.querySelectorAll('button.btn')].filter(b=>!b.classList.contains('v250-trigger')&&!b.classList.contains('v250-item')))+'#'+others.length;
+}
+function v250Close(){if(!__v250Open)return;__v250Open.classList.remove('open');__v250Open.querySelector('.v250-trigger')?.setAttribute('aria-expanded','false');__v250Open=null}
+function v250Toggle(dd){
+ const was=__v250Open===dd;v250Close();if(was)return;
+ dd.classList.add('open');dd.querySelector('.v250-trigger').setAttribute('aria-expanded','true');__v250Open=dd;
+ const t=dd.querySelector('.v250-trigger').getBoundingClientRect(),m=dd.querySelector('.v250-menu');
+ m.style.left='0px';m.style.top='0px';const w=m.offsetWidth,h=m.offsetHeight,vw=document.documentElement.clientWidth,vh=window.innerHeight;
+ let left=t.right-w;if(left<8)left=Math.min(t.left,vw-w-8);left=Math.max(8,Math.min(left,vw-w-8));
+ let top=t.bottom+6;if(top+h>vh-8&&t.top-h-6>8)top=t.top-h-6;
+ m.style.left=left+'px';m.style.top=top+'px';
+}
+function v250Apply(){
+ if(__v250Busy)return;__v250Busy=true;
+ try{document.querySelectorAll('#content .page-head > .actions, #content .v163-actions').forEach(bar=>{try{v250Build(bar)}catch(e){console.warn('v250',e)}})}finally{__v250Busy=false}
+}
+let __v250Raf=0;
+const __v250Obs=new MutationObserver(()=>{if(__v250Busy||__v250Raf)return;__v250Raf=requestAnimationFrame(()=>{__v250Raf=0;__v250Obs.disconnect();v250Apply();__v250Obs.observe(document.body,{childList:true,subtree:true,characterData:true})})});
+__v250Obs.observe(document.body,{childList:true,subtree:true,characterData:true});
+document.addEventListener('click',e=>{if(__v250Open&&!__v250Open.contains(e.target))v250Close()});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')v250Close()});
+window.addEventListener('resize',v250Close);window.addEventListener('scroll',v250Close,true);
 </script>
 
 <div id="reportPreviewOverlay" class="report-preview-overlay" role="dialog" aria-modal="true" aria-label="معاينة التقرير" aria-hidden="true">
