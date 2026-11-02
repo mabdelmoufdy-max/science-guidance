@@ -1,4 +1,5 @@
 <!doctype html>
+<!-- v251: الضغط على اسم في «التنبيهات» أو «فحص الاعتماد» يفتح المطلوب مباشرة: المعلم ← «المعلمون» مفلترًا عليه، والمدرسة ← الشاشة المناسبة مختارًا عليها المدرسة (كانت الشاشة تُفتح فارغة لأن الاختيار المحفوظ لا تقرؤه أي شاشة). الموجه بلا تغيير. -->
 <!-- v250: شريط أدوات مجمّع في رؤوس كل الشاشات ولكل الأدوار: الزر الرئيسي (إضافة/تسجيل) بارز أولًا ثم فاصل، وبقية الأزرار مضغوطة بمقاس واحد في سطر، و«طباعة ▾» و«تصدير Excel ▾» و«تقارير ▾» قوائم صغيرة عند وجود زرين فأكثر من النوع؛ على الهاتف شبكة متساوية والزر الرئيسي بعرض كامل. الأزرار الأصلية باقية (مخفية في المجموعة) فلا يتغير عملها ولا صلاحياتها. -->
 <!-- v249: نافذة «الإجازات وتجديدها»: بطاقة لكل معلم بدل الجدول (الاسم والرقم القومي وزر «تعديل»، المدرسة والشارات، القرار والمدة) — بلا تمرير أفقي ولا التفاف الزر. الأقسام والحفظ والطباعة بلا تغيير. -->
 <!-- v248: شاشة «المعلمون»: أزرار «الإجازات وتجديدها» و«توزيع العجز» و«تقرير الإدارة» و«المعلمون الموقوفون» كانت تُحقن داخل ملاحظة «صلاحية الانتداب المباشر» المخفية (.notice.info) فلا تظهر لمدير النظام والمنسق والموجه ومشرف المادة؛ صارت في رأس الشاشة. -->
@@ -8,7 +9,6 @@
 <!-- v241: الخطة التشغيلية/الملخصة للمرحلة الابتدائية: أعمدة الصفوف تعدّ فصول الرابع/الخامس/السادس (كانت تعدّ الأول/الثاني/الثالث فتظهر أصفارًا) وعناوينها «رابعة/خامسة/سادسة»؛ عند عرض الابتدائي مع مراحل أخرى «أولى / رابعة»… الإعدادي والثانوي بلا تغيير. عرض فقط. -->
 <!-- v239: تقارير بلا تكرار ولا تكدس: عند معاينة أي تقرير، إن تكرر اسم الكيان (المدرسة/المعلم/الموجه/القسم) في أسطر متتالية تبقى الأسطر بأعمدتها وتُدمج خانة الكيان وخانة «م» عموديًا فيُكتب مرة واحدة، ومثلها كيان ثانٍ داخل المجموعة؛ والخانة متعددة الأسطر تُفرد صفًا لكل سطر. تقارير الإسناد الثلاثة صارت صفًا لكل فصل (المعلم وبياناته مدمجة)، وتقرير الموجهين يُدمج عموديًا. الأرقام لا تُدمج إلا ما يخص الكيان صراحة، ولا تُدمج إلا الخانات المتطابقة نصًا ومعرّفًا؛ الجداول الأسبوعية وملفات Excel بلا تغيير؛ إن تعذّر العرض يُعرض التقرير بشكله السابق. -->
 <!-- v238: تقريران جديدان في «التقارير» للموجه فأعلى (عرض فقط، بنطاق الدور): «إسناد الفصول — كل المدارس (جدول)» سطر لكل معلم (المدرسة، النوع، النصاب، الفصول المسندة: الحصص، المسند، المتبقي/الزيادة) وبعد كل مدرسة سطر فصولها غير المسندة؛ و«إسناد الفصول — قسم لكل مدرسة» (المعلمون وفصولهم، الفصول غير المسندة، المعلمون بلا فصول). المنتدب جزئيًا يظهر في المدرستين بفصوله في كل منهما. بلا تعديل قاعدة بيانات. -->
-<!-- v237: شاشة «إدخال بيانات المدارس»: الإطار يملأ المساحة المتاحة تلقائيًا حتى شريط الأزرار السفلي (ويُعاد حسابه عند تغيير الحجم)، وعلى الهاتف بلا حواف وبلا سطر «فتح في نافذة مستقلة»؛ وزر «⛶» لملء الشاشة يغطي شريطي البرنامج أثناء الإدخال، و«✕» يُرجعهما. والبند في آخر القائمة الجانبية بعرض زرين وباسمه كاملًا. -->
 <html lang="ar" dir="rtl">
 <head>
 <!-- إعداد: أ/ محمود عبدالمفدي محمد أبوالنجا | الصفة: معلم -->
@@ -16,7 +16,7 @@
 <script>/* v226: العنوان الموحد — انظر التعليق أعلى الملف */(function(){try{if(/\.github\.io$/.test(location.hostname)&&/^\/science-guidance\/?(index\.html)?$/.test(location.pathname)&&!/[?&]stay\b/.test(location.search))location.replace('https://teachers-data-portal.vercel.app/app/'+location.hash)}catch(e){}})();</script>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#152c43">
-<title>نظام توجيه العلوم — v250</title>
+<title>نظام توجيه العلوم — v251</title>
 <link rel="manifest" href="./manifest.webmanifest">
 <link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png">
 <link rel="apple-touch-icon" href="./icon-192.png">
@@ -10704,6 +10704,33 @@ __v250Obs.observe(document.body,{childList:true,subtree:true,characterData:true}
 document.addEventListener('click',e=>{if(__v250Open&&!__v250Open.contains(e.target))v250Close()});
 document.addEventListener('keydown',e=>{if(e.key==='Escape')v250Close()});
 window.addEventListener('resize',v250Close);window.addEventListener('scroll',v250Close,true);
+/* v251: روابط التنبيهات وفحص الاعتماد تفتح المطلوب مباشرة: المعلم ← «المعلمون» مفلترًا عليه (برقمه القومي ثم اسمه)، والمدرسة ← الشاشة المستهدفة مختارًا عليها المدرسة ومرحلتها (بآلية البحث v233OpenPage). كان الاختيار يُحفظ في sessionStorage ولا تقرؤه أي شاشة فتفتح الشاشة فارغة. الموجه بلا تغيير (supervisorSchoolQuickView). */
+async function v251Lookup(){try{const r=await v162ReportsDatasetRaw();const h=r?.data?.hierarchy||{};return {schools:h.schools||[],teachers:h.teachers||[]}}catch(_){return {schools:[],teachers:[]}}}
+async function v251Go({page,schoolId,teacherId,name,civil}){
+ const L=await v251Lookup();
+ if(teacherId||civil){
+  const t=teacherId?L.teachers.find(x=>String(x.teacher_id||x.id)===String(teacherId)):null;
+  const search=[civil||t?.civil_id,name||t?.full_name].filter(Boolean);
+  if(alertHasNav('teachers'))return v233OpenPage('teachers',{search});
+ }
+ const target=alertTargetPage(page||'schools');
+ if(schoolId){const sc=L.schools.find(x=>String(x.id)===String(schoolId));return v233OpenPage(target,{schoolId,stage:sc?.stage||''})}
+ go(target);
+}
+openSmartAlert=function(index){
+ const a=__alertsLast[index];if(!a)return;
+ appNavSetReturn('العودة إلى التنبيهات','alerts');
+ if(profile.role==='supervisor'&&a.schoolId&&!a.teacherId&&['schools','assignments','workload','approval'].includes(a.page)){const mode=a.page==='approval'?'approval':a.page==='assignments'?'distribution':a.page==='workload'?'deficit':'overview';return supervisorSchoolQuickView(a.schoolId,mode)}
+ const k=String(a.key||''),civil=k.startsWith('dup-civil:')?k.slice(10):'';
+ const name=a.teacherId?String(a.title||'').split(' — ').slice(1).join(' — ').trim():'';
+ v251Go({page:a.page,schoolId:a.teacherId?'':a.schoolId,teacherId:a.teacherId,name:name&&name!=='بدون اسم'?name:'',civil}).catch(moneySafeError);
+};
+const __v251BaseSafetyFix=approvalSafetyFix;
+approvalSafetyFix=function(page,schoolId,teacherId=null){
+ if(profile.role==='supervisor'&&schoolId&&!teacherId)return __v251BaseSafetyFix(page,schoolId,teacherId);
+ appNavSetReturn('العودة إلى الفحص','approval');closeModal();
+ v251Go({page,schoolId:teacherId?'':schoolId,teacherId}).catch(moneySafeError);
+};
 </script>
 
 <div id="reportPreviewOverlay" class="report-preview-overlay" role="dialog" aria-modal="true" aria-label="معاينة التقرير" aria-hidden="true">
