@@ -1,4 +1,5 @@
 <!doctype html>
+<!-- v256: صف «المجموع» في آخر جدول كل تقرير فيه أعمدة رقمية جمعية (يُحسب بعد الفلترة؛ يظهر في المعاينة والطباعة والواتس وExcel)؛ الشريط الإجمالي القديم باقٍ. بلا قاعدة بيانات. -->
 <!-- v255: «تقارير المرحلة» من 23 إلى 13 تقريرًا: حُجبت بطاقات المكرر والمتضمن في غيره (المعلمين الشامل، المعلمين، الكادر، العجز والزيادة، توزيع العجز داخليًا، المدارس، الفصول، وبيانات الرفع القديمة الثلاثة). تبقى: تقرير العجز، العجز الرسمي، تقرير المدارس الشامل، أنصبة المعلمين، بيانات معلمي المدرسة، المالي، الإجازات، أولوية الإشراف، الأنصبة، الموجهين، نصاب الموجه، وإسناد الفصول (أ) و(ب). الأكواد باقية. -->
 <!-- v254: «توزيع العجز»: شارة المدرسة تذكر الأجر — «عجز N · مغطى بالأجر» أو «عجز N · بعد الأجر M» (العجز الرسمي قبل الأجر بلا تغيير؛ عرض فقط). -->
 <!-- v253: رأس الصفحة على الكمبيوتر: أزرار شريط الأدوات كانت تُرص عموديًا في عمود ضيق إذا احتوى جزء العنوان عنصرًا عريضًا؛ صار عمود الأزرار يأخذ حاجته أولًا (سطر واحد ثم يلتف) والعنوان الباقي. -->
@@ -8,7 +9,6 @@
 <!-- v249: نافذة «الإجازات وتجديدها»: بطاقة لكل معلم بدل الجدول (الاسم والرقم القومي وزر «تعديل»، المدرسة والشارات، القرار والمدة) — بلا تمرير أفقي ولا التفاف الزر. الأقسام والحفظ والطباعة بلا تغيير. -->
 <!-- v248: شاشة «المعلمون»: أزرار «الإجازات وتجديدها» و«توزيع العجز» و«تقرير الإدارة» و«المعلمون الموقوفون» كانت تُحقن داخل ملاحظة «صلاحية الانتداب المباشر» المخفية (.notice.info) فلا تظهر لمدير النظام والمنسق والموجه ومشرف المادة؛ صارت في رأس الشاشة. -->
 <!-- v247: مركز التنبيهات مجمّع حسب النوع لكل الأدوار: سطر واحد لكل نوع (عجز، فصول غير مسندة، زيادة، اعتماد، مكرر…) بعدده وزر «معالجة»، والأسماء مطوية (أول 5 ثم «عرض الكل»)؛ النواقص سطر واحد «بيانات ناقصة» يفتح «استكمال البيانات» بدل تكرار قائمتها؛ رقم الجرس = عدد الأنواع لا عدد الحالات. حساب التنبيهات بلا تغيير. -->
-<!-- v246: تقرير «المدارس» في التقارير: حُذف فلتر «الحالة» — كانت خياراته حالات أنصبة المعلمين (عجز/زيادة/مكتمل) بينما صفوف التقرير تحمل حالة اعتماد المدرسة، فكانت النتيجة 0 دائمًا. العجز من «تقرير العجز» و«تقرير المدارس الشامل». -->
 <html lang="ar" dir="rtl">
 <head>
 <!-- إعداد: أ/ محمود عبدالمفدي محمد أبوالنجا | الصفة: معلم -->
@@ -16,7 +16,7 @@
 <script>/* v226: العنوان الموحد — انظر التعليق أعلى الملف */(function(){try{if(/\.github\.io$/.test(location.hostname)&&/^\/science-guidance\/?(index\.html)?$/.test(location.pathname)&&!/[?&]stay\b/.test(location.search))location.replace('https://teachers-data-portal.vercel.app/app/'+location.hash)}catch(e){}})();</script>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#152c43">
-<title>نظام توجيه العلوم — v255</title>
+<title>نظام توجيه العلوم — v256</title>
 <link rel="manifest" href="./manifest.webmanifest">
 <link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png">
 <link rel="apple-touch-icon" href="./icon-192.png">
@@ -5732,6 +5732,8 @@ function renderReportSchema(schema,sheet=document.getElementById('reportPreviewS
  let held=null;
  schema.rows.forEach((row,index)=>{let tr=reportRowNode(schema,row,index);if(row&&row._group){held=tr;return}const hadHeader=!!held,unit=held?[held,tr]:[tr];held=null;unit.forEach(n=>sk.tbody.appendChild(n));if(reportBodyOverflows(pg.body)){unit.forEach(n=>n.remove());if(sk.tbody.children.length===0){unit.forEach(n=>{n.classList.add('report-row-dense');sk.tbody.appendChild(n)});if(reportBodyOverflows(pg.body))throw new Error(`السطر ${index+1} أكبر من صفحة A4 ولا يمكن اعتماده.`);return}pg=reportCreatePage(stack,schema,signature);sk=reportTableSkeleton(schema);pg.body.appendChild(sk.table);if(!hadHeader&&row&&row._ingroup){const cont=reportRowNode(schema,{_group:true,_groupTitle:row._ingroup+' (تابع)'},index);cont.removeAttribute('data-report-row-index');unit.unshift(cont)}unit.forEach(n=>sk.tbody.appendChild(n));if(reportBodyOverflows(pg.body)){unit.forEach(n=>n.classList.add('report-row-dense'));if(reportBodyOverflows(pg.body))throw new Error(`السطر ${index+1} أكبر من صفحة A4 ولا يمكن اعتماده.`)}}});
  if(held)sk.tbody.appendChild(held);
+ /* v256: صف «المجموع» أخيرًا في الجدول (لا يدخل عدّ الصفوف ولا التحقق) */
+ if(schema.totalRow&&schema.rows.length){const ttr=reportRowNode(schema,schema.totalRow,-1);ttr.removeAttribute('data-report-row-index');ttr.classList.add('report-total-row');[...ttr.children].forEach(td=>{td.style.fontWeight='900';td.style.borderTop='2px solid #000'});const prev=sk.tbody.lastElementChild;sk.tbody.appendChild(ttr);if(reportBodyOverflows(pg.body)){ttr.remove();const carry=prev&&!prev.classList.contains('report-group-row')&&sk.tbody.children.length>1?prev:null;if(carry)carry.remove();pg=reportCreatePage(stack,schema,signature);sk=reportTableSkeleton(schema);pg.body.appendChild(sk.table);if(carry)sk.tbody.appendChild(carry);sk.tbody.appendChild(ttr)}}
  if(!schema.rows.length){const empty=document.createElement('div');empty.className='report-empty-state';empty.textContent='لا توجد نتائج ضمن النطاق والفلاتر المحددة.';pg.body.appendChild(empty)}
  const tail=document.createElement('div');if(schema.totals.length)tail.appendChild(reportTotalsNode(schema.totals));tail.appendChild(reportApprovalNodeV32(schema));pg.body.appendChild(tail);if(reportBodyOverflows(pg.body)){tail.remove();
   /* v133: تقرير «أنصبة المعلمين» فقط — إن لم تلائم الإجماليات والاعتماد الصفحة الأخيرة، تنتقل معها آخر 3 صفوف من الجدول بدل أن تنفرد الإجماليات بصفحة فارغة. بقية التقارير على سلوكها السابق. */
@@ -7574,6 +7576,7 @@ async function v179ExportReport(reportId,label){
   const cols=schema.columns||[],rows=schema.rows||[];
   if(!rows.length)return toast('لا توجد بيانات مطابقة للفلاتر الحالية.');
   const out=[cols.map(c=>c.label),...rows.map(r=>cols.map(c=>reportCellValue(r[c.key])))];
+  if(schema.totalRow)out.push(cols.map(c=>{const v=schema.totalRow[c.key];return v===''||v==null?'':reportCellValue(v)}));
   out.push([]);(schema.summary||[]).forEach(m=>out.push([m.label,reportCellValue(m.value)]));out.push([reportIssuerText()]);
   const name=`${label}${v97Stage()?' - '+v97Stage():''}.xlsx`;
   v169SaveFile(new File([v169Xlsx(out)],name,{type:V169_XLSX_TYPE}),`تم تصدير ${rows.length} صف.`);
@@ -10600,6 +10603,39 @@ v174AssignmentReport=function(d,ctx){
     [out.columns,out.__v239Orig&&out.__v239Orig.columns].forEach(cols=>(cols||[]).forEach(c=>{const i=['g1','g2','g3'].indexOf(c&&c.key);if(i>=0)c.label=L[i]}));
    }
   }catch(e){console.warn('v241 labels skipped',e)}
+  return out;
+ };
+}
+/* v256: صف «المجموع» — آخر غلاف لـapplyCurrentFiltersToReportSchema. */
+{
+ const prev256=applyCurrentFiltersToReportSchema;
+ const V256_SKIP_ID=/timetable|teacherSelf/i,V256_SKIP_COL=/ترتيب|نسبة|%|متوسط|عمر|سنة|رقم|كود|هاتف/;
+ function v256Total(src,cols){
+  const rows=(src.rows||[]).filter(r=>r&&!r._group&&!r._total);
+  if(rows.length<2)return null;
+  const sums={};let any=false;
+  cols.forEach(c=>{
+   if(!c||!c.numeric||c.id||c.spanWith)return;
+   const k=String(c.key||''),lab=String(c.label||'').trim();
+   if(/^(index|rank|no|seq)$/i.test(k)||lab==='م'||lab==='#'||V256_SKIP_COL.test(lab))return;
+   let s=0,ok=true,has=false;
+   for(const r of rows){const v=r[c.key];if(v===''||v==null||v==='—'||v==='-'||v==='\u00a0')continue;const n=typeof v==='number'?v:Number(String(v).replace(/[٠-٩]/g,d=>'٠١٢٣٤٥٦٧٨٩'.indexOf(d)).trim());if(!Number.isFinite(n)){ok=false;break}s+=n;has=true}
+   if(ok&&has){sums[c.key]=Math.round(s*100)/100;any=true}
+  });
+  if(!any)return null;
+  const lc=cols.find(c=>c&&!c.numeric&&!c.id)||cols[0];
+  const row={_total:true};cols.forEach(c=>{row[c.key]='\u00a0'});
+  row[lc.key]='المجموع';Object.assign(row,sums);return row;
+ }
+ applyCurrentFiltersToReportSchema=function(schema,state){
+  const out=prev256.apply(this,arguments);
+  try{
+   if(out&&Array.isArray(out.rows)&&Array.isArray(out.columns)&&!V256_SKIP_ID.test(String(out.reportId||''))){
+    const src=out.__v239Orig||out;
+    const tr=v256Total(src,out.columns);
+    if(tr){try{Object.defineProperty(out,'totalRow',{value:tr,writable:true,configurable:true,enumerable:false})}catch(_e){out.totalRow=tr}}
+   }
+  }catch(e){console.warn('v256 total skipped',e)}
   return out;
  };
 }
