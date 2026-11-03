@@ -1,4 +1,5 @@
 <!doctype html>
+<!-- v259: تقرير «المعلمون حسب التخصص — الثانوي» بأربعة أعمدة: م (مسلسل مستمر)، التخصص (خلية مدموجة بعدد معلميه «فيزياء (5)»)، المعلم، المدرسة (خلايا متتالية للمدرسة نفسها مدموجة)؛ حُذفت عناوين الأقسام والمرحلة والمجموعات والحصص وصف المجموع. بلا قاعدة بيانات. -->
 <!-- v258: تقرير «المعلمون حسب التخصص — الثانوي»: المادة عنوان قسم واحد (بعدد معلميها) بدل تكرارها في كل صف، والمرحلة ثابتة «ثانوي» (حُذف فلتر المرحلة)، وفلتر «التخصص» (فيزياء/كيمياء/أحياء/علوم متكاملة) مع فلتر المدرسة؛ يظهر لمدير النظام ومنسق المرحلة فقط. بلا قاعدة بيانات. -->
 <!-- v257: تقرير جديد «المعلمون حسب التخصص — الثانوي» (فيزياء/كيمياء/أحياء/علوم متكاملة): المعلمون بأسمائهم ومدارسهم ومجموعاتهم وحصصهم بحسب المادة المدرَّسة فعلًا، وعددهم لكل مادة؛ للمدير/الموجه الأول/المنسق/الموجه، عرض فقط، بلا قاعدة بيانات. -->
 <!-- v256: صف «المجموع» في آخر جدول كل تقرير فيه أعمدة رقمية جمعية (يُحسب بعد الفلترة؛ يظهر في المعاينة والطباعة والواتس وExcel)؛ الشريط الإجمالي القديم باقٍ. بلا قاعدة بيانات. -->
@@ -8,7 +9,6 @@
 <!-- v252: تبويب واحد للموجهين (مدير النظام والموجه الأول ومنسق المرحلة): فلاتر المرحلة والموجه والمدرسة، مربعات أعداد، وعرضان «حسب الموجه» (بطاقة لكل موجه بهاتفه ومدارسه، ونقل المدرسة من ▾، وبطاقة «مدارس بلا موجه») و«حسب المدرسة (التوزيع)»؛ تقرير وExcel حسب الفلاتر ولكل موجه. حُذف بند «توزيع الموجهين». النقل لمدير النظام والمنسق فقط. -->
 <!-- v251: الضغط على اسم في «التنبيهات» أو «فحص الاعتماد» يفتح المطلوب مباشرة: المعلم ← «المعلمون» مفلترًا عليه، والمدرسة ← الشاشة المناسبة مختارًا عليها المدرسة (كانت الشاشة تُفتح فارغة لأن الاختيار المحفوظ لا تقرؤه أي شاشة). الموجه بلا تغيير. -->
 <!-- v250: شريط أدوات مجمّع في رؤوس كل الشاشات ولكل الأدوار: الزر الرئيسي (إضافة/تسجيل) بارز أولًا ثم فاصل، وبقية الأزرار مضغوطة بمقاس واحد في سطر، و«طباعة ▾» و«تصدير Excel ▾» و«تقارير ▾» قوائم صغيرة عند وجود زرين فأكثر من النوع؛ على الهاتف شبكة متساوية والزر الرئيسي بعرض كامل. الأزرار الأصلية باقية (مخفية في المجموعة) فلا يتغير عملها ولا صلاحياتها. -->
-<!-- v249: نافذة «الإجازات وتجديدها»: بطاقة لكل معلم بدل الجدول (الاسم والرقم القومي وزر «تعديل»، المدرسة والشارات، القرار والمدة) — بلا تمرير أفقي ولا التفاف الزر. الأقسام والحفظ والطباعة بلا تغيير. -->
 <html lang="ar" dir="rtl">
 <head>
 <!-- إعداد: أ/ محمود عبدالمفدي محمد أبوالنجا | الصفة: معلم -->
@@ -16,7 +16,7 @@
 <script>/* v226: العنوان الموحد — انظر التعليق أعلى الملف */(function(){try{if(/\.github\.io$/.test(location.hostname)&&/^\/science-guidance\/?(index\.html)?$/.test(location.pathname)&&!/[?&]stay\b/.test(location.search))location.replace('https://teachers-data-portal.vercel.app/app/'+location.hash)}catch(e){}})();</script>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#152c43">
-<title>نظام توجيه العلوم — v258</title>
+<title>نظام توجيه العلوم — v259</title>
 <link rel="manifest" href="./manifest.webmanifest">
 <link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png">
 <link rel="apple-touch-icon" href="./icon-192.png">
@@ -10354,7 +10354,7 @@ v103RebuildMetrics=function(schema){return V238_IDS.includes(schema?.reportId)?v
    على صفوفه فيُكتب مرة واحدة؛ ومثلها كيان ثانٍ داخل المجموعة (مثل المعلم داخل المدرسة) وصفاته النصية الثابتة. الأرقام لا تُدمج.
    لا تُدمج خانتان إلا إذا تطابق نصهما. عند انتقال المجموعة لصفحة جديدة يتكرر الكيان مرة واحدة بـ«(تابع)». الجداول الأسبوعية مستثناة.
    إن تعذّر العرض يُعرض التقرير بشكله السابق تلقائيًا. الحسابات والمربعات والإجماليات بلا تغيير. */
-const V239_KEY_RE=/^(المدرسة|اسم المدرسة|المعلم|اسم المعلم|الموجه|القسم)(\s|\/|$)/,V239_SKIP_RE=/timetable/i,V239_IK='__v239i';
+const V239_KEY_RE=/^(المدرسة|اسم المدرسة|المعلم|اسم المعلم|الموجه|القسم)(\s|\/|$)/,V239_SKIP_RE=/timetable|secSpecialty/i,V239_IK='__v239i';
 const v239Val=v=>String(reportCellValue(v)).replace(/\s+/g,' ').trim();
 const v239Empty=s=>!s||s==='—'||s==='-'||/^(لا|لم|كل)\s/.test(s); // عبارات مثل «لا توجد…» ليست كيانًا فلا تُدمج
 const v239IsIndex=c=>c.key==='index'||String(c.label||'').trim()==='م';
@@ -10622,16 +10622,36 @@ function v257Metrics(schema){
  const rows=(schema.rows||[]).filter(r=>r&&!r._group),by=new Map();
  rows.forEach(r=>{(by.get(r._subj)||by.set(r._subj,new Set()).get(r._subj)).add(r._tid)});
  const names=[...by.keys()].sort((a,b)=>v257Rank(a)-v257Rank(b)||a.localeCompare(b,'ar'));
- const out=[],cols=schema.columns||[];
- names.forEach(n=>{
-  const g={_group:true,_groupTitle:`${n} — ${by.get(n).size} معلم`,_subj:n};cols.forEach(c=>{g[c.key]='\u00a0'});g.name=g._groupTitle;out.push(g);
-  rows.filter(r=>r._subj===n).forEach((r,i)=>{r.index=i+1;out.push(r)});
- });
- schema.rows=out;
+ rows.forEach((r,i)=>{r.index=i+1;r.subject=`${r._subj} (${by.get(r._subj).size})`});
+ schema.rows=rows;
  const v=[...names.map(n=>['معلمو '+n,by.get(n).size]),['المعلمون بلا تكرار',new Set(rows.map(r=>r._tid)).size],['المدارس',new Set(rows.map(r=>r._schoolId)).size]];
  schema.summary=v.map(([k,x])=>reportMetric(k,x));schema.totals=v.map(([k,x])=>reportTotalsMetric(k,x));
  return schema;
 }
+/* v259: دمج خلايا التخصص (متتالية بالتخصص) والمدرسة (متتالية بالتخصص والمدرسة) داخل كل صفحة؛ من الأخير للأول كي لا تنزاح فهارس الأعمدة. */
+function v259Spans(schema,sheet){
+ if(!schema||schema.reportId!==V257_ID||!sheet)return;
+ const keys=(schema.columns||[]).map(c=>c.key);
+ sheet.querySelectorAll('table').forEach(table=>{
+  const trs=[...table.querySelectorAll('tbody > tr')].filter(tr=>tr.dataset.reportRowIndex!==undefined);
+  [['school','_sk'],['subject','_subj']].forEach(([key,f])=>{
+   const i=keys.indexOf(key);if(i<0)return;
+   let start=null,sv=null;
+   trs.forEach(tr=>{
+    const row=schema.rows[Number(tr.dataset.reportRowIndex)],v=row?row[f]:null,td=tr.children[i];
+    if(!td||v==null){start=null;sv=null;return}
+    if(start&&sv===v){start.rowSpan=(start.rowSpan||1)+1;td.remove();return}
+    start=td;sv=v;td.style.verticalAlign='middle';
+   });
+  });
+ });
+}
+const __v259Render=renderReportSchema;
+renderReportSchema=function(schema,sheet){
+ const res=__v259Render.apply(this,arguments);
+ try{v259Spans(schema,sheet||document.getElementById('reportPreviewSheet'))}catch(e){console.warn('v259 spans skipped',e)}
+ return res;
+};
 const __v257Rebuild=v103RebuildMetrics;
 v103RebuildMetrics=function(schema){return schema?.reportId===V257_ID?v257Metrics(schema):__v257Rebuild(schema)};
 ReportAdapters.secSpecialty={async load(ctx){
@@ -10649,11 +10669,11 @@ ReportAdapters.secSpecialty={async load(ctx){
   const g=agg.get(k)||agg.set(k,{subj,s,tid:String(a.teacher_id),name:a.teacher_records?.full_name||'—',cl:new Set(),p:0}).get(k);
   g.cl.add(String(a.class_id));g.p+=reportNumber(a.weekly_periods);
  });
- const rows=[...agg.values()].sort((a,b)=>v257Rank(a.subj)-v257Rank(b.subj)||a.subj.localeCompare(b.subj,'ar')||String(a.s.stage).localeCompare(String(b.s.stage),'ar')||String(a.s.name).localeCompare(String(b.s.name),'ar')||String(a.name).localeCompare(String(b.name),'ar')).map(g=>({
-  _schoolId:String(g.s.id),_schoolIds:[String(g.s.id)],_school:g.s.name,_schools:[g.s.name],_stage:g.s.stage,_stages:[g.s.stage],_tid:g.tid,_subj:g.subj,_status:g.subj,
-  index:0,subject:g.subj,name:g.name,school:g.s.name,stage:g.s.stage,groups:String(g.cl.size),periods:String(g.p),_search:g.name+' '+g.s.name+' '+g.subj}));
+ const rows=[...agg.values()].sort((a,b)=>v257Rank(a.subj)-v257Rank(b.subj)||a.subj.localeCompare(b.subj,'ar')||String(a.s.name).localeCompare(String(b.s.name),'ar')||String(a.s.id).localeCompare(String(b.s.id))||String(a.name).localeCompare(String(b.name),'ar')).map(g=>({
+  _schoolId:String(g.s.id),_schoolIds:[String(g.s.id)],_school:g.s.name,_schools:[g.s.name],_stage:g.s.stage,_stages:[g.s.stage],_tid:g.tid,_subj:g.subj,_sk:String(g.s.id),_status:g.subj,
+  index:0,subject:g.subj,name:g.name,school:g.s.name,_search:g.name+' '+g.s.name+' '+g.subj}));
  const C=(k,l,w,o={},h={})=>({...reportColumn(k,l,w,o),...h});
- const sc=v103BaseReport(V257_ID,ctx,[C('index','م',.3,{numeric:true}),C('name','المعلم',1.7),C('school','المدرسة',1.8),C('stage','المرحلة',.8),C('groups','المجموعات',.6,{numeric:true}),C('periods','الحصص',.5,{numeric:true})],rows,'المعلمون بحسب المادة التي يدرّسونها فعلًا في الفصل الدراسي الحالي؛ من يدرّس أكثر من مادة يظهر في كل مادة، وعدده بلا تكرار في المربعات.');
+ const sc=v103BaseReport(V257_ID,ctx,[C('index','م',.3,{numeric:true}),C('subject','التخصص',1.1),C('name','المعلم',1.8),C('school','المدرسة',1.9)],rows,'المعلمون بحسب المادة التي يدرّسونها فعلًا في الفصل الدراسي الحالي؛ من يدرّس أكثر من مادة يظهر في كل مادة، وعدده بلا تكرار في المربعات.');
  sc.v239KeepIndex=true;return sc;
 }};
 /* v256: صف «المجموع» — آخر غلاف لـapplyCurrentFiltersToReportSchema. */
