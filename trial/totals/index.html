@@ -1,4 +1,5 @@
 <!doctype html>
+<!-- v260: تقرير «المعلمون حسب التخصص — الثانوي»: عاد فلتر المرحلة (ثانوي عام / ثانوي صناعي / الكل)، وعند «الكل» يظهر كل قسم منفصلًا بعنوان مرحلته وترقيمه وعدد تخصصاته؛ وفلتر المدرسة يتبع المرحلة. بلا قاعدة بيانات. -->
 <!-- v259: تقرير «المعلمون حسب التخصص — الثانوي» بأربعة أعمدة: م (مسلسل مستمر)، التخصص (خلية مدموجة بعدد معلميه «فيزياء (5)»)، المعلم، المدرسة (خلايا متتالية للمدرسة نفسها مدموجة)؛ حُذفت عناوين الأقسام والمرحلة والمجموعات والحصص وصف المجموع. بلا قاعدة بيانات. -->
 <!-- v258: تقرير «المعلمون حسب التخصص — الثانوي»: المادة عنوان قسم واحد (بعدد معلميها) بدل تكرارها في كل صف، والمرحلة ثابتة «ثانوي» (حُذف فلتر المرحلة)، وفلتر «التخصص» (فيزياء/كيمياء/أحياء/علوم متكاملة) مع فلتر المدرسة؛ يظهر لمدير النظام ومنسق المرحلة فقط. بلا قاعدة بيانات. -->
 <!-- v257: تقرير جديد «المعلمون حسب التخصص — الثانوي» (فيزياء/كيمياء/أحياء/علوم متكاملة): المعلمون بأسمائهم ومدارسهم ومجموعاتهم وحصصهم بحسب المادة المدرَّسة فعلًا، وعددهم لكل مادة؛ للمدير/الموجه الأول/المنسق/الموجه، عرض فقط، بلا قاعدة بيانات. -->
@@ -8,7 +9,6 @@
 <!-- v253: رأس الصفحة على الكمبيوتر: أزرار شريط الأدوات كانت تُرص عموديًا في عمود ضيق إذا احتوى جزء العنوان عنصرًا عريضًا؛ صار عمود الأزرار يأخذ حاجته أولًا (سطر واحد ثم يلتف) والعنوان الباقي. -->
 <!-- v252: تبويب واحد للموجهين (مدير النظام والموجه الأول ومنسق المرحلة): فلاتر المرحلة والموجه والمدرسة، مربعات أعداد، وعرضان «حسب الموجه» (بطاقة لكل موجه بهاتفه ومدارسه، ونقل المدرسة من ▾، وبطاقة «مدارس بلا موجه») و«حسب المدرسة (التوزيع)»؛ تقرير وExcel حسب الفلاتر ولكل موجه. حُذف بند «توزيع الموجهين». النقل لمدير النظام والمنسق فقط. -->
 <!-- v251: الضغط على اسم في «التنبيهات» أو «فحص الاعتماد» يفتح المطلوب مباشرة: المعلم ← «المعلمون» مفلترًا عليه، والمدرسة ← الشاشة المناسبة مختارًا عليها المدرسة (كانت الشاشة تُفتح فارغة لأن الاختيار المحفوظ لا تقرؤه أي شاشة). الموجه بلا تغيير. -->
-<!-- v250: شريط أدوات مجمّع في رؤوس كل الشاشات ولكل الأدوار: الزر الرئيسي (إضافة/تسجيل) بارز أولًا ثم فاصل، وبقية الأزرار مضغوطة بمقاس واحد في سطر، و«طباعة ▾» و«تصدير Excel ▾» و«تقارير ▾» قوائم صغيرة عند وجود زرين فأكثر من النوع؛ على الهاتف شبكة متساوية والزر الرئيسي بعرض كامل. الأزرار الأصلية باقية (مخفية في المجموعة) فلا يتغير عملها ولا صلاحياتها. -->
 <html lang="ar" dir="rtl">
 <head>
 <!-- إعداد: أ/ محمود عبدالمفدي محمد أبوالنجا | الصفة: معلم -->
@@ -16,7 +16,7 @@
 <script>/* v226: العنوان الموحد — انظر التعليق أعلى الملف */(function(){try{if(/\.github\.io$/.test(location.hostname)&&/^\/science-guidance\/?(index\.html)?$/.test(location.pathname)&&!/[?&]stay\b/.test(location.search))location.replace('https://teachers-data-portal.vercel.app/app/'+location.hash)}catch(e){}})();</script>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#152c43">
-<title>نظام توجيه العلوم — v259</title>
+<title>نظام توجيه العلوم — v260</title>
 <link rel="manifest" href="../../manifest.webmanifest">
 <link rel="icon" type="image/png" sizes="192x192" href="../../icon-192.png">
 <link rel="apple-touch-icon" href="../../icon-192.png">
@@ -7934,8 +7934,8 @@ applyCurrentFiltersToReportSchema=function(schema,state){
 function v103Detail(cfg,data){
  const h=data?.hierarchy||{};window.__statisticsFilterData={schools:h.schools||[],sups:h.sups||[]};
  if(cfg.secOnly){/* v258: المرحلة ثابتة «ثانوي»؛ فلترا المدرسة والتخصص فقط */
-  const sf=[statisticsFilterField('School','المدرسة',(h.schools||[]).filter(s=>String(s.stage||'').startsWith('ثانوي')).map(s=>s.name)),statisticsFilterField('Status',cfg.statusLabel||'الحالة',cfg.statuses||[])];
-  return `<div class="statistics-filter-page v103-purpose-detail"><div class="statistics-filter-head"><div><h2>${esc(cfg.title)}</h2><p>${esc(cfg.subtitle)}</p></div><button type="button" class="btn secondary statistics-back-btn" onclick="statisticsBackToCenter()">← رجوع للتقارير</button></div><div class="card statistics-filter-card"><div class="statistics-filter-grid">${sf.join('')}<div class="statistics-filter-field"><label for="v103ReportSearch">بحث داخل التقرير</label><input type="search" id="v103ReportSearch" placeholder="اسم المعلم أو المدرسة" autocomplete="off"></div></div><p class="statistics-filter-note">المرحلة الثانوية (عام وصناعي). اختر المدرسة أو التخصص، أو اتركهما «الكل».</p></div><div class="statistics-fixed-actions no-print"><button type="button" class="btn secondary" onclick="v103RunReport('preview')">👁 معاينة</button><button type="button" class="btn primary" onclick="v103RunReport('print')">🖨 طباعة / PDF</button><button type="button" class="btn secondary" onclick="v103RunReport('share')">↗ مشاركة</button></div></div>`;
+  const sf=[statisticsFilterField('Stage','المرحلة',['ثانوي عام','ثانوي صناعي'],'onchange="v260StageChanged()"'),statisticsFilterField('School','المدرسة',(h.schools||[]).filter(s=>String(s.stage||'').startsWith('ثانوي')).map(s=>s.name)),statisticsFilterField('Status',cfg.statusLabel||'الحالة',cfg.statuses||[])];
+  return `<div class="statistics-filter-page v103-purpose-detail"><div class="statistics-filter-head"><div><h2>${esc(cfg.title)}</h2><p>${esc(cfg.subtitle)}</p></div><button type="button" class="btn secondary statistics-back-btn" onclick="statisticsBackToCenter()">← رجوع للتقارير</button></div><div class="card statistics-filter-card"><div class="statistics-filter-grid">${sf.join('')}<div class="statistics-filter-field"><label for="v103ReportSearch">بحث داخل التقرير</label><input type="search" id="v103ReportSearch" placeholder="اسم المعلم أو المدرسة" autocomplete="off"></div></div><p class="statistics-filter-note">اختر المرحلة (ثانوي عام أو صناعي) أو المدرسة أو التخصص، أو اتركها «الكل» فيظهر كل قسم منفصلًا.</p></div><div class="statistics-fixed-actions no-print"><button type="button" class="btn secondary" onclick="v103RunReport('preview')">👁 معاينة</button><button type="button" class="btn primary" onclick="v103RunReport('print')">🖨 طباعة / PDF</button><button type="button" class="btn secondary" onclick="v103RunReport('share')">↗ مشاركة</button></div></div>`;
  }
  const fields=[statisticsFilterField('Stage','المرحلة',(h.schools||[]).map(s=>s.stage),'onchange="statisticsRefreshDependentFilters(\'stage\')"'),statisticsFilterField('Supervisor','الموجه',[],'disabled onchange="statisticsRefreshDependentFilters(\'supervisor\')"'),statisticsFilterField('School','المدرسة',[],'disabled onchange="statisticsRefreshDependentFilters(\'school\')"'),statisticsFilterField('Status',cfg.statusLabel||'الحالة',cfg.statuses||[])];
  return `<div class="statistics-filter-page v103-purpose-detail"><div class="statistics-filter-head"><div><h2>${esc(cfg.title)}</h2><p>${esc(cfg.subtitle)}</p></div><button type="button" class="btn secondary statistics-back-btn" onclick="statisticsBackToCenter()">← رجوع للتقارير</button></div><div class="card statistics-filter-card"><div class="statistics-filter-grid">${fields.join('')}<div class="statistics-filter-field"><label for="v103ReportSearch">بحث داخل التقرير</label><input type="search" id="v103ReportSearch" placeholder="اسم المعلم أو المدرسة أو رقم القرار" autocomplete="off"></div></div><p class="statistics-filter-note">حدد المرحلة ثم الموجه والمدرسة. «الكل» يشمل نطاق صلاحيتك؛ الفلاتر المختارة تظهر على جميع صفحات التقرير.</p></div><div class="notice">${esc(cfg.note)}</div><div class="statistics-fixed-actions no-print"><button type="button" class="btn secondary" onclick="v103RunReport('preview')">👁 معاينة</button><button type="button" class="btn primary" onclick="v103RunReport('print')">🖨 طباعة / PDF</button><button type="button" class="btn secondary" onclick="v103RunReport('share')">↗ مشاركة PDF</button></div></div>`;
@@ -10619,14 +10619,28 @@ v103CanViewReport=function(id){return id===V257_ID?['admin','stage_coordinator']
 function v257Subj(n){n=String(n||'');if(/فيزياء/.test(n))return 'فيزياء';if(/كيمياء/.test(n))return 'كيمياء';if(/أحياء|احياء/.test(n))return 'أحياء';if(/متكامل/.test(n))return 'علوم متكاملة';return n||'مادة أخرى'}
 const v257Rank=n=>{const i=V257_ORDER.indexOf(n);return i<0?99:i};
 function v257Metrics(schema){
- const rows=(schema.rows||[]).filter(r=>r&&!r._group),by=new Map();
- rows.forEach(r=>{(by.get(r._subj)||by.set(r._subj,new Set()).get(r._subj)).add(r._tid)});
- const names=[...by.keys()].sort((a,b)=>v257Rank(a)-v257Rank(b)||a.localeCompare(b,'ar'));
- rows.forEach((r,i)=>{r.index=i+1;r.subject=`${r._subj} (${by.get(r._subj).size})`});
- schema.rows=rows;
- const v=[...names.map(n=>['معلمو '+n,by.get(n).size]),['المعلمون بلا تكرار',new Set(rows.map(r=>r._tid)).size],['المدارس',new Set(rows.map(r=>r._schoolId)).size]];
+ const rows=(schema.rows||[]).filter(r=>r&&!r._group),cols=schema.columns||[];
+ const stages=[...new Set(rows.map(r=>r._stage))].sort((a,b)=>(a==='ثانوي عام'?0:1)-(b==='ثانوي عام'?0:1)||String(a).localeCompare(String(b),'ar'));
+ const multi=stages.length>1,out=[],v=[];
+ stages.forEach(st=>{
+  const sr=rows.filter(r=>r._stage===st),by=new Map();
+  sr.forEach(r=>{(by.get(r._subj)||by.set(r._subj,new Set()).get(r._subj)).add(r._tid)});
+  const names=[...by.keys()].sort((a,b)=>v257Rank(a)-v257Rank(b)||a.localeCompare(b,'ar'));
+  if(multi){const g={_group:true,_groupTitle:`${st} — ${new Set(sr.map(r=>r._tid)).size} معلم`};cols.forEach(c=>{g[c.key]='\u00a0'});g.subject=g._groupTitle;out.push(g)}
+  sr.forEach((r,i)=>{r.index=i+1;r.subject=`${r._subj} (${by.get(r._subj).size})`;out.push(r)});
+  names.forEach(n=>v.push([`معلمو ${n}${multi?' — '+st.replace('ثانوي ',''):''}`,by.get(n).size]));
+ });
+ schema.rows=out;
+ v.push(['المعلمون بلا تكرار',new Set(rows.map(r=>r._tid)).size],['المدارس',new Set(rows.map(r=>r._schoolId)).size]);
  schema.summary=v.map(([k,x])=>reportMetric(k,x));schema.totals=v.map(([k,x])=>reportTotalsMetric(k,x));
  return schema;
+}
+/* v260: فلتر المدرسة يتبع المرحلة المختارة (ثانوي فقط). */
+function v260StageChanged(){
+ const st=document.getElementById('statisticsFilterStage')?.value||'',el=document.getElementById('statisticsFilterSchool');
+ if(!el)return;
+ const names=((window.__statisticsFilterData||{}).schools||[]).filter(x=>String(x.stage||'').startsWith('ثانوي')&&(!st||String(x.stage).trim()===st)).map(x=>x.name);
+ el.innerHTML=`<option value="">الكل</option>${statisticsFilterOptions(names)}`;
 }
 /* v259: دمج خلايا التخصص (متتالية بالتخصص) والمدرسة (متتالية بالتخصص والمدرسة) داخل كل صفحة؛ من الأخير للأول كي لا تنزاح فهارس الأعمدة. */
 function v259Spans(schema,sheet){
@@ -10669,8 +10683,8 @@ ReportAdapters.secSpecialty={async load(ctx){
   const g=agg.get(k)||agg.set(k,{subj,s,tid:String(a.teacher_id),name:a.teacher_records?.full_name||'—',cl:new Set(),p:0}).get(k);
   g.cl.add(String(a.class_id));g.p+=reportNumber(a.weekly_periods);
  });
- const rows=[...agg.values()].sort((a,b)=>v257Rank(a.subj)-v257Rank(b.subj)||a.subj.localeCompare(b.subj,'ar')||String(a.s.name).localeCompare(String(b.s.name),'ar')||String(a.s.id).localeCompare(String(b.s.id))||String(a.name).localeCompare(String(b.name),'ar')).map(g=>({
-  _schoolId:String(g.s.id),_schoolIds:[String(g.s.id)],_school:g.s.name,_schools:[g.s.name],_stage:g.s.stage,_stages:[g.s.stage],_tid:g.tid,_subj:g.subj,_sk:String(g.s.id),_status:g.subj,
+ const rows=[...agg.values()].sort((a,b)=>(a.s.stage==='ثانوي عام'?0:1)-(b.s.stage==='ثانوي عام'?0:1)||v257Rank(a.subj)-v257Rank(b.subj)||a.subj.localeCompare(b.subj,'ar')||String(a.s.name).localeCompare(String(b.s.name),'ar')||String(a.s.id).localeCompare(String(b.s.id))||String(a.name).localeCompare(String(b.name),'ar')).map(g=>({
+  _schoolId:String(g.s.id),_schoolIds:[String(g.s.id)],_school:g.s.name,_schools:[g.s.name],_stage:g.s.stage,_stages:[g.s.stage],_tid:g.tid,_subj:g.subj,_sk:g.subj+'|'+g.s.id,_status:g.subj,
   index:0,subject:g.subj,name:g.name,school:g.s.name,_search:g.name+' '+g.s.name+' '+g.subj}));
  const C=(k,l,w,o={},h={})=>({...reportColumn(k,l,w,o),...h});
  const sc=v103BaseReport(V257_ID,ctx,[C('index','م',.3,{numeric:true}),C('subject','التخصص',1.1),C('name','المعلم',1.8),C('school','المدرسة',1.9)],rows,'المعلمون بحسب المادة التي يدرّسونها فعلًا في الفصل الدراسي الحالي؛ من يدرّس أكثر من مادة يظهر في كل مادة، وعدده بلا تكرار في المربعات.');
