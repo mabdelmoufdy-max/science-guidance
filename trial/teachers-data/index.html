@@ -1,5 +1,5 @@
 <!doctype html>
-<!-- v266: إصلاح عمود «الموجه» في تقرير «بيانات المعلمين — تجميع» للثانوي: يُقرأ من توزيع موجهي المادة (supervisor_school_subjects) بحسب ما يدرّسه المعلم فعلًا في الفصل الحالي (يظهر عند أكثر من موجه إن درّس أكثر من مادة، ويظهر في مجموعة كل منهم عند التجميع بالموجه)، و«الموجه المسؤول عن المعلم» اليدوي له الأولوية. قراءة فقط. وإصلاح ملف PDF/واتساب لهذا التقرير: يرسم مساري التصدير أجزاء الخلية (سطرا كل خلية وفواصلهما) كلًّا على حدة بدل دمجها في نص واحد، دون تغيير باقي التقارير. -->
+<!-- v266: تقرير «بيانات المعلمين — تجميع»: حُذف الموجه من التقرير والفلتر وخيارات التجميع (بقرار المستخدم)، وبقيت المدرسة في آخر عمود؛ وإصلاح ملف PDF/واتساب: يرسم مساري التصدير أجزاء الخلية (سطرا كل خلية وفواصلهما) كلًّا على حدة بدل دمجها في نص واحد، دون تغيير باقي التقارير. قراءة فقط. -->
 <!-- v265: تقرير جديد «بيانات المعلمين — تجميع» (teachersGrouped) في التقارير لـadmin/first_supervisor/stage_coordinator/supervisor: صف بسطرين لكل معلم (الاسم والمؤهل والتخصص، الرقم القومي والهاتف، التعيين والاستلام، الكادر وتاريخه، الموجه والمدرسة)، فلاتر المرحلة والموجه والمدرسة ونوع التعاقد، وقائمة «تجميع حسب» (التخصص/المدرسة/الموجه/التخصص على الكادر) بعنوان لكل مجموعة ويُحذف عمودها من الجدول، والترتيب بالأقدمية. قراءة فقط بلا قاعدة بيانات. -->
 <!-- v264: حقل جديد «التخصص على الكادر» (teacher_records.cadre_specialty، migration v264) في بيانات المعلم: قائمة حسب مرحلة المدرسة الأصلية — ابتدائي/إعدادي: علوم؛ ثانوي: فيزياء/كيمياء/أحياء — في نافذة تعديل المعلم وشاشة إدخال بيانات المدارس وبطاقة المعلم، وعمود جديد في تقرير «بيانات معلمي المدرسة» وجدول «معلمو المرحلة»، وفي بطاقة بيانات المعلم الشخصية وملف المدرسة. عُبّئت القيم آليًا: علوم للابتدائي والإعدادي (336)، والثانوي نفس تخصص المعلم إن كان صريحًا (64)، والباقي فارغ للمراجعة. لا يغيّر الإشراف بالتخصص ولا الأنصبة ولا updated_at. -->
 <!-- v263: «إدخال بيانات المدارس» صارت مدمجة برمجيًا داخل البرنامج بدل الإطار (iframe): قوائم المرحلة ← نوع الثانوي (للثانوي فقط) ← المدرسة، ثم التبويبات (البيانات | الموجهون | الفصول والمجموعات | المعلمون) بمحتواها وتنسيقها كما في الصفحة المستقلة بلا تغيير. الكود في نطاق معزول (Shadow DOM) فلا يتعارض مع تنسيق البرنامج ولا أسماء ملفه؛ وبنفس عميل Supabase والدور (x-app-role) فلا تغيير في قاعدة البيانات ولا الصلاحيات. الصفحة المستقلة /coordinator/ وبوابة المعلمين بلا تغيير. أُسقط من هذه الشاشة فقط: البحث الموحد ومرشحات القائمة الجانبية وزر ملء الشاشة (باقية في الصفحة المستقلة). -->
@@ -2331,7 +2331,7 @@ window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();window.v152
 window.addEventListener('appinstalled',()=>{window.v152InstallPrompt=null;v152SyncInstallBtn()});
 if('serviceWorker' in navigator&&location.protocol!=='file:')window.addEventListener('load',()=>navigator.serviceWorker.register('../../service-worker.js').catch(()=>{}));
 const V145_NEWS=[
- ['v266','تقرير «بيانات المعلمين — تجميع»: عمود الموجه في الثانوي صار يظهر من توزيع موجهي المادة بحسب ما يدرّسه المعلم، وعند التجميع بالموجه يظهر المعلم تحت كل موجه له.'],
+ ['v266','تقرير «بيانات المعلمين — تجميع»: أُلغي الموجه من التقرير والفلتر والتجميع، وأُصلح ملف PDF/واتساب ليظهر كل معلم في سطرين بفواصله.'],
  ['v265','تقرير جديد «بيانات المعلمين — تجميع» في التقارير: بيانات المعلم الشخصية والوظيفية والكادر والموجه في سطرين لكل معلم، مع فلاتر المرحلة والموجه والمدرسة، وقائمة «تجميع حسب» التخصص أو المدرسة أو الموجه أو التخصص على الكادر بعنوان لكل مجموعة.'],
  ['v264','حقل جديد «التخصص على الكادر» في بيانات المعلم: علوم للابتدائي والإعدادي، وفيزياء أو كيمياء أو أحياء للثانوي. عُبّئ تلقائيًا من البيانات المعروفة ويمكن تعديله من نافذة تعديل المعلم، ويظهر في تقرير «بيانات معلمي المدرسة» وجدول المعلمين وبطاقة بيانات المعلم وملف المدرسة.'],
  ['v263','«إدخال بيانات المدارس» صارت داخل البرنامج مباشرة: اختر المرحلة (ونوع الثانوي) ثم المدرسة، وتحتها البيانات والموجهون والفصول والمجموعات والمعلمون بنفس شكلها المعتاد.'],
@@ -11628,19 +11628,18 @@ renderReportSchema=function(schema,sheet){
 }
 /* v265-begin: تقرير «بيانات المعلمين — تجميع»: صف بسطرين لكل معلم، وتجميع واحد اختياري بعنوان مجموعة؛ العمود المُجمَّع عليه يُحذف من الجدول. قراءة فقط، بلا قاعدة بيانات. */
 const V265_ID='teachersGrouped',V265_ROLES=['admin','first_supervisor','stage_coordinator','supervisor'];
-Object.assign(STATISTICS_REPORTS,{teachersGrouped:{title:'بيانات المعلمين — تجميع',subtitle:'البيانات الشخصية والوظيفية والكادر والموجه، مع إمكان التجميع حسب التخصص أو المدرسة أو الموجه أو التخصص على الكادر',icon:'👥',adapter:'teachersGrouped',filters:['stage','supervisor','school','status'],purpose:true,statusLabel:'نوع التعاقد',statuses:['ثابت','بالأجر'],note:'اختر «تجميع حسب» ليظهر كل مجموعة بعنوان مستقل ويُحذف عمودها من الجدول. الترتيب داخل المجموعة بالأقدمية.'}});
+Object.assign(STATISTICS_REPORTS,{teachersGrouped:{title:'بيانات المعلمين — تجميع',subtitle:'البيانات الشخصية والوظيفية والكادر، مع إمكان التجميع حسب التخصص أو المدرسة أو التخصص على الكادر',icon:'👥',adapter:'teachersGrouped',filters:['stage','school','status'],purpose:true,statusLabel:'نوع التعاقد',statuses:['ثابت','بالأجر'],note:'اختر «تجميع حسب» ليظهر كل مجموعة بعنوان مستقل ويُحذف عمودها من الجدول. الترتيب داخل المجموعة بالأقدمية.'}});
 if(!V103_PURPOSE_REPORTS.includes(V265_ID))V103_PURPOSE_REPORTS.push(V265_ID);
-{const i=V196_ORDER.indexOf('schoolTeachersData');V196_ORDER.splice(i<0?V196_ORDER.length:i+1,0,V265_ID);V196_DESC[V265_ID]='صف بسطرين لكل معلم: الاسم والمؤهل والتخصص، الرقم القومي والهاتف، التعيين والاستلام، الكادر وتاريخه، الموجه والمدرسة؛ مع تجميع اختياري بعنوان لكل مجموعة.'}
+{const i=V196_ORDER.indexOf('schoolTeachersData');V196_ORDER.splice(i<0?V196_ORDER.length:i+1,0,V265_ID);V196_DESC[V265_ID]='صف بسطرين لكل معلم: الاسم والمؤهل والتخصص، الرقم القومي والهاتف، التعيين والاستلام، الكادر وتاريخه، والمدرسة؛ مع تجميع اختياري بعنوان لكل مجموعة.'}
 const __v265CanView=v103CanViewReport;
 v103CanViewReport=function(id){return id===V265_ID?V265_ROLES.includes(profile?.role):__v265CanView(id)};
 let v265Pri=new Map(),v265LastGroup='';
-const V265_GROUPS={specialty:'التخصص',school:'المدرسة',sup:'الموجه',cadre:'التخصص على الكادر'};
+const V265_GROUPS={specialty:'التخصص',school:'المدرسة',cadre:'التخصص على الكادر'};
 function v265GroupNow(schema){const el=document.getElementById('statisticsFilterGroup');if(el){v265LastGroup=el.value||'';return v265LastGroup}return schema&&schema.v265Group||''}
 function v265Columns(g){
  const C=(k,l,w,o={})=>reportColumn(k,l,w,o);
- return [C('index','م',.3,{numeric:true}),C('name','الاسم',1.6),C('civil','الرقم القومي',1.1,{id:true,nowrap:true}),C('phone','رقم الهاتف',.95,{id:true,nowrap:true}),C('school','المدرسة',1.4),C('qualification','المؤهل',1.1),C('specialty','التخصص',.8),C('appointment','تاريخ التعيين',.8,{nowrap:true}),C('workStart','تاريخ استلام العمل',.8,{nowrap:true}),C('job','درجة الكادر',.8),C('gradeDate','تاريخ الكادر',.8,{nowrap:true}),C('cadre','التخصص على الكادر',.8),C('sup','الموجه',1.2)].filter(c=>c.key!==g);
+ return [C('index','م',.3,{numeric:true}),C('name','الاسم',1.6),C('civil','الرقم القومي',1.1,{id:true,nowrap:true}),C('phone','رقم الهاتف',.95,{id:true,nowrap:true}),C('school','المدرسة',1.4),C('qualification','المؤهل',1.1),C('specialty','التخصص',.8),C('appointment','تاريخ التعيين',.8,{nowrap:true}),C('workStart','تاريخ استلام العمل',.8,{nowrap:true}),C('job','درجة الكادر',.8),C('gradeDate','تاريخ الكادر',.8,{nowrap:true}),C('cadre','التخصص على الكادر',.8)].filter(c=>c.key!==g);
 }
-function by0(rows,g){return rows.flatMap(r=>g==='sup'&&(r._supList||[]).length?r._supList:[r._gv[g]||'غير محدد'])}
 function v265Metrics(schema){
  const g=v265GroupNow(schema),rows=(schema.rows||[]).filter(r=>r&&!r._group&&!r._dup),nm=r=>String(r.name||'');
  const pri=r=>v265Pri.has(String(r._tid))?v265Pri.get(String(r._tid)):Infinity;
@@ -11653,7 +11652,7 @@ function v265Metrics(schema){
   rows.forEach((r,i)=>{r.index=i+1;delete r._ingroup;out.push(r)});
  }else{
   const by=new Map(),put=(k,r)=>(by.get(k)||by.set(k,[]).get(k)).push(r);
-  rows.forEach(r=>{if(g==='sup'&&(r._supList||[]).length>1){r._supList.forEach((k,i)=>put(k,i?{...r,_dup:true}:r))}else put((g==='sup'&&(r._supList||[])[0])||r._gv[g]||NONE,r)});
+  rows.forEach(r=>put(r._gv[g]||NONE,r));
   const keys=[...by.keys()].sort((a,b)=>(a===NONE)-(b===NONE)||(g==='cadre'?(CAD.indexOf(a)<0?9:CAD.indexOf(a))-(CAD.indexOf(b)<0?9:CAD.indexOf(b)):0)||a.localeCompare(b,'ar'));
   keys.forEach(k=>{
    const list=by.get(k).sort(cmp),n=list.length,title=`${V265_GROUPS[g]}: ${k} (${n===1?'معلم':n===2?'معلمان':n<=10?n+' معلمين':n+' معلمًا'})`,gr={_group:true,_groupTitle:title};
@@ -11663,7 +11662,7 @@ function v265Metrics(schema){
  }
  schema.rows=out;
  const v=[['المعلمون',rows.length],['المدارس',new Set(rows.map(r=>(r._schoolIds||[])[0])).size]];
- if(g)v.push(['المجموعات',new Set([...by0(rows,g)]).size]);
+ if(g)v.push(['المجموعات',new Set(rows.map(r=>r._gv[g]||NONE)).size]);
  schema.summary=v.map(([k,x])=>reportMetric(k,x));schema.totals=v.map(([k,x])=>reportTotalsMetric(k,x));
  return schema;
 }
@@ -11674,37 +11673,18 @@ ReportAdapters.teachersGrouped={async load(ctx){
  const ids=[...new Set(scopes.map(v91TeacherId).filter(Boolean))];
  const recs=new Map();
  for(let i=0;i<ids.length;i+=80){const part=ids.slice(i,i+80);const r=await sb.from('teacher_records').select(V120_TEACHER_FIELDS).in('id',part);if(r.error)throw r.error;(r.data||[]).forEach(t=>recs.set(String(t.id),t))}
- const resp=new Map();
- try{for(let i=0;i<ids.length;i+=80){const r=await sb.from('teacher_responsible_supervisor').select('teacher_id,supervisor_id').in('teacher_id',ids.slice(i,i+80));(r.data||[]).forEach(x=>resp.set(String(x.teacher_id),String(x.supervisor_id)))}}catch(_){}
- try{v265Pri=await v261Priority()}catch(_){v265Pri=new Map()}
- const hs=data?.hierarchy||{},sch=new Map((hs.schools||[]).map(x=>[String(x.id),x])),sup=new Map((hs.sups||[]).map(x=>[String(x.id),x.full_name||x.name]));
+  try{v265Pri=await v261Priority()}catch(_){v265Pri=new Map()}
  const isHome=s=>['home','delegated_out_partial'].includes(String(s.school_relation||'home'));
  const pick=new Map();scopes.forEach(s=>{const k=v91TeacherId(s);if(!k)return;const cur=pick.get(k);if(!cur||(!isHome(cur)&&isHome(s)))pick.set(k,s)});
- /* موجهو الثانوي بالمادة: (المدرسة + المادة) ← الموجه من supervisor_school_subjects، ويُنسب للمعلم بحسب ما يدرّسه فعلًا في الفصل الحالي. */
- const subjSup=new Map(),taught=new Map(),allSup=new Map(sup);
- try{
-  const r=await sb.from('supervisor_school_subjects').select('supervisor_id,school_id,subject_name').eq('active',true);
-  (r.data||[]).forEach(x=>{const k=String(x.school_id)+'|'+v257Subj(x.subject_name);(subjSup.get(k)||subjSup.set(k,new Set()).get(k)).add(String(x.supervisor_id))});
-  const miss=[...new Set([...[...subjSup.values()].flatMap(v=>[...v]),...resp.values()])].filter(u=>!allSup.has(u));
-  if(miss.length){const r2=await sb.from('supervisors').select('id,full_name').in('id',miss);(r2.data||[]).forEach(x=>allSup.set(String(x.id),x.full_name))}
-  const secIds=[...pick.values()].filter(x=>String(x.scope_school_stage||'').startsWith('ثانوي')).map(v91TeacherId);
-  for(let i=0;i<secIds.length;i+=60){
-   const ra=await sb.from('teaching_assignments').select('teacher_id,school_classes(school_id),curriculum_subjects(subject_name)').eq('term_id',activeTerm.id).in('teacher_id',secIds.slice(i,i+60));
-   (ra.data||[]).forEach(a=>{const set=subjSup.get(String(a.school_classes?.school_id)+'|'+v257Subj(a.curriculum_subjects?.subject_name));if(!set)return;const t=String(a.teacher_id);set.forEach(u=>{(taught.get(t)||taught.set(t,new Set()).get(t)).add(u)})});
-  }
- }catch(e){console.warn('v265 subject supervisors skipped',e)}
  const dash=v=>reportCellValue(v&&/^\d{4}-\d{2}-\d{2}/.test(String(v))?String(v).slice(0,10).replace(/-/g,'/'):v);
  const rows=[...pick.values()].map(s=>{
-  const tid=v91TeacherId(s),t=recs.get(tid)||s,sc=sch.get(String(v91ScopeSchoolId(s))),paid=String(t.work_type||s.work_type)==='paid',type=paid?'بالأجر':'ثابت';
-  let supList=[sup.get(String(sc?.supervisor_id||''))||allSup.get(resp.get(tid)||'')].filter(Boolean);
-  if(!supList.length&&taught.has(tid))supList=[...taught.get(tid)].map(u=>allSup.get(u)).filter(Boolean).sort((a,b)=>a.localeCompare(b,'ar'));
-  const supName=supList.join('، ');
-  const row={index:0,_tid:tid,name:reportCellValue(t.full_name),civil:reportCellValue(t.civil_id),phone:reportCellValue(t.phone),school:reportCellValue(s.scope_school_name),qualification:reportCellValue(v123Qualification(t)),specialty:reportCellValue(t.specialty),appointment:dash(t.appointment_date),workStart:dash(t.work_start_date),job:reportCellValue(t.job_title),gradeDate:dash(t.grade_acquired_date),cadre:reportCellValue(t.cadre_specialty),sup:reportCellValue(supName),
-   _gv:{specialty:String(t.specialty||'').trim(),school:String(s.scope_school_name||'').trim(),sup:supName,cadre:String(t.cadre_specialty||'').trim()},_supList:supList,
-   ...v103ScopeMeta([s]),_supervisor:supName,_status:type,_search:[t.full_name,t.civil_id,t.phone,s.scope_school_name,t.specialty,t.cadre_specialty,supName].filter(Boolean).join(' ')};
+  const tid=v91TeacherId(s),t=recs.get(tid)||s,paid=String(t.work_type||s.work_type)==='paid',type=paid?'بالأجر':'ثابت';
+  const row={index:0,_tid:tid,name:reportCellValue(t.full_name),civil:reportCellValue(t.civil_id),phone:reportCellValue(t.phone),school:reportCellValue(s.scope_school_name),qualification:reportCellValue(v123Qualification(t)),specialty:reportCellValue(t.specialty),appointment:dash(t.appointment_date),workStart:dash(t.work_start_date),job:reportCellValue(t.job_title),gradeDate:dash(t.grade_acquired_date),cadre:reportCellValue(t.cadre_specialty),
+   _gv:{specialty:String(t.specialty||'').trim(),school:String(s.scope_school_name||'').trim(),cadre:String(t.cadre_specialty||'').trim()},
+   ...v103ScopeMeta([s]),_status:type,_search:[t.full_name,t.civil_id,t.phone,s.scope_school_name,t.specialty,t.cadre_specialty].filter(Boolean).join(' ')};
   return row;
  });
- return v103BaseReport(V265_ID,ctx,v265Columns(''),rows,'البيانات كما هي مسجلة في قاعدة البيانات. الموجه: موجه مدرسة المعلم، وفي الثانوي «الموجه المسؤول عن المعلم» إن حُدّد.');
+ return v103BaseReport(V265_ID,ctx,v265Columns(''),rows,'البيانات كما هي مسجلة في قاعدة البيانات.');
 }};
 /* عرض الصف بسطرين (الأقسام الأفقية داخل كل خلية) بدل صف واحد؛ يستخدم أنماطًا مضمنة لتصلح للمعاينة والطباعة. */
 function v265Layout(schema){
@@ -11717,9 +11697,9 @@ function v265Layout(schema){
  ];
  if(g!=='cadre')L.push({w:.9,single:[P('cadre','التخصص على الكادر')]});
  L.push({w:1.05,rows:[[P('job','درجة الكادر')],[P('gradeDate','تاريخ الكادر',{nb:1})]]});
- L.push({w:1.5,rows:[[P('sup','الموجه')].filter(has),[P('school','المدرسة')].filter(has)]});
+ L.push({w:1.5,rows:[[P('school','المدرسة')].filter(has)]});
  L.forEach(c=>{if(c.rows)c.rows=c.rows.filter(r=>r.length)});
- return L;
+ return L.filter(c=>c.single||c.rows.length);
 }
 const __v265Skel=reportTableSkeleton,__v265Row=reportRowNode;
 reportTableSkeleton=function(schema){
@@ -11750,6 +11730,7 @@ v103Detail=function(cfg,data){
  let html=__v265Detail.apply(this,arguments);
  if(cfg&&cfg.adapter===V265_ID&&typeof html==='string'&&!html.includes('statisticsFilterGroup')){
   const f=`<div class="statistics-filter-field"><label for="statisticsFilterGroup">تجميع حسب</label><select id="statisticsFilterGroup"><option value="">بدون تجميع</option>${Object.entries(V265_GROUPS).map(([k,l])=>`<option value="${k}">${l}</option>`).join('')}</select></div>`;
+  html=html.replace(/<div class="statistics-filter-field"><label>الموجه<\/label><select id="statisticsFilterSupervisor"[\s\S]*?<\/select><\/div>/,'');
   const m='<div class="statistics-filter-field"><label for="v103ReportSearch">';
   if(html.includes(m))html=html.replace(m,f+m);
  }
