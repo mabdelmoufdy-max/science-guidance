@@ -1989,6 +1989,7 @@ body.v233-lock{overflow:hidden}
 .v252-none{border:1.5px dashed #f59e0b!important;background:#fffbeb}.v252-none .v252-nm{color:#b45309}.v252-none .v252-cnt{background:#fde68a;color:#92400e}
 .v252-note{font-size:12px;color:var(--muted);margin-top:8px}
 @media(max-width:800px){.v252-filters{grid-template-columns:1fr 1fr}.v252-filters input{grid-column:1/-1}.v252-stats{grid-template-columns:1fr 1fr}.v252-cards{grid-template-columns:1fr}.v252-seg{display:flex}.v252-seg button{flex:1;text-align:center;padding:9px 6px}}
+.v268-mgr{font-size:12px;margin-top:4px}
 </style>
 </head>
 <body>
@@ -2549,11 +2550,13 @@ async function mySchool(){
 }
 
 async function schoolsPage(){
- const [schoolRes,classRes,supervisorRes]=await Promise.all([
+ const [schoolRes,classRes,supervisorRes,v268MgrRes]=await Promise.all([
   sb.from('schools').select('id,name,stage,school_type,gender_type,address,phone,class_count,supervisor_id,manager_profile_id,status,approval_authority').order('name'),
   sb.from('school_classes').select('school_id').eq('term_id',activeTerm.id),
-  sb.from('supervisors').select('id,full_name,active').order('full_name')
+  sb.from('supervisors').select('id,full_name,active').order('full_name'),
+  sb.from('school_manager_contact').select('school_id,manager_name,manager_phone')
  ]);
+ window.V268_MGR={};(v268MgrRes.data||[]).forEach(r=>window.V268_MGR[r.school_id]=r);
  if(schoolRes.error)return `<div class="error">${esc(schoolRes.error.message)}</div>`;
  if(classRes.error)return `<div class="error">${esc(classRes.error.message)}</div>`;
  if(supervisorRes.error)return `<div class="error">${esc(supervisorRes.error.message)}</div>`;
@@ -2624,7 +2627,7 @@ async function schoolsPage(){
            let supervisorCell=`<div class="school-supervisor-display"><b class="${assignedSupervisor?'':'muted'}">${esc(supName)}</b>${canAssign?`<button type="button" class="btn secondary school-supervisor-change no-print" onclick="editSchoolForm('${sc.id}')">تغيير</button>`:''}</div>`;
 
            return `<tr>
-             <td><b>${esc(sc.name)}</b></td>
+             <td><b>${esc(sc.name)}</b>${v268MgrLine(sc)}</td>
              <td>${esc(sc.stage)}</td>
              
              <td><b>${visibleClassCount(sc)}</b></td>
@@ -2660,6 +2663,17 @@ async function schoolsPage(){
 }
 
 function schoolForm(){if(profile?.role!=='admin')return toast('إضافة المدارس متاحة لمدير النظام فقط');modal(`<h3>إضافة مدرسة</h3><div class="notice info">سيُنشئ النظام معرفًا داخليًا ثابتًا وفريدًا للمدرسة تلقائيًا. لا يوجد كود مدرسة يدوي.</div><form onsubmit="saveSchool(event)"><div class="form-grid"><div class="field"><label>اسم المدرسة الرسمي</label><input name="name" required></div><div class="field"><label>المرحلة</label><select name="stage"><option>ابتدائي</option><option>إعدادي</option><option>ثانوي عام</option><option>ثانوي صناعي</option></select></div><div class="field"><label>النوع</label><select name="gender_type"><option>بنين</option><option>بنات</option><option>مشترك</option></select></div><div class="field"><label>عدد الفصول</label><input name="class_count" type="number" min="0" value="0"></div><div class="field"><label>جهة الاعتماد النهائي</label><select name="approval_authority"><option value="school_manager">مدير المدرسة</option><option value="supervisor">موجه المدرسة</option><option value="admin">مدير النظام</option></select></div><div class="field"><label>العنوان</label><input name="address"></div><div class="field"><label>الهاتف</label><input name="phone"></div></div><div class="actions"><button class="btn primary">حفظ</button><button type="button" class="btn secondary" onclick="closeModal()">إلغاء</button></div></form>`)}
+
+/* v268: اسم مدير المدرسة وهاتفه (school_manager_contact) — الحفظ عبر set_school_manager_contact للمدير والمنسق والموجه */
+function v268MgrLine(sc){const c=(window.V268_MGR||{})[sc.id]||{},can=['admin','stage_coordinator','supervisor'].includes(profile.role);
+ const txt=(c.manager_name||c.manager_phone)?`المدير: ${esc(c.manager_name||'—')}${c.manager_phone?` — <span dir="ltr">${esc(c.manager_phone)}</span>`:''}`:'';
+ return (txt||can)?`<div class="muted v268-mgr">${txt}${can?` <button type="button" class="btn secondary sm no-print" onclick="v268ManagerForm('${sc.id}')">بيانات المدير</button>`:''}</div>`:''}
+function v268ManagerForm(id){const c=(window.V268_MGR||{})[id]||{};
+ modal(`<h3>بيانات مدير المدرسة</h3><form onsubmit="v268SaveManager(event,'${id}')"><div class="form-grid"><div class="field"><label>اسم مدير المدرسة</label><input name="manager_name" maxlength="150" value="${esc(c.manager_name||'')}"></div><div class="field"><label>هاتف المدير</label><input name="manager_phone" inputmode="tel" value="${esc(c.manager_phone||'')}"></div></div><div class="actions"><button class="btn primary">حفظ</button><button type="button" class="btn secondary" onclick="closeModal()">إلغاء</button></div></form>`)}
+async function v268SaveManager(e,id){e.preventDefault();const f=Object.fromEntries(new FormData(e.target).entries());
+ const ph=String(f.manager_phone||'').replace(/[٠-٩]/g,d=>'٠١٢٣٤٥٦٧٨٩'.indexOf(d)).replace(/[^0-9+]/g,'');
+ const {data,error}=await sb.rpc('set_school_manager_contact',{p_school_id:id,p_name:String(f.manager_name||'').trim()||null,p_phone:ph||null});
+ if(error)return moneySafeError(error);(window.V268_MGR=window.V268_MGR||{})[id]=data;closeModal();toast('تم حفظ بيانات مدير المدرسة');refreshCurrentPage({invalidate:['schools']}).catch(moneySafeError)}
 
 async function saveSchool(e){e.preventDefault();if(profile?.role!=='admin')return toast('غير مصرح بإضافة مدرسة');const f=Object.fromEntries(new FormData(e.target).entries());f.class_count=Number(f.class_count||0);const {error}=await sb.from('schools').insert(f);if(error)return moneySafeError(error);closeModal();toast('تمت إضافة المدرسة');refreshCurrentPage({invalidate:['schools','hierarchy','dashboard','page:reports']}).catch(moneySafeError)}
 
@@ -10294,6 +10308,8 @@ async function loadAll(){
  try{S.supStages=await q(sb.from('supervisor_stage_assignments').select('supervisor_id,stage,active').eq('active',true))}catch(e){S.supStages=null}
  const mids=[...new Set(schools.map(s=>s.manager_profile_id).filter(Boolean))];
  if(mids.length)try{(await q(sb.from('profiles').select('id,full_name').in('id',mids))).forEach(p=>S.managers[p.id]=p.full_name)}catch(e){}
+ /* v268: اسم مدير المدرسة وهاتفه */
+ S.mgr={};try{(await q(sb.from('school_manager_contact').select('school_id,manager_name,manager_phone'))).forEach(r=>S.mgr[r.school_id]=r)}catch(e){}
 }
 
 /* ---------- الحالة ---------- */
@@ -10425,7 +10441,7 @@ function renderMain(){
  let pane='';
  if(S.tab==='data'){
   if(!S.edit){
-   pane=`<h3>البيانات الأساسية</h3><div class="kv">${v('اسم المدرسة',s.name)}${v('المرحلة',s.stage)}${v('النوع',(TYPES[s.stage]||[]).find(t=>t[0]===(s.school_type||''))?.[1]||s.school_type||'عام')}${v('بنين / بنات',s.gender_type)}${v('مدير المدرسة',S.managers[s.manager_profile_id]||'')}${sec?'':v('الموجه',supName)}${v('الهاتف',s.phone)}${v('العنوان',s.address)}</div>
+   pane=`<h3>البيانات الأساسية</h3><div class="kv">${v('اسم المدرسة',s.name)}${v('المرحلة',s.stage)}${v('النوع',(TYPES[s.stage]||[]).find(t=>t[0]===(s.school_type||''))?.[1]||s.school_type||'عام')}${v('بنين / بنات',s.gender_type)}${v('مدير المدرسة',S.mgr?.[s.id]?.manager_name||S.managers[s.manager_profile_id]||'')}${v('هاتف المدير',S.mgr?.[s.id]?.manager_phone||'')}${sec?'':v('الموجه',supName)}${v('الهاتف',s.phone)}${v('العنوان',s.address)}</div>
    ${agg?`<div class="notice n-info" style="margin-top:10px">تُجمع مع «${esc(agg.name)}» في التقارير.</div>`:''}
    <div class="actions"><button class="btn primary" id="editBtn">تعديل البيانات</button></div>`;
   }else{
@@ -10443,6 +10459,8 @@ function renderMain(){
     <div class="field"><label for="f_phone">هاتف المدرسة</label><input id="f_phone" inputmode="tel" value="${esc(s.phone||'')}"></div>
     <div class="field" style="grid-column:1/-1"><label for="f_addr">العنوان</label><input id="f_addr" value="${esc(s.address||'')}"></div>
     <div class="field"><label>مدير المدرسة</label><input value="${esc(S.managers[s.manager_profile_id]||'غير مسجل')}" readonly title="يُسند من شاشة الحسابات"></div>
+    <div class="field"><label for="f_mgr_name">اسم مدير المدرسة</label><input id="f_mgr_name" maxlength="150" value="${esc(S.mgr?.[s.id]?.manager_name||'')}"></div>
+    <div class="field"><label for="f_mgr_phone">هاتف المدير</label><input id="f_mgr_phone" inputmode="tel" value="${esc(S.mgr?.[s.id]?.manager_phone||'')}"></div>
    </div><div class="actions"><button class="btn primary" id="saveBtn">حفظ البيانات</button><button type="button" class="btn ghost" id="cancelBtn">إلغاء</button></div></form>`;
   }
  }else if(S.tab==='sup'){
@@ -10817,7 +10835,9 @@ function saveSchool(s){guard(async()=>{
  if(isSec(s))await saveSubjectSups(s);
  const rows=await q(sb.from('schools').update(patch).eq('id',s.id).select('id,school_type,gender_type,address,phone,supervisor_id,updated_at'));
  if(!rows?.length)throw new Error('لم يُحفظ التعديل (لا توجد صلاحية على هذه المدرسة)');
- Object.assign(s,rows[0]);S.edit=false;toast('تم حفظ بيانات المدرسة');
+ Object.assign(s,rows[0]);
+ if($('f_mgr_name')){const mn=$('f_mgr_name').value.trim(),mp=digits($('f_mgr_phone').value),oc=(S.mgr||{})[s.id]||{};if(mn!==(oc.manager_name||'')||mp!==(oc.manager_phone||'')){const r=await q(sb.rpc('set_school_manager_contact',{p_school_id:s.id,p_name:mn||null,p_phone:mp||null}));(S.mgr=S.mgr||{})[s.id]=r}}
+ S.edit=false;toast('تم حفظ بيانات المدرسة');
 },true)}
 async function syncClassCount(s){const n=classesOf(s.id).length;try{const r=await q(sb.from('schools').update({class_count:n}).eq('id',s.id).select('class_count,updated_at'));if(r?.[0])Object.assign(s,r[0])}catch(e){}}
 function addClass(s,grade){guard(async()=>{

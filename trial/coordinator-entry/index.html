@@ -325,6 +325,8 @@ async function loadAll(){
  try{S.supStages=await q(sb.from('supervisor_stage_assignments').select('supervisor_id,stage,active').eq('active',true))}catch(e){S.supStages=null}
  const mids=[...new Set(schools.map(s=>s.manager_profile_id).filter(Boolean))];
  if(mids.length)try{(await q(sb.from('profiles').select('id,full_name').in('id',mids))).forEach(p=>S.managers[p.id]=p.full_name)}catch(e){}
+ /* v268: اسم مدير المدرسة وهاتفه */
+ S.mgr={};try{(await q(sb.from('school_manager_contact').select('school_id,manager_name,manager_phone'))).forEach(r=>S.mgr[r.school_id]=r)}catch(e){}
 }
 
 /* ---------- الحالة ---------- */
@@ -532,7 +534,7 @@ function renderMain(){
  let pane='';
  if(S.tab==='data'){
   if(!S.edit){
-   pane=`<h3>البيانات الأساسية</h3><div class="kv">${v('اسم المدرسة',s.name)}${v('المرحلة',s.stage)}${v('النوع',(TYPES[s.stage]||[]).find(t=>t[0]===(s.school_type||''))?.[1]||s.school_type||'عام')}${v('بنين / بنات',s.gender_type)}${v('مدير المدرسة',S.managers[s.manager_profile_id]||'')}${sec?'':v('الموجه',supName)}${v('الهاتف',s.phone)}${v('العنوان',s.address)}</div>
+   pane=`<h3>البيانات الأساسية</h3><div class="kv">${v('اسم المدرسة',s.name)}${v('المرحلة',s.stage)}${v('النوع',(TYPES[s.stage]||[]).find(t=>t[0]===(s.school_type||''))?.[1]||s.school_type||'عام')}${v('بنين / بنات',s.gender_type)}${v('مدير المدرسة',S.mgr?.[s.id]?.manager_name||S.managers[s.manager_profile_id]||'')}${v('هاتف المدير',S.mgr?.[s.id]?.manager_phone||'')}${sec?'':v('الموجه',supName)}${v('الهاتف',s.phone)}${v('العنوان',s.address)}</div>
    ${agg?`<div class="notice n-info" style="margin-top:10px">تُجمع مع «${esc(agg.name)}» في التقارير.</div>`:''}
    <div class="actions"><button class="btn primary" id="editBtn">تعديل البيانات</button></div>`;
   }else{
@@ -550,6 +552,8 @@ function renderMain(){
     <div class="field"><label for="f_phone">هاتف المدرسة</label><input id="f_phone" inputmode="tel" value="${esc(s.phone||'')}"></div>
     <div class="field" style="grid-column:1/-1"><label for="f_addr">العنوان</label><input id="f_addr" value="${esc(s.address||'')}"></div>
     <div class="field"><label>مدير المدرسة</label><input value="${esc(S.managers[s.manager_profile_id]||'غير مسجل')}" readonly title="يُسند من شاشة الحسابات"></div>
+    <div class="field"><label for="f_mgr_name">اسم مدير المدرسة</label><input id="f_mgr_name" maxlength="150" value="${esc(S.mgr?.[s.id]?.manager_name||'')}"></div>
+    <div class="field"><label for="f_mgr_phone">هاتف المدير</label><input id="f_mgr_phone" inputmode="tel" value="${esc(S.mgr?.[s.id]?.manager_phone||'')}"></div>
    </div><div class="actions"><button class="btn primary" id="saveBtn">حفظ البيانات</button><button type="button" class="btn ghost" id="cancelBtn">إلغاء</button></div></form>`;
   }
  }else if(S.tab==='sup'){
@@ -925,7 +929,9 @@ function saveSchool(s){guard(async()=>{
  if(isSec(s))await saveSubjectSups(s);
  const rows=await q(sb.from('schools').update(patch).eq('id',s.id).select('id,school_type,gender_type,address,phone,supervisor_id,updated_at'));
  if(!rows?.length)throw new Error('لم يُحفظ التعديل (لا توجد صلاحية على هذه المدرسة)');
- Object.assign(s,rows[0]);S.edit=false;toast('تم حفظ بيانات المدرسة');
+ Object.assign(s,rows[0]);
+ if($('f_mgr_name')){const mn=$('f_mgr_name').value.trim(),mp=digits($('f_mgr_phone').value),oc=(S.mgr||{})[s.id]||{};if(mn!==(oc.manager_name||'')||mp!==(oc.manager_phone||'')){const r=await q(sb.rpc('set_school_manager_contact',{p_school_id:s.id,p_name:mn||null,p_phone:mp||null}));(S.mgr=S.mgr||{})[s.id]=r}}
+ S.edit=false;toast('تم حفظ بيانات المدرسة');
 },true)}
 async function syncClassCount(s){const n=classesOf(s.id).length;try{const r=await q(sb.from('schools').update({class_count:n}).eq('id',s.id).select('class_count,updated_at'));if(r?.[0])Object.assign(s,r[0])}catch(e){}}
 function addClass(s,grade){guard(async()=>{
