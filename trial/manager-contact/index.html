@@ -1,4 +1,5 @@
 <!doctype html>
+<!-- v268: اسم مدير المدرسة وهاتفه: جدول school_manager_contact ودالة set_school_manager_contact (migration v268) — يكتب مدير النظام والمنسق لمرحلته والموجه لمدارسه. حقلا «اسم مدير المدرسة/هاتف المدير» في «تعديل البيانات الأساسية» بشاشة إدخال بيانات المدارس (المدمجة والمستقلة) ويظهران في بطاقتها، وسطر «المدير: … — الهاتف» وزر «بيانات المدير» تحت اسم المدرسة في مدارسي/مدارس المرحلة. -->
 <!-- v267: تقرير «بيانات المعلمين — تجميع»: فلتر جديد «حالة المعلم» (الكل / في إجازة / قائم على العمل). «في إجازة» = إجازة مجددة فقط (excluded_by_renewed_leave في teacher_financial_guidance للعام الحالي)؛ بانتظار التجديد وعادت ومن بلا إجازة = قائم على العمل (القاعدة المعتمدة). يظهر في الملخص عند التفعيل. قراءة فقط. -->
 <!-- v266: تقرير «بيانات المعلمين — تجميع»: حُذف الموجه من التقرير والفلتر وخيارات التجميع (بقرار المستخدم)، وبقيت المدرسة في آخر عمود؛ وإصلاح ملف PDF/واتساب: يرسم مساري التصدير أجزاء الخلية (سطرا كل خلية وفواصلهما) كلًّا على حدة بدل دمجها في نص واحد، دون تغيير باقي التقارير. قراءة فقط. -->
 <!-- v265: تقرير جديد «بيانات المعلمين — تجميع» (teachersGrouped) في التقارير لـadmin/first_supervisor/stage_coordinator/supervisor: صف بسطرين لكل معلم (الاسم والمؤهل والتخصص، الرقم القومي والهاتف، التعيين والاستلام، الكادر وتاريخه، الموجه والمدرسة)، فلاتر المرحلة والموجه والمدرسة ونوع التعاقد، وقائمة «تجميع حسب» (التخصص/المدرسة/الموجه/التخصص على الكادر) بعنوان لكل مجموعة ويُحذف عمودها من الجدول، والترتيب بالأقدمية. قراءة فقط بلا قاعدة بيانات. -->
@@ -8,7 +9,6 @@
 <!-- v261: ترتيب المعلمين حسب الأقدمية (ترتيب «أولوية الإشراف» الجاهز `teacher_supervision_priority.general_priority`: الدرجة ثم تواريخ الدرجة والاستلام والتعيين) داخل كل مدرسة/تخصص في تقارير الكادر والأنصبة والتوجيه المالي وبيانات معلمي المدرسة والمعلمون حسب التخصص وإسناد الفصول؛ من لا ترتيب له في آخر مجموعته. ترتيب الصفوف فقط، بلا قاعدة بيانات. -->
 <!-- v260: تقرير «المعلمون حسب التخصص — الثانوي»: عاد فلتر المرحلة (ثانوي عام / ثانوي صناعي / الكل)، وعند «الكل» يظهر كل قسم منفصلًا بعنوان مرحلته وترقيمه وعدد تخصصاته؛ وفلتر المدرسة يتبع المرحلة. بلا قاعدة بيانات. -->
 <!-- v259: تقرير «المعلمون حسب التخصص — الثانوي» بأربعة أعمدة: م (مسلسل مستمر)، التخصص (خلية مدموجة بعدد معلميه «فيزياء (5)»)، المعلم، المدرسة (خلايا متتالية للمدرسة نفسها مدموجة)؛ حُذفت عناوين الأقسام والمرحلة والمجموعات والحصص وصف المجموع. بلا قاعدة بيانات. -->
-<!-- v258: تقرير «المعلمون حسب التخصص — الثانوي»: المادة عنوان قسم واحد (بعدد معلميها) بدل تكرارها في كل صف، والمرحلة ثابتة «ثانوي» (حُذف فلتر المرحلة)، وفلتر «التخصص» (فيزياء/كيمياء/أحياء/علوم متكاملة) مع فلتر المدرسة؛ يظهر لمدير النظام ومنسق المرحلة فقط. بلا قاعدة بيانات. -->
 <html lang="ar" dir="rtl">
 <head>
 <!-- إعداد: أ/ محمود عبدالمفدي محمد أبوالنجا | الصفة: معلم -->
@@ -16,7 +16,7 @@
 <script>/* v226: العنوان الموحد — انظر التعليق أعلى الملف */(function(){try{if(/\.github\.io$/.test(location.hostname)&&/^\/science-guidance\/?(index\.html)?$/.test(location.pathname)&&!/[?&]stay\b/.test(location.search))location.replace('https://teachers-data-portal.vercel.app/app/'+location.hash)}catch(e){}})();</script>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#152c43">
-<title>نظام توجيه العلوم — v267</title>
+<title>نظام توجيه العلوم — v268</title>
 <link rel="manifest" href="../../manifest.webmanifest">
 <link rel="icon" type="image/png" sizes="192x192" href="../../icon-192.png">
 <link rel="apple-touch-icon" href="../../icon-192.png">
@@ -2332,6 +2332,7 @@ window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();window.v152
 window.addEventListener('appinstalled',()=>{window.v152InstallPrompt=null;v152SyncInstallBtn()});
 if('serviceWorker' in navigator&&location.protocol!=='file:')window.addEventListener('load',()=>navigator.serviceWorker.register('../../service-worker.js').catch(()=>{}));
 const V145_NEWS=[
+ ['v268','اسم مدير المدرسة وهاتفه: يسجّلهما مدير النظام والمنسق والموجه من زر «بيانات المدير» تحت اسم المدرسة في «مدارسي»، أو من «تعديل البيانات» في شاشة إدخال بيانات المدارس، ويظهران تحت اسم المدرسة وفي بطاقتها.'],
  ['v267','تقرير «بيانات المعلمين — تجميع»: فلتر جديد «حالة المعلم» (الكل / في إجازة / قائم على العمل). المعلم في إجازة = إجازته مجددة؛ أما بانتظار التجديد فيُعد قائمًا على العمل.'],
  ['v266','تقرير «بيانات المعلمين — تجميع»: أُلغي الموجه من التقرير والفلتر والتجميع، وأُصلح ملف PDF/واتساب ليظهر كل معلم في سطرين بفواصله.'],
  ['v265','تقرير جديد «بيانات المعلمين — تجميع» في التقارير: بيانات المعلم الشخصية والوظيفية والكادر والموجه في سطرين لكل معلم، مع فلاتر المرحلة والموجه والمدرسة، وقائمة «تجميع حسب» التخصص أو المدرسة أو الموجه أو التخصص على الكادر بعنوان لكل مجموعة.'],
@@ -10458,7 +10459,6 @@ function renderMain(){
     ${sec?'':`<div class="field"><label for="f_sup">الموجه</label><select id="f_sup"><option value="">— بدون —</option>${supOpts.map(x=>`<option value="${x.id}" ${x.id===s.supervisor_id?'selected':''}>${esc(x.full_name)}</option>`).join('')}</select></div>`}
     <div class="field"><label for="f_phone">هاتف المدرسة</label><input id="f_phone" inputmode="tel" value="${esc(s.phone||'')}"></div>
     <div class="field" style="grid-column:1/-1"><label for="f_addr">العنوان</label><input id="f_addr" value="${esc(s.address||'')}"></div>
-    <div class="field"><label>مدير المدرسة</label><input value="${esc(S.managers[s.manager_profile_id]||'غير مسجل')}" readonly title="يُسند من شاشة الحسابات"></div>
     <div class="field"><label for="f_mgr_name">اسم مدير المدرسة</label><input id="f_mgr_name" maxlength="150" value="${esc(S.mgr?.[s.id]?.manager_name||'')}"></div>
     <div class="field"><label for="f_mgr_phone">هاتف المدير</label><input id="f_mgr_phone" inputmode="tel" value="${esc(S.mgr?.[s.id]?.manager_phone||'')}"></div>
    </div><div class="actions"><button class="btn primary" id="saveBtn">حفظ البيانات</button><button type="button" class="btn ghost" id="cancelBtn">إلغاء</button></div></form>`;
