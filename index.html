@@ -1,4 +1,5 @@
 <!doctype html>
+<!-- v277: ترتيب المعلمين في الشاشات والتقارير: الثابتون بالأقدمية ثم الأجر بالأقدمية (v261Priority يضع الأجر بعد الثابتين؛ v277Sort في معلمو مدارسي وملف المدرسة وتقريريه وإسناد حصص الفصول والإسنادات الحالية وبطاقات توزيع الفصول). -->
 <!-- v276: «معلمو مدارسي» عند «المدرسة: الكل»: طلب واحد get_school_teacher_rosters لكل المدارس بدل 17 طلبًا متوازيًا كانت تتجاوز مهلة القاعدة (8 ث)؛ احتياطي متتالٍ إن غابت الدالة. -->
 <!-- v275: ملف المدرسة (الشاشة): حُذف قسم «بيان الحصص من الملفات المرفوعة» (أرقام مرجعية قديمة مكررة)؛ يبقى في «تقرير المدرسة الشامل» المطبوع. -->
 <!-- v274: بلا تكرار المادة والحصص: «إسناد حصص الفصول» و«الفصول» في ملف المدرسة و«الإسنادات الحالية» في توزيع الفصول — المعلم مرة واحدة وفصوله متجاورة، والفصول مجمّعة بالصف؛ المادة والحصص سطر واحد أعلى الجدول إن كانت مادة واحدة، ويظهر المختلف فقط. -->
@@ -8,7 +9,6 @@
 <!-- v270: «بياناتي» للموجه (بدل «بيانات المشرف»): بطاقة بياناته كاملة، وتعديل الهاتف/المسمى/الدرجة/تاريخ الحصول على الدرجة/التعيين/استلام العمل بالدالة update_my_supervisor_profile (migration v270)، وطباعة بطاقة A4، وتغيير كلمة المرور بعد التحقق من الحالية. -->
 <!-- v269: «تعديل البيانات الأساسية» في شاشة إدخال بيانات المدارس (المدمجة والمستقلة): أُزيل حقل «مدير المدرسة» الباهت للقراءة فقط (حساب الدخول المربوط) لتكراره مع «اسم مدير المدرسة»؛ ربط الحساب يبقى من شاشة الحسابات. -->
 <!-- v268: اسم مدير المدرسة وهاتفه: جدول school_manager_contact ودالة set_school_manager_contact (migration v268) — يكتب مدير النظام والمنسق لمرحلته والموجه لمدارسه. حقلا «اسم مدير المدرسة/هاتف المدير» في «تعديل البيانات الأساسية» بشاشة إدخال بيانات المدارس (المدمجة والمستقلة) ويظهران في بطاقتها، وسطر «المدير: … — الهاتف» وزر «بيانات المدير» تحت اسم المدرسة في مدارسي/مدارس المرحلة. -->
-<!-- v267: تقرير «بيانات المعلمين — تجميع»: فلتر جديد «حالة المعلم» (الكل / في إجازة / قائم على العمل). «في إجازة» = إجازة مجددة فقط (excluded_by_renewed_leave في teacher_financial_guidance للعام الحالي)؛ بانتظار التجديد وعادت ومن بلا إجازة = قائم على العمل (القاعدة المعتمدة). يظهر في الملخص عند التفعيل. قراءة فقط. -->
 <html lang="ar" dir="rtl">
 <head>
 <!-- إعداد: أ/ محمود عبدالمفدي محمد أبوالنجا | الصفة: معلم -->
@@ -16,7 +16,7 @@
 <script>/* v226: العنوان الموحد — انظر التعليق أعلى الملف */(function(){try{if(/\.github\.io$/.test(location.hostname)&&/^\/science-guidance\/?(index\.html)?$/.test(location.pathname)&&!/[?&]stay\b/.test(location.search))location.replace('https://teachers-data-portal.vercel.app/app/'+location.hash)}catch(e){}})();</script>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#152c43">
-<title>نظام توجيه العلوم — v276</title>
+<title>نظام توجيه العلوم — v277</title>
 <link rel="manifest" href="./manifest.webmanifest">
 <link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png">
 <link rel="apple-touch-icon" href="./icon-192.png">
@@ -2333,6 +2333,7 @@ window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();window.v152
 window.addEventListener('appinstalled',()=>{window.v152InstallPrompt=null;v152SyncInstallBtn()});
 if('serviceWorker' in navigator&&location.protocol!=='file:')window.addEventListener('load',()=>navigator.serviceWorker.register('./service-worker.js').catch(()=>{}));
 const V145_NEWS=[
+ ['v277','ترتيب المعلمين في الشاشات والتقارير: الثابتون أولًا بالأقدمية، ثم معلمو الأجر بالأقدمية.'],
  ['v276','«معلمو مدارسي» لكل المدارس صارت تُحمَّل بطلب واحد سريع بدل طلب لكل مدرسة، فلم تعد تتوقف بخطأ انتهاء المهلة.'],
  ['v275','ملف المدرسة: حُذف من الشاشة قسم «بيان الحصص من الملفات المرفوعة» (أرقام مرجعية قديمة)، ويبقى في تقرير المدرسة الشامل المطبوع.'],
  ['v274','عرض بلا تكرار: في ملف المدرسة و«الإسنادات الحالية» يظهر المعلم مرة واحدة وبجواره فصوله، والفصول مجمّعة بالصف، والمادة والحصص تُكتب مرة واحدة أعلى الجدول.'],
@@ -2914,7 +2915,7 @@ async function teachersPage({force=false}={}){
    return result.error?result:{data:v91ScopeRows(result.data),error:null}
  },{ttl:30000,force});
  if(error)return `<div class="error">${esc(error.message)}</div>`;
- const teachers=(Array.isArray(teachersRaw)?teachersRaw:[]).filter(t=>v97StageMatches(v97TeacherStage(t,t._v142School||scopeSchool))&&v98SchoolMatches(scopeSchool?.id||v91ScopeSchoolId(t)));
+ const teachers=(Array.isArray(teachersRaw)?teachersRaw:[]).filter(t=>v97StageMatches(v97TeacherStage(t,t._v142School||scopeSchool))&&v98SchoolMatches(scopeSchool?.id||v91ScopeSchoolId(t)));await v277Ready();v277Sort(teachers,t=>t.teacher_id,t=>t.full_name);
  const canAdd=['supervisor','senior_teacher'].includes(profile.role),canEdit=TEACHER_ACTION_ROLES.edit.includes(profile.role),canDelegate=TEACHER_ACTION_ROLES.delegate.includes(profile.role);
  const scopeNotice=allSchools?`<div class="notice info"><b>نطاق العرض: كل مدارسي (${allSchools.length})</b> — يظهر معلمو كل مدرسة والمنتدبون إليها، والمنتدب جزئيًا يظهر في المدرستين.</div>`:schoolScopedRole?(scopeSchool?`<div class="notice info"><b>نطاق العرض: ${esc(scopeSchool.name)}</b> — يظهر معلمو المدرسة والمنتدبون إليها فقط، وتطبق قاعدة الإشراف بحسب مدرسة العمل الحالية.</div>`:`<div class="notice warn">لا توجد مدرسة مرتبطة بالحساب.</div>`):'';
  const relationLabel=t=>{
@@ -6352,7 +6353,7 @@ function uxUpdateAssignmentTeacherCard(tid){const t=uxAssignmentCurrentTeacher(t
 function uxAppendAssignmentRow(a){if(document.querySelector('#assignmentCurrentList.v274-current'))return v274RenderCurrentList();const box=document.getElementById('assignmentCurrentList');if(!box)return;const empty=box.querySelector('.muted');empty?.remove();const row=document.createElement('div');row.className='assignment-current-row';row.id=`assignmentRow_${a.id}`;row.innerHTML=`<b>${esc(a.teacher_records?.full_name||'')}</b><span>${esc(a.school_classes?.class_name||'')} — ${esc(gradeLabel(a.school_classes?.stage,a.school_classes?.grade))}</span><span>${esc(a.curriculum_subjects?.subject_name||'')}</span><span>${a.weekly_periods}</span>${assignmentEditCanManage()?`<button class="btn secondary" type="button" onclick="editAssignmentForm('${a.id}')">تعديل</button>`:''}`;box.prepend(row)}
 async function uxUndoAssignment(assignmentId){const a=(__assignmentUx?.assigns||[]).find(x=>x.id===assignmentId);if(!a)return;try{const {data,error}=await sb.rpc('unassign_class_atomic',{p_assignment_id:assignmentId});if(error)throw error;__assignmentUx.assigns=__assignmentUx.assigns.filter(x=>x.id!==assignmentId);if(window.__assignmentWorkspace)window.__assignmentWorkspace.assignments=__assignmentUx.assigns;const t=uxAssignmentCurrentTeacher(a.teacher_id);if(t)t.teaching_periods=Math.max(0,Number(t.teaching_periods||0)-Number(a.weekly_periods||0));document.getElementById(`assignmentRow_${assignmentId}`)?.remove();v274RenderCurrentList();uxUpdateAssignmentTeacherCard(a.teacher_id);uxRenderAvailableClasses();invalidateData('assignments','teachers','dashboard','approvals','page:reports');toast('تم التراجع عن الإسناد')}catch(err){moneySafeError(err)}}
 
-assignmentsPage=async function({force=false}={}){const s=await mySchool();if(!s)return '<div class="notice">لا توجد مدرسة مرتبطة بالحساب.</div>';const {data,error}=await cachedRead(`assignments:workspace:${s.id}:${activeTerm.id}`,async signal=>{const q=abortable(sb.rpc('get_assignment_workspace',{p_school_id:s.id,p_term_id:activeTerm.id}),signal);return await q},{ttl:15000,force});if(error)return `<div class="error">${esc(error.message)}</div>`;__assignmentUx={schoolId:s.id,teachers:Array.isArray(data?.teachers)?data.teachers:[],classes:Array.isArray(data?.classes)?data.classes:[],assigns:Array.isArray(data?.assignments)?data.assignments:[],summary:Array.isArray(data?.summary)?data.summary.filter(t=>!t.renewed_leave):[],selectedTeacherId:null};window.__assignmentWorkspace={teachers:__assignmentUx.teachers,classes:__assignmentUx.classes,assignments:__assignmentUx.assigns,schoolId:s.id,termId:activeTerm.id};const first=__assignmentUx.summary.find(t=>Math.max(0,uxAssignmentTeacherTarget(t)-Number(t.teaching_periods||0))>0)||__assignmentUx.summary[0];__assignmentUx.selectedTeacherId=first?.teacher_id||null;const available=uxAssignmentAvailable();return `<div class="page-head"><div><h2>التوزيع السريع للفصول</h2><p>اختر المعلم ثم اضغط على الفصل، أو اسحب الفصل إلى المعلم على الكمبيوتر. لا تظهر هنا إلا الفصول غير المسندة.</p></div></div><div class="assignment-fast-layout"><section><div class="card"><div class="card-title"><h3>المعلمون والأنصبة</h3><span class="badge info">اضغط لاختيار المعلم</span></div><div class="assignment-teacher-list">${__assignmentUx.summary.map(uxTeacherCardMarkup).join('')||'<div class="notice">لا يوجد معلمون.</div>'}</div></div><div class="card"><h3>الإسنادات الحالية</h3><div id="assignmentCurrentList" class="assignment-current-list v274-current">${v274CurrentListMarkup()}</div></div></section><aside class="card available-classes-panel"><div class="card-title"><h3>الفصول غير المسندة</h3><span class="badge warn"><b id="availableClassCount">${available.length}</b> متاح</span></div><div id="availableClassList" class="available-class-list">${available.length?available.map(uxAvailableClassMarkup).join(''):'<div class="assignment-empty">تم إسناد جميع الفصول المتاحة.</div>'}</div><div class="notice info" style="margin-top:10px">الإسناد يتحقق من المدرسة والمادة المقررة. النصاب الوظيفي يطبق على المعلم الثابت؛ معلم الأجر يأخذ الحصص المسندة دون حد أدنى أو أعلى.</div></aside></div>`};
+assignmentsPage=async function({force=false}={}){await v277Ready();const s=await mySchool();if(!s)return '<div class="notice">لا توجد مدرسة مرتبطة بالحساب.</div>';const {data,error}=await cachedRead(`assignments:workspace:${s.id}:${activeTerm.id}`,async signal=>{const q=abortable(sb.rpc('get_assignment_workspace',{p_school_id:s.id,p_term_id:activeTerm.id}),signal);return await q},{ttl:15000,force});if(error)return `<div class="error">${esc(error.message)}</div>`;__assignmentUx={schoolId:s.id,teachers:Array.isArray(data?.teachers)?data.teachers:[],classes:Array.isArray(data?.classes)?data.classes:[],assigns:Array.isArray(data?.assignments)?data.assignments:[],summary:v277Sort(Array.isArray(data?.summary)?data.summary.filter(t=>!t.renewed_leave):[],t=>t.teacher_id,t=>t.full_name),selectedTeacherId:null};window.__assignmentWorkspace={teachers:__assignmentUx.teachers,classes:__assignmentUx.classes,assignments:__assignmentUx.assigns,schoolId:s.id,termId:activeTerm.id};const first=__assignmentUx.summary.find(t=>Math.max(0,uxAssignmentTeacherTarget(t)-Number(t.teaching_periods||0))>0)||__assignmentUx.summary[0];__assignmentUx.selectedTeacherId=first?.teacher_id||null;const available=uxAssignmentAvailable();return `<div class="page-head"><div><h2>التوزيع السريع للفصول</h2><p>اختر المعلم ثم اضغط على الفصل، أو اسحب الفصل إلى المعلم على الكمبيوتر. لا تظهر هنا إلا الفصول غير المسندة.</p></div></div><div class="assignment-fast-layout"><section><div class="card"><div class="card-title"><h3>المعلمون والأنصبة</h3><span class="badge info">اضغط لاختيار المعلم</span></div><div class="assignment-teacher-list">${__assignmentUx.summary.map(uxTeacherCardMarkup).join('')||'<div class="notice">لا يوجد معلمون.</div>'}</div></div><div class="card"><h3>الإسنادات الحالية</h3><div id="assignmentCurrentList" class="assignment-current-list v274-current">${v274CurrentListMarkup()}</div></div></section><aside class="card available-classes-panel"><div class="card-title"><h3>الفصول غير المسندة</h3><span class="badge warn"><b id="availableClassCount">${available.length}</b> متاح</span></div><div id="availableClassList" class="available-class-list">${available.length?available.map(uxAvailableClassMarkup).join(''):'<div class="assignment-empty">تم إسناد جميع الفصول المتاحة.</div>'}</div><div class="notice info" style="margin-top:10px">الإسناد يتحقق من المدرسة والمادة المقررة. النصاب الوظيفي يطبق على المعلم الثابت؛ معلم الأجر يأخذ الحصص المسندة دون حد أدنى أو أعلى.</div></aside></div>`};
 
 
 function uxShowUndo(message,action,ms=8000){document.querySelector('.undo-toast')?.remove();const box=document.createElement('div');box.className='undo-toast';box.innerHTML=`<span>${esc(message)}</span><button type="button">تراجع</button>`;document.body.appendChild(box);let done=false;const timer=setTimeout(()=>{if(!done)box.remove()},ms);box.querySelector('button').onclick=async()=>{if(done)return;done=true;clearTimeout(timer);box.querySelector('button').disabled=true;try{await action();box.remove()}catch(err){box.remove();moneySafeError(err)}}}
@@ -8234,7 +8235,7 @@ function v110PrepareDossier(school,classes,workspace,records,rules,budgets){
   if(reference.primary_role==='supervisor')teacher.relation='موجه أساسي بالإدارة؛ منتدب إلى المدرسة';
   teachers.push(teacher);
  }
- teachers.sort((a,b)=>String(a.full_name).localeCompare(String(b.full_name),'ar'));
+ v277Sort(teachers,t=>v110TeacherId(t),t=>t.full_name); // v277
  const assignments=(workspace.assignments||[]).filter(a=>classIds.has(String(a.class_id)));
  const assignmentMap=new Map(assignments.map(a=>[String(a.id),a]));
  const slots=(workspace.slots||[]).filter(s=>String(s.school_id)===schoolId&&classIds.has(String(s.class_id))&&assignmentMap.has(String(s.assignment_id)));
@@ -8254,7 +8255,7 @@ function v110PrepareDossier(school,classes,workspace,records,rules,budgets){
   session_context:[profile?.id,profile?.role,activeTerm?.id,v96SessionEpoch].join('|')};
 }
 async function v110LoadSchoolDossier(schoolId,{force=false}={}){
- schoolId=String(schoolId||'');
+ schoolId=String(schoolId||'');await v277Ready();
  if(!schoolId||!activeTerm?.id)throw new Error('اختر مدرسة وفترة دراسية نشطة أولًا.');
  const termId=activeTerm.id,epoch=v96SessionEpoch,role=profile?.role,userId=profile?.id;
  return cachedRead(`page:reports:school-dossier:v110:${userId}:${role}:${termId}:${schoolId}`,async signal=>{
@@ -8342,7 +8343,7 @@ function v274TeacherAssignmentsMarkup(items,{edit=false,headLabel='الفصول 
  const subjects=[...new Set(items.map(x=>x.subject||'علوم'))],single=subjects.length===1;
  const commonP=Number(v274Mode(items.map(x=>Number(x.periods)||0)));
  const groups=new Map();items.forEach(x=>{const k=String(x.teacherId||'');if(!groups.has(k))groups.set(k,{name:x.teacherName||'—',list:[]});groups.get(k).list.push(x)});
- const rows=[...groups.values()].sort((a,b)=>String(a.name).localeCompare(String(b.name),'ar')).map(g=>{
+ const rows=v277Sort([...groups.entries()],e=>e[0],e=>e[1].name).map(e=>e[1]).map(g=>{
   let sub='';const tSubs=[...new Set(g.list.map(x=>x.subject||'علوم'))];const pBySub=new Map();
   if(!single){g.list.forEach(x=>{const k=x.subject||'علوم';if(!pBySub.has(k))pBySub.set(k,new Set());pBySub.get(k).add(Number(x.periods)||0)});sub=[...pBySub.entries()].map(([k,ps])=>`${esc(k)} (${[...ps].join('، ')})`).join(' • ')}
   const chips=g.list.map(x=>{const subj=x.subject||'علوم';let extra='';
@@ -11683,9 +11684,12 @@ let __v261Cache=null;
 async function v261Priority(){
  if(__v261Cache&&Date.now()-__v261Cache.t<60000)return __v261Cache.m;
  const m=new Map();
- try{const rows=await v103ReadAll(()=>sb.from('teacher_supervision_priority').select('teacher_id,general_priority').order('general_priority'));rows.forEach(r=>{if(r.teacher_id!=null&&r.general_priority!=null)m.set(String(r.teacher_id),Number(r.general_priority))})}catch(e){console.warn('v261 priority skipped',e)}
+ try{const rows=await v103ReadAll(()=>sb.from('teacher_supervision_priority').select('teacher_id,general_priority,work_type').order('general_priority'));rows.forEach(r=>{if(r.teacher_id!=null&&r.general_priority!=null)m.set(String(r.teacher_id),Number(r.general_priority)+(r.work_type&&r.work_type!=='permanent'?1e6:0))})}/* v277: الثابتون أولًا بالأقدمية ثم الأجر بالأقدمية */catch(e){console.warn('v261 priority skipped',e)}
  __v261Cache={t:Date.now(),m};return m;
 }
+/* v277: ترتيب موحد للشاشات — الثابتون بالأقدمية ثم الأجر بالأقدمية، وعند التساوي بالاسم */
+function v277Sort(list,idOf,nameOf){const pri=__v261Cache?.m;if(!Array.isArray(list))return list;return list.sort((a,b)=>v261Cmp(pri,idOf(a),idOf(b))||String(nameOf(a)||'').localeCompare(String(nameOf(b)||''),'ar'))}
+async function v277Ready(){try{await v261Priority()}catch(_){}}
 function v261Cmp(pri,a,b){const x=pri&&pri.has(String(a))?pri.get(String(a)):Infinity,y=pri&&pri.has(String(b))?pri.get(String(b)):Infinity;return x===y?0:x<y?-1:1}
 async function v261Reorder(schema,groupKey,idKey){
  const rows=schema&&schema.rows;if(!Array.isArray(rows)||rows.length<2)return;
@@ -11697,7 +11701,7 @@ async function v261Reorder(schema,groupKey,idKey){
  if((schema.columns||[]).some(c=>c.key==='index')&&out.every(r=>r&&('index' in r||r._group))){let i=0;out.forEach(r=>{if(r&&!r._group)r.index=++i})}
  if(schema.reportId===V257_ID)v257Metrics(schema);
 }
-[['staffRoster',r=>r.school,'teacherId'],['teacherWorkload',r=>r.home,'teacherId'],['financialGuidance',r=>r.school,'teacherId'],['schoolTeachersData',r=>r.school,'teacherId'],[V257_ID,r=>r._sk,'_tid']].forEach(([id,gk,idk])=>{
+[['staffRoster',r=>r.school,'teacherId'],['teachers',r=>r._schoolId,'teacherId'],/* v277 */['teacherWorkload',r=>r.home,'teacherId'],['financialGuidance',r=>r.school,'teacherId'],['schoolTeachersData',r=>r.school,'teacherId'],[V257_ID,r=>r._sk,'_tid']].forEach(([id,gk,idk])=>{
  const a=ReportAdapters[id];if(!a||a.__v261||typeof a.load!=='function')return;
  const orig=a.load;
  a.load=async function(){const sch=await orig.apply(this,arguments);try{await v261Reorder(sch,gk,idk)}catch(e){console.warn('v261 reorder skipped',id,e)}return sch};
