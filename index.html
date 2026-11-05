@@ -1,4 +1,5 @@
 <!doctype html>
+<!-- v275: ملف المدرسة (الشاشة): حُذف قسم «بيان الحصص من الملفات المرفوعة» (أرقام مرجعية قديمة مكررة)؛ يبقى في «تقرير المدرسة الشامل» المطبوع. -->
 <!-- v274: بلا تكرار المادة والحصص: «إسناد حصص الفصول» و«الفصول» في ملف المدرسة و«الإسنادات الحالية» في توزيع الفصول — المعلم مرة واحدة وفصوله متجاورة، والفصول مجمّعة بالصف؛ المادة والحصص سطر واحد أعلى الجدول إن كانت مادة واحدة، ويظهر المختلف فقط. -->
 <!-- v273: «مدارسي» للموجه: حُذفت بطاقة «إدخال فصول المدرسة» (كانت تظهر بأزرار معطلة عند «الكل» وتختفي عند اختيار مدرسة لأن ملف المدرسة v110 يستبدل الشاشة)؛ وظائفها في القائمة الجانبية. تبقى في «الفصول» و«توزيع الفصول». -->
 <!-- v272: «مدارسي» للموجه: أُزيلت قائمة «المدرسة المختارة» المكررة من بطاقة «إدخال فصول المدرسة»؛ الأزرار تعمل على مدرسة فلتر الأعلى وتتعطل عند «المدرسة: الكل». «الفصول» و«التوزيع» بلا تغيير (لا فلتر مدرسة فيهما). -->
@@ -8,7 +9,6 @@
 <!-- v268: اسم مدير المدرسة وهاتفه: جدول school_manager_contact ودالة set_school_manager_contact (migration v268) — يكتب مدير النظام والمنسق لمرحلته والموجه لمدارسه. حقلا «اسم مدير المدرسة/هاتف المدير» في «تعديل البيانات الأساسية» بشاشة إدخال بيانات المدارس (المدمجة والمستقلة) ويظهران في بطاقتها، وسطر «المدير: … — الهاتف» وزر «بيانات المدير» تحت اسم المدرسة في مدارسي/مدارس المرحلة. -->
 <!-- v267: تقرير «بيانات المعلمين — تجميع»: فلتر جديد «حالة المعلم» (الكل / في إجازة / قائم على العمل). «في إجازة» = إجازة مجددة فقط (excluded_by_renewed_leave في teacher_financial_guidance للعام الحالي)؛ بانتظار التجديد وعادت ومن بلا إجازة = قائم على العمل (القاعدة المعتمدة). يظهر في الملخص عند التفعيل. قراءة فقط. -->
 <!-- v266: تقرير «بيانات المعلمين — تجميع»: حُذف الموجه من التقرير والفلتر وخيارات التجميع (بقرار المستخدم)، وبقيت المدرسة في آخر عمود؛ وإصلاح ملف PDF/واتساب: يرسم مساري التصدير أجزاء الخلية (سطرا كل خلية وفواصلهما) كلًّا على حدة بدل دمجها في نص واحد، دون تغيير باقي التقارير. قراءة فقط. -->
-<!-- v265: تقرير جديد «بيانات المعلمين — تجميع» (teachersGrouped) في التقارير لـadmin/first_supervisor/stage_coordinator/supervisor: صف بسطرين لكل معلم (الاسم والمؤهل والتخصص، الرقم القومي والهاتف، التعيين والاستلام، الكادر وتاريخه، الموجه والمدرسة)، فلاتر المرحلة والموجه والمدرسة ونوع التعاقد، وقائمة «تجميع حسب» (التخصص/المدرسة/الموجه/التخصص على الكادر) بعنوان لكل مجموعة ويُحذف عمودها من الجدول، والترتيب بالأقدمية. قراءة فقط بلا قاعدة بيانات. -->
 <html lang="ar" dir="rtl">
 <head>
 <!-- إعداد: أ/ محمود عبدالمفدي محمد أبوالنجا | الصفة: معلم -->
@@ -16,7 +16,7 @@
 <script>/* v226: العنوان الموحد — انظر التعليق أعلى الملف */(function(){try{if(/\.github\.io$/.test(location.hostname)&&/^\/science-guidance\/?(index\.html)?$/.test(location.pathname)&&!/[?&]stay\b/.test(location.search))location.replace('https://teachers-data-portal.vercel.app/app/'+location.hash)}catch(e){}})();</script>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#152c43">
-<title>نظام توجيه العلوم — v274</title>
+<title>نظام توجيه العلوم — v275</title>
 <link rel="manifest" href="./manifest.webmanifest">
 <link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png">
 <link rel="apple-touch-icon" href="./icon-192.png">
@@ -2333,6 +2333,7 @@ window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();window.v152
 window.addEventListener('appinstalled',()=>{window.v152InstallPrompt=null;v152SyncInstallBtn()});
 if('serviceWorker' in navigator&&location.protocol!=='file:')window.addEventListener('load',()=>navigator.serviceWorker.register('./service-worker.js').catch(()=>{}));
 const V145_NEWS=[
+ ['v275','ملف المدرسة: حُذف من الشاشة قسم «بيان الحصص من الملفات المرفوعة» (أرقام مرجعية قديمة)، ويبقى في تقرير المدرسة الشامل المطبوع.'],
  ['v274','عرض بلا تكرار: في ملف المدرسة و«الإسنادات الحالية» يظهر المعلم مرة واحدة وبجواره فصوله، والفصول مجمّعة بالصف، والمادة والحصص تُكتب مرة واحدة أعلى الجدول.'],
  ['v273','للموجه: حُذفت بطاقة «إدخال فصول المدرسة» من «مدارسي»؛ الفصول والتوزيع والحفظ والاعتماد من القائمة الجانبية.'],
  ['v272','للموجه في «مدارسي»: قائمة واحدة لاختيار المدرسة (في الأعلى)، وأزرار «الفصول/التوزيع/حفظ واعتماد مباشر» تعمل على المدرسة المختارة فيها.'],
@@ -8399,7 +8400,7 @@ function v110DossierMarkup(d){
   ${isAdminV128?`<section class="card"><h3>إدارة الفصول (مدير النظام)</h3><p class="muted">الحذف متاح للفصل الذي لا يوجد عليه معلم مسند ولا حصص جدول. لتعديل حصص المواد استخدم شاشة الفصول.</p>${d.classes.length?`<div class="table-wrap"><table class="table"><thead><tr><th>الصف / الفصل</th><th>المعلمون المسندون</th><th></th></tr></thead><tbody>${d.classes.map(c=>{const n=d.assignments.filter(a=>String(a.class_id)===String(c.id)).length;return `<tr><td><b>${esc(v110ClassName(c))}</b></td><td>${n?n+' إسناد':'—'}</td><td>${n?'<span class="muted">مسند — فُك الإسناد أولًا</span>':`<button type="button" class="btn danger" onclick="adminDeleteClass('${esc(String(c.id))}','${id}')">حذف</button>`}</td></tr>`}).join('')}</tbody></table></div>`:'<div class="notice">لا توجد فصول مفصلة لهذه المدرسة.</div>'}</section>`:''}
   <section class="card"><h3>إسناد حصص الفصول</h3>${assignmentRows.length?v274DossierAssignments(d):'<div class="notice">لم تُدخل إسنادات حصص للفصول بعد.</div>'}</section>
   <section class="card"><h3>جدول المدرسة المسجل</h3><p class="muted">لكل يوم المعلمون الذين لهم حصص فيه، وفي كل خانة الفصل.</p>${timetable}</section>
-  ${referenceRows.length||d.budgets.length?`<section class="card"><h3>بيان الحصص من الملفات المرفوعة</h3>${d.budgets.map(b=>`<div class="v110-reference-budget"><h4>أرقام بيان المدرسة المرفوع${b.source_row_no?' — الصف '+esc(b.source_row_no):''}</h4>${v110FactsMarkup(v110BudgetFacts(b))}</div>`).join('')}${referenceRows.length?v110Table(['المعلم','النصاب كما ورد','المصدر','ملاحظات'],referenceRows):''}</section>`:''}
+  ${'' /* v275: قسم «بيان الحصص من الملفات المرفوعة» حُذف من الشاشة؛ باقٍ في التقرير الشامل المطبوع */}
  </div>`;
 }
 function v110ReportDetails(facts){return facts.map(([label,value])=>`${label}: ${v110Number(value)}`).join('؛ ')}
