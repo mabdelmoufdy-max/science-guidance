@@ -1,5 +1,5 @@
 <!doctype html>
-<!-- v283: «توزيع الفصول»: «المطلوب» للمنتدب جزئيًا = النصاب − إشرافه وريادته في المدرستين (global_supervision/leadership_periods، كقاعدة v148) بدل الهدف المحلي الذي يصفّر الإشراف (v83) — مثال: نصاب 19 = 16 تدريس + 2 إشراف + 1 ريادة ← مكتمل. -->
+<!-- v283: «توزيع الفصول»: «المطلوب» لكل معلم ثابت = النصاب − الإشراف − الريادة (للمنتدب جزئيًا في المدرستين: global_*) بلا تقريب لعدد الفصول، والحالة = النصاب − (تدريس + إشراف + ريادة) كقاعدة البيانات والتقارير؛ «حد أقصى» لا يظهر متبقيًا. مثال: نصاب 19 = 16 + 2 + 1 ← مكتمل. -->
 <!-- v282: «توزيع الفصول»: حالة المعلم المنتدب جزئيًا (زيادة/متبقٍ/مكتمل وشريط التقدّم وأثر الإسناد) تُحسب على تدريسه الكلي في المدرستين (global_teaching_periods) مع بيان «N هنا + M بمدرسة أخرى» و«منتدب جزئيًا». -->
 <!-- v281: «توزيع الفصول»: شريط أدوات واحد (المدرسة + تعديل الفصول + تقرير + حفظ واعتماد للموجه) بدل بطاقة «إدخال فصول المدرسة»، مؤشرات، شريط خطوات، سطر لكل معلم (شريط تقدّم + زيادة/متبقٍ برقم + فصوله شرائح بـ✕ لإلغاء الإسناد بعد التأكيد)، والفصول غير المسندة مجمّعة بالصف والمادة بأثر الإسناد؛ حُذف «الإسنادات الحالية». -->
 <!-- v280: «تعديل الفصول»: أُزيل القلم ✎؛ × لحذف الفصل غير المسند (تأكيد) و🔒 للمسند، للموجه (دالة supervisor_remove_class، migration v280) ولمدير النظام (adminDeleteClassConfirmed). -->
@@ -2346,7 +2346,7 @@ window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();window.v152
 window.addEventListener('appinstalled',()=>{window.v152InstallPrompt=null;v152SyncInstallBtn()});
 if('serviceWorker' in navigator&&location.protocol!=='file:')window.addEventListener('load',()=>navigator.serviceWorker.register('../../service-worker.js').catch(()=>{}));
 const V145_NEWS=[
- ['v283','«توزيع الفصول»: المنتدب جزئيًا يُحسب المطلوب منه بعد خصم الإشراف والريادة، فيظهر «مكتمل» عند اكتمال نصابه.'],
+ ['v283','«توزيع الفصول»: المطلوب من كل معلم = النصاب − الإشراف − الريادة (وللمنتدب جزئيًا في المدرستين معًا)، مطابقًا للتقارير.'],
  ['v282','«توزيع الفصول»: المعلم المنتدب جزئيًا تُحسب حالته على حصصه في المدرستين معًا، ويظهر «هنا + بمدرسة أخرى».'],
  ['v281','«توزيع الفصول»: أدوات في شريط واحد، ملخص بالأرقام، خطوات الاستخدام، سطر لكل معلم بفصوله وزر ✕ لإلغاء إسناد فصل، والفصول غير المسندة مجمّعة بالصف والمادة مع أثر الإسناد على نصاب المعلم.'],
  ['v280','«تعديل الفصول»: حذف الفصل غير المسند بزر × عليه (بعد التأكيد)، والفصل المسند لمعلم عليه 🔒.'],
@@ -8473,9 +8473,9 @@ function v274RenderCurrentList(){const box=document.getElementById('assignmentCu
 /* v274-end */
 /* v281-begin: «توزيع الفصول» — شريط أدوات واحد، مؤشرات، خطوات، سطر لكل معلم بفصوله (✕ إلغاء الإسناد)، فصول غير مسندة مجمّعة بأثر الإسناد */
 function v281On(){return !!document.getElementById('v281Root')}
-function v283Deleg(t){if(t?.weekly_target==null||t?.global_total_counted_periods==null)return null;const rel=String(t.school_relation||'');if(rel!=='delegated_in_partial'&&rel!=='delegated_out_partial'&&!v281Other(t))return null;const sup=Number(t.global_supervision_periods||0),lead=Number(t.global_leadership_periods||0);return {target:Math.max(0,Number(t.weekly_target)-sup-lead),sup,lead}} // v283: المنتدب جزئيًا = النصاب − إشرافه وريادته في المدرستين (كقاعدة v148)
+function v283Deleg(t){if(t?.weekly_target==null)return null;const n=(g,l)=>Number((g!=null?g:l)||0),sup=n(t.global_supervision_periods,t.supervision_periods),lead=n(t.global_leadership_periods,t.leadership_periods);return {target:Math.max(0,Number(t.weekly_target)-sup-lead),sup,lead,max:t.workload_rule_type==='maximum'}} // v283: لكل المعلمين: المطلوب للتدريس = النصاب − الإشراف − الريادة (في المدرستين للمنتدب)، كقاعدة قاعدة البيانات والتقارير
 function v281Other(t){if(t._v281Other==null){const g=Number(t.global_teaching_periods),h=Number(t.teaching_periods||0);t._v281Other=Number.isFinite(g)&&t.global_teaching_periods!=null?Math.max(0,g-h):0}return t._v281Other} // v282: حصص المعلم في مدرسة أخرى (الانتداب الجزئي)
-function v281State(t){const teach=Number(t.teaching_periods||0)+v281Other(t);if(isPaidTeacher(t))return {k:'paid',n:0,teach,target:null};const dg=v283Deleg(t),target=dg?dg.target:Number(uxAssignmentTeacherTarget(t)||0),d=teach-target;return {k:d>0?'over':d<0?'left':'ok',n:Math.abs(d),teach,target}}
+function v281State(t){const teach=Number(t.teaching_periods||0)+v281Other(t);if(isPaidTeacher(t))return {k:'paid',n:0,teach,target:null};const dg=v283Deleg(t),target=dg?dg.target:Number(uxAssignmentTeacherTarget(t)||0),d=teach-target;return {k:d>0?'over':d<0&&!dg?.max?'left':'ok',n:Math.abs(d),teach,target}}
 function v281Tag(st){return st.k==='paid'?'<span class="v281-tag info">أجر</span>':st.k==='over'?`<span class="v281-tag danger">زيادة +${st.n}</span>`:st.k==='left'?`<span class="v281-tag warn">متبقٍ ${st.n}</span>`:'<span class="v281-tag ok">مكتمل</span>'}
 function v281Mine(tid){return (__assignmentUx?.assigns||[]).filter(a=>a.teacher_id===tid)}
 function v281Subjects(t){const set=new Set(v281Mine(t.teacher_id).map(a=>a.curriculum_subjects?.subject_name).filter(Boolean));if(!set.size){const sp=String(t.specialty||'');if(sp)(__assignmentUx?.classes||[]).forEach(c=>(c.class_subject_requirements||[]).forEach(r=>{const n=r.curriculum_subjects?.subject_name;if(n&&sp.includes(String(n).replace(/^ال/,'')))set.add(n)}))}return set}
