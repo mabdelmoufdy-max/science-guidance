@@ -551,7 +551,6 @@ function renderMain(){
     ${sec?'':`<div class="field"><label for="f_sup">الموجه</label><select id="f_sup"><option value="">— بدون —</option>${supOpts.map(x=>`<option value="${x.id}" ${x.id===s.supervisor_id?'selected':''}>${esc(x.full_name)}</option>`).join('')}</select></div>`}
     <div class="field"><label for="f_phone">هاتف المدرسة</label><input id="f_phone" inputmode="tel" value="${esc(s.phone||'')}"></div>
     <div class="field" style="grid-column:1/-1"><label for="f_addr">العنوان</label><input id="f_addr" value="${esc(s.address||'')}"></div>
-    <div class="field"><label>مدير المدرسة</label><input value="${esc(S.managers[s.manager_profile_id]||'غير مسجل')}" readonly title="يُسند من شاشة الحسابات"></div>
     <div class="field"><label for="f_mgr_name">اسم مدير المدرسة</label><input id="f_mgr_name" maxlength="150" value="${esc(S.mgr?.[s.id]?.manager_name||'')}"></div>
     <div class="field"><label for="f_mgr_phone">هاتف المدير</label><input id="f_mgr_phone" inputmode="tel" value="${esc(S.mgr?.[s.id]?.manager_phone||'')}"></div>
    </div><div class="actions"><button class="btn primary" id="saveBtn">حفظ البيانات</button><button type="button" class="btn ghost" id="cancelBtn">إلغاء</button></div></form>`;
