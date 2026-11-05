@@ -1,4 +1,5 @@
 <!doctype html>
+<!-- v279: صفحة «الفصول» صار اسم تبويبها «تعديل الفصول»: صف أدوات واحد بجوار المرحلة (المدرسة + إضافة فصل + التوزيع + حفظ واعتماد + تقرير) وجدول واحد بالصفوف وشرائح الفصول بـ✎؛ حُذف العنوان الكبير وبطاقة الإدخال وزر «الفصول» المكرر والجدول التفصيلي، وملاحظة الثانوي في مدارس الثانوي فقط. -->
 <!-- v278: صفحة «معلمو مدارسي/المعلمون» (كل الأدوار عدا المعلم): حُذف العنوان الكبير، وأزرار الصفحة (إضافة معلم/الإجازات/توزيع العجز) أعلى المحتوى، و«تقارير ▾» + «تصدير Excel» في صف المرحلة/المدرسة، وزر «تقرير» صار «تقرير المعلمين (حسب الفلاتر)» داخل القائمة. -->
 <!-- v277: ترتيب المعلمين في الشاشات والتقارير: الثابتون بالأقدمية ثم الأجر بالأقدمية (v261Priority يضع الأجر بعد الثابتين؛ v277Sort في معلمو مدارسي وملف المدرسة وتقريريه وإسناد حصص الفصول والإسنادات الحالية وبطاقات توزيع الفصول). -->
 <!-- v276: «معلمو مدارسي» عند «المدرسة: الكل»: طلب واحد get_school_teacher_rosters لكل المدارس بدل 17 طلبًا متوازيًا كانت تتجاوز مهلة القاعدة (8 ث)؛ احتياطي متتالٍ إن غابت الدالة. -->
@@ -8,7 +9,6 @@
 <!-- v272: «مدارسي» للموجه: أُزيلت قائمة «المدرسة المختارة» المكررة من بطاقة «إدخال فصول المدرسة»؛ الأزرار تعمل على مدرسة فلتر الأعلى وتتعطل عند «المدرسة: الكل». «الفصول» و«التوزيع» بلا تغيير (لا فلتر مدرسة فيهما). -->
 <!-- v271: «مدارسي» للموجه: تشمل مدارس الثانوي المسندة إليه بالمادة (supervisor_school_subjects) لا المربوطة مباشرة فقط، وقائمة المرحلة لا تعرض إلا مراحل مدارسه. -->
 <!-- v270: «بياناتي» للموجه (بدل «بيانات المشرف»): بطاقة بياناته كاملة، وتعديل الهاتف/المسمى/الدرجة/تاريخ الحصول على الدرجة/التعيين/استلام العمل بالدالة update_my_supervisor_profile (migration v270)، وطباعة بطاقة A4، وتغيير كلمة المرور بعد التحقق من الحالية. -->
-<!-- v269: «تعديل البيانات الأساسية» في شاشة إدخال بيانات المدارس (المدمجة والمستقلة): أُزيل حقل «مدير المدرسة» الباهت للقراءة فقط (حساب الدخول المربوط) لتكراره مع «اسم مدير المدرسة»؛ ربط الحساب يبقى من شاشة الحسابات. -->
 <html lang="ar" dir="rtl">
 <head>
 <!-- إعداد: أ/ محمود عبدالمفدي محمد أبوالنجا | الصفة: معلم -->
@@ -16,7 +16,7 @@
 <script>/* v226: العنوان الموحد — انظر التعليق أعلى الملف */(function(){try{if(/\.github\.io$/.test(location.hostname)&&/^\/science-guidance\/?(index\.html)?$/.test(location.pathname)&&!/[?&]stay\b/.test(location.search))location.replace('https://teachers-data-portal.vercel.app/app/'+location.hash)}catch(e){}})();</script>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#152c43">
-<title>نظام توجيه العلوم — v278</title>
+<title>نظام توجيه العلوم — v279</title>
 <link rel="manifest" href="./manifest.webmanifest">
 <link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png">
 <link rel="apple-touch-icon" href="./icon-192.png">
@@ -1992,6 +1992,7 @@ body.v233-lock{overflow:hidden}
 .v268-mgr{font-size:12px;margin-top:4px}
 .v274-chips{display:flex;flex-wrap:wrap;gap:6px}.v274-chip{display:inline-flex;align-items:center;gap:4px;border:1px solid var(--line,#d6dee8);background:#f6f9fc;border-radius:8px;padding:3px 9px;font-size:13px;line-height:1.6;white-space:nowrap}.v274-chip small{color:#8a5a00;font-weight:700}.v274-chip.miss{border-color:#e3a3a3;background:#fdf1f1;color:#9b2c2c}.v274-chip.part{border-color:#e6c77a;background:#fff8e6;color:#7a5600}.v274-chip .v274-edit{border:0;background:#e6eff8;color:#1f4f78;border-radius:5px;padding:0 6px;cursor:pointer;font-size:12px;min-height:0;height:auto}.v274-sub{display:block;color:var(--muted,#64748b);font-size:12px;font-weight:400;margin-top:2px}.v274-note{margin:0 0 8px;color:var(--muted,#64748b);font-size:13px}.v274-table td,.v274-table th{vertical-align:middle;text-align:right}.v274-table .v274-num{text-align:center;width:70px;font-weight:700}.v274-table{table-layout:auto!important;width:100%}.v274-table th:first-child,.v274-table td:first-child{width:24%;min-width:150px}.v274-table th:nth-child(2),.v274-table td:nth-child(2){width:auto}
 #content .v278-tools{display:flex;flex-wrap:wrap;align-items:flex-end;gap:8px}#content .v278-tools.v250-toolbar{justify-content:flex-start;margin:0}#content .page-head.v278-head{justify-content:flex-start}#content .page-head.v278-head>.actions{justify-content:flex-start!important}
+#content .v279-tools{display:flex;flex-wrap:wrap;align-items:flex-end;gap:8px}#content .v279-tools .field{margin:0!important;min-width:min(100%,260px)!important}#content .v279-tools .field label{display:none}
 </style>
 </head>
 <body>
@@ -2334,6 +2335,7 @@ window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();window.v152
 window.addEventListener('appinstalled',()=>{window.v152InstallPrompt=null;v152SyncInstallBtn()});
 if('serviceWorker' in navigator&&location.protocol!=='file:')window.addEventListener('load',()=>navigator.serviceWorker.register('./service-worker.js').catch(()=>{}));
 const V145_NEWS=[
+ ['v279','تبويب «تعديل الفصول»: صف أدوات واحد وجدول واحد بالصفوف، وكل فصل يُعدَّل بزر ✎ عليه.'],
  ['v278','صفحة المعلمين: أزرار الإضافة والإجازات وتوزيع العجز في أعلى الصفحة، و«تقارير» و«تصدير Excel» بجوار قائمتي المرحلة والمدرسة، و«تقرير المعلمين» داخل قائمة التقارير.'],
  ['v277','ترتيب المعلمين في الشاشات والتقارير: الثابتون أولًا بالأقدمية، ثم معلمو الأجر بالأقدمية.'],
  ['v276','«معلمو مدارسي» لكل المدارس صارت تُحمَّل بطلب واحد سريع بدل طلب لكل مدرسة، فلم تعد تتوقف بخطأ انتهاء المهلة.'],
@@ -3374,19 +3376,13 @@ function updateGradeSelect(){const st=document.getElementById('classStage'),gr=d
 
 function updateCurriculumPreview(){const st=document.getElementById('classStage'),gr=document.getElementById('classGrade'),el=document.getElementById('curriculumPreview');if(!st||!gr||!el)return;const names=SCIENCE_CURRICULUM[st.value]?.[gr.value]||[];el.innerHTML=names.length?names.map(n=>`<span class="chip">${esc(n)}</span>`).join(' '):'<span class="muted">لا توجد مواد معرفة</span>'}
 
-async function classesPage(){
+async function classesPage(options={}){
  const s=await mySchool();if(!s)return '<div class="notice">لا توجد مدرسة مرتبطة بالحساب.</div>';
  const {data:classes,error}=await sb.from('school_classes')
    .select('id,stage,grade,class_name,science_periods,grade_order,class_subject_requirements(id,weekly_periods,subject_id,curriculum_subjects(subject_name,sort_order))')
    .eq('school_id',s.id).eq('term_id',activeTerm.id).order('grade_order').order('class_name');
  if(error)return `<div class="error">${esc(error.message)}</div>`;
- return `<div class="page-head"><div><h2>الفصول والمواد</h2><p>${esc(s.name)} — العلوم تبدأ من الصف الرابع الابتدائي، وتحدد مواد كل صف تلقائيًا من المنهج.</p></div><button id="addClassButton" type="button" class="btn primary add-class-action" data-action="add-class" data-school-id="${s.id}">+ إضافة فصل</button></div>
- <div class="notice"><b>الثانوي العام:</b> الأول «علوم متكاملة»، والثاني والثالث «الكيمياء + الفيزياء + الأحياء». <b>الثانوي الصناعي:</b> الأول «الفيزياء + الكيمياء»، والثاني والثالث «الفيزياء».</div>
- ${v119GradeSummaryCard(classes||[])}<details class="card v119-class-details"><summary><b>عرض الفصول تفصيليًا وتعديلها</b> <small class="muted">(${(classes||[]).length} فصل)</small></summary><div class="table-wrap v118-plain-wrap"><table class="table no-compact-directory v118-plain-table v118-classes-table"><thead><tr><th>المرحلة</th><th>الصف</th><th>الفصل</th><th>المواد / الحصص</th><th>إجمالي حصص العلوم</th><th></th></tr></thead><tbody>${(classes||[]).map(c=>{
-   const reqs=(c.class_subject_requirements||[]).sort((a,b)=>(a.curriculum_subjects?.sort_order||0)-(b.curriculum_subjects?.sort_order||0));
-   const subjects=reqs.map(r=>`<span class="chip">${esc(r.curriculum_subjects?.subject_name||'مادة')} <b>${r.weekly_periods}</b></span>`).join('');
-   return `<tr><td>${esc(c.stage)}</td><td>${esc(gradeLabel(c.stage,c.grade))}</td><td><b>${esc(c.class_name)}</b></td><td>${subjects||'—'}</td><td><b>${c.science_periods||0}</b></td><td><button class="btn secondary v118-edit-btn" onclick="subjectPeriodsForm('${c.id}')">تعديل</button></td></tr>`
- }).join('')||'<tr><td colspan="6">لم يتم إدخال الفصول بعد.</td></tr>'}</tbody></table></div></details>`
+ return v279ClassesMarkup(s,classes||[],arguments[0]||{}); // v279: الخطة أ
 }
 
 
@@ -5489,7 +5485,7 @@ const NAV={
  stage_coordinator:[['dashboard','لوحة منسق المرحلة','▦'],['alerts','التنبيهات','🔔'],['completion','استكمال البيانات','✎'],['supervisors','موجهو المرحلة','◎'],['schools','مدارس المرحلة','⌂'],['teachers','معلمو المرحلة','◉'],['statistics','الإحصائيات','◫'],['reports','تقارير المرحلة','▤']],
  supervisor:[['dashboard','لوحة الموجه','▦'],['alerts','التنبيهات','🔔'],['completion','استكمال البيانات','✎'],['supervisors','بيانات الموجه','◎'],['schools','مدارسي','⌂'],['teachers','معلمو مدارسي','◉'],['approval','الاعتمادات','✓'],['statistics','الإحصائيات','◫'],['reports','التقارير','▤']],
  school_manager:[['dashboard','لوحة المدرسة','▦'],['alerts','التنبيهات','🔔'],['completion','استكمال البيانات','✎'],['supervisors','موجه المدرسة','◎'],['schools','بيانات المدرسة','⌂'],['teachers','معلمو المدرسة','◉'],['approval','اعتماد البيانات','✓'],['statistics','الإحصائيات','◫'],['reports','تقارير المدرسة','▤']],
- senior_teacher:[['dashboard','لوحة مشرف المادة','▦'],['alerts','التنبيهات','🔔'],['completion','استكمال البيانات','✎'],['supervisors','موجه المدرسة','◎'],['schools','بيانات المدرسة','⌂'],['teachers','إضافة وإدارة المعلمين','◉'],['classes','الفصول','▦'],['assignments','توزيع المعلمين على الفصول','Σ'],['approval','الإرسال للاعتماد','✓'],['statistics','الإحصائيات','◫'],['reports','تقارير المدرسة','▤']],
+ senior_teacher:[['dashboard','لوحة مشرف المادة','▦'],['alerts','التنبيهات','🔔'],['completion','استكمال البيانات','✎'],['supervisors','موجه المدرسة','◎'],['schools','بيانات المدرسة','⌂'],['teachers','إضافة وإدارة المعلمين','◉'],['classes','تعديل الفصول','▦'],['assignments','توزيع المعلمين على الفصول','Σ'],['approval','الإرسال للاعتماد','✓'],['statistics','الإحصائيات','◫'],['reports','تقارير المدرسة','▤']],
  teacher:[['dashboard','بياناتي','▦'],['supervisors','موجه المدرسة','◎'],['schools','بيانات المدرسة','⌂'],['teachers','بيانات المعلم','◉'],['myAssignments','حصصي وفصولي','Σ'],['reports','تقاريري','▤']]
  };
 
@@ -6597,7 +6593,7 @@ mySchool=async function(){
 };
 
 NAV.supervisor=[
- ['dashboard','لوحة المشرف','▦'],['alerts','التنبيهات','🔔'],['completion','استكمال البيانات','✎'],['supervisors','بياناتي','◎'],['schools','مدارسي','⌂'],['teachers','معلمو مدارسي','◉'],['classes','الفصول','▦'],['assignments','توزيع الفصول','Σ'],['approval','الحفظ والاعتماد','✓'],['statistics','الإحصائيات','◫'],['reports','التقارير','▤']
+ ['dashboard','لوحة المشرف','▦'],['alerts','التنبيهات','🔔'],['completion','استكمال البيانات','✎'],['supervisors','بياناتي','◎'],['schools','مدارسي','⌂'],['teachers','معلمو مدارسي','◉'],['classes','تعديل الفصول','▦'],['assignments','توزيع الفصول','Σ'],['approval','الحفظ والاعتماد','✓'],['statistics','الإحصائيات','◫'],['reports','التقارير','▤']
 ];
 
 function supervisorChooseSchoolV75(schoolId,target=currentPage){
@@ -6632,7 +6628,7 @@ classesPage=async function(options={}){
  if(profile?.role!=='supervisor')return __v75BaseClassesPage(options);
  const [schools,school]=await Promise.all([supervisorOwnedSchoolsV75(),mySchool()]);
  if(!school)return '<div class="notice warn">لا توجد مدارس مسندة إلى هذا المشرف.</div>';
- return `${supervisorEntryPanelV75(schools,school,'classes')}${await __v75BaseClassesPage(options)}`;
+ return await __v75BaseClassesPage({...options,v279Picker:supervisorSchoolPickerV75(schools,school.id,'classes'),v279Sup:true}); // v279
 };
 const __v75BaseAssignmentsPage=assignmentsPage;
 assignmentsPage=async function(options={}){
@@ -7671,11 +7667,36 @@ function v278PlaceTools(){
  row.insertBefore(__v278Tools,row.querySelector(':scope > .muted'));
 }
 /* v278-end */
+
+/* v279-begin: صفحة «تعديل الفصول» — صف أدوات واحد (المدرسة + إضافة فصل + التوزيع + حفظ واعتماد + تقرير) وجدول واحد بالصفوف وشرائح الفصول بـ✎ */
+function v279ClassesMarkup(s,classes,opt){
+ const id=esc(String(s.id)),sup=!!opt.v279Sup,secondary=/^ثانوي/.test(String(s.stage||''));
+ const reqs=c=>(c.class_subject_requirements||[]).filter(r=>Number(r.weekly_periods||0)>0).sort((a,b)=>(a.curriculum_subjects?.sort_order||0)-(b.curriculum_subjects?.sort_order||0));
+ const subs=new Set(classes.flatMap(c=>reqs(c).map(r=>r.curriculum_subjects?.subject_name||'علوم')));
+ const single=subs.size<=1&&classes.every(c=>reqs(c).length<=1);
+ const per=classes.map(v119ClassPeriods),common=Number(v274Mode(per)||0),subj=[...subs][0]||'علوم';
+ const groups=new Map();classes.forEach(c=>{const k=gradeLabel(c.stage,c.grade)||'—';if(!groups.has(k))groups.set(k,[]);groups.get(k).push(c)});
+ let tc=0,tp=0;
+ const rows=[...groups.entries()].map(([g,list])=>{const p=list.reduce((n,c)=>n+v119ClassPeriods(c),0);tc+=list.length;tp+=p;
+  return `<tr><td><b>${esc(g)}</b></td><td><div class="v274-chips">${list.map(c=>{const n=v119ClassPeriods(c);let extra='';
+   if(single){if(n!==common)extra=` <small>· ${esc(v274PeriodsText(n))}</small>`}else{const r=reqs(c);extra=` <small>· ${esc(r.map(x=>r.length>1?`${x.curriculum_subjects?.subject_name||'علوم'} ${x.weekly_periods}`:x.weekly_periods).join('، ')||n)}</small>`}
+   return `<span class="v274-chip">${esc(c.class_name||'—')}${extra}<button class="v274-edit" type="button" title="تعديل حصص الفصل" aria-label="تعديل ${esc(c.class_name||'')}" onclick="subjectPeriodsForm('${esc(c.id)}')">✎</button></span>`}).join('')}</div></td><td class="v274-num">${list.length}</td><td class="v274-num">${p}</td></tr>`}).join('');
+ const table=classes.length?v274Table(['الصف','الفصول','العدد','الحصص'],rows+`<tr><td><b>الإجمالي</b></td><td></td><td class="v274-num">${tc}</td><td class="v274-num">${tp}</td></tr>`):'<div class="notice">لم يتم إدخال الفصول بعد.</div>';
+ const tools=`<div id="v279Tools" class="v279-tools no-print">${opt.v279Picker||''}<button id="addClassButton" type="button" class="btn primary add-class-action" data-action="add-class" data-school-id="${id}">+ إضافة فصل</button><button class="btn secondary" type="button" onclick="${sup?`supervisorChooseSchoolV75('${id}','assignments')`:`go('assignments')`}">التوزيع</button>${sup?`<button class="btn ok" type="button" onclick="supervisorSaveAndApproveV75('${id}')">حفظ واعتماد مباشر</button>`:''}<button class="btn secondary" type="button" onclick="openReportPreview()">📄 تقرير</button></div>`;
+ return `${tools}${secondary?'<div class="notice"><b>الثانوي العام:</b> الأول «علوم متكاملة»، والثاني والثالث «الكيمياء + الفيزياء + الأحياء». <b>الثانوي الصناعي:</b> الأول «الفيزياء + الكيمياء»، والثاني والثالث «الفيزياء».</div>':''}<div class="card"><h3>الفصول (${classes.length})</h3><p class="v274-note">${single&&classes.length?`المادة: ${esc(subj)} — ${esc(v274PeriodsText(common))} لكل فصل • `:''}اضغط ✎ على الفصل لتعديل حصصه</p>${table}</div>`;
+}
+function v279Layout(){
+ if(currentPage!=='classes')return;
+ const t=document.querySelector('#content #v279Tools'),row=document.querySelector('#content #v97StageBar .auto-filter-options-row');
+ if(t&&row&&t.parentElement!==row)row.insertBefore(t,row.querySelector(':scope > .muted'));
+}
+/* v279-end */
 const __v163BaseLoadPage=loadPage;
 loadPage=async function(force=false){
  const result=await __v163BaseLoadPage(force);
  try{v163InstallTeachersUi()}catch(_){}
  try{v278Layout()}catch(e){console.warn('v278',e)}
+ try{v279Layout()}catch(e){console.warn('v279',e)}
  try{v179InstallSchoolsUi()}catch(_){}
  return result;
 };
