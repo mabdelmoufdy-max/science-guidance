@@ -1,4 +1,5 @@
 <!doctype html>
+<!-- v276: «معلمو مدارسي» عند «المدرسة: الكل»: طلب واحد get_school_teacher_rosters لكل المدارس بدل 17 طلبًا متوازيًا كانت تتجاوز مهلة القاعدة (8 ث)؛ احتياطي متتالٍ إن غابت الدالة. -->
 <!-- v275: ملف المدرسة (الشاشة): حُذف قسم «بيان الحصص من الملفات المرفوعة» (أرقام مرجعية قديمة مكررة)؛ يبقى في «تقرير المدرسة الشامل» المطبوع. -->
 <!-- v274: بلا تكرار المادة والحصص: «إسناد حصص الفصول» و«الفصول» في ملف المدرسة و«الإسنادات الحالية» في توزيع الفصول — المعلم مرة واحدة وفصوله متجاورة، والفصول مجمّعة بالصف؛ المادة والحصص سطر واحد أعلى الجدول إن كانت مادة واحدة، ويظهر المختلف فقط. -->
 <!-- v273: «مدارسي» للموجه: حُذفت بطاقة «إدخال فصول المدرسة» (كانت تظهر بأزرار معطلة عند «الكل» وتختفي عند اختيار مدرسة لأن ملف المدرسة v110 يستبدل الشاشة)؛ وظائفها في القائمة الجانبية. تبقى في «الفصول» و«توزيع الفصول». -->
@@ -8,7 +9,6 @@
 <!-- v269: «تعديل البيانات الأساسية» في شاشة إدخال بيانات المدارس (المدمجة والمستقلة): أُزيل حقل «مدير المدرسة» الباهت للقراءة فقط (حساب الدخول المربوط) لتكراره مع «اسم مدير المدرسة»؛ ربط الحساب يبقى من شاشة الحسابات. -->
 <!-- v268: اسم مدير المدرسة وهاتفه: جدول school_manager_contact ودالة set_school_manager_contact (migration v268) — يكتب مدير النظام والمنسق لمرحلته والموجه لمدارسه. حقلا «اسم مدير المدرسة/هاتف المدير» في «تعديل البيانات الأساسية» بشاشة إدخال بيانات المدارس (المدمجة والمستقلة) ويظهران في بطاقتها، وسطر «المدير: … — الهاتف» وزر «بيانات المدير» تحت اسم المدرسة في مدارسي/مدارس المرحلة. -->
 <!-- v267: تقرير «بيانات المعلمين — تجميع»: فلتر جديد «حالة المعلم» (الكل / في إجازة / قائم على العمل). «في إجازة» = إجازة مجددة فقط (excluded_by_renewed_leave في teacher_financial_guidance للعام الحالي)؛ بانتظار التجديد وعادت ومن بلا إجازة = قائم على العمل (القاعدة المعتمدة). يظهر في الملخص عند التفعيل. قراءة فقط. -->
-<!-- v266: تقرير «بيانات المعلمين — تجميع»: حُذف الموجه من التقرير والفلتر وخيارات التجميع (بقرار المستخدم)، وبقيت المدرسة في آخر عمود؛ وإصلاح ملف PDF/واتساب: يرسم مساري التصدير أجزاء الخلية (سطرا كل خلية وفواصلهما) كلًّا على حدة بدل دمجها في نص واحد، دون تغيير باقي التقارير. قراءة فقط. -->
 <html lang="ar" dir="rtl">
 <head>
 <!-- إعداد: أ/ محمود عبدالمفدي محمد أبوالنجا | الصفة: معلم -->
@@ -16,7 +16,7 @@
 <script>/* v226: العنوان الموحد — انظر التعليق أعلى الملف */(function(){try{if(/\.github\.io$/.test(location.hostname)&&/^\/science-guidance\/?(index\.html)?$/.test(location.pathname)&&!/[?&]stay\b/.test(location.search))location.replace('https://teachers-data-portal.vercel.app/app/'+location.hash)}catch(e){}})();</script>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#152c43">
-<title>نظام توجيه العلوم — v275</title>
+<title>نظام توجيه العلوم — v276</title>
 <link rel="manifest" href="../../manifest.webmanifest">
 <link rel="icon" type="image/png" sizes="192x192" href="../../icon-192.png">
 <link rel="apple-touch-icon" href="../../icon-192.png">
@@ -2333,6 +2333,7 @@ window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();window.v152
 window.addEventListener('appinstalled',()=>{window.v152InstallPrompt=null;v152SyncInstallBtn()});
 if('serviceWorker' in navigator&&location.protocol!=='file:')window.addEventListener('load',()=>navigator.serviceWorker.register('../../service-worker.js').catch(()=>{}));
 const V145_NEWS=[
+ ['v276','«معلمو مدارسي» لكل المدارس صارت تُحمَّل بطلب واحد سريع بدل طلب لكل مدرسة، فلم تعد تتوقف بخطأ انتهاء المهلة.'],
  ['v275','ملف المدرسة: حُذف من الشاشة قسم «بيان الحصص من الملفات المرفوعة» (أرقام مرجعية قديمة)، ويبقى في تقرير المدرسة الشامل المطبوع.'],
  ['v274','عرض بلا تكرار: في ملف المدرسة و«الإسنادات الحالية» يظهر المعلم مرة واحدة وبجواره فصوله، والفصول مجمّعة بالصف، والمادة والحصص تُكتب مرة واحدة أعلى الجدول.'],
  ['v273','للموجه: حُذفت بطاقة «إدخال فصول المدرسة» من «مدارسي»؛ الفصول والتوزيع والحفظ والاعتماد من القائمة الجانبية.'],
@@ -7538,7 +7539,11 @@ const v142SupervisorAllKeys=new Set();
 function v142SupervisorAllMode(){return profile?.role==='supervisor'&&currentPage==='teachers'&&v142SupervisorAllKeys.has(v97StageKey())&&!v98School()}
 async function v142ReadSchoolRosters(schools,signal){
  if(!activeTerm?.id||!schools.length)return {data:[],error:null};
- const results=await Promise.all(schools.map(s=>abortable(sb.rpc('get_school_teacher_roster',{p_school_id:s.id,p_term_id:activeTerm.id}),signal)));
+ // v276: طلب واحد لكل المدارس بدل طلب متوازٍ لكل مدرسة (كان يتجاوز مهلة القاعدة)
+ const batch=await abortable(sb.rpc('get_school_teacher_rosters',{p_school_ids:schools.map(s=>s.id),p_term_id:activeTerm.id}),signal);
+ if(!batch.error&&Array.isArray(batch.data)){const byId=new Map(batch.data.map(x=>[String(x.school_id),x.roster]));return {data:schools.flatMap(s=>(byId.get(String(s.id))||[]).map(t=>({...t,_v142School:s}))),error:null};}
+ if(batch.error&&!/get_school_teacher_rosters|PGRST202|function/i.test(String(batch.error.message||batch.error.code||'')))return {data:null,error:batch.error};
+ const results=[];for(const s of schools)results.push(await abortable(sb.rpc('get_school_teacher_roster',{p_school_id:s.id,p_term_id:activeTerm.id}),signal)); // احتياطي: متتالية لا متوازية
  const failed=results.find(r=>r.error);if(failed)return {data:null,error:failed.error};
  return {data:results.flatMap((r,i)=>(r.data||[]).map(t=>({...t,_v142School:schools[i]}))),error:null};
 }
