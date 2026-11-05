@@ -1,4 +1,5 @@
 <!doctype html>
+<!-- v270: «بياناتي» للموجه (بدل «بيانات المشرف»): بطاقة بياناته كاملة، وتعديل الهاتف/المسمى/الدرجة/تاريخ الحصول على الدرجة/التعيين/استلام العمل بالدالة update_my_supervisor_profile (migration v270)، وطباعة بطاقة A4، وتغيير كلمة المرور بعد التحقق من الحالية. -->
 <!-- v269: «تعديل البيانات الأساسية» في شاشة إدخال بيانات المدارس (المدمجة والمستقلة): أُزيل حقل «مدير المدرسة» الباهت للقراءة فقط (حساب الدخول المربوط) لتكراره مع «اسم مدير المدرسة»؛ ربط الحساب يبقى من شاشة الحسابات. -->
 <!-- v268: اسم مدير المدرسة وهاتفه: جدول school_manager_contact ودالة set_school_manager_contact (migration v268) — يكتب مدير النظام والمنسق لمرحلته والموجه لمدارسه. حقلا «اسم مدير المدرسة/هاتف المدير» في «تعديل البيانات الأساسية» بشاشة إدخال بيانات المدارس (المدمجة والمستقلة) ويظهران في بطاقتها، وسطر «المدير: … — الهاتف» وزر «بيانات المدير» تحت اسم المدرسة في مدارسي/مدارس المرحلة. -->
 <!-- v267: تقرير «بيانات المعلمين — تجميع»: فلتر جديد «حالة المعلم» (الكل / في إجازة / قائم على العمل). «في إجازة» = إجازة مجددة فقط (excluded_by_renewed_leave في teacher_financial_guidance للعام الحالي)؛ بانتظار التجديد وعادت ومن بلا إجازة = قائم على العمل (القاعدة المعتمدة). يظهر في الملخص عند التفعيل. قراءة فقط. -->
@@ -8,7 +9,6 @@
 <!-- v263: «إدخال بيانات المدارس» صارت مدمجة برمجيًا داخل البرنامج بدل الإطار (iframe): قوائم المرحلة ← نوع الثانوي (للثانوي فقط) ← المدرسة، ثم التبويبات (البيانات | الموجهون | الفصول والمجموعات | المعلمون) بمحتواها وتنسيقها كما في الصفحة المستقلة بلا تغيير. الكود في نطاق معزول (Shadow DOM) فلا يتعارض مع تنسيق البرنامج ولا أسماء ملفه؛ وبنفس عميل Supabase والدور (x-app-role) فلا تغيير في قاعدة البيانات ولا الصلاحيات. الصفحة المستقلة /coordinator/ وبوابة المعلمين بلا تغيير. أُسقط من هذه الشاشة فقط: البحث الموحد ومرشحات القائمة الجانبية وزر ملء الشاشة (باقية في الصفحة المستقلة). -->
 <!-- v262: تقرير جديد «عجز المدارس بعد الأجر» (shortageAfterPaid) لإرساله للموجهين: المدارس التي بقي فيها عجز بعد تدريس الأجر فقط (المطلوب − المغطى بثابت/منتدب − الأجر المسند، من تقرير العجز نفسه)، مجمّعة بالموجه (خلية مدموجة)، الأعلى عجزًا أولًا، وصف مجموع، وفلاتر المرحلة والموجه والمدرسة؛ للمدير والموجه الأول والمنسق والموجه؛ الثانوي «بالمادة». عرض فقط، بلا قاعدة بيانات. -->
 <!-- v261: ترتيب المعلمين حسب الأقدمية (ترتيب «أولوية الإشراف» الجاهز `teacher_supervision_priority.general_priority`: الدرجة ثم تواريخ الدرجة والاستلام والتعيين) داخل كل مدرسة/تخصص في تقارير الكادر والأنصبة والتوجيه المالي وبيانات معلمي المدرسة والمعلمون حسب التخصص وإسناد الفصول؛ من لا ترتيب له في آخر مجموعته. ترتيب الصفوف فقط، بلا قاعدة بيانات. -->
-<!-- v260: تقرير «المعلمون حسب التخصص — الثانوي»: عاد فلتر المرحلة (ثانوي عام / ثانوي صناعي / الكل)، وعند «الكل» يظهر كل قسم منفصلًا بعنوان مرحلته وترقيمه وعدد تخصصاته؛ وفلتر المدرسة يتبع المرحلة. بلا قاعدة بيانات. -->
 <html lang="ar" dir="rtl">
 <head>
 <!-- إعداد: أ/ محمود عبدالمفدي محمد أبوالنجا | الصفة: معلم -->
@@ -16,7 +16,7 @@
 <script>/* v226: العنوان الموحد — انظر التعليق أعلى الملف */(function(){try{if(/\.github\.io$/.test(location.hostname)&&/^\/science-guidance\/?(index\.html)?$/.test(location.pathname)&&!/[?&]stay\b/.test(location.search))location.replace('https://teachers-data-portal.vercel.app/app/'+location.hash)}catch(e){}})();</script>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#152c43">
-<title>نظام توجيه العلوم — v269</title>
+<title>نظام توجيه العلوم — v270</title>
 <link rel="manifest" href="./manifest.webmanifest">
 <link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png">
 <link rel="apple-touch-icon" href="./icon-192.png">
@@ -2332,6 +2332,7 @@ window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();window.v152
 window.addEventListener('appinstalled',()=>{window.v152InstallPrompt=null;v152SyncInstallBtn()});
 if('serviceWorker' in navigator&&location.protocol!=='file:')window.addEventListener('load',()=>navigator.serviceWorker.register('./service-worker.js').catch(()=>{}));
 const V145_NEWS=[
+ ['v270','للموجه: تبويب «بياناتي» يعرض بطاقة بياناتك كاملة، مع تعديل الهاتف والمسمى والدرجة وتواريخها، وطباعة البطاقة، وتغيير كلمة المرور بعد إدخال الحالية.'],
  ['v269','شاشة إدخال بيانات المدارس: أُزيل حقل «مدير المدرسة» الباهت من «تعديل البيانات» لأنه كان يتكرر مع «اسم مدير المدرسة».'],
  ['v268','اسم مدير المدرسة وهاتفه: يسجّلهما مدير النظام والمنسق والموجه من زر «بيانات المدير» تحت اسم المدرسة في «مدارسي»، أو من «تعديل البيانات» في شاشة إدخال بيانات المدارس، ويظهران تحت اسم المدرسة وفي بطاقتها.'],
  ['v267','تقرير «بيانات المعلمين — تجميع»: فلتر جديد «حالة المعلم» (الكل / في إجازة / قائم على العمل). المعلم في إجازة = إجازته مجددة؛ أما بانتظار التجديد فيُعد قائمًا على العمل.'],
@@ -3224,7 +3225,62 @@ function filterSupervisorDirectory(){
  const details=document.getElementById('supervisorDirectoryDetails');if(details&&supervisorDirectoryActiveId)details.classList.toggle('hidden',!activeVisible);
 }
 
+/* v270-begin: «بياناتي» للموجه */
+let v270Me=null;
+function v270Date(d){return d?supervisorDirectoryDate(d):'—'}
+function v270Fields(m){
+ const stages=supervisorDirectoryStages(m)||'—';
+ return [['الاسم',m.full_name||m.profile?.full_name],['الرقم القومي',m.civil_id||m.profile?.civil_id,1],['الهاتف',m.phone||m.profile?.phone,1],['المرحلة / المراحل',stages],['الصفة','موجه علوم'],['المسمى الوظيفي',m.job_title],['الدرجة الوظيفية',m.employment_grade],['تاريخ الحصول على الدرجة',v270Date(m.grade_date)],['تاريخ التعيين',v270Date(m.appointment_date)],['تاريخ استلام العمل',v270Date(m.work_start_date)],['الموقف الوظيفي',m.assignment_status]];
+}
+async function v270MyProfilePage(){
+ const {data,error}=await sb.from('supervisors').select('id,profile_id,civil_id,full_name,phone,job_title,employment_grade,grade_date,appointment_date,work_start_date,assignment_status,active,profile:profiles!supervisors_profile_id_fkey(full_name,civil_id,phone),supervisor_stage_assignments(stage,active),stage_coordinator_assignments(stage,active)').eq('profile_id',profile.id).limit(1);
+ if(error)return `<div class="error">${esc(error.message)}</div>`;
+ const m=v270Me=(data||[])[0];
+ if(!m)return `<div class="page-head"><div><h2>بياناتي</h2></div></div><div class="notice">لا يوجد سجل موجه مرتبط بحسابك. تواصل مع مدير النظام.</div>`;
+ const name=supervisorDirectoryName(m);
+ return `<div class="page-head"><div><h2>بياناتي</h2><p>بطاقة بياناتك الوظيفية. الاسم والرقم القومي والمراحل والموقف الوظيفي يعدّلها مدير النظام فقط.</p></div><div class="actions"><button class="btn primary" type="button" onclick="v270EditForm()">تعديل بياناتي</button><button class="btn secondary" type="button" onclick="v270PrintCard()">طباعة البطاقة</button></div></div>
+ <div class="card"><div class="supervisor-details-head"><div class="supervisor-details-person"><span class="supervisor-details-avatar" aria-hidden="true">${esc((name.trim()[0]||'م'))}</span><div><h3>${esc(name)}</h3><div class="muted">موجه علوم</div></div></div></div>
+ <div class="supervisor-detail-grid">${v270Fields(m).map(([k,v,ltr])=>`<div class="supervisor-detail-item"><span>${k}</span><b${ltr?' style="direction:ltr;text-align:right"':''}>${esc(v||'—')}</b></div>`).join('')}</div></div>
+ <div class="card" style="margin-top:14px"><h3>تغيير كلمة المرور</h3><form id="v270PwForm" onsubmit="v270ChangePassword(event)" autocomplete="off"><div class="form-grid"><div class="field"><label>كلمة المرور الحالية</label><input name="current" type="password" autocomplete="current-password" required></div><div class="field"><label>كلمة المرور الجديدة</label><input name="password" type="password" minlength="8" autocomplete="new-password" required></div><div class="field"><label>تأكيد كلمة المرور الجديدة</label><input name="confirm" type="password" minlength="8" autocomplete="new-password" required></div></div><div class="actions"><button class="btn primary">تغيير كلمة المرور</button></div></form></div>`;
+}
+function v270EditForm(){
+ const m=v270Me;if(!m)return;
+ const f=(n,l,v,t='text')=>`<div class="field"><label>${l}</label><input name="${n}" type="${t}" value="${esc(v||'')}"${t==='tel'?' dir="ltr" inputmode="tel"':''}></div>`;
+ modal(`<h3>تعديل بياناتي</h3><form onsubmit="v270Save(event)"><div class="form-grid">${f('phone','الهاتف',m.phone||m.profile?.phone,'tel')}${f('job_title','المسمى الوظيفي',m.job_title)}${f('employment_grade','الدرجة الوظيفية',m.employment_grade)}${f('grade_date','تاريخ الحصول على الدرجة',m.grade_date,'date')}${f('appointment_date','تاريخ التعيين',m.appointment_date,'date')}${f('work_start_date','تاريخ استلام العمل',m.work_start_date,'date')}</div><div class="actions"><button class="btn primary">حفظ</button><button class="btn secondary" type="button" onclick="closeModal()">إلغاء</button></div></form>`);
+}
+async function v270Save(e){
+ e.preventDefault();const f=Object.fromEntries(new FormData(e.target).entries());
+ const {error}=await sb.rpc('update_my_supervisor_profile',{p_phone:f.phone||null,p_job_title:f.job_title||null,p_employment_grade:f.employment_grade||null,p_grade_date:f.grade_date||null,p_appointment_date:f.appointment_date||null,p_work_start_date:f.work_start_date||null});
+ if(error)return moneySafeError(error);
+ closeModal();toast('تم حفظ بياناتك');refreshCurrentPage({invalidate:['supervisors','page:reports']}).catch(moneySafeError);
+}
+async function v270ChangePassword(e){
+ e.preventDefault();const form=e.target,fd=new FormData(form),cur=String(fd.get('current')||''),p=String(fd.get('password')||'');
+ if(p.length<8)return toast('كلمة المرور الجديدة 8 أحرف على الأقل');
+ if(p!==fd.get('confirm'))return toast('كلمتا المرور الجديدتان غير متطابقتين');
+ if(p===cur)return toast('اختر كلمة مرور مختلفة عن الحالية');
+ const civil=String(profile?.civil_id||v270Me?.civil_id||'').trim();if(!civil)return toast('تعذر التحقق: الرقم القومي غير متاح');
+ const btn=form.querySelector('button');if(btn)btn.disabled=true;
+ try{
+  const v=await sb.auth.signInWithPassword({email:`${civil}@science-guidance.local`,password:cur});
+  if(v.error||v.data?.user?.id!==profile.id)throw new Error('كلمة المرور الحالية غير صحيحة');
+  const {error}=await sb.auth.updateUser({password:p});if(error)throw error;
+  form.reset();toast('تم تغيير كلمة المرور');
+ }catch(err){moneySafeError(err)}finally{if(btn)btn.disabled=false}
+}
+function v270PrintCard(){
+ const m=v270Me;if(!m)return;
+ const w=window.open('about:blank','_blank');if(!w)return toast('اسمح بفتح نافذة الطباعة من المتصفح.');
+ const rows=v270Fields(m).map(([k,v,ltr])=>`<tr><th>${k}</th><td${ltr?' dir="ltr" style="text-align:right"':''}>${esc(v||'—')}</td></tr>`).join('');
+ const today=new Date().toLocaleDateString('ar-EG');
+ w.document.open();w.document.write(`<!doctype html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><title>بطاقة الموجه — ${esc(supervisorDirectoryName(m))}</title><style>@page{size:A4;margin:16mm}*{box-sizing:border-box}body{font-family:Tahoma,Arial,sans-serif;color:#0f214d;margin:0}.card{border:2px solid #0f214d;border-radius:14px;padding:22px}.head{display:flex;align-items:center;gap:16px;border-bottom:3px solid #c9a227;padding-bottom:14px;margin-bottom:18px}.head img{width:90px;height:90px}.head h1{margin:0;font-size:24px}.head p{margin:4px 0 0;color:#55657a}table{width:100%;border-collapse:collapse;font-size:16px}th,td{border:1px solid #c8d2de;padding:10px 12px;text-align:right}th{background:#eef3f8;width:34%}.foot{margin-top:18px;font-size:12px;color:#55657a;display:flex;justify-content:space-between}</style></head><body><div class="card"><div class="head"><img src="${BRAND_LOGO_SRC}" alt=""><div><h1>بطاقة بيانات موجه</h1><p>توجيه العلوم — إدارة قوص التعليمية</p></div></div><table>${rows}</table><div class="foot"><span>تاريخ الطباعة: ${esc(today)}</span><span>نظام توجيه العلوم</span></div></div></body></html>`);w.document.close();
+ const go=()=>setTimeout(()=>{try{w.focus();w.print()}catch(_){}},150);
+ if(w.document.readyState==='complete')go();else w.addEventListener('load',go,{once:true});
+}
+/* v270-end */
+
 async function supervisorsPage(){
+ if(profile?.role==='supervisor')return v270MyProfilePage();
  const fullAccess=supervisorDirectoryCanViewFull();
  let sups=[],error=null;
  if(fullAccess){
@@ -6522,7 +6578,7 @@ mySchool=async function(){
 };
 
 NAV.supervisor=[
- ['dashboard','لوحة المشرف','▦'],['alerts','التنبيهات','🔔'],['completion','استكمال البيانات','✎'],['supervisors','بيانات المشرف','◎'],['schools','مدارسي','⌂'],['teachers','معلمو مدارسي','◉'],['classes','الفصول','▦'],['assignments','توزيع الفصول','Σ'],['approval','الحفظ والاعتماد','✓'],['statistics','الإحصائيات','◫'],['reports','التقارير','▤']
+ ['dashboard','لوحة المشرف','▦'],['alerts','التنبيهات','🔔'],['completion','استكمال البيانات','✎'],['supervisors','بياناتي','◎'],['schools','مدارسي','⌂'],['teachers','معلمو مدارسي','◉'],['classes','الفصول','▦'],['assignments','توزيع الفصول','Σ'],['approval','الحفظ والاعتماد','✓'],['statistics','الإحصائيات','◫'],['reports','التقارير','▤']
 ];
 
 function supervisorChooseSchoolV75(schoolId,target=currentPage){
