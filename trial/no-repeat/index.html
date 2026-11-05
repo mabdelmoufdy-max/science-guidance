@@ -1,4 +1,5 @@
 <!doctype html>
+<!-- v278: صفحة «معلمو مدارسي/المعلمون» (كل الأدوار عدا المعلم): حُذف العنوان الكبير، وأزرار الصفحة (إضافة معلم/الإجازات/توزيع العجز) أعلى المحتوى، و«تقارير ▾» + «تصدير Excel» في صف المرحلة/المدرسة، وزر «تقرير» صار «تقرير المعلمين (حسب الفلاتر)» داخل القائمة. -->
 <!-- v277: ترتيب المعلمين في الشاشات والتقارير: الثابتون بالأقدمية ثم الأجر بالأقدمية (v261Priority يضع الأجر بعد الثابتين؛ v277Sort في معلمو مدارسي وملف المدرسة وتقريريه وإسناد حصص الفصول والإسنادات الحالية وبطاقات توزيع الفصول). -->
 <!-- v276: «معلمو مدارسي» عند «المدرسة: الكل»: طلب واحد get_school_teacher_rosters لكل المدارس بدل 17 طلبًا متوازيًا كانت تتجاوز مهلة القاعدة (8 ث)؛ احتياطي متتالٍ إن غابت الدالة. -->
 <!-- v275: ملف المدرسة (الشاشة): حُذف قسم «بيان الحصص من الملفات المرفوعة» (أرقام مرجعية قديمة مكررة)؛ يبقى في «تقرير المدرسة الشامل» المطبوع. -->
@@ -8,7 +9,6 @@
 <!-- v271: «مدارسي» للموجه: تشمل مدارس الثانوي المسندة إليه بالمادة (supervisor_school_subjects) لا المربوطة مباشرة فقط، وقائمة المرحلة لا تعرض إلا مراحل مدارسه. -->
 <!-- v270: «بياناتي» للموجه (بدل «بيانات المشرف»): بطاقة بياناته كاملة، وتعديل الهاتف/المسمى/الدرجة/تاريخ الحصول على الدرجة/التعيين/استلام العمل بالدالة update_my_supervisor_profile (migration v270)، وطباعة بطاقة A4، وتغيير كلمة المرور بعد التحقق من الحالية. -->
 <!-- v269: «تعديل البيانات الأساسية» في شاشة إدخال بيانات المدارس (المدمجة والمستقلة): أُزيل حقل «مدير المدرسة» الباهت للقراءة فقط (حساب الدخول المربوط) لتكراره مع «اسم مدير المدرسة»؛ ربط الحساب يبقى من شاشة الحسابات. -->
-<!-- v268: اسم مدير المدرسة وهاتفه: جدول school_manager_contact ودالة set_school_manager_contact (migration v268) — يكتب مدير النظام والمنسق لمرحلته والموجه لمدارسه. حقلا «اسم مدير المدرسة/هاتف المدير» في «تعديل البيانات الأساسية» بشاشة إدخال بيانات المدارس (المدمجة والمستقلة) ويظهران في بطاقتها، وسطر «المدير: … — الهاتف» وزر «بيانات المدير» تحت اسم المدرسة في مدارسي/مدارس المرحلة. -->
 <html lang="ar" dir="rtl">
 <head>
 <!-- إعداد: أ/ محمود عبدالمفدي محمد أبوالنجا | الصفة: معلم -->
@@ -16,7 +16,7 @@
 <script>/* v226: العنوان الموحد — انظر التعليق أعلى الملف */(function(){try{if(/\.github\.io$/.test(location.hostname)&&/^\/science-guidance\/?(index\.html)?$/.test(location.pathname)&&!/[?&]stay\b/.test(location.search))location.replace('https://teachers-data-portal.vercel.app/app/'+location.hash)}catch(e){}})();</script>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#152c43">
-<title>نظام توجيه العلوم — v277</title>
+<title>نظام توجيه العلوم — v278</title>
 <link rel="manifest" href="../../manifest.webmanifest">
 <link rel="icon" type="image/png" sizes="192x192" href="../../icon-192.png">
 <link rel="apple-touch-icon" href="../../icon-192.png">
@@ -1991,6 +1991,7 @@ body.v233-lock{overflow:hidden}
 @media(max-width:800px){.v252-filters{grid-template-columns:1fr 1fr}.v252-filters input{grid-column:1/-1}.v252-stats{grid-template-columns:1fr 1fr}.v252-cards{grid-template-columns:1fr}.v252-seg{display:flex}.v252-seg button{flex:1;text-align:center;padding:9px 6px}}
 .v268-mgr{font-size:12px;margin-top:4px}
 .v274-chips{display:flex;flex-wrap:wrap;gap:6px}.v274-chip{display:inline-flex;align-items:center;gap:4px;border:1px solid var(--line,#d6dee8);background:#f6f9fc;border-radius:8px;padding:3px 9px;font-size:13px;line-height:1.6;white-space:nowrap}.v274-chip small{color:#8a5a00;font-weight:700}.v274-chip.miss{border-color:#e3a3a3;background:#fdf1f1;color:#9b2c2c}.v274-chip.part{border-color:#e6c77a;background:#fff8e6;color:#7a5600}.v274-chip .v274-edit{border:0;background:#e6eff8;color:#1f4f78;border-radius:5px;padding:0 6px;cursor:pointer;font-size:12px;min-height:0;height:auto}.v274-sub{display:block;color:var(--muted,#64748b);font-size:12px;font-weight:400;margin-top:2px}.v274-note{margin:0 0 8px;color:var(--muted,#64748b);font-size:13px}.v274-table td,.v274-table th{vertical-align:middle;text-align:right}.v274-table .v274-num{text-align:center;width:70px;font-weight:700}.v274-table{table-layout:auto!important;width:100%}.v274-table th:first-child,.v274-table td:first-child{width:24%;min-width:150px}.v274-table th:nth-child(2),.v274-table td:nth-child(2){width:auto}
+#content .v278-tools{display:flex;flex-wrap:wrap;align-items:flex-end;gap:8px}#content .v278-tools.v250-toolbar{justify-content:flex-start;margin:0}#content .page-head.v278-head{justify-content:flex-start}#content .page-head.v278-head>.actions{justify-content:flex-start!important}
 </style>
 </head>
 <body>
@@ -2333,6 +2334,7 @@ window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();window.v152
 window.addEventListener('appinstalled',()=>{window.v152InstallPrompt=null;v152SyncInstallBtn()});
 if('serviceWorker' in navigator&&location.protocol!=='file:')window.addEventListener('load',()=>navigator.serviceWorker.register('../../service-worker.js').catch(()=>{}));
 const V145_NEWS=[
+ ['v278','صفحة المعلمين: أزرار الإضافة والإجازات وتوزيع العجز في أعلى الصفحة، و«تقارير» و«تصدير Excel» بجوار قائمتي المرحلة والمدرسة، و«تقرير المعلمين» داخل قائمة التقارير.'],
  ['v277','ترتيب المعلمين في الشاشات والتقارير: الثابتون أولًا بالأقدمية، ثم معلمو الأجر بالأقدمية.'],
  ['v276','«معلمو مدارسي» لكل المدارس صارت تُحمَّل بطلب واحد سريع بدل طلب لكل مدرسة، فلم تعد تتوقف بخطأ انتهاء المهلة.'],
  ['v275','ملف المدرسة: حُذف من الشاشة قسم «بيان الحصص من الملفات المرفوعة» (أرقام مرجعية قديمة)، ويبقى في تقرير المدرسة الشامل المطبوع.'],
@@ -7638,10 +7640,42 @@ function v163InstallTeachersUi(){
  box.after(hint);
  const t=c.querySelector('table.table');if(t?.id)applyAutoTableFilters(t.id);else v163SyncHint(false);
 }
+
+/* v278-begin: «معلمو مدارسي/المعلمون» — بلا عنوان كبير؛ أزرار الصفحة أعلى المحتوى؛ «تقارير ▾» و«تصدير Excel» في صف المرحلة/المدرسة؛ زر «تقرير» صار «تقرير المعلمين (حسب الفلاتر)» داخل القائمة. كل الأدوار ما عدا المعلم. */
+let __v278Tools=null;
+function v278Mode(){return currentPage==='teachers'&&!!profile&&profile.role!=='teacher'}
+function v278Layout(){
+ if(!v278Mode())return;
+ const c=document.getElementById('content');if(!c)return;
+ const head=c.querySelector('.page-head');
+ if(head&&!head.dataset.v278){
+  head.dataset.v278='1';head.classList.add('v278-head');
+  const title=[...head.children].find(el=>el.querySelector&&el.querySelector('h2'));if(title)title.remove();
+  const tools=document.createElement('div');tools.className='v278-tools';
+  const acts=head.querySelector('.actions');
+  if(acts){[...acts.querySelectorAll('button.btn')].filter(b=>!b.classList.contains('v250-trigger')&&/^تقرير/.test(String(b.textContent||'').trim())).forEach(b=>{b.classList.remove('v250-src');tools.appendChild(b)});acts.querySelectorAll('.v250-dd').forEach(dd=>{if(!dd.querySelector('button.btn:not(.v250-trigger)'))dd.remove()});acts.__v250sig='';}
+  const box=c.querySelector('#v163Actions');
+  if(box){const btns=[...box.querySelectorAll('button.btn')].filter(b=>!b.classList.contains('v250-trigger'));
+   const rep=btns.find(b=>/openReportPreview/.test(b.getAttribute('onclick')||'')),ex=btns.find(b=>/v163ExportTeachers/.test(b.getAttribute('onclick')||''));
+   if(rep){rep.textContent='تقرير المعلمين (حسب الفلاتر)';rep.className='btn secondary';tools.prepend(rep)}
+   if(ex){ex.className='btn secondary';tools.appendChild(ex)}
+   box.style.display='none';box.querySelectorAll('.v250-dd').forEach(dd=>dd.remove());}
+  __v278Tools=tools.children.length?tools:null;
+  c.prepend(head);
+ }
+ v278PlaceTools();
+}
+function v278PlaceTools(){
+ if(!v278Mode()||!__v278Tools)return;
+ const row=document.querySelector('#content #v97StageBar .auto-filter-options-row');if(!row||__v278Tools.parentElement===row)return;
+ row.insertBefore(__v278Tools,row.querySelector(':scope > .muted'));
+}
+/* v278-end */
 const __v163BaseLoadPage=loadPage;
 loadPage=async function(force=false){
  const result=await __v163BaseLoadPage(force);
  try{v163InstallTeachersUi()}catch(_){}
+ try{v278Layout()}catch(e){console.warn('v278',e)}
  try{v179InstallSchoolsUi()}catch(_){}
  return result;
 };
@@ -12022,7 +12056,7 @@ function v250Toggle(dd){
 }
 function v250Apply(){
  if(__v250Busy)return;__v250Busy=true;
- try{document.querySelectorAll('#content .page-head > .actions, #content .v163-actions').forEach(bar=>{try{v250Build(bar)}catch(e){console.warn('v250',e)}})}finally{__v250Busy=false}
+ try{document.querySelectorAll('#content .page-head > .actions, #content .v163-actions, #content .v278-tools').forEach(bar=>{try{v250Build(bar)}catch(e){console.warn('v250',e)}})}finally{__v250Busy=false}
 }
 let __v250Raf=0;
 const __v250Obs=new MutationObserver(()=>{if(__v250Busy||__v250Raf)return;__v250Raf=requestAnimationFrame(()=>{__v250Raf=0;__v250Obs.disconnect();v250Apply();__v250Obs.observe(document.body,{childList:true,subtree:true,characterData:true})})});
