@@ -1,4 +1,5 @@
 <!doctype html>
+<!-- v284: «جدول المعلم»: أعلى الصفحة صف واحد (المرحلة + المدرسة + المعلم + تحديث + معاينة وطباعة) بلا عنوان؛ بطاقة «أيام الدراسة وحصص المدرسة» صارت سطرًا يعرض القيم وزر «تعديل» يُظهر الحقلين وزر الحفظ (نفس المعرفات)؛ شارة «في الجدول X من Y» تنتقل لسطر الإعدادات (v284SyncBadge). -->
 <!-- v283: «توزيع الفصول»: «المطلوب» لكل معلم ثابت = النصاب − الإشراف − الريادة (للمنتدب جزئيًا في المدرستين: global_*) بلا تقريب لعدد الفصول، والحالة = النصاب − (تدريس + إشراف + ريادة) كقاعدة البيانات والتقارير؛ «حد أقصى» لا يظهر متبقيًا. مثال: نصاب 19 = 16 + 2 + 1 ← مكتمل. -->
 <!-- v282: «توزيع الفصول»: حالة المعلم المنتدب جزئيًا (زيادة/متبقٍ/مكتمل وشريط التقدّم وأثر الإسناد) تُحسب على تدريسه الكلي في المدرستين (global_teaching_periods) مع بيان «N هنا + M بمدرسة أخرى» و«منتدب جزئيًا». -->
 <!-- v281: «توزيع الفصول»: شريط أدوات واحد (المدرسة + تعديل الفصول + تقرير + حفظ واعتماد للموجه) بدل بطاقة «إدخال فصول المدرسة»، مؤشرات، شريط خطوات، سطر لكل معلم (شريط تقدّم + زيادة/متبقٍ برقم + فصوله شرائح بـ✕ لإلغاء الإسناد بعد التأكيد)، والفصول غير المسندة مجمّعة بالصف والمادة بأثر الإسناد؛ حُذف «الإسنادات الحالية». -->
@@ -8,7 +9,6 @@
 <!-- v277: ترتيب المعلمين في الشاشات والتقارير: الثابتون بالأقدمية ثم الأجر بالأقدمية (v261Priority يضع الأجر بعد الثابتين؛ v277Sort في معلمو مدارسي وملف المدرسة وتقريريه وإسناد حصص الفصول والإسنادات الحالية وبطاقات توزيع الفصول). -->
 <!-- v276: «معلمو مدارسي» عند «المدرسة: الكل»: طلب واحد get_school_teacher_rosters لكل المدارس بدل 17 طلبًا متوازيًا كانت تتجاوز مهلة القاعدة (8 ث)؛ احتياطي متتالٍ إن غابت الدالة. -->
 <!-- v275: ملف المدرسة (الشاشة): حُذف قسم «بيان الحصص من الملفات المرفوعة» (أرقام مرجعية قديمة مكررة)؛ يبقى في «تقرير المدرسة الشامل» المطبوع. -->
-<!-- v274: بلا تكرار المادة والحصص: «إسناد حصص الفصول» و«الفصول» في ملف المدرسة و«الإسنادات الحالية» في توزيع الفصول — المعلم مرة واحدة وفصوله متجاورة، والفصول مجمّعة بالصف؛ المادة والحصص سطر واحد أعلى الجدول إن كانت مادة واحدة، ويظهر المختلف فقط. -->
 <html lang="ar" dir="rtl">
 <head>
 <!-- إعداد: أ/ محمود عبدالمفدي محمد أبوالنجا | الصفة: معلم -->
@@ -16,7 +16,7 @@
 <script>/* v226: العنوان الموحد — انظر التعليق أعلى الملف */(function(){try{if(/\.github\.io$/.test(location.hostname)&&/^\/science-guidance\/?(index\.html)?$/.test(location.pathname)&&!/[?&]stay\b/.test(location.search))location.replace('https://teachers-data-portal.vercel.app/app/'+location.hash)}catch(e){}})();</script>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#152c43">
-<title>نظام توجيه العلوم — v283</title>
+<title>نظام توجيه العلوم — v284</title>
 <link rel="manifest" href="./manifest.webmanifest">
 <link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png">
 <link rel="apple-touch-icon" href="./icon-192.png">
@@ -2004,6 +2004,9 @@ body.v233-lock{overflow:hidden}
 #v281Root .v281-tag{border-radius:8px;padding:3px 9px;font-size:12px;font-weight:800;white-space:nowrap}#v281Root .v281-tag.danger{background:#fee2e2;color:#b91c1c}#v281Root .v281-tag.warn{background:#fef3c7;color:#b45309}#v281Root .v281-tag.ok{background:#dcfce7;color:#15803d}#v281Root .v281-tag.info{background:#e2e8f0;color:#334155}
 #v281Root .v281-hint{background:#eff6ff;border:1px solid #bfdbfe;border-radius:10px;padding:7px 10px;font-size:13px;margin-bottom:10px}#v281Root .v281-gr{margin-bottom:10px}#v281Root .v281-gr h4{margin:0 0 6px;font-size:13px;color:#475569}#v281Root .available-class-chip.v281-dim{opacity:.45;border-style:dashed}#v281Root .available-classes-panel{max-height:calc(100vh - 20px);overflow:auto}
 @media(max-width:760px){#v281Root .v281-kpis{grid-template-columns:repeat(2,minmax(0,1fr))}#v281Root .v281-row{grid-template-columns:18px minmax(0,1fr) auto}#v281Root .v281-load{grid-column:2/4}}
+.v284-bar .v284-row{display:flex;flex-wrap:wrap;align-items:flex-end;gap:8px}.v284-bar .v284-row .field{margin:0;min-width:170px;flex:0 1 260px}.v284-bar .v284-sp{flex:1}
+.v284-bar .v284-set{display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px;margin-top:10px;padding:8px 12px;background:#f8fafc;border:1px dashed #cbd5e1;border-radius:10px;font-size:14px}.v284-bar #v284SetEdit{margin-top:10px}
+@media(max-width:760px){.v284-bar .v284-row .field{flex:1 1 100%}}
 </style>
 </head>
 <body>
@@ -2346,6 +2349,7 @@ window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();window.v152
 window.addEventListener('appinstalled',()=>{window.v152InstallPrompt=null;v152SyncInstallBtn()});
 if('serviceWorker' in navigator&&location.protocol!=='file:')window.addEventListener('load',()=>navigator.serviceWorker.register('./service-worker.js').catch(()=>{}));
 const V145_NEWS=[
+ ['v284','«جدول المعلم»: القوائم والأزرار في صف واحد، وإعدادات أيام الدراسة وعدد الحصص في سطر مختصر بزر «تعديل».'],
  ['v283','«توزيع الفصول»: المطلوب من كل معلم = النصاب − الإشراف − الريادة (وللمنتدب جزئيًا في المدرستين معًا)، مطابقًا للتقارير.'],
  ['v282','«توزيع الفصول»: المعلم المنتدب جزئيًا تُحسب حالته على حصصه في المدرستين معًا، ويظهر «هنا + بمدرسة أخرى».'],
  ['v281','«توزيع الفصول»: أدوات في شريط واحد، ملخص بالأرقام، خطوات الاستخدام، سطر لكل معلم بفصوله وزر ✕ لإلغاء إسناد فصل، والفصول غير المسندة مجمّعة بالصف والمادة مع أثر الإسناد على نصاب المعلم.'],
@@ -7844,12 +7848,11 @@ async function teacherTimetablePage({signal}={}){
  if(v101TeacherId!=='__all__'&&!data.teachers?.some(t=>String(t.teacher_id||t.id)===v101TeacherId))v101TeacherId=v166CanAll?'__all__':String(data.teachers?.[0]?.teacher_id||data.teachers?.[0]?.id||'');
  v101SetDraft();v101SettingsDirty=false;
  const cfg=data.config,canManage=data.can_manage;
- return `<div class="page-head"><div><h2>${canManage?'جدول المعلم الأسبوعي':'جدولي الأسبوعي'}</h2><p>الأيام والحصص الفعلية من الفصول المسندة للمعلم خلال الأسبوع.</p></div><div class="actions">${v102CanPrintSchool()?'<button type="button" class="btn primary" onclick="v102PrintSchoolTimetable()">معاينة وطباعة معلمي المدرسة</button>':''}<button type="button" class="btn secondary" onclick="v101ReloadTimetable()">تحديث</button></div></div>
- <div class="card"><div class="form-grid">${v166Stages.length>1&&canManage?`<div class="field"><label for="v166StageSelect">المرحلة</label><select id="v166StageSelect" onchange="v166ChangeStage(this.value)"><option value="">الكل</option>${v166Stages.map(st=>`<option value="${esc(st)}" ${st===v166Stage?'selected':''}>${esc(st)}</option>`).join('')}</select></div>`:''}<div class="field"><label for="v101SchoolSelect">المدرسة</label><select id="v101SchoolSelect" onchange="v101ChangeSchool(this.value)">${schools.map(s=>`<option value="${s.id}" ${s.id===selectedSchool?'selected':''}>${esc(s.name)} — ${esc(s.stage)}</option>`).join('')}</select></div>
- <div class="field"><label for="v101TeacherSelect">المعلم</label><select id="v101TeacherSelect" onchange="v101ChangeTeacher(this.value)" ${!data.teachers?.length?'disabled':''}>${v166CanAll?`<option value="__all__" ${v101TeacherId==='__all__'?'selected':''}>كل معلمي المدرسة (جدول مجمّع)</option>`:''}${(data.teachers||[]).map(t=>`<option value="${t.teacher_id||t.id}" ${String(t.teacher_id||t.id)===v101TeacherId?'selected':''}>${esc(t.full_name)}${isPaidTeacher(t)?' (بالأجر)':''}</option>`).join('')||'<option>لا يوجد معلمون</option>'}</select></div></div></div>
- <div class="card"><h3>أيام الدراسة وحصص المدرسة</h3><div class="form-grid"><div class="field"><label for="v101WeekMode">أيام الدراسة</label><select id="v101WeekMode" onchange="v101SettingsDirty=true" ${canManage?'':'disabled'}><option value="sunday" ${cfg.operating_days.includes(6)?'':'selected'}>من الأحد إلى الخميس</option><option value="saturday" ${cfg.operating_days.includes(6)?'selected':''}>من السبت إلى الخميس</option></select></div><div class="field"><label for="v101PeriodCount">عدد الحصص في اليوم</label><input id="v101PeriodCount" type="number" min="1" max="12" step="1" value="${cfg.periods_per_day}" oninput="v101SettingsDirty=true" ${canManage?'':'disabled'}></div></div>
+ const v284Days=cfg.operating_days.includes(6)?'من السبت إلى الخميس':'من الأحد إلى الخميس'; // v284
+ return `<div class="card v284-bar"><div class="v284-row">${v166Stages.length>1&&canManage?`<div class="field"><label for="v166StageSelect">المرحلة</label><select id="v166StageSelect" onchange="v166ChangeStage(this.value)"><option value="">الكل</option>${v166Stages.map(st=>`<option value="${esc(st)}" ${st===v166Stage?'selected':''}>${esc(st)}</option>`).join('')}</select></div>`:''}<div class="field"><label for="v101SchoolSelect">المدرسة</label><select id="v101SchoolSelect" onchange="v101ChangeSchool(this.value)">${schools.map(s=>`<option value="${s.id}" ${s.id===selectedSchool?'selected':''}>${esc(s.name)} — ${esc(s.stage)}</option>`).join('')}</select></div>
+ <div class="field"><label for="v101TeacherSelect">المعلم</label><select id="v101TeacherSelect" onchange="v101ChangeTeacher(this.value)" ${!data.teachers?.length?'disabled':''}>${v166CanAll?`<option value="__all__" ${v101TeacherId==='__all__'?'selected':''}>كل معلمي المدرسة (جدول مجمّع)</option>`:''}${(data.teachers||[]).map(t=>`<option value="${t.teacher_id||t.id}" ${String(t.teacher_id||t.id)===v101TeacherId?'selected':''}>${esc(t.full_name)}${isPaidTeacher(t)?' (بالأجر)':''}</option>`).join('')||'<option>لا يوجد معلمون</option>'}</select></div><span class="v284-sp"></span><button type="button" class="btn secondary" onclick="v101ReloadTimetable()">↻ تحديث</button>${v102CanPrintSchool()?'<button type="button" class="btn primary" onclick="v102PrintSchoolTimetable()">🖨 معاينة وطباعة</button>':''}</div><div class="v284-set"><span>⚙ إعدادات المدرسة: <b>${v284Days}</b> • <b>${esc(cfg.periods_per_day)} حصص يوميًا</b></span>${canManage?'<button type="button" class="btn secondary v284-edit" onclick="v284ToggleSet()">تعديل</button>':''}<span class="v284-sp"></span><span id="v284Badge"></span></div><div id="v284SetEdit" hidden><div class="form-grid"><div class="field"><label for="v101WeekMode">أيام الدراسة</label><select id="v101WeekMode" onchange="v101SettingsDirty=true" ${canManage?'':'disabled'}><option value="sunday" ${cfg.operating_days.includes(6)?'':'selected'}>من الأحد إلى الخميس</option><option value="saturday" ${cfg.operating_days.includes(6)?'selected':''}>من السبت إلى الخميس</option></select></div><div class="field"><label for="v101PeriodCount">عدد الحصص في اليوم</label><input id="v101PeriodCount" type="number" min="1" max="12" step="1" value="${cfg.periods_per_day}" oninput="v101SettingsDirty=true" ${canManage?'':'disabled'}></div></div>
  ${canManage?`<div class="actions"><button type="button" class="btn secondary" onclick="v101SaveSettings(this)">حفظ إعدادات المدرسة</button></div><small class="muted">تطبق الإعدادات على جميع معلمي المدرسة في الفصل الدراسي الحالي.</small>`:''}
- ${Number(cfg.revision)===0?'<div class="notice warn">إعدادات المدرسة لم تُحفظ بعد. المعروض مبدئيًا: الأحد إلى الخميس، ٧ حصص في اليوم.</div>':''}</div>
+ </div>${Number(cfg.revision)===0?'<div class="notice warn">إعدادات المدرسة لم تُحفظ بعد. المعروض مبدئيًا: الأحد إلى الخميس، ٧ حصص في اليوم.</div>':''}</div>
  <section id="v101TeacherArea">${v101TeacherArea()}</section>`;
 }
 /* v166: فلتر المرحلة، وجدول مجمّع لكل معلمي المدرسة (عرض فقط). */
@@ -7885,11 +7888,13 @@ function v166SchoolGrid(){
    body+='</tr>';
   });
  }
- return `<div class="card"><div class="card-title"><div><h3>جداول معلمي المدرسة</h3><p class="muted">${esc(ws.school.name)} • ${esc(activeYear?.label||'')} • ${esc(activeTerm?.name||'')} • ${teachers.length} معلم</p></div><span class="badge ${placed>=required&&required>0?'ok':'info'}">في الجدول ${placed} من ${required} حصة</span></div>
+ return `<div class="card"><div class="card-title"><div><h3>جداول معلمي المدرسة</h3><p class="muted">${esc(ws.school.name)} • ${esc(activeYear?.label||'')} • ${esc(activeTerm?.name||'')} • ${teachers.length} معلم</p></div><span class="badge v284-badge ${placed>=required&&required>0?'ok':'info'}">في الجدول ${placed} من ${required} حصة</span></div>
  <div class="v116-scroll-hint">اسحب الجدول يمينًا ويسارًا لعرض باقي الحصص ←</div><div class="v101-grid-scroll"><table class="v101-timetable v166-school-grid"><thead><tr><th scope="col">اليوم</th><th scope="col">المعلم</th>${Array.from({length:P},(_,i)=>`<th scope="col">الحصة ${i+1}</th>`).join('')}</tr></thead><tbody>${body}</tbody></table></div>
  <div class="actions">${v102CanPrintSchool()?'<button type="button" class="btn primary" onclick="v102PrintSchoolTimetable()">معاينة وطباعة معلمي المدرسة</button>':''}</div><small class="muted">لتعديل جدول معلم اختره من قائمة «المعلم».</small></div>`;
 }
-function v101TeacherArea(){
+function v284ToggleSet(){const e=document.getElementById('v284SetEdit');if(e)e.hidden=!e.hidden}
+function v284SyncBadge(){const box=document.getElementById('v284Badge');if(!box)return;const b=document.querySelector('#v101TeacherArea .v284-badge');box.innerHTML='';if(b)box.appendChild(b)}
+function v101TeacherArea(){setTimeout(v284SyncBadge,0);
  if(v101TeacherId==='__all__'&&v101Timetable)return v166SchoolGrid();
  const ws=v101Timetable;if(!ws||!v101TeacherId)return '<div class="notice">لا يوجد معلم متاح لعرض الجدول.</div>';
  const editable=ws.can_manage&&Number(ws.config.revision)>0;
