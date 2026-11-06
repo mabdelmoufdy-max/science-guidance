@@ -1,4 +1,5 @@
 <!doctype html>
+<!-- v286: «تعديل الفصول» على الهاتف: الفصول 4 في كل سطر بعرض متساوٍ (شبكة) بدل 5 تخرج عن البطاقة. -->
 <!-- v285: «تعديل الفصول» على الهاتف (≤760px فقط): القوائم بعرض الشاشة والأزرار شبكة 2×2، وجدول الفصول بطاقة لكل صف (الصف والعدد والحصص في سطر والفصول تلتف تحته) بلا تمرير جانبي (.v285-classes). -->
 <!-- v284: «جدول المعلم»: أعلى الصفحة صف واحد (المرحلة + المدرسة + المعلم + تحديث + معاينة وطباعة) بلا عنوان؛ بطاقة «أيام الدراسة وحصص المدرسة» صارت سطرًا يعرض القيم وزر «تعديل» يُظهر الحقلين وزر الحفظ (نفس المعرفات)؛ شارة «في الجدول X من Y» تنتقل لسطر الإعدادات (v284SyncBadge). -->
 <!-- v283: «توزيع الفصول»: «المطلوب» لكل معلم ثابت = النصاب − الإشراف − الريادة (للمنتدب جزئيًا في المدرستين: global_*) بلا تقريب لعدد الفصول، والحالة = النصاب − (تدريس + إشراف + ريادة) كقاعدة البيانات والتقارير؛ «حد أقصى» لا يظهر متبقيًا. مثال: نصاب 19 = 16 + 2 + 1 ← مكتمل. -->
@@ -8,7 +9,6 @@
 <!-- v279: صفحة «الفصول» صار اسم تبويبها «تعديل الفصول»: صف أدوات واحد بجوار المرحلة (المدرسة + إضافة فصل + التوزيع + حفظ واعتماد + تقرير) وجدول واحد بالصفوف وشرائح الفصول بـ✎؛ حُذف العنوان الكبير وبطاقة الإدخال وزر «الفصول» المكرر والجدول التفصيلي، وملاحظة الثانوي في مدارس الثانوي فقط. -->
 <!-- v278: صفحة «معلمو مدارسي/المعلمون» (كل الأدوار عدا المعلم): حُذف العنوان الكبير، وأزرار الصفحة (إضافة معلم/الإجازات/توزيع العجز) أعلى المحتوى، و«تقارير ▾» + «تصدير Excel» في صف المرحلة/المدرسة، وزر «تقرير» صار «تقرير المعلمين (حسب الفلاتر)» داخل القائمة. -->
 <!-- v277: ترتيب المعلمين في الشاشات والتقارير: الثابتون بالأقدمية ثم الأجر بالأقدمية (v261Priority يضع الأجر بعد الثابتين؛ v277Sort في معلمو مدارسي وملف المدرسة وتقريريه وإسناد حصص الفصول والإسنادات الحالية وبطاقات توزيع الفصول). -->
-<!-- v276: «معلمو مدارسي» عند «المدرسة: الكل»: طلب واحد get_school_teacher_rosters لكل المدارس بدل 17 طلبًا متوازيًا كانت تتجاوز مهلة القاعدة (8 ث)؛ احتياطي متتالٍ إن غابت الدالة. -->
 <html lang="ar" dir="rtl">
 <head>
 <!-- إعداد: أ/ محمود عبدالمفدي محمد أبوالنجا | الصفة: معلم -->
@@ -16,7 +16,7 @@
 <script>/* v226: العنوان الموحد — انظر التعليق أعلى الملف */(function(){try{if(/\.github\.io$/.test(location.hostname)&&/^\/science-guidance\/?(index\.html)?$/.test(location.pathname)&&!/[?&]stay\b/.test(location.search))location.replace('https://teachers-data-portal.vercel.app/app/'+location.hash)}catch(e){}})();</script>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#152c43">
-<title>نظام توجيه العلوم — v285</title>
+<title>نظام توجيه العلوم — v286</title>
 <link rel="manifest" href="./manifest.webmanifest">
 <link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png">
 <link rel="apple-touch-icon" href="./icon-192.png">
@@ -2008,7 +2008,7 @@ body.v233-lock{overflow:hidden}
 .v284-bar .v284-set{display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px;margin-top:10px;padding:8px 12px;background:#f8fafc;border:1px dashed #cbd5e1;border-radius:10px;font-size:14px}.v284-bar #v284SetEdit{margin-top:10px}
 @media(max-width:760px){.v284-bar .v284-row .field{flex:1 1 100%}}
 @media(max-width:760px){#content .auto-filter-options-row:has(> .v279-tools){grid-template-columns:1fr}#content .v279-tools{grid-column:1/-1;display:grid;grid-template-columns:1fr 1fr;gap:6px}#content .v279-tools .field{grid-column:1/-1;min-width:0!important}#content .v279-tools>.btn{width:100%;min-width:0;margin:0}
-.v285-classes .v110-table-scroll{overflow:visible}.v285-classes table.v274-table{min-width:0!important;display:block;border:0}.v285-classes table.v274-table thead{display:none}.v285-classes table.v274-table tbody{display:block}.v285-classes table.v274-table tr{display:grid;grid-template-columns:1fr auto auto;gap:6px 10px;align-items:center;border:1px solid #e2e8f0;border-radius:10px;padding:8px 10px;margin-bottom:8px;background:#fff}.v285-classes table.v274-table td{display:block;border:0!important;padding:0!important;background:none!important}.v285-classes table.v274-table td:nth-child(2){grid-column:1/-1;grid-row:2}.v285-classes table.v274-table td.v274-num{font-size:12px;color:#64748b;white-space:nowrap}.v285-classes table.v274-table td:nth-child(3):not(:empty)::after{content:" فصول"}.v285-classes table.v274-table td:nth-child(4):not(:empty)::after{content:" حصة"}}
+.v285-classes .v110-table-scroll{overflow:visible}.v285-classes table.v274-table{min-width:0!important;display:block;border:0}.v285-classes table.v274-table thead{display:none}.v285-classes table.v274-table tbody{display:block}.v285-classes table.v274-table tr{display:grid;grid-template-columns:1fr auto auto;gap:6px 10px;align-items:center;border:1px solid #e2e8f0;border-radius:10px;padding:8px 10px;margin-bottom:8px;background:#fff}.v285-classes table.v274-table td{display:block;border:0!important;padding:0!important;background:none!important}.v285-classes table.v274-table td:nth-child(2){grid-column:1/-1;grid-row:2}.v285-classes table.v274-table td.v274-num{font-size:12px;color:#64748b;white-space:nowrap}.v285-classes table.v274-table td:nth-child(3):not(:empty)::after{content:" فصول"}.v285-classes table.v274-table td:nth-child(4):not(:empty)::after{content:" حصة"}.v285-classes .v274-chips{display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px}.v285-classes .v274-chip{display:flex;justify-content:center;align-items:center;min-width:0;margin:0;white-space:nowrap}}
 </style>
 </head>
 <body>
@@ -2351,6 +2351,7 @@ window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();window.v152
 window.addEventListener('appinstalled',()=>{window.v152InstallPrompt=null;v152SyncInstallBtn()});
 if('serviceWorker' in navigator&&location.protocol!=='file:')window.addEventListener('load',()=>navigator.serviceWorker.register('./service-worker.js').catch(()=>{}));
 const V145_NEWS=[
+ ['v286','«تعديل الفصول» على الهاتف: 4 فصول في كل سطر بعرض متساوٍ.'],
  ['v285','«تعديل الفصول» على الهاتف: الأزرار في شبكة 2×2، والفصول بطاقة لكل صف بلا تمرير جانبي.'],
  ['v284','«جدول المعلم»: القوائم والأزرار في صف واحد، وإعدادات أيام الدراسة وعدد الحصص في سطر مختصر بزر «تعديل».'],
  ['v283','«توزيع الفصول»: المطلوب من كل معلم = النصاب − الإشراف − الريادة (وللمنتدب جزئيًا في المدرستين معًا)، مطابقًا للتقارير.'],
