@@ -2020,7 +2020,14 @@ body.v293-ro select[onchange*="v101ChangeSlot"]{pointer-events:none;opacity:.65}
 .v293-chip{margin-inline-start:6px;vertical-align:middle}
 .v294-dot{display:inline-block;width:12px;height:12px;border-radius:50%;background:#b8c2cf;vertical-align:middle}
 .v294-dot.on{background:#1d6fe0;box-shadow:0 0 0 3px rgba(29,111,224,.22)}
-#v294Table tr.v294-on td{background:rgba(29,111,224,.06)}
+#v294Q{width:100%;margin-bottom:10px}
+.v294-head{font-weight:700;padding:6px 2px 8px;border-bottom:1px solid var(--line,#e2e8f0)}
+.v294-item{display:flex;gap:10px;align-items:flex-start;padding:10px 2px;border-bottom:1px solid var(--line,#e2e8f0)}
+.v294-item:last-child{border-bottom:0}
+.v294-item>.v294-dot{margin-top:6px;flex:0 0 auto}
+.v294-main{min-width:0;flex:1}
+.v294-kv{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:6px 14px;margin-top:8px}
+.v294-kv span{display:block;font-size:12px;color:var(--muted,#64748b)}
 </style>
 </head>
 <body>
@@ -8707,6 +8714,7 @@ const __v294BaseLoadContext=loadContext;
 loadContext=async function(){const st=await __v294BaseLoadContext.apply(this,arguments);v294Ping(true);return st};
 function v294Role(r){return r?(ROLE_LABELS[r]||r):'—'}
 function v294Time(t){if(!t)return '—';try{return new Date(t).toLocaleString('ar-EG',{weekday:'short',day:'numeric',month:'short',hour:'numeric',minute:'2-digit'})}catch(e){return String(t).slice(0,16)}}
+function v294Clock(t){if(!t)return '—';const d=new Date(t);if(d.toDateString()!==new Date().toDateString())return v294Time(t);try{return d.toLocaleTimeString('ar-EG',{hour:'numeric',minute:'2-digit'})}catch(e){return v294Time(t)}}
 function v294Ago(t){
  if(!t)return 'لم يظهر بعد';
  const s=Math.max(0,Math.round((Date.now()-new Date(t).getTime())/1000));
@@ -8716,15 +8724,25 @@ function v294Ago(t){
  return 'منذ '+v294N(Math.round(h/24),'يوم','يومين','أيام','يومًا');
 }
 function v294N(n,one,two,few,many){return n===1?one:n===2?two:(n>=3&&n<=10)?`${n} ${few}`:`${n} ${many}`}
-async function v294Load(){const r=await sb.rpc('admin_online_users');if(r.error)throw r.error;return r.data||[]}
-function v294Body(list){
- const on=list.filter(u=>u.online).length;
- const rows=list.map(u=>`<tr class="${u.online?'v294-on':''}"><td><span class="v294-dot${u.online?' on':''}" title="${u.online?'متصل الآن':'غير متصل'}"></span> <b>${esc(u.full_name||'—')}</b><div class="cell-sub">${esc((u.roles||[]).map(v294Role).join('، '))}</div></td><td>${u.online?esc(v294Role(u.active_role)):'—'}</td><td>${u.online?esc(v294Time(u.session_started_at)):'—'}</td><td>${esc(u.online?'الآن':v294Ago(u.last_seen_at))}</td><td>${esc(v294Time(u.last_sign_in_at))}</td></tr>`).join('');
- return `<div class="grid4" style="margin:10px 0"><div class="card stat-card"><div class="stat-label"><span class="v294-dot on"></span> متصل الآن</div><div class="stat-value">${on}</div></div><div class="card stat-card"><div class="stat-label">غير متصل</div><div class="stat-value">${list.length-on}</div></div><div class="card stat-card"><div class="stat-label">إجمالي الحسابات</div><div class="stat-value">${list.length}</div></div></div>
- <div class="card"><div class="table-wrap"><table class="table no-compact-directory" id="v294Table"><thead><tr><th>الاسم</th><th>الدور الحالي</th><th>متصل منذ</th><th>آخر ظهور</th><th>آخر تسجيل دخول</th></tr></thead><tbody>${rows||'<tr><td colspan="5">لا توجد حسابات.</td></tr>'}</tbody></table></div></div>
- <div class="cell-sub" style="margin-top:6px">آخر تحديث: ${esc(new Date().toLocaleTimeString('ar-EG',{hour:'numeric',minute:'2-digit',second:'2-digit'}))}</div>`;
+const V294={list:[],q:''};
+async function v294Load(){const r=await sb.rpc('admin_online_users');if(r.error)throw r.error;V294.list=r.data||[];return V294.list}
+function v294OnlineItem(u){return `<div class="v294-item"><span class="v294-dot on" title="متصل الآن"></span><div class="v294-main"><b>${esc(u.full_name||'—')}</b><div class="cell-sub">${esc(v294Role(u.active_role))} — متصل منذ ${esc(v294Clock(u.session_started_at))}</div></div></div>`}
+function v294DetailItem(u){
+ const kv=(k,v)=>`<div><span>${k}</span><b>${esc(v)}</b></div>`;
+ return `<div class="v294-item v294-detail"><span class="v294-dot${u.online?' on':''}"></span><div class="v294-main"><b>${esc(u.full_name||'—')}</b> <span class="badge ${u.online?'info':'warn'}">${u.online?'متصل الآن':'غير متصل'}</span>
+ <div class="v294-kv">${kv('الأدوار',(u.roles||[]).map(v294Role).join('، ')||'—')}${u.online?kv('الدور الحالي',v294Role(u.active_role))+kv('متصل منذ',v294Clock(u.session_started_at)):kv('آخر ظهور',v294Ago(u.last_seen_at))+(u.active_role?kv('آخر دور استخدمه',v294Role(u.active_role)):'')}${kv('آخر تسجيل دخول',v294Time(u.last_sign_in_at))}</div></div></div>`;
 }
-async function v294Refresh(){const root=document.getElementById('v294Root');if(!root)return;try{root.innerHTML=v294Body(await v294Load())}catch(e){}}
+function v294Body(){
+ const q=v288Norm(V294.q);
+ if(q){
+  const hits=V294.list.filter(u=>v288Norm(u.full_name).includes(q));
+  return `<div class="v294-head">نتائج البحث (${hits.length})</div>${hits.map(v294DetailItem).join('')||'<div class="cell-sub" style="padding:10px">لا يوجد حساب بهذا الاسم.</div>'}`;
+ }
+ const on=V294.list.filter(u=>u.online);
+ return `<div class="v294-head"><span class="v294-dot on"></span> متصل الآن (${on.length})</div>${on.map(v294OnlineItem).join('')||'<div class="cell-sub" style="padding:10px">لا يوجد أحد متصل الآن.</div>'}`;
+}
+function v294Search(v){V294.q=String(v||'');const root=document.getElementById('v294Root');if(root)root.innerHTML=v294Body()}
+async function v294Refresh(){const root=document.getElementById('v294Root');if(!root)return;try{await v294Load();root.innerHTML=v294Body()}catch(e){}}
 function v294StartAuto(){
  if(__v294Timer)return;
  __v294Timer=setInterval(()=>{
@@ -8734,9 +8752,10 @@ function v294StartAuto(){
 }
 async function v294Page(){
  if(profile?.role!=='admin')return '<div class="notice warn">هذه الشاشة لمدير النظام فقط.</div>';
- let list;try{list=await v294Load()}catch(e){return `<div class="notice danger">تعذّر تحميل المتصلين: ${esc(e.message||e)}</div>`}
- v294Ping(true);v294StartAuto();
- return `<div class="page-head"><div><h2>المتصلون الآن</h2><p>النقطة الزرقاء = فاتح البرنامج الآن (خلال آخر 3 دقائق). تتحدث القائمة تلقائيًا كل 30 ثانية. «لم يظهر بعد» = لم يفتح البرنامج منذ تفعيل هذه الشاشة.</p></div><div class="actions"><button class="btn secondary" type="button" onclick="v294Refresh()">تحديث</button></div></div><div id="v294Root">${v294Body(list)}</div>`;
+ try{await v294Load()}catch(e){return `<div class="notice danger">تعذّر تحميل المتصلين: ${esc(e.message||e)}</div>`}
+ V294.q='';v294Ping(true);v294StartAuto();
+ return `<div class="page-head"><div><h2>المتصلون الآن</h2></div><div class="actions"><button class="btn secondary" type="button" onclick="v294Refresh()">تحديث</button></div></div>
+ <div class="card"><input type="search" id="v294Q" placeholder="🔎 ابحث عن شخص لعرض تفاصيله" autocomplete="off" oninput="v294Search(this.value)" aria-label="بحث بالاسم"><div id="v294Root">${v294Body()}</div></div>`;
 }
 /* v294-end */
 
