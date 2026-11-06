@@ -1,4 +1,5 @@
 <!doctype html>
+<!-- v288: شاشة «طلبات معلمي الأجر» لمدير النظام (NAV admin: paidRequests؛ كتلة v288): الطلبات من paid_teacher_applications (قراءة للمشاهد المسجل فقط) مع حالة كل طلب بمطابقة الرقم القومي في teacher_records، وتفاصيل الطلب وصور الشهادات (روابط موقعة من paid-teacher-docs)، وزر «إضافة إلى البرنامج» ينشئ بطاقة معلم بالأجر بمدرسة يختارها + ربطه بالمدرسة للفصل الحالي. الرابط المباشر #/paidRequests يختار دور مدير النظام تلقائيًا. بلا تغيير في قاعدة البيانات. -->
 <!-- v287: قائمة «المرحلة» لمنسق المرحلة تعرض مراحله النشطة فقط (v202Stages ← v287Set)، والمرحلة المحفوظة التي ليست له تُعامل «الكل» (كما في v271 للموجه). -->
 <!-- v286: «تعديل الفصول» على الهاتف: الفصول 4 في كل سطر بعرض متساوٍ (شبكة) بدل 5 تخرج عن البطاقة. -->
 <!-- v285: «تعديل الفصول» على الهاتف (≤760px فقط): القوائم بعرض الشاشة والأزرار شبكة 2×2، وجدول الفصول بطاقة لكل صف (الصف والعدد والحصص في سطر والفصول تلتف تحته) بلا تمرير جانبي (.v285-classes). -->
@@ -8,7 +9,6 @@
 <!-- v281: «توزيع الفصول»: شريط أدوات واحد (المدرسة + تعديل الفصول + تقرير + حفظ واعتماد للموجه) بدل بطاقة «إدخال فصول المدرسة»، مؤشرات، شريط خطوات، سطر لكل معلم (شريط تقدّم + زيادة/متبقٍ برقم + فصوله شرائح بـ✕ لإلغاء الإسناد بعد التأكيد)، والفصول غير المسندة مجمّعة بالصف والمادة بأثر الإسناد؛ حُذف «الإسنادات الحالية». -->
 <!-- v280: «تعديل الفصول»: أُزيل القلم ✎؛ × لحذف الفصل غير المسند (تأكيد) و🔒 للمسند، للموجه (دالة supervisor_remove_class، migration v280) ولمدير النظام (adminDeleteClassConfirmed). -->
 <!-- v279: صفحة «الفصول» صار اسم تبويبها «تعديل الفصول»: صف أدوات واحد بجوار المرحلة (المدرسة + إضافة فصل + التوزيع + حفظ واعتماد + تقرير) وجدول واحد بالصفوف وشرائح الفصول بـ✎؛ حُذف العنوان الكبير وبطاقة الإدخال وزر «الفصول» المكرر والجدول التفصيلي، وملاحظة الثانوي في مدارس الثانوي فقط. -->
-<!-- v278: صفحة «معلمو مدارسي/المعلمون» (كل الأدوار عدا المعلم): حُذف العنوان الكبير، وأزرار الصفحة (إضافة معلم/الإجازات/توزيع العجز) أعلى المحتوى، و«تقارير ▾» + «تصدير Excel» في صف المرحلة/المدرسة، وزر «تقرير» صار «تقرير المعلمين (حسب الفلاتر)» داخل القائمة. -->
 <html lang="ar" dir="rtl">
 <head>
 <!-- إعداد: أ/ محمود عبدالمفدي محمد أبوالنجا | الصفة: معلم -->
@@ -16,7 +16,7 @@
 <script>/* v226: العنوان الموحد — انظر التعليق أعلى الملف */(function(){try{if(/\.github\.io$/.test(location.hostname)&&/^\/science-guidance\/?(index\.html)?$/.test(location.pathname)&&!/[?&]stay\b/.test(location.search))location.replace('https://teachers-data-portal.vercel.app/app/'+location.hash)}catch(e){}})();</script>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#152c43">
-<title>نظام توجيه العلوم — v287</title>
+<title>نظام توجيه العلوم — v288</title>
 <link rel="manifest" href="./manifest.webmanifest">
 <link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png">
 <link rel="apple-touch-icon" href="./icon-192.png">
@@ -2009,6 +2009,7 @@ body.v233-lock{overflow:hidden}
 @media(max-width:760px){.v284-bar .v284-row .field{flex:1 1 100%}}
 @media(max-width:760px){#content .auto-filter-options-row:has(> .v279-tools){grid-template-columns:1fr}#content .v279-tools{grid-column:1/-1;display:grid;grid-template-columns:1fr 1fr;gap:6px}#content .v279-tools .field{grid-column:1/-1;min-width:0!important}#content .v279-tools>.btn{width:100%;min-width:0;margin:0}
 .v285-classes .v110-table-scroll{overflow:visible}.v285-classes table.v274-table{min-width:0!important;display:block;border:0}.v285-classes table.v274-table thead{display:none}.v285-classes table.v274-table tbody{display:block}.v285-classes table.v274-table tr{display:grid;grid-template-columns:1fr auto auto;gap:6px 10px;align-items:center;border:1px solid #e2e8f0;border-radius:10px;padding:8px 10px;margin-bottom:8px;background:#fff}.v285-classes table.v274-table td{display:block;border:0!important;padding:0!important;background:none!important}.v285-classes table.v274-table td:nth-child(2){grid-column:1/-1;grid-row:2}.v285-classes table.v274-table td.v274-num{font-size:12px;color:#64748b;white-space:nowrap}.v285-classes table.v274-table td:nth-child(3):not(:empty)::after{content:" فصول"}.v285-classes table.v274-table td:nth-child(4):not(:empty)::after{content:" حصة"}.v285-classes .v274-chips{display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px}.v285-classes .v274-chip{display:flex;justify-content:center;align-items:center;min-width:0;margin:0;white-space:nowrap}}
+.v288-imgs{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px;margin:8px 0}.v288-imgs a{display:block;text-align:center;font-size:12px;color:var(--muted);text-decoration:none}.v288-imgs img{display:block;width:100%;height:150px;object-fit:cover;border-radius:8px;border:1px solid var(--line);margin-bottom:4px;background:#f7f9fc}
 </style>
 </head>
 <body>
@@ -2351,6 +2352,7 @@ window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();window.v152
 window.addEventListener('appinstalled',()=>{window.v152InstallPrompt=null;v152SyncInstallBtn()});
 if('serviceWorker' in navigator&&location.protocol!=='file:')window.addEventListener('load',()=>navigator.serviceWorker.register('./service-worker.js').catch(()=>{}));
 const V145_NEWS=[
+ ['v288','مدير النظام: شاشة «طلبات معلمي الأجر» لعرض الطلبات وإضافة المعلم إلى البرنامج بعد اختيار مدرسته.'],
  ['v287','منسق المرحلة: قائمة «المرحلة» تعرض مراحله فقط، فلا تظهر له مدارس مراحل غيره.'],
  ['v286','«تعديل الفصول» على الهاتف: 4 فصول في كل سطر بعرض متساوٍ.'],
  ['v285','«تعديل الفصول» على الهاتف: الأزرار في شبكة 2×2، والفصول بطاقة لكل صف بلا تمرير جانبي.'],
@@ -2464,7 +2466,7 @@ async function loadPage(force=false){
  if(currentPage==='studyPlans'||currentPage==='budget')currentPage='dashboard';
  if(currentPage==='reports'&&typeof V186_MERGED!=='undefined'&&V186_MERGED.has(profile?.role))currentPage='statistics'; // v186
  __pageLoadController?.abort();__pageLoadController=new AbortController();const local=__pageLoadController;
- const pages={teacherTimetable:teacherTimetablePage,dashboard:dashboardPage,users:usersPage,supervisors:supervisorsPage,schools:schoolsPage,incoming:incomingDataPage,teachers:teachersPage,classes:classesPage,assignments:assignmentsPage,approval:approvalPage,myAssignments:myAssignmentsPage,workload:workloadPage,budget:budgetPage,completion:dataCompletionPage,alerts:alertsPage,statistics:statisticsPage,reports:reportsPage,announcements:announcementsPage,supervisorHealth:supervisorHealthPage,supDistribution:supDistributionPage,schoolEntry:v236SchoolEntryPage};
+ const pages={paidRequests:v288Page,teacherTimetable:teacherTimetablePage,dashboard:dashboardPage,users:usersPage,supervisors:supervisorsPage,schools:schoolsPage,incoming:incomingDataPage,teachers:teachersPage,classes:classesPage,assignments:assignmentsPage,approval:approvalPage,myAssignments:myAssignmentsPage,workload:workloadPage,budget:budgetPage,completion:dataCompletionPage,alerts:alertsPage,statistics:statisticsPage,reports:reportsPage,announcements:announcementsPage,supervisorHealth:supervisorHealthPage,supDistribution:supDistributionPage,schoolEntry:v236SchoolEntryPage};
  const renderPage=pages[currentPage]||dashboardPage;
  const html=await v97RenderPage(renderPage,{force,signal:local.signal});if(local.signal.aborted)return;
  c.innerHTML=html;appNavRenderStrip();initializeCurrentPageUi(c);v97InstallStageFilter(c);enhanceMobileWorkspace(c);refreshMobileActionBar(c);if(currentPage==='dashboard')injectCompletionDashboardCards(c).catch(()=>{});
@@ -5504,7 +5506,7 @@ if(window.visualViewport)window.visualViewport.addEventListener('resize',()=>{if
 
 /* === الإصدار 2026.08.26.44: الخطط الدراسية + إزالة تكرار عناصر قائمة الموبايل === */
 const NAV={
- admin:[['dashboard','لوحة النظام','▦'],['alerts','التنبيهات','🔔'],['completion','استكمال البيانات','✎'],['users','الحسابات','◌'],['supervisors','الموجهون','◎'],['schools','المدارس','⌂'],['teachers','المعلمون','◉'],['approval','الاعتماد','✓'],['incoming','البيانات الواردة','⇩'],['workload','الأنصبة','Σ'],['supervisorHealth','فحص شاشة الموجه','⌁'],['statistics','الإحصائيات','◫'],['reports','التقارير','▤']],
+ admin:[['dashboard','لوحة النظام','▦'],['alerts','التنبيهات','🔔'],['completion','استكمال البيانات','✎'],['users','الحسابات','◌'],['supervisors','الموجهون','◎'],['schools','المدارس','⌂'],['teachers','المعلمون','◉'],['approval','الاعتماد','✓'],['incoming','البيانات الواردة','⇩'],['paidRequests','طلبات معلمي الأجر','📝'],['workload','الأنصبة','Σ'],['supervisorHealth','فحص شاشة الموجه','⌁'],['statistics','الإحصائيات','◫'],['reports','التقارير','▤']],
  first_supervisor:[['dashboard','لوحة الإدارة','▦'],['alerts','التنبيهات','🔔'],['supervisors','الموجهون','◎'],['schools','المدارس','⌂'],['teachers','المعلمون','◉'],['statistics','الإحصائيات','◫'],['reports','التقارير العامة','▤'],['announcements','الإعلانات','◈']],
  stage_coordinator:[['dashboard','لوحة منسق المرحلة','▦'],['alerts','التنبيهات','🔔'],['completion','استكمال البيانات','✎'],['supervisors','موجهو المرحلة','◎'],['schools','مدارس المرحلة','⌂'],['teachers','معلمو المرحلة','◉'],['statistics','الإحصائيات','◫'],['reports','تقارير المرحلة','▤']],
  supervisor:[['dashboard','لوحة الموجه','▦'],['alerts','التنبيهات','🔔'],['completion','استكمال البيانات','✎'],['supervisors','بيانات الموجه','◎'],['schools','مدارسي','⌂'],['teachers','معلمو مدارسي','◉'],['approval','الاعتمادات','✓'],['statistics','الإحصائيات','◫'],['reports','التقارير','▤']],
@@ -8530,6 +8532,124 @@ const __v281Avail=uxRenderAvailableClasses;uxRenderAvailableClasses=function(){r
 const __v281Sel=uxSelectAssignmentTeacher;uxSelectAssignmentTeacher=function(id){if(v281On()&&__assignmentUx){__assignmentUx.selectedTeacherId=id;return v281Render()}return __v281Sel(id)};
 const __v281Cur=v274RenderCurrentList;v274RenderCurrentList=function(){return v281On()?v281Render():__v281Cur()};
 /* v281-end */
+/* v288-begin: «طلبات معلمي الأجر» لمدير النظام — الطلبات من paid_teacher_applications (RLS: المشاهد المسجل فقط) + «إضافة إلى البرنامج» بمدرسة يختارها */
+(function(){try{if(String(location.hash||'')==='#/paidRequests')sessionStorage.setItem('v288Want','1')}catch(e){}})();
+const V288={apps:new Map(),tr:new Map(),schools:[]};
+const __v288BaseLoadContext=loadContext;
+loadContext=async function(){
+ const st=await __v288BaseLoadContext.apply(this,arguments);
+ let want=false;try{want=sessionStorage.getItem('v288Want')==='1'}catch(e){}
+ if(!want||st==='password')return st;
+ try{sessionStorage.removeItem('v288Want')}catch(e){}
+ if(!userRoles.includes('admin'))return st;
+ if(activeRole!=='admin'){AppDataStore.clear();activeRole='admin';try{sessionStorage.setItem('science_guidance_active_role','admin')}catch(e){}}
+ profile.role='admin';currentPage='paidRequests';
+ try{history.replaceState({scienceGuidance:true,page:'paidRequests'},'',appNavRoute('paidRequests'))}catch(e){}
+ return 'ready';
+};
+function v288Digits(v){return String(v??'').replace(/[٠-٩]/g,d=>'٠١٢٣٤٥٦٧٨٩'.indexOf(d)).replace(/\D/g,'')}
+function v288Norm(v){return String(v||'').replace(/[أإآ]/g,'ا').replace(/ة/g,'ه').replace(/ى/g,'ي').replace(/\s+/g,' ').trim()}
+function v288AppSchool(a){return a.current_school==='أخرى'?(a.current_school_other||'أخرى'):(a.current_school||'')}
+function v288SchoolName(id){return (V288.schools.find(x=>x.id===id)||{}).name||'—'}
+function v288Status(a){
+ const t=V288.tr.get(v288Digits(a.civil_id));
+ if(!t)return {added:false,html:'<span class="badge warn">غير مضاف</span>'};
+ return {added:true,html:`<span class="badge ${t.active?'ok':'info'}">في البرنامج${t.active?'':' (موقوف)'}</span><div class="cell-sub">${esc(v288SchoolName(t.home_school_id))} — ${t.work_type==='paid'?'بالأجر':'ثابت'}</div>`};
+}
+async function v288Page(){
+ if(profile?.role!=='admin')return '<div class="notice warn">هذه الشاشة لمدير النظام فقط.</div>';
+ const [ar,sr]=await Promise.all([
+  sb.from('paid_teacher_applications').select('*').order('created_at',{ascending:false}),
+  sb.from('schools').select('id,name,stage').order('name')
+ ]);
+ if(ar.error)return `<div class="notice danger">تعذّر تحميل الطلبات: ${esc(ar.error.message)}</div>`;
+ if(sr.error)return `<div class="notice danger">تعذّر تحميل المدارس: ${esc(sr.error.message)}</div>`;
+ V288.schools=sr.data||[];
+ const byCivil=new Map();
+ (ar.data||[]).forEach(a=>{const k=v288Digits(a.civil_id)||a.id,p=byCivil.get(k);if(!p||String(a.updated_at||a.created_at||'')>String(p.updated_at||p.created_at||''))byCivil.set(k,a)});
+ const list=[...byCivil.values()];
+ if(!list.length){
+  const v=await sb.rpc('paid_teacher_is_viewer');
+  if(v.data===false)return '<div class="notice warn">حسابك غير مسجّل ضمن من يحق لهم عرض طلبات معلمي الأجر.</div>';
+ }
+ V288.apps=new Map(list.map(a=>[a.id,a]));
+ V288.tr=new Map();
+ const civils=[...new Set(list.map(a=>v288Digits(a.civil_id)).filter(Boolean))];
+ for(let i=0;i<civils.length;i+=100){
+  const r=await sb.from('teacher_records').select('id,civil_id,full_name,work_type,home_school_id,active').in('civil_id',civils.slice(i,i+100));
+  if(r.error)return `<div class="notice danger">تعذّر مطابقة الطلبات مع المعلمين: ${esc(r.error.message)}</div>`;
+  (r.data||[]).forEach(t=>V288.tr.set(v288Digits(t.civil_id),t));
+ }
+ const rows=list.map(a=>({a,st:v288Status(a)})).sort((x,y)=>(x.st.added-y.st.added)||String(y.a.created_at||'').localeCompare(String(x.a.created_at||'')));
+ const added=rows.filter(r=>r.st.added).length;
+ const body=rows.map((r,i)=>{const a=r.a;return `<tr><td>${i+1}</td><td><b>${esc(a.full_name||'—')}</b></td><td>${esc(a.civil_id||'')}</td><td>${esc(a.phone||'')}</td><td>${esc(a.basic_name||'—')}<div class="cell-sub">${esc(a.basic_major||'')}</div></td><td>${esc(v288AppSchool(a)||'—')}</td><td>${esc(String(a.created_at||'').slice(0,10))}</td><td>${r.st.html}</td><td><div class="actions" style="gap:5px;flex-wrap:wrap"><button class="btn secondary" type="button" onclick="v288Open('${a.id}')">عرض</button>${r.st.added?'':`<button class="btn primary" type="button" onclick="v288AddForm('${a.id}')">إضافة إلى البرنامج</button>`}</div></td></tr>`}).join('');
+ return `<div class="page-head"><div><h2>طلبات معلمي الأجر</h2><p>الطلبات الواردة من نموذج التقدم للتعاقد. «إضافة إلى البرنامج» تنشئ بطاقة معلم بالأجر في المدرسة التي تختارها، ولا تتكرر الإضافة لرقم قومي موجود.</p></div></div>
+ <div class="grid4" style="margin:10px 0"><div class="card stat-card"><div class="stat-label">إجمالي الطلبات</div><div class="stat-value">${rows.length}</div></div><div class="card stat-card"><div class="stat-label">في البرنامج</div><div class="stat-value">${added}</div></div><div class="card stat-card"><div class="stat-label">غير مضاف</div><div class="stat-value">${rows.length-added}</div></div></div>
+ <div class="card"><div class="table-wrap"><table class="table" id="v288Table"><thead><tr><th>م</th><th>الاسم</th><th>الرقم القومي</th><th>الهاتف</th><th>المؤهل / التخصص</th><th>المدرسة في الطلب</th><th>تاريخ الطلب</th><th>الحالة</th><th>إجراء</th></tr></thead><tbody>${body||'<tr><td colspan="9">لا توجد طلبات.</td></tr>'}</tbody></table></div></div>`;
+}
+function v288Row(l,v){return v===null||v===undefined||v===''?'':`<tr><th>${esc(l)}</th><td>${esc(v)}</td></tr>`}
+function v288Pct(v){return v===null||v===undefined||v===''?'':v+'%'}
+function v288Imgs(a){return ['basic','diploma','master','phd'].flatMap(p=>(Array.isArray(a[p+'_images'])?a[p+'_images']:[]).filter(Boolean).map(path=>({p,path})))}
+function v288Open(id){
+ const a=V288.apps.get(id);if(!a)return;
+ const st=v288Status(a),imgs=v288Imgs(a);
+ const sec=(title,rows)=>{const b=rows.join('');return b?`<h4>${esc(title)}</h4><div class="table-wrap"><table class="table" style="min-width:0"><tbody>${b}</tbody></table></div>`:''};
+ const q=(p,title,major)=>sec(title,[major?v288Row('التخصص',a[p+'_major']):'',v288Row('الجهة',a[p+'_institution']),v288Row('السنة',a[p+'_year']),v288Row('التقدير',a[p+'_grade']),v288Row('النسبة',v288Pct(a[p+'_percentage']))]);
+ modal(`<h3>طلب معلم بالأجر — ${esc(a.full_name||'')}</h3><div style="margin-bottom:8px">${st.html}</div>
+ ${sec('البيانات الأساسية',[v288Row('الاسم',a.full_name),v288Row('الرقم القومي',a.civil_id),v288Row('الهاتف',a.phone),v288Row('المدرسة الحالية',v288AppSchool(a)),v288Row('منتدب',a.is_delegated===true?'نعم':a.is_delegated===false?'لا':''),v288Row('مدرسة الانتداب',a.is_delegated?a.delegated_school:''),v288Row('تاريخ التقديم',String(a.created_at||'').slice(0,10)),v288Row('آخر تعديل',String(a.updated_at||'').slice(0,10)),v288Row('مرات التعديل',a.edit_count)])}
+ ${sec('المؤهل الأساسي',[v288Row('المؤهل',a.basic_name),v288Row('التخصص',a.basic_major),v288Row('الجهة',a.basic_institution),v288Row('السنة',a.basic_year),v288Row('التقدير',a.basic_grade),v288Row('النسبة',v288Pct(a.basic_percentage))])}
+ ${a.has_diploma?q('diploma','الدبلوم',false):''}${a.has_master?q('master','الماجستير',true):''}${a.has_phd?q('phd','الدكتوراه',true):''}
+ ${imgs.length?`<div id="v288Imgs"><button class="btn secondary" type="button" onclick="v288ShowImgs('${a.id}')">عرض صور الشهادات (${imgs.length})</button></div>`:''}
+ <div class="actions">${st.added?'':`<button class="btn primary" type="button" onclick="v288AddForm('${a.id}')">إضافة إلى البرنامج</button>`}<button class="btn secondary" type="button" onclick="closeModal()">إغلاق</button></div>`);
+}
+async function v288ShowImgs(id){
+ const a=V288.apps.get(id),box=document.getElementById('v288Imgs');if(!a||!box)return;
+ const imgs=v288Imgs(a),L={basic:'المؤهل الأساسي',diploma:'الدبلوم',master:'الماجستير',phd:'الدكتوراه'};
+ box.innerHTML='<div class="cell-sub">جارٍ تحميل الصور…</div>';
+ const {data,error}=await sb.storage.from('paid-teacher-docs').createSignedUrls(imgs.map(x=>x.path),3600);
+ if(error){box.innerHTML=`<div class="notice danger">تعذّر تحميل الصور: ${esc(error.message)}</div>`;return}
+ box.innerHTML=`<h4>صور الشهادات</h4><div class="v288-imgs">${(data||[]).map((d,i)=>d&&d.signedUrl?`<a href="${esc(d.signedUrl)}" target="_blank" rel="noopener"><img src="${esc(d.signedUrl)}" alt="${esc(L[imgs[i].p])}" loading="lazy"><span>${esc(L[imgs[i].p])}</span></a>`:'').join('')}</div>`;
+}
+function v288AddForm(id){
+ const a=V288.apps.get(id);if(!a)return;
+ if(V288.tr.has(v288Digits(a.civil_id)))return toast('هذا المعلم موجود في البرنامج بالفعل');
+ const want=v288Norm(v288AppSchool(a)),pre=(V288.schools.find(x=>v288Norm(x.name)===want)||{}).id||'';
+ modal(`<h3>إضافة إلى البرنامج — معلم بالأجر</h3>
+ <form id="v288AddForm" onsubmit="v288Add(event,'${a.id}')"><div class="form-grid">
+ <div class="field"><label>المدرسة *</label><select name="school_id" required><option value="">— اختر المدرسة —</option>${V288.schools.map(x=>`<option value="${x.id}" ${x.id===pre?'selected':''}>${esc(x.name)} — ${esc(x.stage||'')}</option>`).join('')}</select><small>في الطلب: ${esc(v288AppSchool(a)||'—')}${a.is_delegated&&a.delegated_school?` — منتدب إلى: ${esc(a.delegated_school)}`:''}</small></div>
+ <div class="field"><label>الاسم الكامل *</label><input name="full_name" value="${esc(a.full_name||'')}" required maxlength="150"></div>
+ <div class="field"><label>الرقم القومي</label><input value="${esc(a.civil_id||'')}" disabled></div>
+ <div class="field"><label>الهاتف</label><input name="phone" value="${esc(a.phone||'')}" inputmode="tel"></div>
+ <div class="field"><label>المؤهل</label><input name="qualification" value="${esc(a.basic_name||'')}" maxlength="160"></div>
+ <div class="field"><label>التخصص</label><input name="specialty" value="${esc(a.basic_major||'')}" maxlength="120"></div>
+ <div class="field"><label>سنة المؤهل</label><input name="qualification_year" value="${esc(a.basic_year||'')}" inputmode="numeric" maxlength="4"></div>
+ <div class="field"><label>نوع العمل</label><input value="بالأجر" disabled></div>
+ </div><div class="actions"><button type="submit" class="btn primary" id="v288Save">إضافة المعلم</button><button type="button" class="btn secondary" onclick="closeModal()">إلغاء</button></div></form>`);
+}
+async function v288Add(e,id){
+ e.preventDefault();
+ const a=V288.apps.get(id),form=e.target,btn=document.getElementById('v288Save');if(!a)return;
+ const g=n=>String(form.elements.namedItem(n)?.value||'').trim();
+ const civil=v288Digits(a.civil_id),school=g('school_id'),name=g('full_name'),yr=v288Digits(g('qualification_year')),year=yr?Number(yr):null;
+ if(civil.length!==14)return toast('الرقم القومي في الطلب ليس 14 رقمًا؛ لا يمكن الإضافة');
+ if(!school)return toast('اختر المدرسة');
+ if(!name)return toast('الاسم مطلوب');
+ if(year!==null&&!(year>=1950&&year<=2100))return toast('سنة المؤهل غير صحيحة');
+ if(!activeYear?.id||!activeTerm?.id)return toast('لا توجد سنة أو فترة دراسية مفعلة');
+ if(btn){btn.disabled=true;btn.textContent='جارٍ الإضافة…'}
+ try{
+  const ex=await sb.from('teacher_records').select('id').eq('civil_id',civil).maybeSingle();if(ex.error)throw ex.error;
+  if(ex.data)throw new Error('الرقم القومي موجود في البرنامج بالفعل');
+  const ins=await sb.from('teacher_records').insert({civil_id:civil,full_name:name,phone:v288Digits(g('phone'))||null,work_type:'paid',home_school_id:school,is_senior_teacher:false,active:true,qualification:g('qualification')||null,specialty:g('specialty')||null,qualification_year:year}).select('id').single();
+  if(ins.error)throw ins.error;
+  const link=await sb.from('teacher_school_assignments').insert({teacher_id:ins.data.id,school_id:school,academic_year_id:activeYear.id,term_id:activeTerm.id,is_home_school:true,active:true});
+  closeModal();
+  toast(link.error?'أُنشئت بطاقة المعلم، لكن تعذّر ربطه بالمدرسة للفصل الحالي: '+link.error.message:`أُضيف ${name} إلى البرنامج — ${v288SchoolName(school)}`);
+  invalidateData('teachers','hierarchy','dashboard','assignments','page:reports');
+  loadPage(true).catch(moneySafeError);
+ }catch(err){if(btn){btn.disabled=false;btn.textContent='إضافة المعلم'}moneySafeError(err)}
+}
+/* v288-end */
 
 function v110DossierMarkup(d){
  const id=esc(String(d.school.id)),schedule=v110ScheduleRows(d),periods=reportNumber(d.config.periods_per_day)||7,isAdminV128=profile?.role==='admin';
