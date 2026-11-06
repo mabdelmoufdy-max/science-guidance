@@ -1,4 +1,5 @@
 <!doctype html>
+<!-- v291: الاعتماد لموجه المدرسة وحده (قاعدة البيانات v291 + دالة الحافة supervisor-save-and-approve v4 لموجه المادة في الثانوي): أُلغي مدير المدرسة من الاعتماد؛ تبويب «الاعتماد» للمنسق، والمنسق ومدير النظام يتابعان ويعيدان للتعديل (ولو بعد الاعتماد) ولا يعتمدان؛ أُزيلت قائمة «جهة الاعتماد» من المدارس ونموذج إضافة مدرسة. -->
 <!-- v290: «طلبات معلمي الأجر»: حقل بحث المدرسة داخل بطاقة كل طلب غير مضاف فوق «إضافة إلى البرنامج» (datalist v288SchoolListPage)، والزر يطلب تأكيدًا واحدًا ثم يضيف ببيانات الطلب بلا نافذة (v288QuickAdd)؛ نافذة «عرض» وزرها بلا تغيير. شريط البحث في هذه الشاشة فقط لم يعد ثابتًا عند التمرير. -->
 <!-- v289: «طلبات معلمي الأجر» ← «إضافة إلى البرنامج»: لا تُختار المدرسة مسبقًا من مدرسة الطلب (قد لا تكون مدرسة الإضافة)، وحقل المدرسة صار بحثًا بالكتابة (input + datalist بنمط نافذة الانتداب v215؛ v288PickSchool) ومدرسة الطلب تظهر بين قوسين في عنوان الحقل للمعلومة فقط (.field small مخفية عامًا). -->
 <!-- v288: شاشة «طلبات معلمي الأجر» لمدير النظام (NAV admin: paidRequests؛ كتلة v288): الطلبات من paid_teacher_applications (قراءة للمشاهد المسجل فقط) مع حالة كل طلب بمطابقة الرقم القومي في teacher_records، وتفاصيل الطلب وصور الشهادات (روابط موقعة من paid-teacher-docs)، وزر «إضافة إلى البرنامج» ينشئ بطاقة معلم بالأجر بمدرسة يختارها + ربطه بالمدرسة للفصل الحالي. الرابط المباشر #/paidRequests يختار دور مدير النظام تلقائيًا. بلا تغيير في قاعدة البيانات. -->
@@ -8,7 +9,6 @@
 <!-- v284: «جدول المعلم»: أعلى الصفحة صف واحد (المرحلة + المدرسة + المعلم + تحديث + معاينة وطباعة) بلا عنوان؛ بطاقة «أيام الدراسة وحصص المدرسة» صارت سطرًا يعرض القيم وزر «تعديل» يُظهر الحقلين وزر الحفظ (نفس المعرفات)؛ شارة «في الجدول X من Y» تنتقل لسطر الإعدادات (v284SyncBadge). -->
 <!-- v283: «توزيع الفصول»: «المطلوب» لكل معلم ثابت = النصاب − الإشراف − الريادة (للمنتدب جزئيًا في المدرستين: global_*) بلا تقريب لعدد الفصول، والحالة = النصاب − (تدريس + إشراف + ريادة) كقاعدة البيانات والتقارير؛ «حد أقصى» لا يظهر متبقيًا. مثال: نصاب 19 = 16 + 2 + 1 ← مكتمل. -->
 <!-- v282: «توزيع الفصول»: حالة المعلم المنتدب جزئيًا (زيادة/متبقٍ/مكتمل وشريط التقدّم وأثر الإسناد) تُحسب على تدريسه الكلي في المدرستين (global_teaching_periods) مع بيان «N هنا + M بمدرسة أخرى» و«منتدب جزئيًا». -->
-<!-- v281: «توزيع الفصول»: شريط أدوات واحد (المدرسة + تعديل الفصول + تقرير + حفظ واعتماد للموجه) بدل بطاقة «إدخال فصول المدرسة»، مؤشرات، شريط خطوات، سطر لكل معلم (شريط تقدّم + زيادة/متبقٍ برقم + فصوله شرائح بـ✕ لإلغاء الإسناد بعد التأكيد)، والفصول غير المسندة مجمّعة بالصف والمادة بأثر الإسناد؛ حُذف «الإسنادات الحالية». -->
 <html lang="ar" dir="rtl">
 <head>
 <!-- إعداد: أ/ محمود عبدالمفدي محمد أبوالنجا | الصفة: معلم -->
@@ -16,7 +16,7 @@
 <script>/* v226: العنوان الموحد — انظر التعليق أعلى الملف */(function(){try{if(/\.github\.io$/.test(location.hostname)&&/^\/science-guidance\/?(index\.html)?$/.test(location.pathname)&&!/[?&]stay\b/.test(location.search))location.replace('https://teachers-data-portal.vercel.app/app/'+location.hash)}catch(e){}})();</script>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#152c43">
-<title>نظام توجيه العلوم — v290</title>
+<title>نظام توجيه العلوم — v291</title>
 <link rel="manifest" href="./manifest.webmanifest">
 <link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png">
 <link rel="apple-touch-icon" href="./icon-192.png">
@@ -2356,6 +2356,7 @@ window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();window.v152
 window.addEventListener('appinstalled',()=>{window.v152InstallPrompt=null;v152SyncInstallBtn()});
 if('serviceWorker' in navigator&&location.protocol!=='file:')window.addEventListener('load',()=>navigator.serviceWorker.register('./service-worker.js').catch(()=>{}));
 const V145_NEWS=[
+ ['v291','الاعتماد صار لموجه المدرسة وحده (أُلغي مدير المدرسة). المنسق له تبويب «الاعتماد» يتابع فيه مدارس مرحلته ويعيد أي مدرسة للتعديل مع السبب، ومدير النظام كذلك. موجه المادة في الثانوي يعتمد من «الحفظ والاعتماد».'],
  ['v290','طلبات معلمي الأجر: اختيار المدرسة داخل بطاقة الطلب ثم «إضافة إلى البرنامج» بتأكيد واحد، وشريط البحث لا يثبت أعلى الشاشة.'],
  ['v289','طلبات معلمي الأجر: المدرسة لا تُختار تلقائيًا من الطلب، وتختارها بالبحث بالكتابة عند الإضافة.'],
  ['v288','مدير النظام: شاشة «طلبات معلمي الأجر» لعرض الطلبات وإضافة المعلم إلى البرنامج بعد اختيار مدرسته.'],
@@ -2680,14 +2681,7 @@ async function schoolsPage(){
              <td><b>${visibleClassCount(sc)}</b></td>
              <td>${supervisorCell}</td>
              <td>
-               ${canConfigure
-                 ? `<select class="compact-select" onchange="setApprovalAuthority('${sc.id}',this.value)">
-                     <option value="school_manager" ${sc.approval_authority==='school_manager'?'selected':''}>مدير المدرسة</option>
-                     <option value="supervisor" ${sc.approval_authority==='supervisor'?'selected':''}>موجه المدرسة</option>
-                     <option value="admin" ${sc.approval_authority==='admin'?'selected':''}>مدير النظام</option>
-                   </select>`
-                 : `<span class="badge info">${approvalAuthorityLabel(sc.approval_authority)}</span>`
-               }
+               <span class="badge info">${approvalAuthorityLabel(sc.approval_authority)}</span>
              </td>
              <td>${statusBadge(sc.status)}</td>
              ${canEdit
@@ -2709,7 +2703,7 @@ async function schoolsPage(){
  </div>`;
 }
 
-function schoolForm(){if(profile?.role!=='admin')return toast('إضافة المدارس متاحة لمدير النظام فقط');modal(`<h3>إضافة مدرسة</h3><div class="notice info">سيُنشئ النظام معرفًا داخليًا ثابتًا وفريدًا للمدرسة تلقائيًا. لا يوجد كود مدرسة يدوي.</div><form onsubmit="saveSchool(event)"><div class="form-grid"><div class="field"><label>اسم المدرسة الرسمي</label><input name="name" required></div><div class="field"><label>المرحلة</label><select name="stage"><option>ابتدائي</option><option>إعدادي</option><option>ثانوي عام</option><option>ثانوي صناعي</option></select></div><div class="field"><label>النوع</label><select name="gender_type"><option>بنين</option><option>بنات</option><option>مشترك</option></select></div><div class="field"><label>عدد الفصول</label><input name="class_count" type="number" min="0" value="0"></div><div class="field"><label>جهة الاعتماد النهائي</label><select name="approval_authority"><option value="school_manager">مدير المدرسة</option><option value="supervisor">موجه المدرسة</option><option value="admin">مدير النظام</option></select></div><div class="field"><label>العنوان</label><input name="address"></div><div class="field"><label>الهاتف</label><input name="phone"></div></div><div class="actions"><button class="btn primary">حفظ</button><button type="button" class="btn secondary" onclick="closeModal()">إلغاء</button></div></form>`)}
+function schoolForm(){if(profile?.role!=='admin')return toast('إضافة المدارس متاحة لمدير النظام فقط');modal(`<h3>إضافة مدرسة</h3><div class="notice info">سيُنشئ النظام معرفًا داخليًا ثابتًا وفريدًا للمدرسة تلقائيًا. لا يوجد كود مدرسة يدوي.</div><form onsubmit="saveSchool(event)"><div class="form-grid"><div class="field"><label>اسم المدرسة الرسمي</label><input name="name" required></div><div class="field"><label>المرحلة</label><select name="stage"><option>ابتدائي</option><option>إعدادي</option><option>ثانوي عام</option><option>ثانوي صناعي</option></select></div><div class="field"><label>النوع</label><select name="gender_type"><option>بنين</option><option>بنات</option><option>مشترك</option></select></div><div class="field"><label>عدد الفصول</label><input name="class_count" type="number" min="0" value="0"></div><input type="hidden" name="approval_authority" value="supervisor"><div class="field"><label>العنوان</label><input name="address"></div><div class="field"><label>الهاتف</label><input name="phone"></div></div><div class="actions"><button class="btn primary">حفظ</button><button type="button" class="btn secondary" onclick="closeModal()">إلغاء</button></div></form>`)}
 
 /* v268: اسم مدير المدرسة وهاتفه (school_manager_contact) — الحفظ عبر set_school_manager_contact للمدير والمنسق والموجه */
 function v268MgrLine(sc){const c=(window.V268_MGR||{})[sc.id]||{},can=['admin','stage_coordinator','supervisor'].includes(profile.role);
@@ -3811,6 +3805,8 @@ let __approvalFilter='mine';
 let __approvalCenter=null;
 let __approvalReturnPreset='';
 
+/* v291: الاعتماد لموجه المدرسة وحده؛ مدير النظام والمنسق متابعة وإعادة للتعديل فقط */
+function v291Monitor(role=profile?.role){return role==='admin'||role==='stage_coordinator'}
 function approvalAuthorityForRole(role=profile?.role){
  if(role==='admin')return 'admin';
  if(role==='supervisor')return 'supervisor';
@@ -3824,13 +3820,15 @@ function approvalStateForUser(school,sub,role=profile?.role){
  const exactAuthority=!!authority&&school?.approval_authority===authority;
  const sameAccount=!!sub?.submitted_by&&String(sub.submitted_by)===String(profile?.id);
  const canSelfIntervene=role==='admin';
- const mine=pending&&exactAuthority&&(!sameAccount||canSelfIntervene);
+ const monitor=v291Monitor(role);
+ const mine=!monitor&&pending&&exactAuthority&&(!sameAccount||canSelfIntervene);
  let bucket='other';
  if(status==='returned_for_edit')bucket='returned';
- else if(mine)bucket='mine';
- else if(pending)bucket='other';
+ else if(mine||(monitor&&pending))bucket='mine';
  else bucket='other';
- return {bucket,mine,pending,status,exactAuthority,sameAccount,authority};
+ const otherListed=monitor?status==='approved':pending;
+ const canReturn=monitor?(pending||status==='approved'):mine;
+ return {bucket,mine,pending,status,exactAuthority,sameAccount,authority,monitor,otherListed,canReturn};
 }
 function approvalOpenCenterFromDashboard(expected=0){
  try{sessionStorage.setItem('approval_expected_mine_v70',String(Number(expected)||0))}catch{}
@@ -3845,15 +3843,15 @@ function approvalSetFilter(filter){
 function approvalCenterCounts(items){
  return {
   mine:items.filter(x=>x.state.bucket==='mine').length,
-  other:items.filter(x=>x.state.bucket==='other'&&x.state.pending).length,
+  other:items.filter(x=>x.state.bucket==='other'&&x.state.otherListed).length,
   returned:items.filter(x=>x.state.bucket==='returned').length
  };
 }
 function approvalCenterCardHtml(item){
  const s=item.school,sub=item.sub,state=item.state;
  const when=sub?.submitted_at?new Date(sub.submitted_at).toLocaleString('ar-EG'):'—';
- const badge=state.bucket==='mine'?'<span class="badge warn">ينتظر اعتمادك</span>':state.bucket==='returned'?'<span class="badge danger">معاد للتعديل</span>':'<span class="badge info">بانتظار جهة أخرى</span>';
- const action=state.bucket==='mine'
+ const badge=state.monitor?(state.bucket==='mine'?'<span class="badge warn">بانتظار اعتماد الموجه</span>':state.bucket==='returned'?'<span class="badge danger">معاد للتعديل</span>':'<span class="badge ok">معتمدة</span>'):state.bucket==='mine'?'<span class="badge warn">ينتظر اعتمادك</span>':state.bucket==='returned'?'<span class="badge danger">معاد للتعديل</span>':'<span class="badge info">بانتظار جهة أخرى</span>';
+ const action=state.bucket==='mine'&&!state.monitor
    ? `<button class="btn primary" type="button" onclick="approvalOpenRequest('${s.id}')">مراجعة الطلب</button>`
    : `<button class="btn secondary" type="button" onclick="approvalOpenRequest('${s.id}')">عرض التفاصيل</button>`;
  return `<article class="approval-request-card" data-school="${s.id}">
@@ -3871,10 +3869,11 @@ function approvalCenterBodyHtml(center,filter=__approvalFilter){
  const items=center.items.filter(x=>{
   if(filter==='mine')return x.state.bucket==='mine';
   if(filter==='returned')return x.state.bucket==='returned';
-  return x.state.bucket==='other'&&x.state.pending;
+  return x.state.bucket==='other'&&x.state.otherListed;
  });
  if(!items.length){
-  const msg=filter==='mine'?'لا توجد طلبات تنتظر اعتمادك الآن.':filter==='returned'?'لا توجد طلبات معادة للتعديل.':'لا توجد طلبات معلقة عند جهة اعتماد أخرى.';
+  const mon=v291Monitor();
+  const msg=filter==='mine'?(mon?'لا توجد مدارس بانتظار اعتماد الموجه.':'لا توجد طلبات تنتظر اعتمادك الآن.'):filter==='returned'?'لا توجد طلبات معادة للتعديل.':(mon?'لا توجد مدارس معتمدة.':'لا توجد طلبات معلقة عند جهة اعتماد أخرى.');
   return `<div class="approval-empty">✓ ${msg}</div>`;
  }
  return `<div class="approval-list">${items.map(approvalCenterCardHtml).join('')}</div>`;
@@ -3907,7 +3906,8 @@ async function approvalOpenRequest(schoolId){
   try{safety=await approvalSafetyCheck(sub.id)}catch(e){return moneySafeError(e)}
  }
  const blockers=safety.blockers||[],warnings=safety.warnings||[],passed=safety.passed||[];
- const canAct=state.bucket==='mine'&&sub.status==='pending_manager_approval';
+ const canAct=!state.monitor&&state.bucket==='mine'&&sub.status==='pending_manager_approval';
+ const canRet=state.monitor?!!state.canReturn:canAct;
  const issues=[...blockers,...warnings].slice(0,4).map(approvalSafetyItemHtml).join('');
  modal(`<div class="modal-head"><h3>${esc(s.name)}</h3><button class="close" onclick="closeModal()">×</button></div>
   <div class="approval-detail-summary">
@@ -3917,9 +3917,9 @@ async function approvalOpenRequest(schoolId){
   </div>
   <div class="notice ${blockers.length?'danger':warnings.length?'warn':'ok'}">${blockers.length?'يلزم التصحيح قبل الاعتماد.':warnings.length?'يمكن الاعتماد بعد مراجعة التحذيرات.':'✓ البيانات سليمة'}</div>
   ${issues?`<div class="approval-safety-list">${issues}</div>`:''}
-  ${!canAct?`<div class="notice info">هذا الطلب ليس مطلوبًا لاعتماد حسابك حاليًا. جهة الاعتماد: <b>${esc(approvalAuthorityLabel(s.approval_authority))}</b>.</div>`:''}
+  ${state.monitor?`<div class="notice info">الاعتماد لموجه المدرسة. ${canRet?'يمكنك إعادة المدرسة للتعديل مع ذكر السبب.':''}</div>`:!canAct?`<div class="notice info">هذا الطلب ليس مطلوبًا لاعتماد حسابك حاليًا. جهة الاعتماد: <b>${esc(approvalAuthorityLabel(s.approval_authority))}</b>.</div>`:''}
   <div class="actions">
-   ${canAct?`<button class="btn ok" ${blockers.length?'disabled':''} onclick="approveSchool('${sub.id}',${sub.row_version??'null'})">اعتماد</button><button class="btn danger" onclick="returnSchool('${sub.id}',${sub.row_version??'null'})">إعادة للتعديل</button>`:''}
+   ${canAct?`<button class="btn ok" ${blockers.length?'disabled':''} onclick="approveSchool('${sub.id}',${sub.row_version??'null'})">اعتماد</button>`:''}${canRet?`<button class="btn danger" onclick="returnSchool('${sub.id}',${sub.row_version??'null'})">إعادة للتعديل</button>`:''}
    <button class="btn secondary" onclick="previewApprovalDistribution('${s.id}',${handlerArg(s.name)})">معاينة التوزيع</button>
    <button class="btn secondary" onclick="closeModal()">إغلاق</button>
   </div>`);
@@ -3940,7 +3940,7 @@ function approvalReturnReasonPick(label){
  const ta=document.getElementById('returnReason');if(ta&&label!=='سبب آخر')ta.value=label;
 }
 async function approvalPage(){
- if(['admin','supervisor'].includes(profile.role)){
+ if(['admin','supervisor','stage_coordinator'].includes(profile.role)){
   let center=await loadApprovalCenterData();
   let expected=0;try{expected=Number(sessionStorage.getItem('approval_expected_mine_v70')||0)}catch{}
   if(expected>0&&center.counts.mine===0){
@@ -3951,11 +3951,11 @@ async function approvalPage(){
   __approvalCenter=center;
   const c=center.counts;
   return `<div class="approval-center">
-   <div class="page-head"><div><h2>مركز الاعتماد</h2><p>كل العدادات والطلبات تعتمد نفس محرك الحالة والصلاحيات.</p></div><div class="actions"><button class="btn secondary" onclick="refreshCurrentPage({invalidate:['approvals','dashboard','alerts']})">تحديث</button></div></div>
+   <div class="page-head"><div><h2>مركز الاعتماد</h2><p>${v291Monitor()?'الاعتماد لموجه المدرسة وحده. يمكنك متابعة المدارس وإعادة أي مدرسة للتعديل مع ذكر السبب، ولو بعد اعتمادها.':'كل العدادات والطلبات تعتمد نفس محرك الحالة والصلاحيات.'}</p></div><div class="actions"><button class="btn secondary" onclick="refreshCurrentPage({invalidate:['approvals','dashboard','alerts']})">تحديث</button></div></div>
    ${expected>0&&c.mine===0?`<div class="notice warn approval-consistency">تمت إعادة قراءة الطلبات تلقائيًا بسبب اختلاف سابق بين العداد والقائمة.</div>`:''}
    <div class="approval-center-summary">
-    <button class="approval-filter-card mine ${__approvalFilter==='mine'?'active':''}" data-filter="mine" onclick="approvalSetFilter('mine')"><b>${c.mine}</b><span>ينتظر اعتمادي</span></button>
-    <button class="approval-filter-card other ${__approvalFilter==='other'?'active':''}" data-filter="other" onclick="approvalSetFilter('other')"><b>${c.other}</b><span>بانتظار جهة أخرى</span></button>
+    <button class="approval-filter-card mine ${__approvalFilter==='mine'?'active':''}" data-filter="mine" onclick="approvalSetFilter('mine')"><b>${c.mine}</b><span>${v291Monitor()?'بانتظار اعتماد الموجه':'ينتظر اعتمادي'}</span></button>
+    <button class="approval-filter-card other ${__approvalFilter==='other'?'active':''}" data-filter="other" onclick="approvalSetFilter('other')"><b>${c.other}</b><span>${v291Monitor()?'معتمدة':'بانتظار جهة أخرى'}</span></button>
     <button class="approval-filter-card returned ${__approvalFilter==='returned'?'active':''}" data-filter="returned" onclick="approvalSetFilter('returned')"><b>${c.returned}</b><span>معاد للتعديل</span></button>
    </div>
    <div id="approvalCenterBody">${approvalCenterBodyHtml(center,__approvalFilter)}</div>
@@ -5514,7 +5514,7 @@ if(window.visualViewport)window.visualViewport.addEventListener('resize',()=>{if
 const NAV={
  admin:[['dashboard','لوحة النظام','▦'],['alerts','التنبيهات','🔔'],['completion','استكمال البيانات','✎'],['users','الحسابات','◌'],['supervisors','الموجهون','◎'],['schools','المدارس','⌂'],['teachers','المعلمون','◉'],['approval','الاعتماد','✓'],['incoming','البيانات الواردة','⇩'],['paidRequests','طلبات معلمي الأجر','📝'],['workload','الأنصبة','Σ'],['supervisorHealth','فحص شاشة الموجه','⌁'],['statistics','الإحصائيات','◫'],['reports','التقارير','▤']],
  first_supervisor:[['dashboard','لوحة الإدارة','▦'],['alerts','التنبيهات','🔔'],['supervisors','الموجهون','◎'],['schools','المدارس','⌂'],['teachers','المعلمون','◉'],['statistics','الإحصائيات','◫'],['reports','التقارير العامة','▤'],['announcements','الإعلانات','◈']],
- stage_coordinator:[['dashboard','لوحة منسق المرحلة','▦'],['alerts','التنبيهات','🔔'],['completion','استكمال البيانات','✎'],['supervisors','موجهو المرحلة','◎'],['schools','مدارس المرحلة','⌂'],['teachers','معلمو المرحلة','◉'],['statistics','الإحصائيات','◫'],['reports','تقارير المرحلة','▤']],
+ stage_coordinator:[['dashboard','لوحة منسق المرحلة','▦'],['alerts','التنبيهات','🔔'],['completion','استكمال البيانات','✎'],['supervisors','موجهو المرحلة','◎'],['schools','مدارس المرحلة','⌂'],['teachers','معلمو المرحلة','◉'],['approval','الاعتماد','✓'],['statistics','الإحصائيات','◫'],['reports','تقارير المرحلة','▤']],
  supervisor:[['dashboard','لوحة الموجه','▦'],['alerts','التنبيهات','🔔'],['completion','استكمال البيانات','✎'],['supervisors','بيانات الموجه','◎'],['schools','مدارسي','⌂'],['teachers','معلمو مدارسي','◉'],['approval','الاعتمادات','✓'],['statistics','الإحصائيات','◫'],['reports','التقارير','▤']],
  school_manager:[['dashboard','لوحة المدرسة','▦'],['alerts','التنبيهات','🔔'],['completion','استكمال البيانات','✎'],['supervisors','موجه المدرسة','◎'],['schools','بيانات المدرسة','⌂'],['teachers','معلمو المدرسة','◉'],['approval','اعتماد البيانات','✓'],['statistics','الإحصائيات','◫'],['reports','تقارير المدرسة','▤']],
  senior_teacher:[['dashboard','لوحة مشرف المادة','▦'],['alerts','التنبيهات','🔔'],['completion','استكمال البيانات','✎'],['supervisors','موجه المدرسة','◎'],['schools','بيانات المدرسة','⌂'],['teachers','إضافة وإدارة المعلمين','◉'],['classes','تعديل الفصول','▦'],['assignments','توزيع المعلمين على الفصول','Σ'],['approval','الإرسال للاعتماد','✓'],['statistics','الإحصائيات','◫'],['reports','تقارير المدرسة','▤']],
