@@ -1,4 +1,5 @@
 <!doctype html>
+<!-- v289: «طلبات معلمي الأجر» ← «إضافة إلى البرنامج»: لا تُختار المدرسة مسبقًا من مدرسة الطلب (قد لا تكون مدرسة الإضافة)، وحقل المدرسة صار بحثًا بالكتابة (input + datalist بنمط نافذة الانتداب v215؛ v288PickSchool) ومدرسة الطلب تظهر بين قوسين في عنوان الحقل للمعلومة فقط (.field small مخفية عامًا). -->
 <!-- v288: شاشة «طلبات معلمي الأجر» لمدير النظام (NAV admin: paidRequests؛ كتلة v288): الطلبات من paid_teacher_applications (قراءة للمشاهد المسجل فقط) مع حالة كل طلب بمطابقة الرقم القومي في teacher_records، وتفاصيل الطلب وصور الشهادات (روابط موقعة من paid-teacher-docs)، وزر «إضافة إلى البرنامج» ينشئ بطاقة معلم بالأجر بمدرسة يختارها + ربطه بالمدرسة للفصل الحالي. الرابط المباشر #/paidRequests يختار دور مدير النظام تلقائيًا. بلا تغيير في قاعدة البيانات. -->
 <!-- v287: قائمة «المرحلة» لمنسق المرحلة تعرض مراحله النشطة فقط (v202Stages ← v287Set)، والمرحلة المحفوظة التي ليست له تُعامل «الكل» (كما في v271 للموجه). -->
 <!-- v286: «تعديل الفصول» على الهاتف: الفصول 4 في كل سطر بعرض متساوٍ (شبكة) بدل 5 تخرج عن البطاقة. -->
@@ -8,7 +9,6 @@
 <!-- v282: «توزيع الفصول»: حالة المعلم المنتدب جزئيًا (زيادة/متبقٍ/مكتمل وشريط التقدّم وأثر الإسناد) تُحسب على تدريسه الكلي في المدرستين (global_teaching_periods) مع بيان «N هنا + M بمدرسة أخرى» و«منتدب جزئيًا». -->
 <!-- v281: «توزيع الفصول»: شريط أدوات واحد (المدرسة + تعديل الفصول + تقرير + حفظ واعتماد للموجه) بدل بطاقة «إدخال فصول المدرسة»، مؤشرات، شريط خطوات، سطر لكل معلم (شريط تقدّم + زيادة/متبقٍ برقم + فصوله شرائح بـ✕ لإلغاء الإسناد بعد التأكيد)، والفصول غير المسندة مجمّعة بالصف والمادة بأثر الإسناد؛ حُذف «الإسنادات الحالية». -->
 <!-- v280: «تعديل الفصول»: أُزيل القلم ✎؛ × لحذف الفصل غير المسند (تأكيد) و🔒 للمسند، للموجه (دالة supervisor_remove_class، migration v280) ولمدير النظام (adminDeleteClassConfirmed). -->
-<!-- v279: صفحة «الفصول» صار اسم تبويبها «تعديل الفصول»: صف أدوات واحد بجوار المرحلة (المدرسة + إضافة فصل + التوزيع + حفظ واعتماد + تقرير) وجدول واحد بالصفوف وشرائح الفصول بـ✎؛ حُذف العنوان الكبير وبطاقة الإدخال وزر «الفصول» المكرر والجدول التفصيلي، وملاحظة الثانوي في مدارس الثانوي فقط. -->
 <html lang="ar" dir="rtl">
 <head>
 <!-- إعداد: أ/ محمود عبدالمفدي محمد أبوالنجا | الصفة: معلم -->
@@ -16,7 +16,7 @@
 <script>/* v226: العنوان الموحد — انظر التعليق أعلى الملف */(function(){try{if(/\.github\.io$/.test(location.hostname)&&/^\/science-guidance\/?(index\.html)?$/.test(location.pathname)&&!/[?&]stay\b/.test(location.search))location.replace('https://teachers-data-portal.vercel.app/app/'+location.hash)}catch(e){}})();</script>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#152c43">
-<title>نظام توجيه العلوم — v288</title>
+<title>نظام توجيه العلوم — v289</title>
 <link rel="manifest" href="./manifest.webmanifest">
 <link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png">
 <link rel="apple-touch-icon" href="./icon-192.png">
@@ -2009,6 +2009,7 @@ body.v233-lock{overflow:hidden}
 @media(max-width:760px){.v284-bar .v284-row .field{flex:1 1 100%}}
 @media(max-width:760px){#content .auto-filter-options-row:has(> .v279-tools){grid-template-columns:1fr}#content .v279-tools{grid-column:1/-1;display:grid;grid-template-columns:1fr 1fr;gap:6px}#content .v279-tools .field{grid-column:1/-1;min-width:0!important}#content .v279-tools>.btn{width:100%;min-width:0;margin:0}
 .v285-classes .v110-table-scroll{overflow:visible}.v285-classes table.v274-table{min-width:0!important;display:block;border:0}.v285-classes table.v274-table thead{display:none}.v285-classes table.v274-table tbody{display:block}.v285-classes table.v274-table tr{display:grid;grid-template-columns:1fr auto auto;gap:6px 10px;align-items:center;border:1px solid #e2e8f0;border-radius:10px;padding:8px 10px;margin-bottom:8px;background:#fff}.v285-classes table.v274-table td{display:block;border:0!important;padding:0!important;background:none!important}.v285-classes table.v274-table td:nth-child(2){grid-column:1/-1;grid-row:2}.v285-classes table.v274-table td.v274-num{font-size:12px;color:#64748b;white-space:nowrap}.v285-classes table.v274-table td:nth-child(3):not(:empty)::after{content:" فصول"}.v285-classes table.v274-table td:nth-child(4):not(:empty)::after{content:" حصة"}.v285-classes .v274-chips{display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px}.v285-classes .v274-chip{display:flex;justify-content:center;align-items:center;min-width:0;margin:0;white-space:nowrap}}
+.v289-hint{font-weight:400;color:var(--muted)}
 .v288-imgs{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px;margin:8px 0}.v288-imgs a{display:block;text-align:center;font-size:12px;color:var(--muted);text-decoration:none}.v288-imgs img{display:block;width:100%;height:150px;object-fit:cover;border-radius:8px;border:1px solid var(--line);margin-bottom:4px;background:#f7f9fc}
 </style>
 </head>
@@ -2352,6 +2353,7 @@ window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();window.v152
 window.addEventListener('appinstalled',()=>{window.v152InstallPrompt=null;v152SyncInstallBtn()});
 if('serviceWorker' in navigator&&location.protocol!=='file:')window.addEventListener('load',()=>navigator.serviceWorker.register('./service-worker.js').catch(()=>{}));
 const V145_NEWS=[
+ ['v289','طلبات معلمي الأجر: المدرسة لا تُختار تلقائيًا من الطلب، وتختارها بالبحث بالكتابة عند الإضافة.'],
  ['v288','مدير النظام: شاشة «طلبات معلمي الأجر» لعرض الطلبات وإضافة المعلم إلى البرنامج بعد اختيار مدرسته.'],
  ['v287','منسق المرحلة: قائمة «المرحلة» تعرض مراحله فقط، فلا تظهر له مدارس مراحل غيره.'],
  ['v286','«تعديل الفصول» على الهاتف: 4 فصول في كل سطر بعرض متساوٍ.'],
@@ -8613,10 +8615,10 @@ async function v288ShowImgs(id){
 function v288AddForm(id){
  const a=V288.apps.get(id);if(!a)return;
  if(V288.tr.has(v288Digits(a.civil_id)))return toast('هذا المعلم موجود في البرنامج بالفعل');
- const want=v288Norm(v288AppSchool(a)),pre=(V288.schools.find(x=>v288Norm(x.name)===want)||{}).id||'';
+ const lbl=x=>`${x.name} — ${x.stage||''}`;V288.pick=new Map(V288.schools.map(x=>[lbl(x),x.id]));
  modal(`<h3>إضافة إلى البرنامج — معلم بالأجر</h3>
  <form id="v288AddForm" onsubmit="v288Add(event,'${a.id}')"><div class="form-grid">
- <div class="field"><label>المدرسة *</label><select name="school_id" required><option value="">— اختر المدرسة —</option>${V288.schools.map(x=>`<option value="${x.id}" ${x.id===pre?'selected':''}>${esc(x.name)} — ${esc(x.stage||'')}</option>`).join('')}</select><small>في الطلب: ${esc(v288AppSchool(a)||'—')}${a.is_delegated&&a.delegated_school?` — منتدب إلى: ${esc(a.delegated_school)}`:''}</small></div>
+ <div class="field"><label>المدرسة * <span class="v289-hint">(في الطلب: ${esc(v288AppSchool(a)||'—')}${a.is_delegated&&a.delegated_school?` — منتدب إلى: ${esc(a.delegated_school)}`:''})</span></label><input type="search" name="school_label" list="v288SchoolList" placeholder="اكتب اسم المدرسة للبحث" autocomplete="off" required oninput="v288PickSchool(this)" onchange="v288PickSchool(this)"><input type="hidden" name="school_id"><datalist id="v288SchoolList">${V288.schools.map(x=>`<option value="${esc(lbl(x))}"></option>`).join('')}</datalist></div>
  <div class="field"><label>الاسم الكامل *</label><input name="full_name" value="${esc(a.full_name||'')}" required maxlength="150"></div>
  <div class="field"><label>الرقم القومي</label><input value="${esc(a.civil_id||'')}" disabled></div>
  <div class="field"><label>الهاتف</label><input name="phone" value="${esc(a.phone||'')}" inputmode="tel"></div>
@@ -8626,13 +8628,15 @@ function v288AddForm(id){
  <div class="field"><label>نوع العمل</label><input value="بالأجر" disabled></div>
  </div><div class="actions"><button type="submit" class="btn primary" id="v288Save">إضافة المعلم</button><button type="button" class="btn secondary" onclick="closeModal()">إلغاء</button></div></form>`);
 }
+function v288PickSchool(inp){const id=(V288.pick||new Map()).get(String(inp.value||'').trim())||'';const h=inp.form?.elements.namedItem('school_id');if(h)h.value=id;inp.setCustomValidity(id||!inp.value?'':'اختر المدرسة من القائمة المقترحة')}
 async function v288Add(e,id){
  e.preventDefault();
+ v288PickSchool(e.target.elements.namedItem('school_label'));
  const a=V288.apps.get(id),form=e.target,btn=document.getElementById('v288Save');if(!a)return;
  const g=n=>String(form.elements.namedItem(n)?.value||'').trim();
  const civil=v288Digits(a.civil_id),school=g('school_id'),name=g('full_name'),yr=v288Digits(g('qualification_year')),year=yr?Number(yr):null;
  if(civil.length!==14)return toast('الرقم القومي في الطلب ليس 14 رقمًا؛ لا يمكن الإضافة');
- if(!school)return toast('اختر المدرسة');
+ if(!school)return toast('اختر المدرسة من القائمة المقترحة (اكتب جزءًا من الاسم)');
  if(!name)return toast('الاسم مطلوب');
  if(year!==null&&!(year>=1950&&year<=2100))return toast('سنة المؤهل غير صحيحة');
  if(!activeYear?.id||!activeTerm?.id)return toast('لا توجد سنة أو فترة دراسية مفعلة');
