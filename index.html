@@ -1,4 +1,5 @@
 <!doctype html>
+<!-- v293: «حساب المدرسة» (بدل «مشرف المادة») و«مسؤول البيانات» (قاعدة البيانات v293): غير المكلّف بالبيانات يرى مدرسته كاملة بلا تعديل (شريط «عرض فقط» واسم المسؤول وهاتفه، وإخفاء أدوات التعديل، والقائمة بلا «الإرسال للاعتماد» و«استكمال البيانات»)؛ وفي «معلمو مدارسي» عند اختيار مدرسة: بطاقة مسؤول البيانات، وشارتا «مشرف المادة/مسؤول البيانات»، وزرّا «تعيين مسؤول البيانات» (الثابتون فقط) و«إنشاء حساب دخول» (للموجه). -->
 <!-- v291: الاعتماد لموجه المدرسة وحده (قاعدة البيانات v291 + دالة الحافة supervisor-save-and-approve v4 لموجه المادة في الثانوي): أُلغي مدير المدرسة من الاعتماد؛ تبويب «الاعتماد» للمنسق، والمنسق ومدير النظام يتابعان ويعيدان للتعديل (ولو بعد الاعتماد) ولا يعتمدان؛ أُزيلت قائمة «جهة الاعتماد» من المدارس ونموذج إضافة مدرسة. -->
 <!-- v290: «طلبات معلمي الأجر»: حقل بحث المدرسة داخل بطاقة كل طلب غير مضاف فوق «إضافة إلى البرنامج» (datalist v288SchoolListPage)، والزر يطلب تأكيدًا واحدًا ثم يضيف ببيانات الطلب بلا نافذة (v288QuickAdd)؛ نافذة «عرض» وزرها بلا تغيير. شريط البحث في هذه الشاشة فقط لم يعد ثابتًا عند التمرير. -->
 <!-- v289: «طلبات معلمي الأجر» ← «إضافة إلى البرنامج»: لا تُختار المدرسة مسبقًا من مدرسة الطلب (قد لا تكون مدرسة الإضافة)، وحقل المدرسة صار بحثًا بالكتابة (input + datalist بنمط نافذة الانتداب v215؛ v288PickSchool) ومدرسة الطلب تظهر بين قوسين في عنوان الحقل للمعلومة فقط (.field small مخفية عامًا). -->
@@ -8,7 +9,6 @@
 <!-- v285: «تعديل الفصول» على الهاتف (≤760px فقط): القوائم بعرض الشاشة والأزرار شبكة 2×2، وجدول الفصول بطاقة لكل صف (الصف والعدد والحصص في سطر والفصول تلتف تحته) بلا تمرير جانبي (.v285-classes). -->
 <!-- v284: «جدول المعلم»: أعلى الصفحة صف واحد (المرحلة + المدرسة + المعلم + تحديث + معاينة وطباعة) بلا عنوان؛ بطاقة «أيام الدراسة وحصص المدرسة» صارت سطرًا يعرض القيم وزر «تعديل» يُظهر الحقلين وزر الحفظ (نفس المعرفات)؛ شارة «في الجدول X من Y» تنتقل لسطر الإعدادات (v284SyncBadge). -->
 <!-- v283: «توزيع الفصول»: «المطلوب» لكل معلم ثابت = النصاب − الإشراف − الريادة (للمنتدب جزئيًا في المدرستين: global_*) بلا تقريب لعدد الفصول، والحالة = النصاب − (تدريس + إشراف + ريادة) كقاعدة البيانات والتقارير؛ «حد أقصى» لا يظهر متبقيًا. مثال: نصاب 19 = 16 + 2 + 1 ← مكتمل. -->
-<!-- v282: «توزيع الفصول»: حالة المعلم المنتدب جزئيًا (زيادة/متبقٍ/مكتمل وشريط التقدّم وأثر الإسناد) تُحسب على تدريسه الكلي في المدرستين (global_teaching_periods) مع بيان «N هنا + M بمدرسة أخرى» و«منتدب جزئيًا». -->
 <html lang="ar" dir="rtl">
 <head>
 <!-- إعداد: أ/ محمود عبدالمفدي محمد أبوالنجا | الصفة: معلم -->
@@ -16,7 +16,7 @@
 <script>/* v226: العنوان الموحد — انظر التعليق أعلى الملف */(function(){try{if(/\.github\.io$/.test(location.hostname)&&/^\/science-guidance\/?(index\.html)?$/.test(location.pathname)&&!/[?&]stay\b/.test(location.search))location.replace('https://teachers-data-portal.vercel.app/app/'+location.hash)}catch(e){}})();</script>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#152c43">
-<title>نظام توجيه العلوم — v291</title>
+<title>نظام توجيه العلوم — v293</title>
 <link rel="manifest" href="./manifest.webmanifest">
 <link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png">
 <link rel="apple-touch-icon" href="./icon-192.png">
@@ -2014,6 +2014,10 @@ body.v233-lock{overflow:hidden}
 #v288Table tr.compact-directory-record>td:last-child{grid-column:1/-1}
 .v288-add{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}.v288-add .v288-school{flex:1 1 200px;min-width:0}
 .v288-imgs{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px;margin:8px 0}.v288-imgs a{display:block;text-align:center;font-size:12px;color:var(--muted);text-decoration:none}.v288-imgs img{display:block;width:100%;height:150px;object-fit:cover;border-radius:8px;border:1px solid var(--line);margin-bottom:4px;background:#f7f9fc}
+/* v293: «حساب المدرسة» للعرض فقط — إخفاء أدوات التعديل (المنع الفعلي في قاعدة البيانات) */
+body.v293-ro [onclick*="seniorTeacherAddTeacherForm("],body.v293-ro [onclick*="teacherAccountForm("],body.v293-ro [onclick*="editTeacherForm("],body.v293-ro [onclick*="openTeacherDelegationForm("],body.v293-ro [onclick*="adminCancelDelegationForm("],body.v293-ro [onclick*="uxQuickAssignClass("],body.v293-ro [onclick*="v281Unassign("],body.v293-ro [onclick*="v281DoUnassign("],body.v293-ro [onclick*="uxUndoAssignment("],body.v293-ro [onclick*="editAssignmentForm("],body.v293-ro [onclick*="v181Assign("],body.v293-ro [onclick*="v181AssignSel("],body.v293-ro [onclick*="v181Unassign("],body.v293-ro [onclick*="v181Suggest("],body.v293-ro [onclick*="v101SaveTimetable("],body.v293-ro [onclick*="v101SaveSettings("],body.v293-ro [onclick*="v284ToggleSet("],body.v293-ro [onclick*="submitSchool("],body.v293-ro [onclick*="savePaidShortageAllocations("],body.v293-ro [onclick*="applySuggestedPaidShortage("],body.v293-ro [onclick*="openPaidShortageCenter("],body.v293-ro [onclick*="saveCompletionAndNext("],body.v293-ro [onclick*="openCompletionEdit("],body.v293-ro [onclick*="v180LeaveShowForm("],body.v293-ro [onclick*="financialLeaveEdit("],body.v293-ro [onclick*="v205StopPaidTeacher("],body.v293-ro [onclick*="v224Reactivate("],body.v293-ro [onclick*="editSchoolForm("],body.v293-ro [onclick*="subjectPeriodsForm("],body.v293-ro [onclick*="v268ManagerForm("],body.v293-ro [onclick*="v280RemoveClassForm("],body.v293-ro [onclick*="v280RemoveClass("],body.v293-ro .add-class-action,body.v293-ro #addClassButton,body.v293-ro [data-action="add-class"]{display:none!important}
+body.v293-ro select[onchange*="v101ChangeSlot"]{pointer-events:none;opacity:.65}
+.v293-chip{margin-inline-start:6px;vertical-align:middle}
 </style>
 </head>
 <body>
@@ -2356,6 +2360,7 @@ window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();window.v152
 window.addEventListener('appinstalled',()=>{window.v152InstallPrompt=null;v152SyncInstallBtn()});
 if('serviceWorker' in navigator&&location.protocol!=='file:')window.addEventListener('load',()=>navigator.serviceWorker.register('./service-worker.js').catch(()=>{}));
 const V145_NEWS=[
+ ['v293','«حساب المدرسة» بدل «مشرف المادة»: يدخل منه مشرف المادة ومسؤول البيانات؛ مسؤول البيانات وحده يعدّل، وغيره يرى فقط. الموجه يعيّن مسؤول البيانات من المعلمين الثابتين وينشئ حساب الدخول من «معلمو مدارسي» بعد اختيار المدرسة.'],
  ['v291','الاعتماد صار لموجه المدرسة وحده (أُلغي مدير المدرسة). المنسق له تبويب «الاعتماد» يتابع فيه مدارس مرحلته ويعيد أي مدرسة للتعديل مع السبب، ومدير النظام كذلك. موجه المادة في الثانوي يعتمد من «الحفظ والاعتماد».'],
  ['v290','طلبات معلمي الأجر: اختيار المدرسة داخل بطاقة الطلب ثم «إضافة إلى البرنامج» بتأكيد واحد، وشريط البحث لا يثبت أعلى الشاشة.'],
  ['v289','طلبات معلمي الأجر: المدرسة لا تُختار تلقائيًا من الطلب، وتختارها بالبحث بالكتابة عند الإضافة.'],
@@ -5297,7 +5302,7 @@ const VirtualTableStore=new Map();
 
 
 
-const ROLE_LABELS={admin:'مدير النظام',first_supervisor:'الموجه الأول',stage_coordinator:'منسق المرحلة',supervisor:'الموجه',school_manager:'مدير المدرسة',senior_teacher:'مشرف المادة',teacher:'المعلم'};
+const ROLE_LABELS={admin:'مدير النظام',first_supervisor:'الموجه الأول',stage_coordinator:'منسق المرحلة',supervisor:'الموجه',school_manager:'مدير المدرسة',senior_teacher:'حساب المدرسة',teacher:'المعلم'};
 const STATUS_LABELS={not_started:'لم تبدأ',in_progress:'جاري الإدخال',pending_manager_approval:'بانتظار الاعتماد',approved:'معتمدة',returned_for_edit:'معادة للتعديل'};
 const INTAKE_STATUS_LABELS={received:'وارد',under_review:'قيد المراجعة',approved_for_import:'جاهز للترحيل',rejected:'مرفوض',imported:'تم الترحيل'};
 const STAGES=['ابتدائي','إعدادي','ثانوي عام','ثانوي صناعي'];
@@ -12443,6 +12448,102 @@ const __v255BaseCard=statisticsReportCard;
 statisticsReportCard=function(k,...a){return V186_HIDDEN_REPORTS.includes(k)?'':__v255BaseCard(k,...a)};
 const __v255BaseV233Reports=v233Reports;
 v233Reports=function(){return __v255BaseV233Reports().filter(x=>!V186_HIDDEN_REPORTS.includes(x.id))};
+/* v293-begin: «حساب المدرسة» و«مسؤول البيانات» — الواجهة (قاعدة البيانات v293: school_data_officer_info / set_school_data_officer، والمنع الفعلي بمشغل trg_v293_school_officer_gate) */
+let v293Info=null,v293Sup=null;
+const V293_NAV_BASE=(NAV.senior_teacher||[]).map(n=>n.slice());
+const V293_EDIT_RE=new RegExp('\\b('+["seniorTeacherAddTeacherForm", "teacherAccountForm", "editTeacherForm", "openTeacherDelegationForm", "adminCancelDelegationForm", "uxQuickAssignClass", "v281Unassign", "v281DoUnassign", "uxUndoAssignment", "editAssignmentForm", "v181Assign", "v181AssignSel", "v181Unassign", "v181Suggest", "v101SaveTimetable", "v101SaveSettings", "v284ToggleSet", "submitSchool", "savePaidShortageAllocations", "applySuggestedPaidShortage", "openPaidShortageCenter", "saveCompletionAndNext", "openCompletionEdit", "v180LeaveShowForm", "financialLeaveEdit", "v205StopPaidTeacher", "v224Reactivate", "editSchoolForm", "subjectPeriodsForm", "v268ManagerForm", "v280RemoveClassForm", "v280RemoveClass"].join('|')+')\\s*\\(');
+function v293ReadOnly(){return profile?.role==='senior_teacher'&&!!v293Info&&v293Info.i_am_officer!==true}
+function v293ApplyNav(){
+ const ro=v293ReadOnly(),roName={teachers:'المعلمون',classes:'الفصول',assignments:'توزيع الفصول'};
+ NAV.senior_teacher=V293_NAV_BASE.filter(n=>!(ro&&(n[0]==='approval'||n[0]==='completion'))).map(n=>{const x=n.slice();if(x[0]==='dashboard')x[1]='لوحة المدرسة';if(ro&&roName[x[0]])x[1]=roName[x[0]];return x});
+ document.body.classList.toggle('v293-ro',ro);
+}
+async function v293Load(){
+ v293Info=null;if(profile?.role!=='senior_teacher')return;
+ try{const s=await mySchool();if(!s?.id)return;const {data,error}=await sb.rpc('school_data_officer_info',{p_school:s.id});if(!error&&data)v293Info=data}catch(e){console.warn(e)}
+}
+function v293OfficerText(i){return i?.full_name?`${esc(i.full_name)}${i.phone?' — '+esc(i.phone):''}`:''}
+function v293Msg(){return v293Info?.full_name?`عرض فقط — التعديل لمسؤول البيانات: ${v293Info.full_name}`:'عرض فقط — لا يوجد مسؤول بيانات لهذه المدرسة؛ الإدخال عن طريق الموجه'}
+function v293Banner(){
+ const c=document.getElementById('content');if(!c)return;c.querySelectorAll('.v293-banner').forEach(x=>x.remove());
+ if(!v293ReadOnly())return;
+ const d=document.createElement('div');d.className='notice warn v293-banner no-print';
+ d.innerHTML=`👁 <b>عرض فقط</b> — ${v293Info.full_name?`مسؤول البيانات: <b>${v293OfficerText(v293Info)}</b>. لأي تصحيح تواصل معه أو مع الموجه.`:'لا يوجد مسؤول بيانات لهذه المدرسة؛ الإدخال عن طريق الموجه.'}`;
+ c.prepend(d);
+}
+function v293Chip(){
+ document.querySelectorAll('.v293-chip').forEach(x=>x.remove());
+ if(profile?.role!=='senior_teacher'||!v293Info)return;
+ const t=document.querySelector('.top-title strong');if(!t)return;
+ const ro=v293ReadOnly(),b=document.createElement('span');b.className='badge '+(ro?'warn':'ok')+' v293-chip';b.textContent=ro?'عرض فقط':'مسؤول البيانات';t.appendChild(b);
+}
+document.addEventListener('click',e=>{
+ if(!document.body.classList.contains('v293-ro'))return;
+ const el=e.target&&e.target.closest?e.target.closest('[onclick],.add-class-action,#addClassButton,[data-action="add-class"]'):null;if(!el)return;
+ if(el.matches('.add-class-action,#addClassButton,[data-action="add-class"]')||V293_EDIT_RE.test(el.getAttribute('onclick')||'')){e.preventDefault();e.stopImmediatePropagation();toast(v293Msg())}
+},true);
+const __v293BaseLoadContext=loadContext;
+loadContext=async function(){const st=await __v293BaseLoadContext.apply(this,arguments);if(st==='ready')await v293Load();else v293Info=null;v293ApplyNav();return st};
+const __v293BaseSelectRole=selectRole;
+selectRole=async function(...a){v293Info=null;v293ApplyNav();const r=await __v293BaseSelectRole.apply(this,a);if(profile?.role==='senior_teacher'){await v293Load();v293ApplyNav();if(v293ReadOnly())renderShell();else v293Chip()}return r};
+const __v293BaseRenderShell=renderShell;
+renderShell=function(...a){v293ApplyNav();const r=__v293BaseRenderShell.apply(this,a);setTimeout(v293Chip,0);return r};
+const __v293BaseLoadPage=loadPage;
+loadPage=async function(...a){const r=await __v293BaseLoadPage.apply(this,a);try{v293Banner();if(['supervisor','stage_coordinator','admin'].includes(profile?.role)&&currentPage==='teachers')await v293SupPanel()}catch(e){console.warn(e)}return r};
+/* الموجه/المنسق/المدير: «معلمو مدارسي» عند اختيار مدرسة واحدة — بطاقة مسؤول البيانات + شارات وأزرار على صفوف المعلمين */
+async function v293SupPanel(){
+ document.querySelectorAll('.v293-officer').forEach(x=>x.remove());
+ const sid=typeof v98School==='function'?v98School():'';if(!sid)return;
+ const [info,tr]=await Promise.all([sb.rpc('school_data_officer_info',{p_school:sid}),sb.from('teacher_records').select('id,civil_id,full_name,phone,job_title,appointment_date,work_type,is_senior_teacher,profile_id,grade_acquired_date,work_start_date').eq('home_school_id',sid).eq('active',true)]);
+ if(info.error||tr.error)return;
+ const I=info.data||{},T=tr.data||[];v293Sup={sid,info:I,teachers:new Map(T.map(t=>[String(t.id),t]))};
+ const canCreate=profile.role==='supervisor',off=I.teacher_id?v293Sup.teachers.get(String(I.teacher_id)):null;
+ const src=I.source==='manual'?'<span class="badge ok">اختيار الموجه</span>':I.source==='auto'?'<span class="badge info">تلقائي: مشرف المادة</span>':'';
+ const acc=I.teacher_id?(I.has_account?'<span class="badge ok">له حساب دخول</span>':'<span class="badge warn">بلا حساب دخول</span>'):'';
+ const card=document.createElement('div');card.className='card v293-officer no-print';
+ card.innerHTML=`<div class="card-title"><h3>مسؤول بيانات المدرسة</h3></div><div class="actions" style="gap:8px;flex-wrap:wrap;align-items:center">${I.teacher_id?`<b>${v293OfficerText(I)}</b> ${src} ${acc}`:'<span class="muted">لا يوجد مسؤول بيانات (لا يوجد مشرف مادة ثابت). اختر معلمًا ثابتًا بزر «تعيين مسؤول البيانات» في صفه.</span>'}${I.source==='manual'?`<button class="btn secondary" type="button" onclick="v293SetOfficer('')">↺ العودة للتلقائي (مشرف المادة)</button>`:''}${canCreate&&off&&!off.profile_id?`<button class="btn ok" type="button" onclick="v293CreateAccount('${off.id}')">+ إنشاء حساب دخول</button>`:''}</div><small class="muted">يدخل مسؤول البيانات ومشرف المادة بـ«حساب المدرسة»: مسؤول البيانات وحده يعدّل، ومشرف المادة غير المكلّف يرى فقط. يُعيَّن من المعلمين الثابتين فقط.</small>`;
+ const bar=document.getElementById('v97StageBar'),c=document.getElementById('content');if(!c)return;
+ if(bar&&c.contains(bar))bar.after(card);else c.prepend(card);
+ v293DecorateRows();
+}
+function v293DecorateRows(){
+ if(!v293Sup)return;const {info:I,teachers}=v293Sup,canCreate=profile.role==='supervisor';
+ document.querySelectorAll('.v293-row').forEach(x=>x.remove());
+ teachers.forEach(t=>{
+  const btn=document.querySelector(`[onclick*="editTeacherForm('${t.id}')"]`),box=btn?.closest('.actions');if(!box)return;
+  const isOff=String(I.teacher_id||'')===String(t.id);let h='';
+  if(t.is_senior_teacher)h+='<span class="badge info v293-row">مشرف المادة</span>';
+  if(isOff)h+='<span class="badge ok v293-row">مسؤول البيانات</span>';
+  if(t.work_type==='permanent'&&!isOff)h+=`<button class="btn secondary v293-row" type="button" onclick="v293SetOfficer('${t.id}')">تعيين مسؤول البيانات</button>`;
+  if(canCreate&&(isOff||t.is_senior_teacher)&&!t.profile_id)h+=`<button class="btn ok v293-row" type="button" onclick="v293CreateAccount('${t.id}')">+ إنشاء حساب دخول</button>`;
+  if(h)box.insertAdjacentHTML('afterbegin',h);
+ });
+}
+function v293SetOfficer(tid){
+ if(!v293Sup)return;const t=tid?v293Sup.teachers.get(String(tid)):null;
+ const msg=tid?`تعيين «${esc(t?.full_name||'')}» مسؤولًا لبيانات المدرسة؟ يأخذ دخول «حساب المدرسة» ويكون وحده من يعدّل بياناتها، ويصبح مشرف المادة للعرض فقط.`:'العودة للتلقائي: يصبح مشرف المادة هو مسؤول البيانات.';
+ modal(`<h3>مسؤول بيانات المدرسة</h3><div class="notice info">${msg}</div><div class="actions"><button class="btn primary" type="button" onclick="v293DoSet('${tid||''}',this)">تأكيد</button><button class="btn secondary" type="button" onclick="closeModal()">إلغاء</button></div>`);
+}
+async function v293DoSet(tid,btn){
+ if(!v293Sup)return;if(btn)btn.disabled=true;
+ const {error}=await sb.rpc('set_school_data_officer',{p_school:v293Sup.sid,p_teacher:tid||null});
+ if(error){if(btn)btn.disabled=false;return moneySafeError(error)}
+ closeModal();toast('تم حفظ مسؤول بيانات المدرسة');await v293SupPanel();
+}
+function v293CreateAccount(tid){
+ const t=v293Sup?.teachers.get(String(tid));if(!t)return;
+ if(!String(t.civil_id||'').trim())return toast('لا يوجد رقم قومي لهذا المعلم — أكمل بياناته أولًا');
+ modal(`<h3>إنشاء حساب دخول</h3><div class="notice info">يُنشأ حساب دخول للمعلم <b>${esc(t.full_name)}</b> برقمه القومي، وتظهر كلمة مرور مؤقتة تسلّمها له، ويغيّرها عند أول دخول. لا تتغير بياناته المسجلة.</div><div class="actions"><button class="btn ok" type="button" onclick="v293DoCreate('${t.id}',this)">إنشاء الحساب</button><button class="btn secondary" type="button" onclick="closeModal()">إلغاء</button></div>`);
+}
+async function v293DoCreate(tid,btn){
+ const t=v293Sup?.teachers.get(String(tid));if(!t)return;if(btn)btn.disabled=true;
+ /* نرسل التواريخ الحالية لأن دالة الإنشاء تكتب grade_acquired_date/work_start_date كما تصلها (الفارغ يمحوها) */
+ const body={role:t.is_senior_teacher?'senior_teacher':'teacher',civil_id:String(t.civil_id).trim(),full_name:t.full_name,phone:t.phone||null,school_id:v293Sup.sid,job_title:t.job_title||null,appointment_date:t.appointment_date||null,work_type:t.work_type==='paid'?'paid':'permanent',grade_acquired_date:t.grade_acquired_date||null,work_start_date:t.work_start_date||null};
+ const {data,error}=await sb.functions.invoke('create-system-user',{body});
+ if(error||data?.error){if(btn)btn.disabled=false;return moneySafeError(new Error(data?.error||error?.message||'تعذر إنشاء الحساب'))}
+ modal(`<h3>تم إنشاء حساب الدخول</h3><div class="notice ok"><b>المعلم:</b> ${esc(t.full_name)}<br><b>الرقم القومي:</b> ${esc(data.civil_id)}<br><b>كلمة المرور المؤقتة:</b> <span dir="ltr" style="display:inline-block">${esc(data.temporary_password)}</span><br>سلّمها للمعلم؛ يغيّرها عند أول دخول.</div><div class="actions"><button class="btn secondary" type="button" onclick="navigator.clipboard&&navigator.clipboard.writeText(${handlerArg(String(data.temporary_password||''))}).then(()=>toast('تم النسخ'))">نسخ</button><button class="btn primary" type="button" onclick="closeModal();v293SupPanel()">تم</button></div>`);
+}
+/* v293-end */
 </script>
 
 <div id="reportPreviewOverlay" class="report-preview-overlay" role="dialog" aria-modal="true" aria-label="معاينة التقرير" aria-hidden="true">
