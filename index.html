@@ -1,4 +1,5 @@
 <!doctype html>
+<!-- v287: قائمة «المرحلة» لمنسق المرحلة تعرض مراحله النشطة فقط (v202Stages ← v287Set)، والمرحلة المحفوظة التي ليست له تُعامل «الكل» (كما في v271 للموجه). -->
 <!-- v286: «تعديل الفصول» على الهاتف: الفصول 4 في كل سطر بعرض متساوٍ (شبكة) بدل 5 تخرج عن البطاقة. -->
 <!-- v285: «تعديل الفصول» على الهاتف (≤760px فقط): القوائم بعرض الشاشة والأزرار شبكة 2×2، وجدول الفصول بطاقة لكل صف (الصف والعدد والحصص في سطر والفصول تلتف تحته) بلا تمرير جانبي (.v285-classes). -->
 <!-- v284: «جدول المعلم»: أعلى الصفحة صف واحد (المرحلة + المدرسة + المعلم + تحديث + معاينة وطباعة) بلا عنوان؛ بطاقة «أيام الدراسة وحصص المدرسة» صارت سطرًا يعرض القيم وزر «تعديل» يُظهر الحقلين وزر الحفظ (نفس المعرفات)؛ شارة «في الجدول X من Y» تنتقل لسطر الإعدادات (v284SyncBadge). -->
@@ -8,7 +9,6 @@
 <!-- v280: «تعديل الفصول»: أُزيل القلم ✎؛ × لحذف الفصل غير المسند (تأكيد) و🔒 للمسند، للموجه (دالة supervisor_remove_class، migration v280) ولمدير النظام (adminDeleteClassConfirmed). -->
 <!-- v279: صفحة «الفصول» صار اسم تبويبها «تعديل الفصول»: صف أدوات واحد بجوار المرحلة (المدرسة + إضافة فصل + التوزيع + حفظ واعتماد + تقرير) وجدول واحد بالصفوف وشرائح الفصول بـ✎؛ حُذف العنوان الكبير وبطاقة الإدخال وزر «الفصول» المكرر والجدول التفصيلي، وملاحظة الثانوي في مدارس الثانوي فقط. -->
 <!-- v278: صفحة «معلمو مدارسي/المعلمون» (كل الأدوار عدا المعلم): حُذف العنوان الكبير، وأزرار الصفحة (إضافة معلم/الإجازات/توزيع العجز) أعلى المحتوى، و«تقارير ▾» + «تصدير Excel» في صف المرحلة/المدرسة، وزر «تقرير» صار «تقرير المعلمين (حسب الفلاتر)» داخل القائمة. -->
-<!-- v277: ترتيب المعلمين في الشاشات والتقارير: الثابتون بالأقدمية ثم الأجر بالأقدمية (v261Priority يضع الأجر بعد الثابتين؛ v277Sort في معلمو مدارسي وملف المدرسة وتقريريه وإسناد حصص الفصول والإسنادات الحالية وبطاقات توزيع الفصول). -->
 <html lang="ar" dir="rtl">
 <head>
 <!-- إعداد: أ/ محمود عبدالمفدي محمد أبوالنجا | الصفة: معلم -->
@@ -16,7 +16,7 @@
 <script>/* v226: العنوان الموحد — انظر التعليق أعلى الملف */(function(){try{if(/\.github\.io$/.test(location.hostname)&&/^\/science-guidance\/?(index\.html)?$/.test(location.pathname)&&!/[?&]stay\b/.test(location.search))location.replace('https://teachers-data-portal.vercel.app/app/'+location.hash)}catch(e){}})();</script>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#152c43">
-<title>نظام توجيه العلوم — v286</title>
+<title>نظام توجيه العلوم — v287</title>
 <link rel="manifest" href="./manifest.webmanifest">
 <link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png">
 <link rel="apple-touch-icon" href="./icon-192.png">
@@ -2351,6 +2351,7 @@ window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();window.v152
 window.addEventListener('appinstalled',()=>{window.v152InstallPrompt=null;v152SyncInstallBtn()});
 if('serviceWorker' in navigator&&location.protocol!=='file:')window.addEventListener('load',()=>navigator.serviceWorker.register('./service-worker.js').catch(()=>{}));
 const V145_NEWS=[
+ ['v287','منسق المرحلة: قائمة «المرحلة» تعرض مراحله فقط، فلا تظهر له مدارس مراحل غيره.'],
  ['v286','«تعديل الفصول» على الهاتف: 4 فصول في كل سطر بعرض متساوٍ.'],
  ['v285','«تعديل الفصول» على الهاتف: الأزرار في شبكة 2×2، والفصول بطاقة لكل صف بلا تمرير جانبي.'],
  ['v284','«جدول المعلم»: القوائم والأزرار في صف واحد، وإعدادات أيام الدراسة وعدد الحصص في سطر مختصر بزر «تعديل».'],
@@ -7438,6 +7439,7 @@ function v97Stage(page=currentPage){
  if(page==='statistics'&&statisticsSelectedReport&&!STATISTICS_REPORTS[statisticsSelectedReport]?.filters.includes('stage'))return '';
  const v271Sel=v97StageSelections.get(v97StageKey(page))||'';
  if(v271Sel&&profile?.role==='supervisor'&&typeof v271SupStages!=='undefined'&&v271SupStages&&v271SupStagesPid===profile?.id&&!v271SupStages.has(v271Sel))return '';
+ const v287S=v287Set();if(v271Sel&&v287S&&!v287S.has(v271Sel))return ''; // v287: مرحلة ليست للمنسق = الكل
  return v271Sel;
 }
 function v97StageMatches(actual,stage=v97Stage()){return !stage||String(actual||'').trim()===stage}
@@ -7465,10 +7467,15 @@ function v97FilterDataset(source,stage=v97Stage()){
   assignments:(source.assignments||[]).filter(a=>classIds.has(String(a.class_id))),
   aug_ref:(!stage||stage==='إعدادي')?(source.aug_ref||[]).filter(r=>v98SchoolMatches(r.school_id)):[],oct_ref:(!stage||stage==='إعدادي')?(source.oct_ref||[]).filter(r=>v98SchoolMatches(r.school_id)):[]};
 }
+/* v287: مراحل منسق المرحلة النشطة (stage_coordinator_assignments) لقائمة «المرحلة» */
+let v287CoordStages=null,v287Pid='',v287Loading=false;
+function v287Set(){return profile?.role==='stage_coordinator'&&v287CoordStages&&v287Pid===profile?.id?v287CoordStages:null}
+function v287Ensure(){if(profile?.role!=='stage_coordinator'||v287Loading||v287Set())return;v287Loading=true;const pid=profile.id;v202Stages().then(st=>{v287Loading=false;if(profile?.id!==pid||!st?.length)return;v287CoordStages=new Set(st);v287Pid=pid;if(v97StagePages.has(currentPage))loadPage(false)}).catch(()=>{v287Loading=false})}
 function v97StageOptions(selected=v97Stage()){
  const v271Ok=profile?.role==='supervisor'&&v271SupStages&&v271SupStagesPid===profile?.id,v271Only=v271Ok?v271SupStages:null; // v271: مراحل مدارس الموجه فقط
  if(profile?.role==='supervisor'&&!v271Ok)supervisorOwnedSchoolsV75().catch(()=>{});
- return [['','المرحلة: الكل'],...(currentPage==='budget'?[]:[['ابتدائي','ابتدائي']]),['إعدادي','إعدادي'],['ثانوي عام','ثانوي عام'],['ثانوي صناعي','ثانوي صناعي']].filter(([v])=>!v||!v271Only||v271Only.has(v)).map(([value,label])=>`<option value="${value}" ${value===selected?'selected':''}>${label}</option>`).join('');
+ v287Ensure();const v287S=v287Set(); // v287: منسق المرحلة يرى مراحله فقط
+ return [['','المرحلة: الكل'],...(currentPage==='budget'?[]:[['ابتدائي','ابتدائي']]),['إعدادي','إعدادي'],['ثانوي عام','ثانوي عام'],['ثانوي صناعي','ثانوي صناعي']].filter(([v])=>!v||((!v271Only||v271Only.has(v))&&(!v287S||v287S.has(v)))).map(([value,label])=>`<option value="${value}" ${value===selected?'selected':''}>${label}</option>`).join('');
 }
 function v97InstallStageFilter(root){
  if(!v97StagePages.has(currentPage)||!root)return;
