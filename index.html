@@ -1,4 +1,5 @@
 <!doctype html>
+<!-- v294: تبويب «المتصلون الآن» لمدير النظام (NAV admin: onlineUsers؛ كتلة v294؛ قاعدة البيانات v294_user_presence): كل مستخدم مسجل يرسل نبضة presence_ping كل دقيقة (وعند الدخول وعند العودة للتبويب)، والشاشة تعرض admin_online_users (للدور النشط admin فقط): نقطة زرقاء لمن نبضته خلال آخر 3 دقائق مع دوره الحالي ومتصل منذ، ورمادية لغيره مع آخر ظهور وآخر تسجيل دخول؛ تتحدث تلقائيًا كل 30 ثانية. -->
 <!-- v293: «حساب المدرسة» (بدل «مشرف المادة») و«مسؤول البيانات» (قاعدة البيانات v293): غير المكلّف بالبيانات يرى مدرسته كاملة بلا تعديل (شريط «عرض فقط» واسم المسؤول وهاتفه، وإخفاء أدوات التعديل، والقائمة بلا «الإرسال للاعتماد» و«استكمال البيانات»)؛ وفي «معلمو مدارسي» عند اختيار مدرسة: بطاقة مسؤول البيانات، وشارتا «مشرف المادة/مسؤول البيانات»، وزرّا «تعيين مسؤول البيانات» (الثابتون فقط) و«إنشاء حساب دخول» (للموجه). -->
 <!-- v291: الاعتماد لموجه المدرسة وحده (قاعدة البيانات v291 + دالة الحافة supervisor-save-and-approve v4 لموجه المادة في الثانوي): أُلغي مدير المدرسة من الاعتماد؛ تبويب «الاعتماد» للمنسق، والمنسق ومدير النظام يتابعان ويعيدان للتعديل (ولو بعد الاعتماد) ولا يعتمدان؛ أُزيلت قائمة «جهة الاعتماد» من المدارس ونموذج إضافة مدرسة. -->
 <!-- v290: «طلبات معلمي الأجر»: حقل بحث المدرسة داخل بطاقة كل طلب غير مضاف فوق «إضافة إلى البرنامج» (datalist v288SchoolListPage)، والزر يطلب تأكيدًا واحدًا ثم يضيف ببيانات الطلب بلا نافذة (v288QuickAdd)؛ نافذة «عرض» وزرها بلا تغيير. شريط البحث في هذه الشاشة فقط لم يعد ثابتًا عند التمرير. -->
@@ -8,7 +9,6 @@
 <!-- v286: «تعديل الفصول» على الهاتف: الفصول 4 في كل سطر بعرض متساوٍ (شبكة) بدل 5 تخرج عن البطاقة. -->
 <!-- v285: «تعديل الفصول» على الهاتف (≤760px فقط): القوائم بعرض الشاشة والأزرار شبكة 2×2، وجدول الفصول بطاقة لكل صف (الصف والعدد والحصص في سطر والفصول تلتف تحته) بلا تمرير جانبي (.v285-classes). -->
 <!-- v284: «جدول المعلم»: أعلى الصفحة صف واحد (المرحلة + المدرسة + المعلم + تحديث + معاينة وطباعة) بلا عنوان؛ بطاقة «أيام الدراسة وحصص المدرسة» صارت سطرًا يعرض القيم وزر «تعديل» يُظهر الحقلين وزر الحفظ (نفس المعرفات)؛ شارة «في الجدول X من Y» تنتقل لسطر الإعدادات (v284SyncBadge). -->
-<!-- v283: «توزيع الفصول»: «المطلوب» لكل معلم ثابت = النصاب − الإشراف − الريادة (للمنتدب جزئيًا في المدرستين: global_*) بلا تقريب لعدد الفصول، والحالة = النصاب − (تدريس + إشراف + ريادة) كقاعدة البيانات والتقارير؛ «حد أقصى» لا يظهر متبقيًا. مثال: نصاب 19 = 16 + 2 + 1 ← مكتمل. -->
 <html lang="ar" dir="rtl">
 <head>
 <!-- إعداد: أ/ محمود عبدالمفدي محمد أبوالنجا | الصفة: معلم -->
@@ -16,7 +16,7 @@
 <script>/* v226: العنوان الموحد — انظر التعليق أعلى الملف */(function(){try{if(/\.github\.io$/.test(location.hostname)&&/^\/science-guidance\/?(index\.html)?$/.test(location.pathname)&&!/[?&]stay\b/.test(location.search))location.replace('https://teachers-data-portal.vercel.app/app/'+location.hash)}catch(e){}})();</script>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#152c43">
-<title>نظام توجيه العلوم — v293</title>
+<title>نظام توجيه العلوم — v294</title>
 <link rel="manifest" href="./manifest.webmanifest">
 <link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png">
 <link rel="apple-touch-icon" href="./icon-192.png">
@@ -2018,6 +2018,9 @@ body.v233-lock{overflow:hidden}
 body.v293-ro [onclick*="seniorTeacherAddTeacherForm("],body.v293-ro [onclick*="teacherAccountForm("],body.v293-ro [onclick*="editTeacherForm("],body.v293-ro [onclick*="openTeacherDelegationForm("],body.v293-ro [onclick*="adminCancelDelegationForm("],body.v293-ro [onclick*="uxQuickAssignClass("],body.v293-ro [onclick*="v281Unassign("],body.v293-ro [onclick*="v281DoUnassign("],body.v293-ro [onclick*="uxUndoAssignment("],body.v293-ro [onclick*="editAssignmentForm("],body.v293-ro [onclick*="v181Assign("],body.v293-ro [onclick*="v181AssignSel("],body.v293-ro [onclick*="v181Unassign("],body.v293-ro [onclick*="v181Suggest("],body.v293-ro [onclick*="v101SaveTimetable("],body.v293-ro [onclick*="v101SaveSettings("],body.v293-ro [onclick*="v284ToggleSet("],body.v293-ro [onclick*="submitSchool("],body.v293-ro [onclick*="savePaidShortageAllocations("],body.v293-ro [onclick*="applySuggestedPaidShortage("],body.v293-ro [onclick*="openPaidShortageCenter("],body.v293-ro [onclick*="saveCompletionAndNext("],body.v293-ro [onclick*="openCompletionEdit("],body.v293-ro [onclick*="v180LeaveShowForm("],body.v293-ro [onclick*="financialLeaveEdit("],body.v293-ro [onclick*="v205StopPaidTeacher("],body.v293-ro [onclick*="v224Reactivate("],body.v293-ro [onclick*="editSchoolForm("],body.v293-ro [onclick*="subjectPeriodsForm("],body.v293-ro [onclick*="v268ManagerForm("],body.v293-ro [onclick*="v280RemoveClassForm("],body.v293-ro [onclick*="v280RemoveClass("],body.v293-ro .add-class-action,body.v293-ro #addClassButton,body.v293-ro [data-action="add-class"]{display:none!important}
 body.v293-ro select[onchange*="v101ChangeSlot"]{pointer-events:none;opacity:.65}
 .v293-chip{margin-inline-start:6px;vertical-align:middle}
+.v294-dot{display:inline-block;width:12px;height:12px;border-radius:50%;background:#b8c2cf;vertical-align:middle}
+.v294-dot.on{background:#1d6fe0;box-shadow:0 0 0 3px rgba(29,111,224,.22)}
+#v294Table tr.v294-on td{background:rgba(29,111,224,.06)}
 </style>
 </head>
 <body>
@@ -2360,6 +2363,7 @@ window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();window.v152
 window.addEventListener('appinstalled',()=>{window.v152InstallPrompt=null;v152SyncInstallBtn()});
 if('serviceWorker' in navigator&&location.protocol!=='file:')window.addEventListener('load',()=>navigator.serviceWorker.register('./service-worker.js').catch(()=>{}));
 const V145_NEWS=[
+ ['v294','مدير النظام: تبويب «المتصلون الآن» يعرض من فاتح البرنامج الآن بنقطة زرقاء ودوره، وآخر ظهور لغيره.'],
  ['v293','«حساب المدرسة» بدل «مشرف المادة»: يدخل منه مشرف المادة ومسؤول البيانات؛ مسؤول البيانات وحده يعدّل، وغيره يرى فقط. الموجه يعيّن مسؤول البيانات من المعلمين الثابتين وينشئ حساب الدخول من «معلمو مدارسي» بعد اختيار المدرسة.'],
  ['v291','الاعتماد صار لموجه المدرسة وحده (أُلغي مدير المدرسة). المنسق له تبويب «الاعتماد» يتابع فيه مدارس مرحلته ويعيد أي مدرسة للتعديل مع السبب، ومدير النظام كذلك. موجه المادة في الثانوي يعتمد من «الحفظ والاعتماد».'],
  ['v290','طلبات معلمي الأجر: اختيار المدرسة داخل بطاقة الطلب ثم «إضافة إلى البرنامج» بتأكيد واحد، وشريط البحث لا يثبت أعلى الشاشة.'],
@@ -2478,7 +2482,7 @@ async function loadPage(force=false){
  if(currentPage==='studyPlans'||currentPage==='budget')currentPage='dashboard';
  if(currentPage==='reports'&&typeof V186_MERGED!=='undefined'&&V186_MERGED.has(profile?.role))currentPage='statistics'; // v186
  __pageLoadController?.abort();__pageLoadController=new AbortController();const local=__pageLoadController;
- const pages={paidRequests:v288Page,teacherTimetable:teacherTimetablePage,dashboard:dashboardPage,users:usersPage,supervisors:supervisorsPage,schools:schoolsPage,incoming:incomingDataPage,teachers:teachersPage,classes:classesPage,assignments:assignmentsPage,approval:approvalPage,myAssignments:myAssignmentsPage,workload:workloadPage,budget:budgetPage,completion:dataCompletionPage,alerts:alertsPage,statistics:statisticsPage,reports:reportsPage,announcements:announcementsPage,supervisorHealth:supervisorHealthPage,supDistribution:supDistributionPage,schoolEntry:v236SchoolEntryPage};
+ const pages={onlineUsers:v294Page,paidRequests:v288Page,teacherTimetable:teacherTimetablePage,dashboard:dashboardPage,users:usersPage,supervisors:supervisorsPage,schools:schoolsPage,incoming:incomingDataPage,teachers:teachersPage,classes:classesPage,assignments:assignmentsPage,approval:approvalPage,myAssignments:myAssignmentsPage,workload:workloadPage,budget:budgetPage,completion:dataCompletionPage,alerts:alertsPage,statistics:statisticsPage,reports:reportsPage,announcements:announcementsPage,supervisorHealth:supervisorHealthPage,supDistribution:supDistributionPage,schoolEntry:v236SchoolEntryPage};
  const renderPage=pages[currentPage]||dashboardPage;
  const html=await v97RenderPage(renderPage,{force,signal:local.signal});if(local.signal.aborted)return;
  c.innerHTML=html;appNavRenderStrip();initializeCurrentPageUi(c);v97InstallStageFilter(c);enhanceMobileWorkspace(c);refreshMobileActionBar(c);if(currentPage==='dashboard')injectCompletionDashboardCards(c).catch(()=>{});
@@ -5517,7 +5521,7 @@ if(window.visualViewport)window.visualViewport.addEventListener('resize',()=>{if
 
 /* === الإصدار 2026.08.26.44: الخطط الدراسية + إزالة تكرار عناصر قائمة الموبايل === */
 const NAV={
- admin:[['dashboard','لوحة النظام','▦'],['alerts','التنبيهات','🔔'],['completion','استكمال البيانات','✎'],['users','الحسابات','◌'],['supervisors','الموجهون','◎'],['schools','المدارس','⌂'],['teachers','المعلمون','◉'],['approval','الاعتماد','✓'],['incoming','البيانات الواردة','⇩'],['paidRequests','طلبات معلمي الأجر','📝'],['workload','الأنصبة','Σ'],['supervisorHealth','فحص شاشة الموجه','⌁'],['statistics','الإحصائيات','◫'],['reports','التقارير','▤']],
+ admin:[['dashboard','لوحة النظام','▦'],['alerts','التنبيهات','🔔'],['completion','استكمال البيانات','✎'],['users','الحسابات','◌'],['onlineUsers','المتصلون الآن','●'],['supervisors','الموجهون','◎'],['schools','المدارس','⌂'],['teachers','المعلمون','◉'],['approval','الاعتماد','✓'],['incoming','البيانات الواردة','⇩'],['paidRequests','طلبات معلمي الأجر','📝'],['workload','الأنصبة','Σ'],['supervisorHealth','فحص شاشة الموجه','⌁'],['statistics','الإحصائيات','◫'],['reports','التقارير','▤']],
  first_supervisor:[['dashboard','لوحة الإدارة','▦'],['alerts','التنبيهات','🔔'],['supervisors','الموجهون','◎'],['schools','المدارس','⌂'],['teachers','المعلمون','◉'],['statistics','الإحصائيات','◫'],['reports','التقارير العامة','▤'],['announcements','الإعلانات','◈']],
  stage_coordinator:[['dashboard','لوحة منسق المرحلة','▦'],['alerts','التنبيهات','🔔'],['completion','استكمال البيانات','✎'],['supervisors','موجهو المرحلة','◎'],['schools','مدارس المرحلة','⌂'],['teachers','معلمو المرحلة','◉'],['approval','الاعتماد','✓'],['statistics','الإحصائيات','◫'],['reports','تقارير المرحلة','▤']],
  supervisor:[['dashboard','لوحة الموجه','▦'],['alerts','التنبيهات','🔔'],['completion','استكمال البيانات','✎'],['supervisors','بيانات الموجه','◎'],['schools','مدارسي','⌂'],['teachers','معلمو مدارسي','◉'],['approval','الاعتمادات','✓'],['statistics','الإحصائيات','◫'],['reports','التقارير','▤']],
@@ -8686,6 +8690,55 @@ async function v288QuickAdd(id,btn){
  }catch(err){btn.disabled=false;btn.textContent='إضافة إلى البرنامج';moneySafeError(err)}
 }
 /* v288-end */
+/* v294-begin: «المتصلون الآن» لمدير النظام — نبضة presence_ping لكل مستخدم مسجل (كل دقيقة) + شاشة admin_online_users (متصل = نبضة خلال 3 دقائق) */
+let __v294Last=0,__v294LastRole='',__v294Timer=null;
+function v294Ping(force){
+ try{
+  if(!profile||!profile.id)return;
+  const now=Date.now();
+  if(!force&&now-__v294Last<50000&&String(activeRole||'')===__v294LastRole)return;
+  __v294Last=now;__v294LastRole=String(activeRole||'');
+  sb.rpc('presence_ping').then(()=>{},()=>{});
+ }catch(e){}
+}
+setInterval(()=>v294Ping(false),60000);
+document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')v294Ping(false)});
+const __v294BaseLoadContext=loadContext;
+loadContext=async function(){const st=await __v294BaseLoadContext.apply(this,arguments);v294Ping(true);return st};
+function v294Role(r){return r?(ROLE_LABELS[r]||r):'—'}
+function v294Time(t){if(!t)return '—';try{return new Date(t).toLocaleString('ar-EG',{weekday:'short',day:'numeric',month:'short',hour:'numeric',minute:'2-digit'})}catch(e){return String(t).slice(0,16)}}
+function v294Ago(t){
+ if(!t)return 'لم يظهر بعد';
+ const s=Math.max(0,Math.round((Date.now()-new Date(t).getTime())/1000));
+ if(s<90)return 'الآن';
+ const m=Math.round(s/60);if(m<60)return 'منذ '+v294N(m,'دقيقة','دقيقتين','دقائق','دقيقة');
+ const h=Math.round(m/60);if(h<24)return 'منذ '+v294N(h,'ساعة','ساعتين','ساعات','ساعة');
+ return 'منذ '+v294N(Math.round(h/24),'يوم','يومين','أيام','يومًا');
+}
+function v294N(n,one,two,few,many){return n===1?one:n===2?two:(n>=3&&n<=10)?`${n} ${few}`:`${n} ${many}`}
+async function v294Load(){const r=await sb.rpc('admin_online_users');if(r.error)throw r.error;return r.data||[]}
+function v294Body(list){
+ const on=list.filter(u=>u.online).length;
+ const rows=list.map(u=>`<tr class="${u.online?'v294-on':''}"><td><span class="v294-dot${u.online?' on':''}" title="${u.online?'متصل الآن':'غير متصل'}"></span> <b>${esc(u.full_name||'—')}</b><div class="cell-sub">${esc((u.roles||[]).map(v294Role).join('، '))}</div></td><td>${u.online?esc(v294Role(u.active_role)):'—'}</td><td>${u.online?esc(v294Time(u.session_started_at)):'—'}</td><td>${esc(u.online?'الآن':v294Ago(u.last_seen_at))}</td><td>${esc(v294Time(u.last_sign_in_at))}</td></tr>`).join('');
+ return `<div class="grid4" style="margin:10px 0"><div class="card stat-card"><div class="stat-label"><span class="v294-dot on"></span> متصل الآن</div><div class="stat-value">${on}</div></div><div class="card stat-card"><div class="stat-label">غير متصل</div><div class="stat-value">${list.length-on}</div></div><div class="card stat-card"><div class="stat-label">إجمالي الحسابات</div><div class="stat-value">${list.length}</div></div></div>
+ <div class="card"><div class="table-wrap"><table class="table no-compact-directory" id="v294Table"><thead><tr><th>الاسم</th><th>الدور الحالي</th><th>متصل منذ</th><th>آخر ظهور</th><th>آخر تسجيل دخول</th></tr></thead><tbody>${rows||'<tr><td colspan="5">لا توجد حسابات.</td></tr>'}</tbody></table></div></div>
+ <div class="cell-sub" style="margin-top:6px">آخر تحديث: ${esc(new Date().toLocaleTimeString('ar-EG',{hour:'numeric',minute:'2-digit',second:'2-digit'}))}</div>`;
+}
+async function v294Refresh(){const root=document.getElementById('v294Root');if(!root)return;try{root.innerHTML=v294Body(await v294Load())}catch(e){}}
+function v294StartAuto(){
+ if(__v294Timer)return;
+ __v294Timer=setInterval(()=>{
+  if(currentPage!=='onlineUsers'||profile?.role!=='admin'){clearInterval(__v294Timer);__v294Timer=null;return}
+  if(document.visibilityState==='visible')v294Refresh();
+ },30000);
+}
+async function v294Page(){
+ if(profile?.role!=='admin')return '<div class="notice warn">هذه الشاشة لمدير النظام فقط.</div>';
+ let list;try{list=await v294Load()}catch(e){return `<div class="notice danger">تعذّر تحميل المتصلين: ${esc(e.message||e)}</div>`}
+ v294Ping(true);v294StartAuto();
+ return `<div class="page-head"><div><h2>المتصلون الآن</h2><p>النقطة الزرقاء = فاتح البرنامج الآن (خلال آخر 3 دقائق). تتحدث القائمة تلقائيًا كل 30 ثانية. «لم يظهر بعد» = لم يفتح البرنامج منذ تفعيل هذه الشاشة.</p></div><div class="actions"><button class="btn secondary" type="button" onclick="v294Refresh()">تحديث</button></div></div><div id="v294Root">${v294Body(list)}</div>`;
+}
+/* v294-end */
 
 function v110DossierMarkup(d){
  const id=esc(String(d.school.id)),schedule=v110ScheduleRows(d),periods=reportNumber(d.config.periods_per_day)||7,isAdminV128=profile?.role==='admin';
