@@ -1,4 +1,5 @@
 <!doctype html>
+<!-- v307: ترتيب القائمة الجانبية لكل دور بحسب الأولوية والاستخدام الفعلي (سجل التدقيق 23 أكتوبر ← 7 نوفمبر وطلبات الواجهة): الترتيب فقط دون إضافة أو حذف عنصر (دالة v307Order تُستدعى عند رسم القائمة وقائمة «المزيد» والمساعدة). -->
 <!-- v306: مؤشر إنجاز جداول المعلمين — صفحة مستقلة «إنجاز الجداول» (#/timetableProgress) بفلاتر المرحلة والمدرسة + بطاقة «إدخال جداول المعلمين» في شاشة الموجّه ولوحة المنسق (مكتمل/ناقص/لم يبدأ، المدارس الأضعف أولًا، نافذة المدرسة بزر «تذكير» واتساب لكل معلم) + تقرير A4 «تقدم إدخال جداول المعلمين»؛ قراءة فقط عبر الدالة timetable_progress (كتلة v306). -->
 <!-- v303: ترتيب تقارير المعلمين (المعلمون/الأنصبة/التوجيه المالي/بيانات المدرسة…): الثابتون أولًا بالأقدمية ثم معلمو الأجر، بنوع الصف نفسه فلا يختلط الأجر بالأساسي حتى لو لم تُحمَّل الأقدمية (منسق المرحلة). -->
 <!-- v302: شاشة الموجّه ← نافذة المدرسة ← تبويب «التوزيع»: بطاقة واحدة لكل معلم (مجموع حصصه وسطر لكل صف بعدد فصوله وحصصها) بدل بطاقة لكل إسناد؛ عرض فقط (supervisorSchoolQuickView). -->
@@ -8,7 +9,6 @@
 <!-- v298: «المعلمون» عند «المدرسة: الكل»: المعلم يظهر مرة واحدة — المنتدب جزئيًا كان يظهر بطاقتين (مدرسته الأصلية والمنتدب إليها)؛ يبقى سطر المدرسة الأصلية ونصه «منتدب جزئيًا إلى …»، والمنتدب كليًا بسطر المدرسة المنتدب إليها (v298OneRowPerTeacher). عند اختيار مدرسة بعينها بلا تغيير. -->
 <!-- v297: شاشة «المعلمون» على الهاتف فقط (≤760px، CSS فقط): شريط البحث والفلاتر لم يعد ثابتًا أعلى الشاشة عند التمرير (كان يغطي بطاقات المعلمين)؛ أزرار «الإجازات وتجديدها» و«توزيع العجز» و«المعلمون الموقوفون» في صف واحد بألوان مميزة (أزرق/ذهبي/أحمر فاتح من متغيرات info/warn/danger)، و«تقارير ▾» بجوار «تصدير Excel» في صف واحد. الحاسوب بلا تغيير. -->
 <!-- v296: «تعديل بيانات المعلم» لمدير النظام: زر «حذف المعلم» انتقل من شريط الحفظ الثابت أسفل النافذة إلى أعلاها (سطر «حذف السجل» تحت سطري المدرسة الأصلية والمنتدب إليها)، لأن الضغط عليه على الهاتف كان يقع على «حفظ». -->
-<!-- v295: مدير النظام — «تعديل بيانات المعلم»: سطرا «المدرسة الأصلية» و«المدرسة المنتدب إليها» بزر «تعديل» يفتح بحثًا في كل المدارس (كل المراحل)؛ تغيير الأصلية يُحفظ بزر «حفظ» ويُلغي ربط المدرسة القديمة (إلا إن كان منتدبًا إليها) مع تنبيه بفصوله المسندة فيها؛ تعديل الانتداب = إلغاء الحالي ثم إنشاء الجديد بدالة الانتداب المعتمدة؛ وزر «حذف المعلم» (قاعدة البيانات v295 admin_remove_teacher: يُمنع إن كان عليه فصول أو انتداب ساري، ويُحفظ السجل في audit_log). -->
 <html lang="ar" dir="rtl">
 <head>
 <!-- إعداد: أ/ محمود عبدالمفدي محمد أبوالنجا | الصفة: معلم -->
@@ -16,7 +16,7 @@
 <script>/* v226: العنوان الموحد — انظر التعليق أعلى الملف */(function(){try{if(/\.github\.io$/.test(location.hostname)&&/^\/science-guidance\/?(index\.html)?$/.test(location.pathname)&&!/[?&]stay\b/.test(location.search))location.replace('https://teachers-data-portal.vercel.app/app/'+location.hash)}catch(e){}})();</script>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#152c43">
-<title>نظام توجيه العلوم — v306</title>
+<title>نظام توجيه العلوم — v307</title>
 <link rel="manifest" href="./manifest.webmanifest">
 <link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png">
 <link rel="apple-touch-icon" href="./icon-192.png">
@@ -2390,6 +2390,7 @@ window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();window.v152
 window.addEventListener('appinstalled',()=>{window.v152InstallPrompt=null;v152SyncInstallBtn()});
 if('serviceWorker' in navigator&&location.protocol!=='file:')window.addEventListener('load',()=>navigator.serviceWorker.register('./service-worker.js').catch(()=>{}));
 const V145_NEWS=[
+ ['v307','ترتيب القائمة الجانبية: الأكثر أولوية واستخدامًا في الأعلى لكل دور (الترتيب فقط، بلا إضافة أو حذف).'],
  ['v306','مؤشر إنجاز جداول المعلمين: بطاقة في شاشة الموجّه ولوحة المنسق وتقرير A4، وزر تذكير واتساب لكل معلم لم يكتمل جدوله.'],
  ['v303','ترتيب تقارير المعلمين: الثابتون أولًا بالأقدمية ثم معلمو الأجر دون اختلاط.'],
  ['v302','نافذة المدرسة (شاشة الموجّه) ← التوزيع: بطاقة واحدة لكل معلم بدل تكرار المعلم مع كل فصل.'],
@@ -2494,7 +2495,7 @@ const V145_NEWS=[
  ['v138–v141','لوحة مؤشرات علوية، والشعار وألوان الهوية في شاشات الدخول واختيار الدور وتغيير كلمة المرور.']
 ];
 function v145OpenHelp(){
- const role=profile?.role,nav=NAV[role]||NAV.teacher,roleName=(typeof ROLE_LABELS!=='undefined'&&ROLE_LABELS[role])||'';
+ const role=profile?.role,nav=v307Order(role,NAV[role]||NAV.teacher),roleName=(typeof ROLE_LABELS!=='undefined'&&ROLE_LABELS[role])||'';
  const items=nav.map(n=>`<div class="v145-help-item"><div><b>${esc(n[2])} ${esc(n[1])}</b><small>${esc(V145_PAGE_HELP[n[0]]||'')}</small></div><button class="btn secondary" type="button" onclick="closeModal();go('${n[0]}')">فتح</button></div>`).join('');
  const news=V145_NEWS.map(x=>`<li><b>${esc(x[0])}:</b> ${esc(x[1])}</li>`).join('');
  modal(`<div class="v145-help"><h3>المساعدة وما الجديد</h3><p class="muted">${roleName?`دورك الحالي: <b>${esc(roleName)}</b> — `:''}تظهر لك الشاشات والبيانات داخل نطاق صلاحيتك فقط.</p><h4>دليل سريع لشاشاتك</h4><div class="v145-help-list">${items}</div><h4>نصائح</h4><ul class="v145-news"><li>كل جدول فيه بحث سريع وتصفية أعلاه.</li><li>بعد كل تحديث للنظام اضغط Ctrl+F5 (أو حدّث الصفحة على الهاتف) لتظهر أحدث نسخة، وتأكد من رقم الإصدار في عنوان الصفحة.</li></ul><h4>ما الجديد</h4><ul class="v145-news">${news}</ul><div class="actions"><button class="btn primary" type="button" onclick="closeModal()">إغلاق</button></div></div>`);
@@ -2504,7 +2505,7 @@ function renderShell(){
  sidebarOpen=false;
  if(!profile)return renderLogin();
  profile.role=activeRole||profile.role;
- const nav=NAV[profile.role]||NAV.teacher;if(!nav.some(x=>x[0]===currentPage))currentPage='dashboard';
+ const nav=v307Order(profile.role,NAV[profile.role]||NAV.teacher);if(!nav.some(x=>x[0]===currentPage))currentPage='dashboard';
  appNavApplyInitial();
  const switchBtn=userRoles.length>1?`<button class="text-btn role-switch-side" onclick="switchRole()">⇄ تبديل الدور</button>`:'';
  app.innerHTML=`<div class="app-shell"><aside id="appSidebar" aria-label="القائمة الرئيسية" class="sidebar ${sidebarOpen?'open':''}"><button class="v111-sidebar-close" type="button" onclick="v111CloseSidebar(true)">× إغلاق القائمة</button><div class="side-logo"><img class="mini side-brand-logo" src="${BRAND_LOGO_SRC}" width="40" height="40" alt="شعار توجيه العلوم"><div><strong>${profile.role==='senior_teacher'?(profile.school_name||'مدرستي'):'توجيه العلوم'}</strong><small>${esc(activeYear?.label||'')} • ${esc(activeTerm?.name||'')}</small></div></div><div class="nav">${nav.map(n=>`<button class="${currentPage===n[0]?'active':''}" data-page="${n[0]}" onclick="go('${n[0]}')"><span class="nav-icon">${n[2]}</span><span class="nav-label" data-short="${esc(mobileNavShort(n[1]))}">${n[1]}</span></button>`).join('')}</div><div class="side-footer"><div class="side-user"><strong>${esc(profile.full_name)}</strong><br>${esc(ROLE_LABELS[profile.role])}<br>${switchBtn}<br><button class="text-btn side-logout" onclick="logout()">تسجيل الخروج</button></div></div></aside><button class="v111-sidebar-backdrop no-print" type="button" tabindex="-1" aria-label="إغلاق القائمة" onclick="v111CloseSidebar(true)"></button><main class="main"><header class="topbar"><div class="topbar-right"><button class="icon-btn mobile-menu" onclick="toggleSidebar()">☰</button><div class="userchip"><span class="top-avatar"></span><div class="top-title"><strong>${esc(ROLE_LABELS[profile.role])}</strong><small>${esc(profile.full_name)}</small></div></div>${userRoles.length>1?`<button class="btn secondary role-switch-top" onclick="switchRole()">⇄ تبديل الدور</button>`:''}<button class="alert-bell v152-install-btn" type="button" onclick="v152Install()" title="تثبيت التطبيق" aria-label="تثبيت التطبيق" ${window.v152InstallPrompt?'':'hidden'}>⬇</button>${profile.role!=='teacher'?`<button class="alert-bell v233-search-btn" type="button" onclick="v233Open()" title="بحث (Ctrl+K)" aria-label="بحث: مدرسة، معلم، موجه">🔍</button>`:''}<button class="alert-bell v225-portals-btn" type="button" onclick="v225ToggleMenu(event)" title="التنقل بين البرنامج والبوابات" aria-label="التنقل بين البرنامج والبوابات" aria-haspopup="menu">🔗</button><button class="alert-bell v145-help-btn" type="button" onclick="v145OpenHelp()" title="المساعدة وما الجديد" aria-label="المساعدة وما الجديد">؟</button>${profile.role!=='teacher'?`<button class="alert-bell" type="button" onclick="go('alerts')" title="مركز التنبيهات" aria-label="مركز التنبيهات">🔔<span id="alertBellCount" class="alert-bell-count"></span></button>`:''}</div><div class="topbar-context">${esc(activeYear?.label||'')} - ${esc(activeTerm?.name||'')}</div></header><div id="appNavTrail" class="app-nav-strip no-print"></div><section id="content" class="content"><div class="card">جاري تحميل البيانات...</div></section></main><nav id="mobileActionBar" class="mobile-action-bar no-print" aria-label="الإجراءات السريعة"></nav></div>`;
@@ -5250,7 +5251,7 @@ function runMobileAction(index){
 
 function openMobileMoreActions(){
  const extras=(window.__mobileActionRegistry||[]);
- const nav=(NAV[profile?.role]||[]).filter(n=>n[0]!==currentPage);
+ const nav=v307Order(profile?.role,NAV[profile?.role]||[]).filter(n=>n[0]!==currentPage);
  const extraHtml=extras.map((a,index)=>`<button class="mobile-more-action" type="button" onclick="runMobileAction(${index})"><span class="mi">${esc(a.icon)}</span><span><b>${esc(a.label)}</b></span></button>`).join('');
  const navHtml=nav.map(n=>`<button class="mobile-more-action" type="button" onclick="closeModal();go('${n[0]}')"><span class="mi">${esc(n[2])}</span><span><b>${esc(mobileNavShort(n[1]))}</b></span></button>`).join('');
  modal(`<div class="modal-head"><h3>المزيد</h3><button class="close" type="button" onclick="closeModal()">×</button></div><div class="mobile-more-grid">${extraHtml}${navHtml}</div>`);
@@ -12985,6 +12986,26 @@ ReportAdapters[V306_ID]={async load(ctx){
  sc.v239KeepIndex=true;return sc;
 }};
 /* v306-end */
+
+/* v307-begin: ترتيب القائمة الجانبية بحسب الأولوية والاستخدام (الترتيب فقط) */
+const V307_ORDER={
+ /* منسق المرحلة: الاستخدام الفعلي = إدخال بيانات المدارس والمعلمون ثم الاعتماد ثم الاستكمال */
+ stage_coordinator:['dashboard','alerts','schoolEntry','teachers','approval','completion','timetableProgress','reports','schools','supervisors','teacherTimetable','statistics'],
+ /* الموجه: مسار العمل = الاستكمال ثم توزيع الفصول وتعديلها ثم الحفظ والاعتماد */
+ supervisor:['dashboard','alerts','completion','assignments','classes','approval','timetableProgress','teachers','schools','reports','teacherTimetable','statistics','supervisors'],
+ /* مدير النظام: البيانات الواردة (اعتماد طلبات البوابة) ثم الاعتماد والمعلمون وإدخال بيانات المدارس */
+ admin:['dashboard','alerts','incoming','approval','teachers','schoolEntry','completion','timetableProgress','schools','supervisors','reports','statistics','paidRequests','workload','teacherTimetable','users','onlineUsers','supervisorHealth'],
+ first_supervisor:['dashboard','alerts','reports','timetableProgress','statistics','schools','teachers','supervisors','announcements','teacherTimetable'],
+ school_manager:['dashboard','alerts','completion','timetableProgress','teachers','approval','reports','teacherTimetable','schools','statistics','supervisors'],
+ senior_teacher:['dashboard','alerts','assignments','classes','teachers','approval','completion','timetableProgress','teacherTimetable','reports','schools','statistics','supervisors'],
+ teacher:['dashboard','myAssignments','teacherTimetable','schools','supervisors','reports','teachers']
+};
+function v307Order(role,nav){
+ const ord=V307_ORDER[role];if(!ord||!Array.isArray(nav))return nav;
+ const rank=id=>{const i=ord.indexOf(id);return i<0?1000:i};
+ return nav.map((n,i)=>[n,i]).sort((a,b)=>rank(a[0][0])-rank(b[0][0])||a[1]-b[1]).map(x=>x[0]);
+}
+/* v307-end */
 </script>
 
 <div id="reportPreviewOverlay" class="report-preview-overlay" role="dialog" aria-modal="true" aria-label="معاينة التقرير" aria-hidden="true">
