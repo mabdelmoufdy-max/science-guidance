@@ -1,4 +1,5 @@
 <!doctype html>
+<!-- v296: «تعديل بيانات المعلم» لمدير النظام: زر «حذف المعلم» انتقل من شريط الحفظ الثابت أسفل النافذة إلى أعلاها (سطر «حذف السجل» تحت سطري المدرسة الأصلية والمنتدب إليها)، لأن الضغط عليه على الهاتف كان يقع على «حفظ». -->
 <!-- v295: مدير النظام — «تعديل بيانات المعلم»: سطرا «المدرسة الأصلية» و«المدرسة المنتدب إليها» بزر «تعديل» يفتح بحثًا في كل المدارس (كل المراحل)؛ تغيير الأصلية يُحفظ بزر «حفظ» ويُلغي ربط المدرسة القديمة (إلا إن كان منتدبًا إليها) مع تنبيه بفصوله المسندة فيها؛ تعديل الانتداب = إلغاء الحالي ثم إنشاء الجديد بدالة الانتداب المعتمدة؛ وزر «حذف المعلم» (قاعدة البيانات v295 admin_remove_teacher: يُمنع إن كان عليه فصول أو انتداب ساري، ويُحفظ السجل في audit_log). -->
 <!-- v294: تبويب «المتصلون الآن» لمدير النظام (NAV admin: onlineUsers؛ كتلة v294؛ قاعدة البيانات v294_user_presence): كل مستخدم مسجل يرسل نبضة presence_ping كل دقيقة (وعند الدخول وعند العودة للتبويب)، والشاشة تعرض admin_online_users (للدور النشط admin فقط): نقطة زرقاء لمن نبضته خلال آخر 3 دقائق مع دوره الحالي ومتصل منذ، ورمادية لغيره مع آخر ظهور وآخر تسجيل دخول؛ تتحدث تلقائيًا كل 30 ثانية. -->
 <!-- v293: «حساب المدرسة» (بدل «مشرف المادة») و«مسؤول البيانات» (قاعدة البيانات v293): غير المكلّف بالبيانات يرى مدرسته كاملة بلا تعديل (شريط «عرض فقط» واسم المسؤول وهاتفه، وإخفاء أدوات التعديل، والقائمة بلا «الإرسال للاعتماد» و«استكمال البيانات»)؛ وفي «معلمو مدارسي» عند اختيار مدرسة: بطاقة مسؤول البيانات، وشارتا «مشرف المادة/مسؤول البيانات»، وزرّا «تعيين مسؤول البيانات» (الثابتون فقط) و«إنشاء حساب دخول» (للموجه). -->
@@ -8,7 +9,6 @@
 <!-- v288: شاشة «طلبات معلمي الأجر» لمدير النظام (NAV admin: paidRequests؛ كتلة v288): الطلبات من paid_teacher_applications (قراءة للمشاهد المسجل فقط) مع حالة كل طلب بمطابقة الرقم القومي في teacher_records، وتفاصيل الطلب وصور الشهادات (روابط موقعة من paid-teacher-docs)، وزر «إضافة إلى البرنامج» ينشئ بطاقة معلم بالأجر بمدرسة يختارها + ربطه بالمدرسة للفصل الحالي. الرابط المباشر #/paidRequests يختار دور مدير النظام تلقائيًا. بلا تغيير في قاعدة البيانات. -->
 <!-- v287: قائمة «المرحلة» لمنسق المرحلة تعرض مراحله النشطة فقط (v202Stages ← v287Set)، والمرحلة المحفوظة التي ليست له تُعامل «الكل» (كما في v271 للموجه). -->
 <!-- v286: «تعديل الفصول» على الهاتف: الفصول 4 في كل سطر بعرض متساوٍ (شبكة) بدل 5 تخرج عن البطاقة. -->
-<!-- v285: «تعديل الفصول» على الهاتف (≤760px فقط): القوائم بعرض الشاشة والأزرار شبكة 2×2، وجدول الفصول بطاقة لكل صف (الصف والعدد والحصص في سطر والفصول تلتف تحته) بلا تمرير جانبي (.v285-classes). -->
 <html lang="ar" dir="rtl">
 <head>
 <!-- إعداد: أ/ محمود عبدالمفدي محمد أبوالنجا | الصفة: معلم -->
@@ -16,7 +16,7 @@
 <script>/* v226: العنوان الموحد — انظر التعليق أعلى الملف */(function(){try{if(/\.github\.io$/.test(location.hostname)&&/^\/science-guidance\/?(index\.html)?$/.test(location.pathname)&&!/[?&]stay\b/.test(location.search))location.replace('https://teachers-data-portal.vercel.app/app/'+location.hash)}catch(e){}})();</script>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#152c43">
-<title>نظام توجيه العلوم — v295</title>
+<title>نظام توجيه العلوم — v296</title>
 <link rel="manifest" href="./manifest.webmanifest">
 <link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png">
 <link rel="apple-touch-icon" href="./icon-192.png">
@@ -2371,6 +2371,7 @@ window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();window.v152
 window.addEventListener('appinstalled',()=>{window.v152InstallPrompt=null;v152SyncInstallBtn()});
 if('serviceWorker' in navigator&&location.protocol!=='file:')window.addEventListener('load',()=>navigator.serviceWorker.register('./service-worker.js').catch(()=>{}));
 const V145_NEWS=[
+ ['v296','مدير النظام: زر «حذف المعلم» صار في أعلى نافذة «تعديل بيانات المعلم» بعيدًا عن زر «حفظ».'],
  ['v295','مدير النظام: في «تعديل بيانات المعلم» تظهر المدرسة الأصلية والمنتدب إليها ويُعدَّلان بالبحث في كل المدارس، مع زر «حذف المعلم» للسجلات المكررة بلا فصول.'],
  ['v294','مدير النظام: تبويب «المتصلون الآن» يعرض من فاتح البرنامج الآن بنقطة زرقاء ودوره، وآخر ظهور لغيره.'],
  ['v293','«حساب المدرسة» بدل «مشرف المادة»: يدخل منه مشرف المادة ومسؤول البيانات؛ مسؤول البيانات وحده يعدّل، وغيره يرى فقط. الموجه يعيّن مسؤول البيانات من المعلمين الثابتين وينشئ حساب الدخول من «معلمو مدارسي» بعد اختيار المدرسة.'],
@@ -8787,8 +8788,8 @@ editTeacherForm=async function(id){
   <div id="v295HomeEdit" hidden class="card v295-edit"><label for="v295HomeInp">ابحث باسم المدرسة (كل المراحل)</label><input type="search" id="v295HomeInp" list="v295SchoolList" placeholder="اكتب جزءًا من اسم المدرسة" autocomplete="off" onkeydown="if(event.key==='Enter'){event.preventDefault();v295ConfirmHome()}"><div id="v295HomeWarn"></div><div class="actions"><button type="button" class="btn primary" onclick="v295ConfirmHome()">تأكيد التغيير</button><button type="button" class="btn secondary" onclick="document.getElementById('v295HomeEdit').hidden=true">رجوع</button></div></div>
   <div class="card v295-line"><div><div class="muted">المدرسة المنتدب إليها</div><b>${ds.length?ds.map(d=>`${v295SchoolName(d.to_school_id)} <span class="badge">${d.delegation_type==='full'?'كلي':'جزئي'}</span>`).join('<br>'):'لا يوجد'}</b></div><div><button type="button" class="btn secondary" onclick="v295EditDelegation('${id}','${ds.length===1?ds[0].id:''}',${ds.length})">تعديل</button>${ds.length?` <button type="button" class="btn secondary" onclick="adminCancelDelegationForm('${id}')">إلغاء الانتداب</button>`:''}</div></div>`;
   form.insertAdjacentElement('afterbegin',box);
-  const acts=form.querySelector(':scope > .actions');
-  if(acts&&!acts.querySelector('.v295-del')){const b=document.createElement('button');b.type='button';b.className='btn danger v295-del';b.textContent='🗑 حذف المعلم';b.onclick=()=>v295DeleteForm(id,t.full_name||'');acts.appendChild(b)}
+  /* v296: زر الحذف في أعلى النافذة بعيدًا عن «حفظ» (كان في شريط الحفظ الثابت أسفل الهاتف فيُضغط «حفظ» بدله) */
+  if(!box.querySelector('.v295-del')){const row=document.createElement('div');row.className='card v295-line';row.innerHTML='<div><div class="muted">حذف السجل</div><b>للسجلات المكررة أو الخاطئة فقط</b></div>';const b=document.createElement('button');b.type='button';b.className='btn danger v295-del';b.textContent='🗑 حذف المعلم';b.onclick=()=>v295DeleteForm(id,t.full_name||'');row.appendChild(b);box.appendChild(row)}
  }catch(error){console.warn('v295 schools box',error)}
 };
 async function v295OpenHome(id){
