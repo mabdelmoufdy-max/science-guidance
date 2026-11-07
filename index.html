@@ -1,4 +1,5 @@
 <!doctype html>
+<!-- v303: ترتيب تقارير المعلمين (المعلمون/الأنصبة/التوجيه المالي/بيانات المدرسة…): الثابتون أولًا بالأقدمية ثم معلمو الأجر، بنوع الصف نفسه فلا يختلط الأجر بالأساسي حتى لو لم تُحمَّل الأقدمية (منسق المرحلة). -->
 <!-- v302: شاشة الموجّه ← نافذة المدرسة ← تبويب «التوزيع»: بطاقة واحدة لكل معلم (مجموع حصصه وسطر لكل صف بعدد فصوله وحصصها) بدل بطاقة لكل إسناد؛ عرض فقط (supervisorSchoolQuickView). -->
 <!-- v301: تقرير «الجدول الأسبوعي لمعلمي المدرسة» (A4): اليوم مرة واحدة بخلية مدموجة (rowspan) على معلمي ذلك اليوم بدل تكراره في كل صف؛ بلا تغيير في الأعمدة ولا الحصص (غلاف renderReportSchema بعد v262 وحقل _dk). -->
 <!-- v300: إلغاء انتداب معلم له فصول مسندة في المدرسة المنتدب إليها (مدير النظام ومنسق المرحلة): بدل رسالة «فُك الإسناد أولًا» نافذة تأكيد بأسماء الفصول وحصصها و«هل فعلًا تريد إلغاء إسناد الحصص وإلغاء الانتداب؟»؛ عند التأكيد يُلغى إسنادها (unassign_class_atomic للمدير، والحذف المسموح بسياسة teaching_coord_remove للمنسق) فتعود غير مسندة ثم يُلغى الانتداب بالمسار نفسه؛ إن تعذر إلغاء أي إسناد لا يُلغى الانتداب. -->
@@ -8,7 +9,6 @@
 <!-- v296: «تعديل بيانات المعلم» لمدير النظام: زر «حذف المعلم» انتقل من شريط الحفظ الثابت أسفل النافذة إلى أعلاها (سطر «حذف السجل» تحت سطري المدرسة الأصلية والمنتدب إليها)، لأن الضغط عليه على الهاتف كان يقع على «حفظ». -->
 <!-- v295: مدير النظام — «تعديل بيانات المعلم»: سطرا «المدرسة الأصلية» و«المدرسة المنتدب إليها» بزر «تعديل» يفتح بحثًا في كل المدارس (كل المراحل)؛ تغيير الأصلية يُحفظ بزر «حفظ» ويُلغي ربط المدرسة القديمة (إلا إن كان منتدبًا إليها) مع تنبيه بفصوله المسندة فيها؛ تعديل الانتداب = إلغاء الحالي ثم إنشاء الجديد بدالة الانتداب المعتمدة؛ وزر «حذف المعلم» (قاعدة البيانات v295 admin_remove_teacher: يُمنع إن كان عليه فصول أو انتداب ساري، ويُحفظ السجل في audit_log). -->
 <!-- v294: تبويب «المتصلون الآن» لمدير النظام (NAV admin: onlineUsers؛ كتلة v294؛ قاعدة البيانات v294_user_presence): كل مستخدم مسجل يرسل نبضة presence_ping كل دقيقة (وعند الدخول وعند العودة للتبويب)، والشاشة تعرض admin_online_users (للدور النشط admin فقط): نقطة زرقاء لمن نبضته خلال آخر 3 دقائق مع دوره الحالي ومتصل منذ، ورمادية لغيره مع آخر ظهور وآخر تسجيل دخول؛ تتحدث تلقائيًا كل 30 ثانية. -->
-<!-- v293: «حساب المدرسة» (بدل «مشرف المادة») و«مسؤول البيانات» (قاعدة البيانات v293): غير المكلّف بالبيانات يرى مدرسته كاملة بلا تعديل (شريط «عرض فقط» واسم المسؤول وهاتفه، وإخفاء أدوات التعديل، والقائمة بلا «الإرسال للاعتماد» و«استكمال البيانات»)؛ وفي «معلمو مدارسي» عند اختيار مدرسة: بطاقة مسؤول البيانات، وشارتا «مشرف المادة/مسؤول البيانات»، وزرّا «تعيين مسؤول البيانات» (الثابتون فقط) و«إنشاء حساب دخول» (للموجه). -->
 <html lang="ar" dir="rtl">
 <head>
 <!-- إعداد: أ/ محمود عبدالمفدي محمد أبوالنجا | الصفة: معلم -->
@@ -16,7 +16,7 @@
 <script>/* v226: العنوان الموحد — انظر التعليق أعلى الملف */(function(){try{if(/\.github\.io$/.test(location.hostname)&&/^\/science-guidance\/?(index\.html)?$/.test(location.pathname)&&!/[?&]stay\b/.test(location.search))location.replace('https://teachers-data-portal.vercel.app/app/'+location.hash)}catch(e){}})();</script>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#152c43">
-<title>نظام توجيه العلوم — v302</title>
+<title>نظام توجيه العلوم — v303</title>
 <link rel="manifest" href="./manifest.webmanifest">
 <link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png">
 <link rel="apple-touch-icon" href="./icon-192.png">
@@ -2382,6 +2382,7 @@ window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();window.v152
 window.addEventListener('appinstalled',()=>{window.v152InstallPrompt=null;v152SyncInstallBtn()});
 if('serviceWorker' in navigator&&location.protocol!=='file:')window.addEventListener('load',()=>navigator.serviceWorker.register('./service-worker.js').catch(()=>{}));
 const V145_NEWS=[
+ ['v303','ترتيب تقارير المعلمين: الثابتون أولًا بالأقدمية ثم معلمو الأجر دون اختلاط.'],
  ['v302','نافذة المدرسة (شاشة الموجّه) ← التوزيع: بطاقة واحدة لكل معلم بدل تكرار المعلم مع كل فصل.'],
  ['v301','تقرير جدول المدرسة: اسم اليوم يظهر مرة واحدة في خلية مدموجة بدل تكراره مع كل معلم.'],
  ['v300','إلغاء انتداب معلم له فصول مسندة: تظهر الفصول وحصصها مع تأكيد واحد يلغي إسنادها والانتداب معًا.'],
@@ -12286,10 +12287,11 @@ async function v277Ready(){try{await v261Priority()}catch(_){}}
 function v261Cmp(pri,a,b){const x=pri&&pri.has(String(a))?pri.get(String(a)):Infinity,y=pri&&pri.has(String(b))?pri.get(String(b)):Infinity;return x===y?0:x<y?-1:1}
 async function v261Reorder(schema,groupKey,idKey){
  const rows=schema&&schema.rows;if(!Array.isArray(rows)||rows.length<2)return;
- const pri=await v261Priority();if(!pri.size)return;
+ const pri=await v261Priority();/* v301: الثابتون أولًا ثم الأجر حسب نوع الصف نفسه (حتى لو غابت الأقدمية) */
+ const v301Paid=r=>(r&&(r.workType==='بالأجر'||r.work_type==='paid'))?1:0;
  const order=[],by=new Map();
  rows.forEach(r=>{const k=r&&r._group?'__g'+order.length:String(groupKey(r));if(!by.has(k)){by.set(k,[]);order.push(k)}by.get(k).push(r)});
- const out=[];order.forEach(k=>{const g=by.get(k).map((r,i)=>[r,i]);g.sort((a,b)=>v261Cmp(pri,a[0][idKey],b[0][idKey])||a[1]-b[1]);g.forEach(x=>out.push(x[0]))});
+ const out=[];order.forEach(k=>{const g=by.get(k).map((r,i)=>[r,i]);g.sort((a,b)=>v301Paid(a[0])-v301Paid(b[0])||v261Cmp(pri,a[0][idKey],b[0][idKey])||a[1]-b[1]);g.forEach(x=>out.push(x[0]))});
  schema.rows=out;
  if((schema.columns||[]).some(c=>c.key==='index')&&out.every(r=>r&&('index' in r||r._group))){let i=0;out.forEach(r=>{if(r&&!r._group)r.index=++i})}
  if(schema.reportId===V257_ID)v257Metrics(schema);
