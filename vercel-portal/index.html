@@ -335,7 +335,7 @@ summary{cursor:pointer;font-weight:600;padding:4px 0}
       S.statusErr ? h('div', { class: 'warn' }, 'تعذّر الاتصال بالخادم. ', h('button', { type: 'button', class: 'link', onclick: boot }, 'إعادة المحاولة')) : null,
       h('div', { class: 'roles' },
         role('👨‍🏫', 'معلم', 'راجع بياناتك المسجّلة (عرض فقط)', function () { S.mode = 'registered'; go('gate'); }),
-        role('🏫', 'مشرف مدرسة', 'اعرض معلمي مدرستك، وعدّل بياناتهم وفصولهم، وأضف معلمًا جديدًا', function () { go('supgate'); }),
+        role('🏫', 'مشرف مدرسة', 'اعرض معلمي مدرستك وبياناتهم وفصولهم (عرض فقط)', function () { go('supgate'); }),
         role('📝', 'معلم بالأجر — تقديم طلب', 'نموذج التقدم للتعاقد', function () { window.location.href = CFG.paid; }),
         ownerMode() ? role('📋', 'طلبات معلمي الأجر', 'عرض الطلبات وإضافة المعلم إلى البرنامج الرئيسي', function () { window.location.href = '/app/#/paidRequests'; }) : null,
         role('🧭', 'إدخال بيانات المدارس', 'لمنسق المرحلة: بيانات مدارس مرحلتك وفصولها ومعلميها، وإسناد الفصول واعتماد البيانات', function () { window.location.href = '/coordinator/'; }),
@@ -1077,9 +1077,8 @@ summary{cursor:pointer;font-weight:600;padding:4px 0}
     return h('div', { class: 'card' },
       suptop(sch.name, sup.schools.length > 1 ? '‹ المدارس' : '‹ الرئيسية', sup.schools.length > 1 ? function () { go('supschools'); } : goHome),
       h('p', { class: 'sub', style: 'text-align:right' }, stageTitle(sch.stage_key) + ' · ' + sup.teachers.length + ' معلم'),
-      closedBanner(),
-      mkBtn('btn', '＋ إضافة معلم جديد', function () { supStart(null); }, { id: 'sup-add', disabled: S.closed }),
-      h('div', { style: 'height:10px' }), q, listEl);
+      h('div', { class: 'note' }, 'البوابة الآن لعرض البيانات والاستعلام فقط.'),
+      q, listEl);
   };
 
   VIEWS.supteacher = function () {
@@ -1100,14 +1099,8 @@ summary{cursor:pointer;font-weight:600;padding:4px 0}
     if (cl.length) rows.push(kvRow('إجمالي الحصص', h('span', { id: 'v-total' }, String(supTotal(t)))));
     return h('div', { class: 'card' },
       suptop('بيانات المعلم', '‹ المعلمون', function () { go('supschool'); }),
-      closedBanner(),
-      t.is_home ? null : h('div', { class: 'note', id: 'visitor-note' }, 'هذا المعلم منتدب إلى مدرستك؛ مدرسته الأصلية في مدرسة أخرى. يمكنك تعديل فصوله في ' + S.sup.school.name + ' فقط.'),
-      t.pending ? h('div', { class: 'note', id: 'pending-note' }, 'لديك طلب سابق لهذا المعلم قيد المراجعة. أي إرسال جديد يحلّ محله.') : null,
-      t.teacher_pending ? h('div', { class: 'note', id: 'tpending-note' }, 'أرسل المعلم نفسه طلب تعديل قيد المراجعة.') : null,
-      h('div', { class: 'kv' }, rows),
-      t.is_home ? mkBtn('btn', 'تعديل بيانات المعلم', function () { supStart(t, 'person'); }, { id: 'sup-edit-person', disabled: S.closed }) : null,
-      t.is_home ? h('div', { style: 'height:10px' }) : null,
-      mkBtn(t.is_home ? 'btn2' : 'btn', 'إسناد / تعديل الفصول', function () { supStart(t, 'classes'); }, { id: 'sup-edit-classes', disabled: S.closed }));
+      t.is_home ? null : h('div', { class: 'note', id: 'visitor-note' }, 'هذا المعلم منتدب إلى مدرستك؛ مدرسته الأصلية في مدرسة أخرى.'),
+      h('div', { class: 'kv' }, rows));
   };
 
   function supStart(t, startKey) {
