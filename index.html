@@ -8849,12 +8849,15 @@ saveTeacherDelegation=async function(e,teacherId){
 async function v295DeleteForm(id,name){
  if(profile?.role!=='admin')return toast('حذف المعلم متاح لمدير النظام فقط');
  try{
-  const [{count:ta,error:e1},{count:dl,error:e2}]=await Promise.all([
+  const [{count:ta,error:e1},{count:dAll,error:e2},{data:tr,error:e3}]=await Promise.all([
    sb.from('teaching_assignments').select('id',{count:'exact',head:true}).eq('teacher_id',id),
-   sb.from('delegations').select('id',{count:'exact',head:true}).eq('teacher_id',id).eq('active',true)]);
-  if(e1)throw e1;if(e2)throw e2;
+   sb.from('delegations').select('id',{count:'exact',head:true}).eq('teacher_id',id).eq('active',true),
+   sb.from('teacher_records').select('home_school_id').eq('id',id).maybeSingle()]);
+  if(e1)throw e1;if(e2)throw e2;if(e3)throw e3;
+  /* v295b: الانتداب الساري لا يمنع حذف سجل بلا مدرسة أصلية (مكرر عالق) */
+  const dl=tr?.home_school_id?dAll:0,orphan=!tr?.home_school_id&&dAll;
   if(ta||dl)return modal(`<h3>حذف المعلم</h3><div class="notice danger"><b>لا يمكن حذف ${esc(name)}</b>: ${ta?`له ${ta} فصل/فصول مسندة`:''}${ta&&dl?' و':''}${dl?'له انتداب ساري':''}. ${ta?'ألغِ إسناد فصوله أولًا (أو انقلها للسجل الصحيح)':'ألغِ الانتداب أولًا'} ثم احذفه.</div><div class="actions"><button type="button" class="btn secondary" onclick="closeModal()">حسنًا</button></div>`);
-  modal(`<h3>حذف المعلم نهائيًا</h3><div class="notice danger">سيُحذف سجل <b>${esc(name)}</b> نهائيًا من البرنامج. يُحفظ السجل كاملًا في سجل التدقيق قبل الحذف.</div><div class="field"><label for="v295DelName">اكتب اسم المعلم للتأكيد</label><input id="v295DelName" autocomplete="off"></div><div class="actions"><button type="button" class="btn danger" id="v295DelBtn" onclick="v295DeleteConfirmed('${id}')">حذف نهائي</button><button type="button" class="btn secondary" onclick="closeModal()">رجوع</button></div>`);
+  modal(`<h3>حذف المعلم نهائيًا</h3><div class="notice danger">سيُحذف سجل <b>${esc(name)}</b> نهائيًا من البرنامج. يُحفظ السجل كاملًا في سجل التدقيق قبل الحذف.${orphan?`<br>السجل بلا مدرسة أصلية وعليه ${dAll} انتداب ساري سيُحذف معه (ويُحفظ في سجل التدقيق).`:''}</div><div class="field"><label for="v295DelName">اكتب اسم المعلم للتأكيد</label><input id="v295DelName" autocomplete="off"></div><div class="actions"><button type="button" class="btn danger" id="v295DelBtn" onclick="v295DeleteConfirmed('${id}')">حذف نهائي</button><button type="button" class="btn secondary" onclick="closeModal()">رجوع</button></div>`);
   document.getElementById('v295DelName').dataset.name=name;
  }catch(error){moneySafeError(error)}
 }
