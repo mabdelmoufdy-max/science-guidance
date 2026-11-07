@@ -8857,21 +8857,22 @@ async function v295DeleteForm(id,name){
   /* v295b: الانتداب الساري لا يمنع حذف سجل بلا مدرسة أصلية (مكرر عالق) */
   const dl=tr?.home_school_id?dAll:0,orphan=!tr?.home_school_id&&dAll;
   if(ta||dl)return modal(`<h3>حذف المعلم</h3><div class="notice danger"><b>لا يمكن حذف ${esc(name)}</b>: ${ta?`له ${ta} فصل/فصول مسندة`:''}${ta&&dl?' و':''}${dl?'له انتداب ساري':''}. ${ta?'ألغِ إسناد فصوله أولًا (أو انقلها للسجل الصحيح)':'ألغِ الانتداب أولًا'} ثم احذفه.</div><div class="actions"><button type="button" class="btn secondary" onclick="closeModal()">حسنًا</button></div>`);
-  modal(`<h3>حذف المعلم نهائيًا</h3><div class="notice danger">سيُحذف سجل <b>${esc(name)}</b> نهائيًا من البرنامج. يُحفظ السجل كاملًا في سجل التدقيق قبل الحذف.${orphan?`<br>السجل بلا مدرسة أصلية وعليه ${dAll} انتداب ساري سيُحذف معه (ويُحفظ في سجل التدقيق).`:''}</div><div class="field"><label for="v295DelName">اكتب اسم المعلم للتأكيد</label><input id="v295DelName" autocomplete="off"></div><div class="actions"><button type="button" class="btn danger" id="v295DelBtn" onclick="v295DeleteConfirmed('${id}')">حذف نهائي</button><button type="button" class="btn secondary" onclick="closeModal()">رجوع</button></div>`);
+  modal(`<h3>حذف المعلم نهائيًا</h3><div class="notice danger">سيُحذف سجل <b>${esc(name)}</b> نهائيًا من البرنامج. يُحفظ السجل كاملًا في سجل التدقيق قبل الحذف.${orphan?`<br>السجل بلا مدرسة أصلية وعليه ${dAll} انتداب ساري سيُحذف معه (ويُحفظ في سجل التدقيق).`:''}</div><div class="field"><label for="v295DelName">اكتب اسم المعلم للتأكيد</label><input id="v295DelName" autocomplete="off"><div id="v295DelErr" class="notice danger" hidden style="margin-top:6px"></div></div><div class="actions"><button type="button" class="btn danger" id="v295DelBtn" onclick="v295DeleteConfirmed('${id}')">حذف نهائي</button><button type="button" class="btn secondary" onclick="closeModal()">رجوع</button></div>`);
   document.getElementById('v295DelName').dataset.name=name;
  }catch(error){moneySafeError(error)}
 }
 async function v295DeleteConfirmed(id){
  const inp=document.getElementById('v295DelName'),btn=document.getElementById('v295DelBtn');
- const n=v=>String(v||'').replace(/\s+/g,' ').trim();
- if(!inp||n(inp.value)!==n(inp.dataset.name))return toast('اكتب اسم المعلم كما هو للتأكيد');
+ const n=v=>v288Norm(v).replace(/\s+/g,''),err=document.getElementById('v295DelErr');
+ if(!inp||n(inp.value)!==n(inp.dataset.name)){if(err){err.hidden=false;err.textContent='الاسم المكتوب لا يطابق اسم المعلم: '+(inp?.dataset.name||'')}return}
  if(btn.disabled)return;btn.disabled=true;btn.textContent='جارٍ الحذف...';
  try{
   const {error}=await sb.rpc('admin_remove_teacher',{p_teacher_id:id});if(error)throw error;
-  closeModal();toast('تم حذف المعلم');
+  const nm=inp.dataset.name||'';closeModal();
   invalidateData('teachers','hierarchy','dashboard','assignments','page:reports','school:self');
-  await loadPage(true);
- }catch(error){moneySafeError(error);btn.disabled=false;btn.textContent='حذف نهائي'}
+  await loadPage(true).catch(()=>{});
+  modal(`<h3>تم حذف المعلم ✅</h3><div class="notice ok">حُذف سجل <b>${esc(nm)}</b> نهائيًا من البرنامج، وحُفظت نسخة منه في سجل التدقيق.</div><div class="actions"><button type="button" class="btn primary" onclick="closeModal()">حسنًا</button></div>`);
+ }catch(error){btn.disabled=false;btn.textContent='حذف نهائي';const err=document.getElementById('v295DelErr');if(err){err.hidden=false;err.textContent='لم يُحذف المعلم: '+(error?.message||'خطأ غير معروف')}else moneySafeError(error)}
 }
 /* v295-end */
 
