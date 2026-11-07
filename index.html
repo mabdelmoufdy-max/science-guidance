@@ -12897,14 +12897,6 @@ function v306Msg(r){
  const q=Number(r.required)||0,e=Number(r.entered)||0,left=Math.max(0,q-e),first=String(r.teacher_name||'').trim().split(/\s+/)[0]||'';
  return `السلام عليكم أ/ ${first}،\n`+(e>0?`باقي لك ${v306Per(left)} لاكتمال جدولك الأسبوعي في بوابة المعلمين.`:`لم يُسجَّل جدولك الأسبوعي بعد (${v306Per(q)}) في بوابة المعلمين.`)+`\nالرابط: https://teachers-data-portal.vercel.app/#teacher\nشكرًا لتعاونك 🌹`;
 }
-async function v306Card(force){
- const rows=await v306Load(force);if(!rows.length)return '';
- const sc=v306Schools(rows),tot=sc.reduce((a,g)=>({done:a.done+g.done,part:a.part+g.part,none:a.none+g.none}),{done:0,part:0,none:0});
- const line=g=>{const p=Math.round(g.pct*100),col=!g.total?'#cbd5e1':p>=100?'#2fa84f':p>=40?'#e8a317':'#e0584d';
-  return `<button type="button" class="v306-row" onclick="v306Open('${esc(g.id)}')"><span class="nm" title="${esc(g.name)}">${esc(g.name)}</span><span class="bar"><i style="width:${g.total?p:0}%;background:${col}"></i></span><span class="pc">${g.total?`${g.done} من ${g.total}`:'لا فصول'}${g.total&&g.done===g.total?' ✓':''}</span></button>`};
- const first=sc.slice(0,6).map(line).join(''),rest=sc.slice(6).map(line).join('');
- return `<div class="card v306-card" id="v306Card"><div class="v306-head"><h3>إدخال جداول المعلمين</h3><span style="display:flex;gap:6px"><button type="button" class="btn secondary" onclick="go('timetableProgress')">الصفحة الكاملة</button><button type="button" class="btn secondary" onclick="openReportById('${V306_ID}')">📄 تقرير</button></span></div><div class="v124-kpis">${v124Kpi('اكتمل جدوله',tot.done,'ok')}${v124Kpi('ناقص',tot.part,tot.part?'warn':'ok')}${v124Kpi('لم يبدأ',tot.none,tot.none?'danger':'ok')}</div><div class="muted" style="font-size:.85em;margin:4px 2px">المدارس الأضعف إنجازًا أولًا — اضغط مدرسة لرؤية معلميها وإرسال تذكير.</div>${first}${rest?`<details><summary class="muted" style="cursor:pointer;padding:6px 2px">عرض باقي المدارس (${sc.length-6})</summary>${rest}</details>`:''}</div>`;
-}
 function v306TeacherRows(list){
   const cls=st=>st===V306_ST[0]?'s2':st===V306_ST[1]?'s1':st===V306_ST[2]?'s0':'sx';
   return list.map(r=>{
@@ -12967,18 +12959,6 @@ async function v306Open(id){
   const body=v306TeacherRows(list);
   modal(`<div class="modal-head"><div><h3>${esc(g.name)}</h3><div class="muted" style="font-size:12px">${g.done} مكتمل • ${g.part} ناقص • ${g.none} لم يبدأ${g.noc?` • ${g.noc} بلا فصول`:''}</div></div><button class="close" onclick="closeModal()">×</button></div>${body}`);
  }catch(e){moneySafeError(e)}
-}
-{
- const base=supervisorWorkspacePage;
- supervisorWorkspacePage=async function(){
-  const html=await base.apply(this,arguments);
-  try{if(!html)return html;const card=await v306Card(false);return card?html.replace('<div class="supervisor-workspace">','<div class="supervisor-workspace">'+card):html}catch(e){console.warn('v306 card skipped',e);return html}
- };
- const base2=v168StageBoard;
- v168StageBoard=async function(){
-  const html=await base2.apply(this,arguments);
-  try{if(!html)return html;const card=await v306Card(false);return card?html.replace('<div class="v155-board v168-board">','<div class="v155-board v168-board">'+card):html}catch(e){console.warn('v306 card skipped',e);return html}
- };
 }
 Object.assign(STATISTICS_REPORTS,{[V306_ID]:{title:'تقدم إدخال جداول المعلمين',subtitle:'من أدخل جدوله الفعلي ومن لم يكمله، مجمّعًا بالمدرسة — للمتابعة والتذكير',icon:'📅',adapter:V306_ID,filters:['stage','school','status'],purpose:true,statusLabel:'الحالة',statuses:V306_ST,note:'المطلوب = مجموع حصص المعلم المسندة له، والمدخل = حصصه المسجّلة في جدوله. المعلم بلا فصول مسندة لا يُحسب عليه تقصير. يُحسب المعلم في مدرسته الأصلية.'}});
 if(!V103_PURPOSE_REPORTS.includes(V306_ID))V103_PURPOSE_REPORTS.push(V306_ID);
