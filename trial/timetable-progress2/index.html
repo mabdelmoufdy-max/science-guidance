@@ -12954,6 +12954,13 @@ ReportAdapters[V306_ID]={async load(ctx){
  try{await v261Reorder(sc,r=>r._schoolId,'_tid')}catch(e){console.warn('v306 reorder skipped',e)}
  sc.v239KeepIndex=true;return sc;
 }};
+{
+ const base3=dashboardPage;
+ dashboardPage=async function(){
+  const html=await base3.apply(this,arguments);
+  try{if(profile?.role!=='admin'||!html)return html;const card=await v306Card(false);return card?card+html:html}catch(e){console.warn('v306 admin card skipped',e);return html}
+ };
+}
 /* v306-end */
 </script>
 
