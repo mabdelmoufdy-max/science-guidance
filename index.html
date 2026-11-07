@@ -1,4 +1,5 @@
 <!doctype html>
+<!-- v295: مدير النظام — «تعديل بيانات المعلم»: سطرا «المدرسة الأصلية» و«المدرسة المنتدب إليها» بزر «تعديل» يفتح بحثًا في كل المدارس (كل المراحل)؛ تغيير الأصلية يُحفظ بزر «حفظ» ويُلغي ربط المدرسة القديمة (إلا إن كان منتدبًا إليها) مع تنبيه بفصوله المسندة فيها؛ تعديل الانتداب = إلغاء الحالي ثم إنشاء الجديد بدالة الانتداب المعتمدة؛ وزر «حذف المعلم» (قاعدة البيانات v295 admin_remove_teacher: يُمنع إن كان عليه فصول أو انتداب ساري، ويُحفظ السجل في audit_log). -->
 <!-- v294: تبويب «المتصلون الآن» لمدير النظام (NAV admin: onlineUsers؛ كتلة v294؛ قاعدة البيانات v294_user_presence): كل مستخدم مسجل يرسل نبضة presence_ping كل دقيقة (وعند الدخول وعند العودة للتبويب)، والشاشة تعرض admin_online_users (للدور النشط admin فقط): نقطة زرقاء لمن نبضته خلال آخر 3 دقائق مع دوره الحالي ومتصل منذ، ورمادية لغيره مع آخر ظهور وآخر تسجيل دخول؛ تتحدث تلقائيًا كل 30 ثانية. -->
 <!-- v293: «حساب المدرسة» (بدل «مشرف المادة») و«مسؤول البيانات» (قاعدة البيانات v293): غير المكلّف بالبيانات يرى مدرسته كاملة بلا تعديل (شريط «عرض فقط» واسم المسؤول وهاتفه، وإخفاء أدوات التعديل، والقائمة بلا «الإرسال للاعتماد» و«استكمال البيانات»)؛ وفي «معلمو مدارسي» عند اختيار مدرسة: بطاقة مسؤول البيانات، وشارتا «مشرف المادة/مسؤول البيانات»، وزرّا «تعيين مسؤول البيانات» (الثابتون فقط) و«إنشاء حساب دخول» (للموجه). -->
 <!-- v291: الاعتماد لموجه المدرسة وحده (قاعدة البيانات v291 + دالة الحافة supervisor-save-and-approve v4 لموجه المادة في الثانوي): أُلغي مدير المدرسة من الاعتماد؛ تبويب «الاعتماد» للمنسق، والمنسق ومدير النظام يتابعان ويعيدان للتعديل (ولو بعد الاعتماد) ولا يعتمدان؛ أُزيلت قائمة «جهة الاعتماد» من المدارس ونموذج إضافة مدرسة. -->
@@ -8,7 +9,6 @@
 <!-- v287: قائمة «المرحلة» لمنسق المرحلة تعرض مراحله النشطة فقط (v202Stages ← v287Set)، والمرحلة المحفوظة التي ليست له تُعامل «الكل» (كما في v271 للموجه). -->
 <!-- v286: «تعديل الفصول» على الهاتف: الفصول 4 في كل سطر بعرض متساوٍ (شبكة) بدل 5 تخرج عن البطاقة. -->
 <!-- v285: «تعديل الفصول» على الهاتف (≤760px فقط): القوائم بعرض الشاشة والأزرار شبكة 2×2، وجدول الفصول بطاقة لكل صف (الصف والعدد والحصص في سطر والفصول تلتف تحته) بلا تمرير جانبي (.v285-classes). -->
-<!-- v284: «جدول المعلم»: أعلى الصفحة صف واحد (المرحلة + المدرسة + المعلم + تحديث + معاينة وطباعة) بلا عنوان؛ بطاقة «أيام الدراسة وحصص المدرسة» صارت سطرًا يعرض القيم وزر «تعديل» يُظهر الحقلين وزر الحفظ (نفس المعرفات)؛ شارة «في الجدول X من Y» تنتقل لسطر الإعدادات (v284SyncBadge). -->
 <html lang="ar" dir="rtl">
 <head>
 <!-- إعداد: أ/ محمود عبدالمفدي محمد أبوالنجا | الصفة: معلم -->
@@ -16,7 +16,7 @@
 <script>/* v226: العنوان الموحد — انظر التعليق أعلى الملف */(function(){try{if(/\.github\.io$/.test(location.hostname)&&/^\/science-guidance\/?(index\.html)?$/.test(location.pathname)&&!/[?&]stay\b/.test(location.search))location.replace('https://teachers-data-portal.vercel.app/app/'+location.hash)}catch(e){}})();</script>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#152c43">
-<title>نظام توجيه العلوم — v294</title>
+<title>نظام توجيه العلوم — v295</title>
 <link rel="manifest" href="./manifest.webmanifest">
 <link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png">
 <link rel="apple-touch-icon" href="./icon-192.png">
@@ -2028,6 +2028,7 @@ body.v293-ro select[onchange*="v101ChangeSlot"]{pointer-events:none;opacity:.65}
 .v294-main{min-width:0;flex:1}
 .v294-kv{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:6px 14px;margin-top:8px}
 .v294-kv span{display:block;font-size:12px;color:var(--muted,#64748b)}
+.v295-line{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:8px}.v295-edit{margin-bottom:8px}
 </style>
 </head>
 <body>
@@ -2370,6 +2371,7 @@ window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();window.v152
 window.addEventListener('appinstalled',()=>{window.v152InstallPrompt=null;v152SyncInstallBtn()});
 if('serviceWorker' in navigator&&location.protocol!=='file:')window.addEventListener('load',()=>navigator.serviceWorker.register('./service-worker.js').catch(()=>{}));
 const V145_NEWS=[
+ ['v295','مدير النظام: في «تعديل بيانات المعلم» تظهر المدرسة الأصلية والمنتدب إليها ويُعدَّلان بالبحث في كل المدارس، مع زر «حذف المعلم» للسجلات المكررة بلا فصول.'],
  ['v294','مدير النظام: تبويب «المتصلون الآن» يعرض من فاتح البرنامج الآن بنقطة زرقاء ودوره، وآخر ظهور لغيره.'],
  ['v293','«حساب المدرسة» بدل «مشرف المادة»: يدخل منه مشرف المادة ومسؤول البيانات؛ مسؤول البيانات وحده يعدّل، وغيره يرى فقط. الموجه يعيّن مسؤول البيانات من المعلمين الثابتين وينشئ حساب الدخول من «معلمو مدارسي» بعد اختيار المدرسة.'],
  ['v291','الاعتماد صار لموجه المدرسة وحده (أُلغي مدير المدرسة). المنسق له تبويب «الاعتماد» يتابع فيه مدارس مرحلته ويعيد أي مدرسة للتعديل مع السبب، ومدير النظام كذلك. موجه المادة في الثانوي يعتمد من «الحفظ والاعتماد».'],
@@ -8758,6 +8760,117 @@ async function v294Page(){
  <div class="card"><input type="search" id="v294Q" placeholder="🔎 ابحث عن شخص لعرض تفاصيله" autocomplete="off" oninput="v294Search(this.value)" aria-label="بحث بالاسم"><div id="v294Root">${v294Body()}</div></div>`;
 }
 /* v294-end */
+/* v295-begin */
+/* v295: مدير النظام — في «تعديل بيانات المعلم»: سطرا المدرسة الأصلية والمنتدب إليها بزر «تعديل» (بحث في كل المدارس)، وحذف المعلم (admin_remove_teacher). */
+const V295={schools:[],byLabel:new Map()};
+function v295Label(s){return `${s.name} — ${s.stage||''}`}
+function v295SchoolName(id){const s=V295.schools.find(x=>String(x.id)===String(id));return s?`${esc(s.name)} <span class="badge">${esc(s.stage||'')}</span>`:'—'}
+const __v295BaseEditTeacherForm=editTeacherForm;
+editTeacherForm=async function(id){
+ await __v295BaseEditTeacherForm(id);
+ if(profile?.role!=='admin')return;
+ const form=document.querySelector('#modal form');if(!form||form.querySelector('.v295-box'))return;
+ const sel=form.elements.namedItem('home_school_id');if(!sel||sel.tagName!=='SELECT')return;
+ try{
+  const [tr,dr,sr]=await Promise.all([
+   sb.from('teacher_records').select('id,full_name,home_school_id').eq('id',id).maybeSingle(),
+   sb.from('delegations').select('id,delegation_type,to_school_id,start_date,end_date').eq('teacher_id',id).eq('active',true).order('start_date'),
+   sb.from('schools').select('id,name,stage').order('name')]);
+  for(const x of [tr,dr,sr])if(x.error)throw x.error;
+  const t=tr.data;if(!t)return;
+  V295.schools=sr.data||[];V295.byLabel=new Map(V295.schools.map(s=>[v295Label(s),String(s.id)]));
+  const field=sel.closest('.field');if(field)field.style.display='none';
+  const ds=dr.data||[];
+  const box=document.createElement('div');box.className='v295-box';box.dataset.home=String(t.home_school_id||'');
+  box.innerHTML=`<datalist id="v295SchoolList">${V295.schools.map(s=>`<option value="${esc(v295Label(s))}"></option>`).join('')}</datalist>
+  <div class="card v295-line"><div><div class="muted">المدرسة الأصلية</div><b id="v295HomeName">${v295SchoolName(t.home_school_id)}</b></div><button type="button" class="btn secondary" onclick="v295OpenHome('${id}')">تعديل</button></div>
+  <div id="v295HomeEdit" hidden class="card v295-edit"><label for="v295HomeInp">ابحث باسم المدرسة (كل المراحل)</label><input type="search" id="v295HomeInp" list="v295SchoolList" placeholder="اكتب جزءًا من اسم المدرسة" autocomplete="off" onkeydown="if(event.key==='Enter'){event.preventDefault();v295ConfirmHome()}"><div id="v295HomeWarn"></div><div class="actions"><button type="button" class="btn primary" onclick="v295ConfirmHome()">تأكيد التغيير</button><button type="button" class="btn secondary" onclick="document.getElementById('v295HomeEdit').hidden=true">رجوع</button></div></div>
+  <div class="card v295-line"><div><div class="muted">المدرسة المنتدب إليها</div><b>${ds.length?ds.map(d=>`${v295SchoolName(d.to_school_id)} <span class="badge">${d.delegation_type==='full'?'كلي':'جزئي'}</span>`).join('<br>'):'لا يوجد'}</b></div><div><button type="button" class="btn secondary" onclick="v295EditDelegation('${id}','${ds.length===1?ds[0].id:''}',${ds.length})">تعديل</button>${ds.length?` <button type="button" class="btn secondary" onclick="adminCancelDelegationForm('${id}')">إلغاء الانتداب</button>`:''}</div></div>`;
+  form.insertAdjacentElement('afterbegin',box);
+  const acts=form.querySelector(':scope > .actions');
+  if(acts&&!acts.querySelector('.v295-del')){const b=document.createElement('button');b.type='button';b.className='btn danger v295-del';b.textContent='🗑 حذف المعلم';b.onclick=()=>v295DeleteForm(id,t.full_name||'');acts.appendChild(b)}
+ }catch(error){console.warn('v295 schools box',error)}
+};
+async function v295OpenHome(id){
+ const ed=document.getElementById('v295HomeEdit');if(!ed)return;ed.hidden=false;
+ const inp=document.getElementById('v295HomeInp');inp.value='';inp.focus();
+ const warn=document.getElementById('v295HomeWarn');warn.innerHTML='';
+ try{
+  const home=document.querySelector('.v295-box')?.dataset.home;if(!home||!activeTerm?.id)return;
+  const {data,error}=await sb.from('teaching_assignments').select('id,school_classes(class_name,school_id,term_id)').eq('teacher_id',id);if(error)throw error;
+  const cls=(data||[]).map(a=>a.school_classes).filter(c=>c&&String(c.school_id)===String(home)&&String(c.term_id)===String(activeTerm.id)).map(c=>c.class_name);
+  if(cls.length)warn.innerHTML=`<div class="notice warn">⚠️ للمعلم ${cls.length} فصل مسند في المدرسة الحالية: ${esc(cls.join('، '))} — ستبقى مسندة له هناك؛ ألغِ إسنادها إن كان التسجيل خطأ.</div>`;
+ }catch(error){console.warn('v295 classes',error)}
+}
+function v295ConfirmHome(){
+ const inp=document.getElementById('v295HomeInp'),sid=V295.byLabel.get(String(inp?.value||'').trim());
+ if(!sid)return toast('اختر المدرسة من القائمة المقترحة');
+ const form=document.querySelector('#modal form'),sel=form?.elements.namedItem('home_school_id');if(!sel)return;
+ if(![...sel.options].some(o=>o.value===sid)){const s=V295.schools.find(x=>String(x.id)===sid);const o=document.createElement('option');o.value=sid;o.dataset.stage=s?.stage||'';o.textContent=s?.name||'';sel.appendChild(o)}
+ sel.value=sid;sel.dispatchEvent(new Event('change',{bubbles:true}));
+ const changed=sid!==document.querySelector('.v295-box')?.dataset.home;
+ document.getElementById('v295HomeName').innerHTML=v295SchoolName(sid)+(changed?' <span class="badge">يُحفظ عند الضغط على «حفظ»</span>':'');
+ document.getElementById('v295HomeEdit').hidden=true;
+}
+const __v295BaseSaveTeacherEdit=saveTeacherEdit;
+saveTeacherEdit=async function(e,id,...rest){
+ const form=e?.target,box=form?.querySelector?.('.v295-box'),oldHome=box?.dataset.home||'',newHome=String(form?.elements?.namedItem('home_school_id')?.value||'');
+ await __v295BaseSaveTeacherEdit(e,id,...rest);
+ if(!box||!oldHome||!newHome||oldHome===newHome||document.body.contains(form)||!activeTerm?.id)return;
+ try{
+  const {data:d,error:de}=await sb.from('delegations').select('id').eq('teacher_id',id).eq('to_school_id',oldHome).eq('active',true);if(de)throw de;
+  if((d||[]).length)return;
+  const {error}=await sb.from('teacher_school_assignments').update({active:false,is_home_school:false}).eq('teacher_id',id).eq('school_id',oldHome).eq('term_id',activeTerm.id);if(error)throw error;
+  invalidateData('teachers','hierarchy','dashboard','assignments','page:reports','school:self');
+ }catch(error){moneySafeError(error)}
+};
+let __v295Replace=null;
+function v295EditDelegation(id,delegationId,count){
+ if(count>1)return toast('للمعلم أكثر من انتداب ساري؛ ألغِ الزائد أولًا من «إلغاء الانتداب»');
+ __v295Replace=delegationId?{teacherId:String(id),delegationId:String(delegationId)}:null;
+ openTeacherDelegationForm(id);
+}
+const __v295BaseSaveTeacherDelegation=saveTeacherDelegation;
+saveTeacherDelegation=async function(e,teacherId){
+ const r=__v295Replace;
+ if(!r||r.teacherId!==String(teacherId))return __v295BaseSaveTeacherDelegation(e,teacherId);
+ e.preventDefault();
+ v215PickDelegSchool(e.target.elements.to_school_label);
+ if(!e.target.elements.to_school_id.value)return toast('اختر المدرسة المنتدب إليها من القائمة المقترحة');
+ if(!confirm('سيُلغى الانتداب الحالي ثم يُنشأ الانتداب الجديد. متابعة؟'))return;
+ await adminCancelDelegation(r.delegationId,teacherId,null);
+ const {data:still}=await sb.from('delegations').select('id').eq('id',r.delegationId).eq('active',true);
+ if((still||[]).length)return;
+ __v295Replace=null;
+ await __v295BaseSaveTeacherDelegation(e,teacherId);
+ const {data:now}=await sb.from('delegations').select('id').eq('teacher_id',teacherId).eq('active',true);
+ if(!(now||[]).length)toast('تنبيه: أُلغي الانتداب القديم ولم يُنشأ الجديد؛ أعد تنفيذ الانتداب');
+};
+async function v295DeleteForm(id,name){
+ if(profile?.role!=='admin')return toast('حذف المعلم متاح لمدير النظام فقط');
+ try{
+  const [{count:ta,error:e1},{count:dl,error:e2}]=await Promise.all([
+   sb.from('teaching_assignments').select('id',{count:'exact',head:true}).eq('teacher_id',id),
+   sb.from('delegations').select('id',{count:'exact',head:true}).eq('teacher_id',id).eq('active',true)]);
+  if(e1)throw e1;if(e2)throw e2;
+  if(ta||dl)return modal(`<h3>حذف المعلم</h3><div class="notice danger"><b>لا يمكن حذف ${esc(name)}</b>: ${ta?`له ${ta} فصل/فصول مسندة`:''}${ta&&dl?' و':''}${dl?'له انتداب ساري':''}. ${ta?'ألغِ إسناد فصوله أولًا (أو انقلها للسجل الصحيح)':'ألغِ الانتداب أولًا'} ثم احذفه.</div><div class="actions"><button type="button" class="btn secondary" onclick="closeModal()">حسنًا</button></div>`);
+  modal(`<h3>حذف المعلم نهائيًا</h3><div class="notice danger">سيُحذف سجل <b>${esc(name)}</b> نهائيًا من البرنامج. يُحفظ السجل كاملًا في سجل التدقيق قبل الحذف.</div><div class="field"><label for="v295DelName">اكتب اسم المعلم للتأكيد</label><input id="v295DelName" autocomplete="off"></div><div class="actions"><button type="button" class="btn danger" id="v295DelBtn" onclick="v295DeleteConfirmed('${id}')">حذف نهائي</button><button type="button" class="btn secondary" onclick="closeModal()">رجوع</button></div>`);
+  document.getElementById('v295DelName').dataset.name=name;
+ }catch(error){moneySafeError(error)}
+}
+async function v295DeleteConfirmed(id){
+ const inp=document.getElementById('v295DelName'),btn=document.getElementById('v295DelBtn');
+ const n=v=>String(v||'').replace(/\s+/g,' ').trim();
+ if(!inp||n(inp.value)!==n(inp.dataset.name))return toast('اكتب اسم المعلم كما هو للتأكيد');
+ if(btn.disabled)return;btn.disabled=true;btn.textContent='جارٍ الحذف...';
+ try{
+  const {error}=await sb.rpc('admin_remove_teacher',{p_teacher_id:id});if(error)throw error;
+  closeModal();toast('تم حذف المعلم');
+  invalidateData('teachers','hierarchy','dashboard','assignments','page:reports','school:self');
+  await loadPage(true);
+ }catch(error){moneySafeError(error);btn.disabled=false;btn.textContent='حذف نهائي'}
+}
+/* v295-end */
 
 function v110DossierMarkup(d){
  const id=esc(String(d.school.id)),schedule=v110ScheduleRows(d),periods=reportNumber(d.config.periods_per_day)||7,isAdminV128=profile?.role==='admin';
