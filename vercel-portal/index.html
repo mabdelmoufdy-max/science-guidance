@@ -48,6 +48,7 @@ input[readonly]{background:#f1f5f9;color:var(--muted)}
 .ferr.on{display:block}
 .hint{color:var(--ok);font-size:.82rem;margin-top:3px;min-height:1px}
 .note{background:var(--soft);border:1px solid var(--soft-bd);color:#1e40af;padding:10px 12px;border-radius:10px;font-size:.9rem;margin-bottom:14px}
+.coord-link{color:inherit;font-weight:700;text-decoration:underline}
 .warn{background:var(--warn-bg);border:1px solid var(--warn-bd);color:var(--warn-tx);padding:10px 12px;border-radius:10px;font-size:.9rem;margin-bottom:14px}
 .err{background:#fef2f2;border:1px solid #fecaca;color:#991b1b;padding:10px 12px;border-radius:10px;font-size:.92rem;margin:12px 0;display:none}
 .err.on{display:block}
@@ -333,7 +334,7 @@ summary{cursor:pointer;font-weight:600;padding:4px 0}
       st && st.editing_open === false ? h('div', { class: 'warn', id: 'closed-banner' }, 'فترة تعديل البيانات مغلقة حاليًا.' + (st.note ? ' ' + st.note : '')) : null,
       S.statusErr ? h('div', { class: 'warn' }, 'تعذّر الاتصال بالخادم. ', h('button', { type: 'button', class: 'link', onclick: boot }, 'إعادة المحاولة')) : null,
       h('div', { class: 'roles' },
-        role('👨‍🏫', 'معلم', 'راجع بياناتك وحدّثها، أو سجّل كمعلم جديد', function () { S.mode = 'registered'; go('gate'); }),
+        role('👨‍🏫', 'معلم', 'راجع بياناتك المسجّلة (عرض فقط)', function () { S.mode = 'registered'; go('gate'); }),
         role('🏫', 'مشرف مدرسة', 'اعرض معلمي مدرستك، وعدّل بياناتهم وفصولهم، وأضف معلمًا جديدًا', function () { go('supgate'); }),
         role('📝', 'معلم بالأجر — تقديم طلب', 'نموذج التقدم للتعاقد', function () { window.location.href = CFG.paid; }),
         ownerMode() ? role('📋', 'طلبات معلمي الأجر', 'عرض الطلبات وإضافة المعلم إلى البرنامج الرئيسي', function () { window.location.href = '/app/#/paidRequests'; }) : null,
@@ -344,7 +345,7 @@ summary{cursor:pointer;font-weight:600;padding:4px 0}
   };
 
   VIEWS.gate = function () {
-    var isNew = S.mode === 'new';
+    var isNew = false; /* v303: لا تسجيل جديد */
     var civil = h('input', { type: 'tel', id: 'g_civil', inputmode: 'numeric', maxlength: '20', autocomplete: 'off', dir: 'ltr' });
     var phone = h('input', { type: 'tel', id: 'g_phone', inputmode: 'numeric', maxlength: '20', autocomplete: 'off', dir: 'ltr' });
     var hintC = h('div', { class: 'hint' }), hintP = h('div', { class: 'hint' }), box = errbox();
@@ -374,14 +375,31 @@ summary{cursor:pointer;font-weight:600;padding:4px 0}
       }));
     return h('div', { class: 'card' },
       topbar('معلم'),
-      h('div', { class: 'tabs' },
-        h('button', { type: 'button', class: 'tab' + (isNew ? '' : ' on'), id: 'tab-reg', onclick: function () { S.mode = 'registered'; render(); } }, 'معلم مسجّل في النظام'),
-        h('button', { type: 'button', class: 'tab' + (isNew ? ' on' : ''), id: 'tab-new', onclick: function () { S.mode = 'new'; render(); } }, 'معلم جديد')),
-      S.status && S.status.editing_open === false ? h('div', { class: 'warn' }, 'فترة تعديل البيانات مغلقة حاليًا.') : null,
-      isNew ? newBox : form);
+      h('div', { class: 'note' }, 'البوابة الآن لعرض بياناتك ومراجعتها فقط.'),
+      form);
   };
 
-  var NEW_TEACHER_DISABLED = false; /* أُعيد تفعيل تسجيل معلم جديد من شاشة المعلم (2026-11-01، بطلب المستخدم) */
+  var NEW_TEACHER_DISABLED = true; /* v303 (2026-11-07): شاشة المعلم للمراجعة فقط — لا تسجيل جديد ولا تعديل */
+  /* منسقو المراحل للتواصل (أرقامهم من قاعدة البيانات) — الواتساب برسالة جاهزة */
+  var COORDS = {
+    primary: [['بركات', '01129959835'], ['أيمن', '01003035173']],
+    prep: [['شيماء', '01154029126']],
+    sec_general: [['محمد معله', '01112856911']],
+    sec_industrial: [['محمد معله', '01112856911']]
+  };
+  function coordBar() {
+    var list = COORDS[S.stageKey] || [];
+    if (!list.length) return null;
+    var nm = (S.person && S.person.full_name) || '';
+    var msg = 'السلام عليكم، أنا ' + nm + ' — بخصوص بياناتي في بوابة المعلمين.';
+    var bar = h('div', { class: 'note', id: 'coord-bar' }, 'للتواصل مع المنسق: ');
+    list.forEach(function (c, i) {
+      if (i) bar.appendChild(document.createTextNode(' · '));
+      bar.appendChild(h('a', { href: 'https://wa.me/2' + c[1] + '?text=' + encodeURIComponent(msg), target: '_blank', rel: 'noopener', class: 'coord-link' },
+        c[0] + ' ', h('span', { class: 'ltr' }, c[1]), ' 💬'));
+    });
+    return bar;
+  }
   function topbar(title) {
     return h('div', { class: 'top' },
       h('button', { type: 'button', class: 'link', id: 'back-home', onclick: function () { var s = S.status, sc = S.schools, ca = S.cache; reset(); S.status = s; S.schools = sc; S.cache = ca; go('launcher'); } }, '‹ الرئيسية'),
@@ -422,7 +440,7 @@ summary{cursor:pointer;font-weight:600;padding:4px 0}
     });
     S.step = 1; S.draft = loadDraft(dkey());
     try { await loadSchools(); if (S.school) await loadClasses(S.school.id); } catch (e) { /* تُعاد المحاولة عند الحاجة */ }
-    go(S.limited ? 'flow' : 'confirm');
+    go('confirm'); /* v303: مراجعة فقط */
   }
   async function startNew() {
     if (NEW_TEACHER_DISABLED) return;
@@ -511,15 +529,10 @@ summary{cursor:pointer;font-weight:600;padding:4px 0}
     var d = S.draft;
     return h('div', { class: 'card' }, topbar('بياناتك'),
       h('h2', null, 'أهلًا ' + (pv('full_name').split(' ')[0] || '')),
-      h('p', { class: 'sub', style: 'text-align:right' }, 'راجع بياناتك المسجّلة. إن كانت صحيحة اضغط «بياناتي صحيحة»، وإلا عدّلها أو أكمل الناقص.'),
-      S.closed ? h('div', { class: 'warn', id: 'closed-banner' }, S.closedNote || 'فترة تعديل البيانات مغلقة حاليًا، يمكنك المراجعة فقط.') : null,
-      S.classesLocked && !S.closed ? h('div', { class: 'note', id: 'classes-locked-note' }, S.classesNote || 'المدرسة والفصول والحصص للعرض فقط، ويمكنك تعديل بياناتك الأساسية.') : null,
-      S.lookup.pending ? h('div', { class: 'note', id: 'pending-note' }, 'لديك طلب سابق قيد المراجعة (رقم ' + S.lookup.pending.ref + '). أي إرسال جديد يحلّ محله.') : null,
+      h('p', { class: 'sub', style: 'text-align:right' }, 'هذه بياناتك المسجّلة للمراجعة فقط. إن وجدت خطأ أو نقصًا فتواصل مع المنسق.'),
+      coordBar(),
       otherN > 0 ? h('div', { class: 'note' }, 'لديك ' + otherN + ' فصل في مدرسة أخرى (انتداب/إعارة)؛ تُدار من المشرف ولا تتغير من هنا.') : null,
-      d ? h('div', { class: 'warn', id: 'draft-note' }, 'لديك مسودة غير مرسلة محفوظة على هذا الجهاز. ',
-        h('button', { type: 'button', class: 'link', id: 'draft-restore', onclick: function () { restoreDraft(d); S.draft = null; S.step = Math.min(d.step || 1, stepCount()); go('flow'); } }, 'متابعة المسودة'), ' · ',
-        h('button', { type: 'button', class: 'link', id: 'draft-drop', onclick: function () { dropDraft(dkey()); S.draft = null; render(); } }, 'تجاهلها')) : null,
-      h('div', { class: 'kv' }, rows), box, primary, h('div', { style: 'height:10px' }), second);
+      h('div', { class: 'kv' }, rows));
   };
 
   function restoreDraft(d) {
