@@ -1,4 +1,5 @@
 <!doctype html>
+<!-- v300: إلغاء انتداب معلم له فصول مسندة في المدرسة المنتدب إليها (مدير النظام ومنسق المرحلة): بدل رسالة «فُك الإسناد أولًا» نافذة تأكيد بأسماء الفصول وحصصها و«هل فعلًا تريد إلغاء إسناد الحصص وإلغاء الانتداب؟»؛ عند التأكيد يُلغى إسنادها (unassign_class_atomic للمدير، والحذف المسموح بسياسة teaching_coord_remove للمنسق) فتعود غير مسندة ثم يُلغى الانتداب بالمسار نفسه؛ إن تعذر إلغاء أي إسناد لا يُلغى الانتداب. -->
 <!-- v299: لوحة منسق المرحلة — سطر «مدارس بها فصول غير مغطاة» في «③ ماذا أفعل الآن؟» (عدد المدارس، الفصول، الحصص المطلوبة للتغطية) وتقريره (المدرسة/الموجه/الفصول غير المغطاة بأسمائها/عددها/الحصص المطلوبة)؛ غير المغطى = المقرر أكبر من المسند لأي معلم ثابت أو بالأجر. عرض فقط. -->
 <!-- v298: «المعلمون» عند «المدرسة: الكل»: المعلم يظهر مرة واحدة — المنتدب جزئيًا كان يظهر بطاقتين (مدرسته الأصلية والمنتدب إليها)؛ يبقى سطر المدرسة الأصلية ونصه «منتدب جزئيًا إلى …»، والمنتدب كليًا بسطر المدرسة المنتدب إليها (v298OneRowPerTeacher). عند اختيار مدرسة بعينها بلا تغيير. -->
 <!-- v297: شاشة «المعلمون» على الهاتف فقط (≤760px، CSS فقط): شريط البحث والفلاتر لم يعد ثابتًا أعلى الشاشة عند التمرير (كان يغطي بطاقات المعلمين)؛ أزرار «الإجازات وتجديدها» و«توزيع العجز» و«المعلمون الموقوفون» في صف واحد بألوان مميزة (أزرق/ذهبي/أحمر فاتح من متغيرات info/warn/danger)، و«تقارير ▾» بجوار «تصدير Excel» في صف واحد. الحاسوب بلا تغيير. -->
@@ -8,7 +9,6 @@
 <!-- v293: «حساب المدرسة» (بدل «مشرف المادة») و«مسؤول البيانات» (قاعدة البيانات v293): غير المكلّف بالبيانات يرى مدرسته كاملة بلا تعديل (شريط «عرض فقط» واسم المسؤول وهاتفه، وإخفاء أدوات التعديل، والقائمة بلا «الإرسال للاعتماد» و«استكمال البيانات»)؛ وفي «معلمو مدارسي» عند اختيار مدرسة: بطاقة مسؤول البيانات، وشارتا «مشرف المادة/مسؤول البيانات»، وزرّا «تعيين مسؤول البيانات» (الثابتون فقط) و«إنشاء حساب دخول» (للموجه). -->
 <!-- v291: الاعتماد لموجه المدرسة وحده (قاعدة البيانات v291 + دالة الحافة supervisor-save-and-approve v4 لموجه المادة في الثانوي): أُلغي مدير المدرسة من الاعتماد؛ تبويب «الاعتماد» للمنسق، والمنسق ومدير النظام يتابعان ويعيدان للتعديل (ولو بعد الاعتماد) ولا يعتمدان؛ أُزيلت قائمة «جهة الاعتماد» من المدارس ونموذج إضافة مدرسة. -->
 <!-- v290: «طلبات معلمي الأجر»: حقل بحث المدرسة داخل بطاقة كل طلب غير مضاف فوق «إضافة إلى البرنامج» (datalist v288SchoolListPage)، والزر يطلب تأكيدًا واحدًا ثم يضيف ببيانات الطلب بلا نافذة (v288QuickAdd)؛ نافذة «عرض» وزرها بلا تغيير. شريط البحث في هذه الشاشة فقط لم يعد ثابتًا عند التمرير. -->
-<!-- v289: «طلبات معلمي الأجر» ← «إضافة إلى البرنامج»: لا تُختار المدرسة مسبقًا من مدرسة الطلب (قد لا تكون مدرسة الإضافة)، وحقل المدرسة صار بحثًا بالكتابة (input + datalist بنمط نافذة الانتداب v215؛ v288PickSchool) ومدرسة الطلب تظهر بين قوسين في عنوان الحقل للمعلومة فقط (.field small مخفية عامًا). -->
 <html lang="ar" dir="rtl">
 <head>
 <!-- إعداد: أ/ محمود عبدالمفدي محمد أبوالنجا | الصفة: معلم -->
@@ -16,7 +16,7 @@
 <script>/* v226: العنوان الموحد — انظر التعليق أعلى الملف */(function(){try{if(/\.github\.io$/.test(location.hostname)&&/^\/science-guidance\/?(index\.html)?$/.test(location.pathname)&&!/[?&]stay\b/.test(location.search))location.replace('https://teachers-data-portal.vercel.app/app/'+location.hash)}catch(e){}})();</script>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#152c43">
-<title>نظام توجيه العلوم — v299</title>
+<title>نظام توجيه العلوم — v300</title>
 <link rel="manifest" href="./manifest.webmanifest">
 <link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png">
 <link rel="apple-touch-icon" href="./icon-192.png">
@@ -2381,6 +2381,7 @@ window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();window.v152
 window.addEventListener('appinstalled',()=>{window.v152InstallPrompt=null;v152SyncInstallBtn()});
 if('serviceWorker' in navigator&&location.protocol!=='file:')window.addEventListener('load',()=>navigator.serviceWorker.register('./service-worker.js').catch(()=>{}));
 const V145_NEWS=[
+ ['v300','إلغاء انتداب معلم له فصول مسندة: تظهر الفصول وحصصها مع تأكيد واحد يلغي إسنادها والانتداب معًا.'],
  ['v299','لوحة منسق المرحلة: «مدارس بها فصول غير مغطاة» بأسماء الفصول وعدد الحصص المطلوبة لتغطيتها.'],
  ['v298','شاشة المعلمين: عند «المدرسة: الكل» يظهر المعلم المنتدب جزئيًا مرة واحدة، ومكتوب في بطاقته المدرسة المنتدب إليها.'],
  ['v297','على الهاتف: أزرار شاشة المعلمين العلوية في صف واحد بألوان مميزة، و«تقارير» بجوار «تصدير Excel»، وشريط البحث لم يعد ثابتًا فوق بطاقات المعلمين عند التمرير.'],
@@ -3146,7 +3147,7 @@ async function adminCancelDelegationForm(teacherId){
   const ids=[...new Set(ds.flatMap(d=>[d.from_school_id||t.home_school_id,d.to_school_id]).filter(Boolean))];
   const {data:sc,error:se}=await sb.from('schools').select('id,name').in('id',ids);if(se)throw se;
   const nm=new Map((sc||[]).map(x=>[String(x.id),x.name]));
-  modal(`<h3>إلغاء الانتداب</h3><div class="notice info"><b>${esc(t.full_name)}</b><br>الإلغاء ينهي الانتداب ويعيد ربط المعلم بمدرسته الأصلية، ولا يمسح بياناته. يُرفض الإلغاء إن كان للمعلم فصول مسندة في المدرسة المنتدب إليها.</div>${ds.map(d=>`<div class="card" style="margin-top:10px"><b>${d.delegation_type==='full'?'انتداب كلي':'انتداب جزئي'}</b> — ${esc(nm.get(String(d.from_school_id||t.home_school_id))||'—')} ← ${esc(nm.get(String(d.to_school_id))||'—')}<div class="cell-sub">من ${esc(d.start_date||'—')} ${d.end_date?'إلى '+esc(d.end_date):'(بلا تاريخ نهاية)'}</div><div class="actions" style="margin-top:8px"><button type="button" class="btn danger" onclick="adminCancelDelegation('${d.id}','${t.id}',this)">إلغاء هذا الانتداب</button></div></div>`).join('')}<div class="actions"><button type="button" class="btn secondary" onclick="closeModal()">إغلاق</button></div>`);
+  modal(`<h3>إلغاء الانتداب</h3><div class="notice info"><b>${esc(t.full_name)}</b><br>الإلغاء ينهي الانتداب ويعيد ربط المعلم بمدرسته الأصلية، ولا يمسح بياناته. إن كان للمعلم فصول مسندة في المدرسة المنتدب إليها تظهر أسماؤها لتأكيد إلغاء إسنادها مع الانتداب.</div>${ds.map(d=>`<div class="card" style="margin-top:10px"><b>${d.delegation_type==='full'?'انتداب كلي':'انتداب جزئي'}</b> — ${esc(nm.get(String(d.from_school_id||t.home_school_id))||'—')} ← ${esc(nm.get(String(d.to_school_id))||'—')}<div class="cell-sub">من ${esc(d.start_date||'—')} ${d.end_date?'إلى '+esc(d.end_date):'(بلا تاريخ نهاية)'}</div><div class="actions" style="margin-top:8px"><button type="button" class="btn danger" onclick="adminCancelDelegation('${d.id}','${t.id}',this)">إلغاء هذا الانتداب</button></div></div>`).join('')}<div class="actions"><button type="button" class="btn secondary" onclick="closeModal()">إغلاق</button></div>`);
  }catch(err){moneySafeError(err)}
 }
 async function adminCancelDelegation(delegationId,teacherId,btn){
@@ -9550,6 +9551,38 @@ ReportAdapters.v155Stage.load=async function(ctx,options={}){
   rows:u.schools.map((x,i)=>({index:i+1,school:x.name,supervisor:x.supervisor,list:cell(x),classes:x.classes,periods:x.periods}))});
 };
 /* v299-end */
+/* v300-begin: إلغاء الانتداب لمعلم له فصول مسندة في المدرسة المنتدب إليها — بدل رسالة «فُك الإسناد أولًا»: نافذة تأكيد بأسماء الفصول وحصصها،
+   وعند التأكيد يُلغى إسنادها (unassign_class_atomic لكل فصل فتعود غير مسندة) ثم يُلغى الانتداب بالمسار المعتمد نفسه. إن تعذر إلغاء إسناد أي فصل لا يُلغى الانتداب. */
+const __v300BaseCancelDelegation=adminCancelDelegation;
+function v300Ask(html){return new Promise(res=>{window.__v300Res=res;modal(html)})}
+function v300Answer(v){const r=window.__v300Res;window.__v300Res=null;if(!v)closeModal();if(r)r(v)}
+adminCancelDelegation=async function(delegationId,teacherId,btn){
+ if(!['admin','stage_coordinator'].includes(profile?.role)||!activeTerm?.id)return __v300BaseCancelDelegation(delegationId,teacherId,btn);
+ let list=[],toName='',tName='';
+ try{
+  const {data:d,error:de}=await sb.from('delegations').select('id,teacher_id,to_school_id,active').eq('id',delegationId).maybeSingle();if(de)throw de;
+  if(d&&d.active&&d.to_school_id){
+   const [{data:cls,error:ce},{data:sc},{data:tr}]=await Promise.all([sb.from('school_classes').select('id,class_name').eq('school_id',d.to_school_id).eq('term_id',activeTerm.id),sb.from('schools').select('name').eq('id',d.to_school_id).maybeSingle(),sb.from('teacher_records').select('full_name').eq('id',teacherId).maybeSingle()]);
+   if(ce)throw ce;toName=sc?.name||'المدرسة المنتدب إليها';tName=tr?.full_name||'المعلم';
+   const ids=(cls||[]).map(c=>c.id);
+   if(ids.length){const {data:as,error:ae}=await sb.from('teaching_assignments').select('id,class_id,weekly_periods').eq('teacher_id',teacherId).in('class_id',ids);if(ae)throw ae;
+    const nm=new Map((cls||[]).map(c=>[String(c.id),c.class_name]));list=(as||[]).map(a=>({id:a.id,name:nm.get(String(a.class_id))||'—',periods:reportNumber(a.weekly_periods)})).sort((a,b)=>String(a.name).localeCompare(String(b.name),'ar',{numeric:true}));}
+  }
+ }catch(err){return moneySafeError(err)}
+ if(!list.length)return __v300BaseCancelDelegation(delegationId,teacherId,btn);
+ const total=list.reduce((n,a)=>n+a.periods,0);
+ const ok=await v300Ask(`<h3>إلغاء الانتداب</h3><div class="notice warn"><b>${esc(tName)}</b> له ${list.length} فصل/فصول مسندة في <b>${esc(toName)}</b> (${total} حصة):<br>${list.map(a=>`${esc(a.name)} (${a.periods} حصة)`).join('، ')}</div><p>إلغاء الانتداب يلغي إسناد هذه الفصول فتعود <b>غير مسندة</b> في المدرسة.</p><p><b>هل فعلًا تريد إلغاء إسناد الحصص وإلغاء الانتداب؟</b></p><div class="actions"><button type="button" class="btn danger" id="v300Yes" onclick="this.disabled=true;this.textContent='جارٍ الإلغاء...';v300Answer(true)">نعم، ألغِ الإسناد والانتداب</button><button type="button" class="btn secondary" onclick="v300Answer(false)">تراجع</button></div>`);
+ if(!ok)return;
+ const failed=[];
+ for(const a of list){ // المدير: unassign_class_atomic؛ المنسق: الحذف المباشر المسموح له بسياسة teaching_coord_remove لفصول مرحلته (كما في «إدخال بيانات المدارس»)
+  if(profile.role==='admin'){const r=await sb.rpc('unassign_class_atomic',{p_assignment_id:a.id});if(r.error)failed.push(`${a.name}: ${r.error.message||'تعذر الإلغاء'}`)}
+  else{const r=await sb.from('teaching_assignments').delete().eq('id',a.id).select('id');if(r.error)failed.push(`${a.name}: ${r.error.message||'تعذر الإلغاء'}`);else if(!(r.data||[]).length)failed.push(`${a.name}: الفصل خارج صلاحية مرحلتك`)}
+ }
+ if(failed.length){closeModal();invalidateData('teachers','hierarchy','dashboard','assignments','page:reports','school:self');return modal(`<h3>لم يُلغَ الانتداب</h3><div class="notice danger">تعذر إلغاء إسناد: ${esc(failed.join(' — '))}<br>لذلك لم يُلغَ الانتداب.${failed.length<list.length?' (أُلغي إسناد باقي الفصول.)':''}</div><div class="actions"><button type="button" class="btn secondary" onclick="closeModal()">إغلاق</button></div>`)}
+ closeModal();
+ return __v300BaseCancelDelegation(delegationId,teacherId,null);
+};
+/* v300-end */
 async function v168StageBoard(force){
  const m=await v155LoadModel(force),t=m.totals;
  if(!m.rows.length)return `<div class="card v155-board"><h3>لوحة قرارات المرحلة</h3><div class="notice warn">لا توجد مدارس ضمن مرحلتك في هذه الفترة.</div></div>`;
