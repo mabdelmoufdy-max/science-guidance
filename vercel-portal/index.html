@@ -1010,13 +1010,12 @@ summary{cursor:pointer;font-weight:600;padding:4px 0}
   VIEWS.supgate = function () {
     var civil = h('input', { type: 'tel', id: 'sg_civil', inputmode: 'numeric', maxlength: '20', autocomplete: 'off', dir: 'ltr' });
     var phone = h('input', { type: 'tel', id: 'sg_phone', inputmode: 'numeric', maxlength: '20', autocomplete: 'off', dir: 'ltr' });
-    var code = h('input', { type: 'tel', id: 'sg_code', inputmode: 'numeric', maxlength: '12', autocomplete: 'off', dir: 'ltr' });
-    var hintC = h('div', { class: 'hint' }), hintP = h('div', { class: 'hint' }), hintK = h('div', { class: 'hint' }), box = errbox();
-    bindDigits(civil, 14, hintC); bindPhone(phone, hintP); bindDigits(code, 12, hintK);
+    var hintC = h('div', { class: 'hint' }), hintP = h('div', { class: 'hint' }), box = errbox();
+    bindDigits(civil, 14, hintC); bindPhone(phone, hintP);
     var btn = mkBtn('btn', 'دخول', null, { type: 'submit', id: 'sg_go' });
     var form = h('form', { novalidate: true, onsubmit: async function (ev) {
       ev.preventDefault(); hideErr(box);
-      var c = digits(civil.value), p = normPhone(phone.value), k = digits(code.value);
+      var c = digits(civil.value), p = normPhone(phone.value), k = '';
       if (c.length !== 14) { showErr(box, reasonMsg({ reason: 'bad_civil' })); civil.focus(); return; }
       if (p.length < 10) { showErr(box, reasonMsg({ reason: 'bad_phone' })); phone.focus(); return; }
       btnBusy(btn, true, 'جارٍ التحقق...');
@@ -1028,11 +1027,10 @@ summary{cursor:pointer;font-weight:600;padding:4px 0}
         if (S.sup.schools.length === 1) await openSchool(S.sup.schools[0].id); else go('supschools');
       } catch (e) { showErr(box, errMsg(e)); btnBusy(btn, false); }
     } },
-      h('p', { class: 'sub', style: 'text-align:right' }, 'اكتب رقمك المدني ورقم هاتفك المسجّل وكود المعلم الخاص بك في سجل المعلمين، وسنعرض لك معلمي مدرستك (لمشرف المدرسة: أقدم معلم أساسي).'),
+      h('p', { class: 'sub', style: 'text-align:right' }, 'اكتب رقمك المدني ورقم هاتفك المسجّل في سجل المعلمين، وسنعرض لك معلمي مدرستك (لمشرف المدرسة: أقدم معلم أساسي).'),
       h('div', { class: 'fg' }, h('label', { for: 'sg_civil' }, 'الرقم المدني (القومي)'), civil, hintC),
       h('div', { class: 'fg' }, h('label', { for: 'sg_phone' }, 'رقم الهاتف'), phone, hintP),
-      h('div', { class: 'fg' }, h('label', { for: 'sg_code' }, 'كود المعلم'), code, hintK,
-        h('div', { class: 'hint', id: 'sg_code_note', style: 'color:var(--muted)' }, 'الكود المسجّل لك في سجل المعلمين. إن لم يكن لك كود مسجّل اتركه فارغًا.')), box, btn);
+      box, btn);
     return h('div', { class: 'card' }, suptop('مشرف مدرسة', '‹ الرئيسية', goHome), form);
   };
 
