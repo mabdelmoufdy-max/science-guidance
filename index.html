@@ -1,4 +1,5 @@
 <!doctype html>
+<!-- v298: «المعلمون» عند «المدرسة: الكل»: المعلم يظهر مرة واحدة — المنتدب جزئيًا كان يظهر بطاقتين (مدرسته الأصلية والمنتدب إليها)؛ يبقى سطر المدرسة الأصلية ونصه «منتدب جزئيًا إلى …»، والمنتدب كليًا بسطر المدرسة المنتدب إليها (v298OneRowPerTeacher). عند اختيار مدرسة بعينها بلا تغيير. -->
 <!-- v297: شاشة «المعلمون» على الهاتف فقط (≤760px، CSS فقط): شريط البحث والفلاتر لم يعد ثابتًا أعلى الشاشة عند التمرير (كان يغطي بطاقات المعلمين)؛ أزرار «الإجازات وتجديدها» و«توزيع العجز» و«المعلمون الموقوفون» في صف واحد بألوان مميزة (أزرق/ذهبي/أحمر فاتح من متغيرات info/warn/danger)، و«تقارير ▾» بجوار «تصدير Excel» في صف واحد. الحاسوب بلا تغيير. -->
 <!-- v296: «تعديل بيانات المعلم» لمدير النظام: زر «حذف المعلم» انتقل من شريط الحفظ الثابت أسفل النافذة إلى أعلاها (سطر «حذف السجل» تحت سطري المدرسة الأصلية والمنتدب إليها)، لأن الضغط عليه على الهاتف كان يقع على «حفظ». -->
 <!-- v295: مدير النظام — «تعديل بيانات المعلم»: سطرا «المدرسة الأصلية» و«المدرسة المنتدب إليها» بزر «تعديل» يفتح بحثًا في كل المدارس (كل المراحل)؛ تغيير الأصلية يُحفظ بزر «حفظ» ويُلغي ربط المدرسة القديمة (إلا إن كان منتدبًا إليها) مع تنبيه بفصوله المسندة فيها؛ تعديل الانتداب = إلغاء الحالي ثم إنشاء الجديد بدالة الانتداب المعتمدة؛ وزر «حذف المعلم» (قاعدة البيانات v295 admin_remove_teacher: يُمنع إن كان عليه فصول أو انتداب ساري، ويُحفظ السجل في audit_log). -->
@@ -8,7 +9,6 @@
 <!-- v290: «طلبات معلمي الأجر»: حقل بحث المدرسة داخل بطاقة كل طلب غير مضاف فوق «إضافة إلى البرنامج» (datalist v288SchoolListPage)، والزر يطلب تأكيدًا واحدًا ثم يضيف ببيانات الطلب بلا نافذة (v288QuickAdd)؛ نافذة «عرض» وزرها بلا تغيير. شريط البحث في هذه الشاشة فقط لم يعد ثابتًا عند التمرير. -->
 <!-- v289: «طلبات معلمي الأجر» ← «إضافة إلى البرنامج»: لا تُختار المدرسة مسبقًا من مدرسة الطلب (قد لا تكون مدرسة الإضافة)، وحقل المدرسة صار بحثًا بالكتابة (input + datalist بنمط نافذة الانتداب v215؛ v288PickSchool) ومدرسة الطلب تظهر بين قوسين في عنوان الحقل للمعلومة فقط (.field small مخفية عامًا). -->
 <!-- v288: شاشة «طلبات معلمي الأجر» لمدير النظام (NAV admin: paidRequests؛ كتلة v288): الطلبات من paid_teacher_applications (قراءة للمشاهد المسجل فقط) مع حالة كل طلب بمطابقة الرقم القومي في teacher_records، وتفاصيل الطلب وصور الشهادات (روابط موقعة من paid-teacher-docs)، وزر «إضافة إلى البرنامج» ينشئ بطاقة معلم بالأجر بمدرسة يختارها + ربطه بالمدرسة للفصل الحالي. الرابط المباشر #/paidRequests يختار دور مدير النظام تلقائيًا. بلا تغيير في قاعدة البيانات. -->
-<!-- v287: قائمة «المرحلة» لمنسق المرحلة تعرض مراحله النشطة فقط (v202Stages ← v287Set)، والمرحلة المحفوظة التي ليست له تُعامل «الكل» (كما في v271 للموجه). -->
 <html lang="ar" dir="rtl">
 <head>
 <!-- إعداد: أ/ محمود عبدالمفدي محمد أبوالنجا | الصفة: معلم -->
@@ -16,7 +16,7 @@
 <script>/* v226: العنوان الموحد — انظر التعليق أعلى الملف */(function(){try{if(/\.github\.io$/.test(location.hostname)&&/^\/science-guidance\/?(index\.html)?$/.test(location.pathname)&&!/[?&]stay\b/.test(location.search))location.replace('https://teachers-data-portal.vercel.app/app/'+location.hash)}catch(e){}})();</script>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#152c43">
-<title>نظام توجيه العلوم — v297</title>
+<title>نظام توجيه العلوم — v298</title>
 <link rel="manifest" href="./manifest.webmanifest">
 <link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png">
 <link rel="apple-touch-icon" href="./icon-192.png">
@@ -2381,6 +2381,7 @@ window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();window.v152
 window.addEventListener('appinstalled',()=>{window.v152InstallPrompt=null;v152SyncInstallBtn()});
 if('serviceWorker' in navigator&&location.protocol!=='file:')window.addEventListener('load',()=>navigator.serviceWorker.register('./service-worker.js').catch(()=>{}));
 const V145_NEWS=[
+ ['v298','شاشة المعلمين: عند «المدرسة: الكل» يظهر المعلم المنتدب جزئيًا مرة واحدة، ومكتوب في بطاقته المدرسة المنتدب إليها.'],
  ['v297','على الهاتف: أزرار شاشة المعلمين العلوية في صف واحد بألوان مميزة، و«تقارير» بجوار «تصدير Excel»، وشريط البحث لم يعد ثابتًا فوق بطاقات المعلمين عند التمرير.'],
  ['v296','مدير النظام: زر «حذف المعلم» صار في أعلى نافذة «تعديل بيانات المعلم» بعيدًا عن زر «حفظ».'],
  ['v295','مدير النظام: في «تعديل بيانات المعلم» تظهر المدرسة الأصلية والمنتدب إليها ويُعدَّلان بالبحث في كل المدارس، مع زر «حذف المعلم» للسجلات المكررة بلا فصول.'],
@@ -2975,7 +2976,7 @@ async function teachersPage({force=false}={}){
    return result.error?result:{data:v91ScopeRows(result.data),error:null}
  },{ttl:30000,force});
  if(error)return `<div class="error">${esc(error.message)}</div>`;
- const teachers=(Array.isArray(teachersRaw)?teachersRaw:[]).filter(t=>v97StageMatches(v97TeacherStage(t,t._v142School||scopeSchool))&&v98SchoolMatches(scopeSchool?.id||v91ScopeSchoolId(t)));await v277Ready();v277Sort(teachers,t=>t.teacher_id,t=>t.full_name);
+ const teachers=(Array.isArray(teachersRaw)?teachersRaw:[]).filter(t=>v97StageMatches(v97TeacherStage(t,t._v142School||scopeSchool))&&v98SchoolMatches(scopeSchool?.id||v91ScopeSchoolId(t)));await v277Ready();v277Sort(teachers,t=>t.teacher_id,t=>t.full_name);if(typeof v298OneRowPerTeacher==='function'&&!v98School())v298OneRowPerTeacher(teachers);
  const canAdd=['supervisor','senior_teacher'].includes(profile.role),canEdit=TEACHER_ACTION_ROLES.edit.includes(profile.role),canDelegate=TEACHER_ACTION_ROLES.delegate.includes(profile.role);
  const scopeNotice=allSchools?`<div class="notice info"><b>نطاق العرض: كل مدارسي (${allSchools.length})</b> — يظهر معلمو كل مدرسة والمنتدبون إليها، والمنتدب جزئيًا يظهر في المدرستين.</div>`:schoolScopedRole?(scopeSchool?`<div class="notice info"><b>نطاق العرض: ${esc(scopeSchool.name)}</b> — يظهر معلمو المدرسة والمنتدبون إليها فقط، وتطبق قاعدة الإشراف بحسب مدرسة العمل الحالية.</div>`:`<div class="notice warn">لا توجد مدرسة مرتبطة بالحساب.</div>`):'';
  const relationLabel=t=>{
@@ -8887,6 +8888,15 @@ async function v295DeleteConfirmed(id){
  }catch(error){btn.disabled=false;btn.textContent='حذف نهائي';const err=document.getElementById('v295DelErr');if(err){err.hidden=false;err.textContent='لم يُحذف المعلم: '+(error?.message||'خطأ غير معروف')}else moneySafeError(error)}
 }
 /* v295-end */
+/* v298-begin: «المعلمون» عند «المدرسة: الكل» — المعلم مرة واحدة (المنتدب جزئيًا كان يظهر سطرين: مدرسته الأصلية والمنتدب إليها).
+   يُختار سطر المدرسة الأصلية (ونصه «منتدب جزئيًا إلى …» يذكر المدرسة الأخرى)، وللمنتدب كليًا سطر المدرسة المنتدب إليها. عند اختيار مدرسة بعينها بلا تغيير. */
+function v298OneRowPerTeacher(list){
+ const rank=t=>{const r=String(t.school_relation||'');if(r==='delegated_in_full')return 0;const sid=String(t._v142School?.id||v91ScopeSchoolId(t));if(t.is_home_school===true||(t.home_school_id&&sid===String(t.home_school_id)))return r.includes('full')?3:1;return 2};
+ const best=new Map();list.forEach((t,i)=>{const k=String(t.teacher_id||t.id||'');if(!k)return;const b=best.get(k);if(b===undefined||rank(t)<rank(list[b]))best.set(k,i)});
+ const keep=list.filter((t,i)=>{const k=String(t.teacher_id||t.id||'');return !k||best.get(k)===i});
+ list.splice(0,list.length,...keep);return list;
+}
+/* v298-end */
 
 function v110DossierMarkup(d){
  const id=esc(String(d.school.id)),schedule=v110ScheduleRows(d),periods=reportNumber(d.config.periods_per_day)||7,isAdminV128=profile?.role==='admin';
