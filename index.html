@@ -1,4 +1,5 @@
 <!doctype html>
+<!-- v297: شاشة «المعلمون» على الهاتف فقط (≤760px، CSS فقط): أزرار «الإجازات وتجديدها» و«توزيع العجز» و«المعلمون الموقوفون» في صف واحد بألوان مميزة (أزرق/ذهبي/أحمر فاتح من متغيرات info/warn/danger)، و«تقارير ▾» بجوار «تصدير Excel» في صف واحد. الحاسوب بلا تغيير. -->
 <!-- v296: «تعديل بيانات المعلم» لمدير النظام: زر «حذف المعلم» انتقل من شريط الحفظ الثابت أسفل النافذة إلى أعلاها (سطر «حذف السجل» تحت سطري المدرسة الأصلية والمنتدب إليها)، لأن الضغط عليه على الهاتف كان يقع على «حفظ». -->
 <!-- v295: مدير النظام — «تعديل بيانات المعلم»: سطرا «المدرسة الأصلية» و«المدرسة المنتدب إليها» بزر «تعديل» يفتح بحثًا في كل المدارس (كل المراحل)؛ تغيير الأصلية يُحفظ بزر «حفظ» ويُلغي ربط المدرسة القديمة (إلا إن كان منتدبًا إليها) مع تنبيه بفصوله المسندة فيها؛ تعديل الانتداب = إلغاء الحالي ثم إنشاء الجديد بدالة الانتداب المعتمدة؛ وزر «حذف المعلم» (قاعدة البيانات v295 admin_remove_teacher: يُمنع إن كان عليه فصول أو انتداب ساري، ويُحفظ السجل في audit_log). -->
 <!-- v294: تبويب «المتصلون الآن» لمدير النظام (NAV admin: onlineUsers؛ كتلة v294؛ قاعدة البيانات v294_user_presence): كل مستخدم مسجل يرسل نبضة presence_ping كل دقيقة (وعند الدخول وعند العودة للتبويب)، والشاشة تعرض admin_online_users (للدور النشط admin فقط): نقطة زرقاء لمن نبضته خلال آخر 3 دقائق مع دوره الحالي ومتصل منذ، ورمادية لغيره مع آخر ظهور وآخر تسجيل دخول؛ تتحدث تلقائيًا كل 30 ثانية. -->
@@ -8,7 +9,6 @@
 <!-- v289: «طلبات معلمي الأجر» ← «إضافة إلى البرنامج»: لا تُختار المدرسة مسبقًا من مدرسة الطلب (قد لا تكون مدرسة الإضافة)، وحقل المدرسة صار بحثًا بالكتابة (input + datalist بنمط نافذة الانتداب v215؛ v288PickSchool) ومدرسة الطلب تظهر بين قوسين في عنوان الحقل للمعلومة فقط (.field small مخفية عامًا). -->
 <!-- v288: شاشة «طلبات معلمي الأجر» لمدير النظام (NAV admin: paidRequests؛ كتلة v288): الطلبات من paid_teacher_applications (قراءة للمشاهد المسجل فقط) مع حالة كل طلب بمطابقة الرقم القومي في teacher_records، وتفاصيل الطلب وصور الشهادات (روابط موقعة من paid-teacher-docs)، وزر «إضافة إلى البرنامج» ينشئ بطاقة معلم بالأجر بمدرسة يختارها + ربطه بالمدرسة للفصل الحالي. الرابط المباشر #/paidRequests يختار دور مدير النظام تلقائيًا. بلا تغيير في قاعدة البيانات. -->
 <!-- v287: قائمة «المرحلة» لمنسق المرحلة تعرض مراحله النشطة فقط (v202Stages ← v287Set)، والمرحلة المحفوظة التي ليست له تُعامل «الكل» (كما في v271 للموجه). -->
-<!-- v286: «تعديل الفصول» على الهاتف: الفصول 4 في كل سطر بعرض متساوٍ (شبكة) بدل 5 تخرج عن البطاقة. -->
 <html lang="ar" dir="rtl">
 <head>
 <!-- إعداد: أ/ محمود عبدالمفدي محمد أبوالنجا | الصفة: معلم -->
@@ -16,7 +16,7 @@
 <script>/* v226: العنوان الموحد — انظر التعليق أعلى الملف */(function(){try{if(/\.github\.io$/.test(location.hostname)&&/^\/science-guidance\/?(index\.html)?$/.test(location.pathname)&&!/[?&]stay\b/.test(location.search))location.replace('https://teachers-data-portal.vercel.app/app/'+location.hash)}catch(e){}})();</script>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#152c43">
-<title>نظام توجيه العلوم — v296</title>
+<title>نظام توجيه العلوم — v297</title>
 <link rel="manifest" href="./manifest.webmanifest">
 <link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png">
 <link rel="apple-touch-icon" href="./icon-192.png">
@@ -2029,6 +2029,15 @@ body.v293-ro select[onchange*="v101ChangeSlot"]{pointer-events:none;opacity:.65}
 .v294-kv{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:6px 14px;margin-top:8px}
 .v294-kv span{display:block;font-size:12px;color:var(--muted,#64748b)}
 .v295-line{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:8px}.v295-edit{margin-bottom:8px}
+/* v297: شاشة المعلمين على الهاتف فقط — الأزرار الثلاثة العلوية في صف واحد بألوان مميزة، و«تقارير» بجوار «تصدير Excel» */
+@media(max-width:760px){
+ #content .page-head.v278-head>.actions.v250-toolbar{grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:6px}
+ #content .page-head.v278-head>.actions.v250-toolbar>.btn{font-size:12px;padding:4px 4px!important;min-height:46px;font-weight:800}
+ #content .page-head.v278-head>.actions>.btn[onclick^="openLongLeaveCenter"]{background:var(--info-bg);color:var(--info);border-color:#b9c9e3}
+ #content .page-head.v278-head>.actions>.btn[onclick^="openPaidShortageCenter"]{background:var(--warn-bg);color:var(--warn);border-color:#e6cf98}
+ #content .page-head.v278-head>.actions>.btn[onclick^="v224InactiveTeachers"]{background:#f9e9e9;color:var(--danger);border-color:#e3bcbc}
+ #content .auto-filter-options-row>.v278-tools{grid-column:1/-1;display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}
+}
 </style>
 </head>
 <body>
@@ -2371,6 +2380,7 @@ window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();window.v152
 window.addEventListener('appinstalled',()=>{window.v152InstallPrompt=null;v152SyncInstallBtn()});
 if('serviceWorker' in navigator&&location.protocol!=='file:')window.addEventListener('load',()=>navigator.serviceWorker.register('./service-worker.js').catch(()=>{}));
 const V145_NEWS=[
+ ['v297','على الهاتف: أزرار شاشة المعلمين العلوية في صف واحد بألوان مميزة، و«تقارير» بجوار «تصدير Excel».'],
  ['v296','مدير النظام: زر «حذف المعلم» صار في أعلى نافذة «تعديل بيانات المعلم» بعيدًا عن زر «حفظ».'],
  ['v295','مدير النظام: في «تعديل بيانات المعلم» تظهر المدرسة الأصلية والمنتدب إليها ويُعدَّلان بالبحث في كل المدارس، مع زر «حذف المعلم» للسجلات المكررة بلا فصول.'],
  ['v294','مدير النظام: تبويب «المتصلون الآن» يعرض من فاتح البرنامج الآن بنقطة زرقاء ودوره، وآخر ظهور لغيره.'],
