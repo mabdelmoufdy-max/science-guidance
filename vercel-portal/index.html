@@ -48,6 +48,7 @@ input[readonly]{background:#f1f5f9;color:var(--muted)}
 .ferr.on{display:block}
 .hint{color:var(--ok);font-size:.82rem;margin-top:3px;min-height:1px}
 .note{background:var(--soft);border:1px solid var(--soft-bd);color:#1e40af;padding:10px 12px;border-radius:10px;font-size:.9rem;margin-bottom:14px}
+.coord-link{color:inherit;font-weight:700;text-decoration:underline}
 .warn{background:var(--warn-bg);border:1px solid var(--warn-bd);color:var(--warn-tx);padding:10px 12px;border-radius:10px;font-size:.9rem;margin-bottom:14px}
 .err{background:#fef2f2;border:1px solid #fecaca;color:#991b1b;padding:10px 12px;border-radius:10px;font-size:.92rem;margin:12px 0;display:none}
 .err.on{display:block}
@@ -91,6 +92,34 @@ summary{cursor:pointer;font-weight:600;padding:4px 0}
 .ltr{direction:ltr;unicode-bidi:embed;display:inline-block}
 .spin{display:inline-block;width:16px;height:16px;border:3px solid #fff5;border-top-color:#fff;border-radius:50%;animation:sp .8s linear infinite;vertical-align:middle;margin-inline-end:6px}
 @keyframes sp{to{transform:rotate(360deg)}}
+
+/* v305: جدول المعلم — شبكة واحدة بلا تمرير */
+.card.tt{padding:12px 8px}
+.tt-chips{display:flex;flex-wrap:wrap;gap:6px;margin:6px 2px 8px}
+.tt-school{flex:0 0 100%;font-size:.72rem;color:var(--muted);margin-top:2px}
+.tt-chip{width:auto;min-width:48px;min-height:38px;padding:2px 7px;font-size:.95rem;line-height:1.15;background:#fff;color:var(--text);border:1.5px solid #94a3b8;border-radius:10px;text-align:center}
+.tt-chip small{display:block;font-size:.68rem;font-weight:600;color:var(--muted)}
+.tt-chip.on{background:var(--primary);border-color:var(--primary);color:#fff}.tt-chip.on small{color:#dbeafe}
+.tt-chip.done{border-color:#86efac;background:#f0fdf4}.tt-chip.done.on{background:var(--primary)}
+.tt-grid{width:100%;border-collapse:separate;border-spacing:3px;table-layout:fixed}
+.tt-grid th{font-size:.7rem;font-weight:700;color:var(--muted);padding:2px 0}
+.tt-grid td{padding:0}
+.tt-grid td.tt-p{width:20px;text-align:center;font-size:.8rem;color:var(--muted);font-weight:700}
+.tt-cell{width:100%;min-height:0;padding:0;height:46px;height:clamp(32px,calc((100dvh - 358px)/8),52px);background:#fff;color:var(--text);border:1px solid var(--border);border-radius:8px;font-size:.92rem;font-weight:800}
+.tt-cell small{font-size:.65rem;font-weight:700;margin-inline-start:1px}
+.tt-cell.f{background:var(--soft);border-color:#7ea6d8;color:#1e3a8a}
+.tt-cell.b{background:repeating-linear-gradient(45deg,#f1f5f9,#f1f5f9 4px,#e2e8f0 4px,#e2e8f0 8px);color:#94a3b8;border-color:#e2e8f0}
+.tt-cell:disabled{opacity:1;cursor:default}
+.tt-count{font-size:.82rem;margin:6px 2px;padding:4px 10px;border-radius:10px;background:#f1f5f9;color:var(--text)}
+.tt-count.ok{background:#f0fdf4;color:#166534}
+.tt-hint{font-size:.8rem;color:var(--muted);margin:2px 4px;min-height:0}
+.tt-hint:empty{display:none}
+.tt-grid th:first-child{width:20px}
+.tt-foot{display:flex;gap:8px;align-items:center;margin-top:6px}
+.tt-foot .tt-count{flex:1;margin:0}
+.tt-foot #tt-actions{display:flex;gap:6px}
+.tt-foot #tt-actions .btn,.tt-foot #tt-actions .btn2{width:auto;min-height:42px;padding:8px 14px;margin:0!important}
+.tt-foot #tt-actions .warn{margin:0;font-size:.8rem;padding:6px 8px}
 </style>
 </head>
 <body>
@@ -333,8 +362,8 @@ summary{cursor:pointer;font-weight:600;padding:4px 0}
       st && st.editing_open === false ? h('div', { class: 'warn', id: 'closed-banner' }, 'فترة تعديل البيانات مغلقة حاليًا.' + (st.note ? ' ' + st.note : '')) : null,
       S.statusErr ? h('div', { class: 'warn' }, 'تعذّر الاتصال بالخادم. ', h('button', { type: 'button', class: 'link', onclick: boot }, 'إعادة المحاولة')) : null,
       h('div', { class: 'roles' },
-        role('👨‍🏫', 'معلم', 'راجع بياناتك وحدّثها، أو سجّل كمعلم جديد', function () { S.mode = 'registered'; go('gate'); }),
-        role('🏫', 'مشرف مدرسة', 'اعرض معلمي مدرستك، وعدّل بياناتهم وفصولهم، وأضف معلمًا جديدًا', function () { go('supgate'); }),
+        role('👨‍🏫', 'معلم', 'راجع بياناتك المسجّلة (عرض فقط)', function () { S.mode = 'registered'; go('gate'); }),
+        role('🏫', 'مشرف مدرسة', 'اعرض معلمي مدرستك وبياناتهم وفصولهم (عرض فقط)', function () { go('supgate'); }),
         role('📝', 'معلم بالأجر — تقديم طلب', 'نموذج التقدم للتعاقد', function () { window.location.href = CFG.paid; }),
         ownerMode() ? role('📋', 'طلبات معلمي الأجر', 'عرض الطلبات وإضافة المعلم إلى البرنامج الرئيسي', function () { window.location.href = '/app/#/paidRequests'; }) : null,
         role('🧭', 'إدخال بيانات المدارس', 'لمنسق المرحلة: بيانات مدارس مرحلتك وفصولها ومعلميها، وإسناد الفصول واعتماد البيانات', function () { window.location.href = '/coordinator/'; }),
@@ -344,7 +373,7 @@ summary{cursor:pointer;font-weight:600;padding:4px 0}
   };
 
   VIEWS.gate = function () {
-    var isNew = S.mode === 'new';
+    var isNew = false; /* v303: لا تسجيل جديد */
     var civil = h('input', { type: 'tel', id: 'g_civil', inputmode: 'numeric', maxlength: '20', autocomplete: 'off', dir: 'ltr' });
     var phone = h('input', { type: 'tel', id: 'g_phone', inputmode: 'numeric', maxlength: '20', autocomplete: 'off', dir: 'ltr' });
     var hintC = h('div', { class: 'hint' }), hintP = h('div', { class: 'hint' }), box = errbox();
@@ -374,14 +403,31 @@ summary{cursor:pointer;font-weight:600;padding:4px 0}
       }));
     return h('div', { class: 'card' },
       topbar('معلم'),
-      h('div', { class: 'tabs' },
-        h('button', { type: 'button', class: 'tab' + (isNew ? '' : ' on'), id: 'tab-reg', onclick: function () { S.mode = 'registered'; render(); } }, 'معلم مسجّل في النظام'),
-        h('button', { type: 'button', class: 'tab' + (isNew ? ' on' : ''), id: 'tab-new', onclick: function () { S.mode = 'new'; render(); } }, 'معلم جديد')),
-      S.status && S.status.editing_open === false ? h('div', { class: 'warn' }, 'فترة تعديل البيانات مغلقة حاليًا.') : null,
-      isNew ? newBox : form);
+      h('div', { class: 'note' }, 'البوابة الآن لعرض بياناتك ومراجعتها فقط.'),
+      form);
   };
 
-  var NEW_TEACHER_DISABLED = false; /* أُعيد تفعيل تسجيل معلم جديد من شاشة المعلم (2026-11-01، بطلب المستخدم) */
+  var NEW_TEACHER_DISABLED = true; /* v303 (2026-11-07): شاشة المعلم للمراجعة فقط — لا تسجيل جديد ولا تعديل */
+  /* منسقو المراحل للتواصل (أرقامهم من قاعدة البيانات) — الواتساب برسالة جاهزة */
+  var COORDS = {
+    primary: [['بركات', '01129959835'], ['أيمن', '01003035173']],
+    prep: [['شيماء', '01154029126']],
+    sec_general: [['محمد معله', '01112856911']],
+    sec_industrial: [['محمد معله', '01112856911']]
+  };
+  function coordBar() {
+    var list = COORDS[S.stageKey] || [];
+    if (!list.length) return null;
+    var nm = (S.person && S.person.full_name) || '';
+    var msg = 'السلام عليكم، أنا ' + nm + ' — بخصوص بياناتي في بوابة المعلمين.';
+    var bar = h('div', { class: 'note', id: 'coord-bar' }, 'للتواصل مع المنسق: ');
+    list.forEach(function (c, i) {
+      if (i) bar.appendChild(document.createTextNode(' · '));
+      bar.appendChild(h('a', { href: 'https://wa.me/2' + c[1] + '?text=' + encodeURIComponent(msg), target: '_blank', rel: 'noopener', class: 'coord-link' },
+        c[0] + ' ', h('span', { class: 'ltr' }, c[1]), ' 💬'));
+    });
+    return bar;
+  }
   function topbar(title) {
     return h('div', { class: 'top' },
       h('button', { type: 'button', class: 'link', id: 'back-home', onclick: function () { var s = S.status, sc = S.schools, ca = S.cache; reset(); S.status = s; S.schools = sc; S.cache = ca; go('launcher'); } }, '‹ الرئيسية'),
@@ -422,7 +468,7 @@ summary{cursor:pointer;font-weight:600;padding:4px 0}
     });
     S.step = 1; S.draft = loadDraft(dkey());
     try { await loadSchools(); if (S.school) await loadClasses(S.school.id); } catch (e) { /* تُعاد المحاولة عند الحاجة */ }
-    go(S.limited ? 'flow' : 'confirm');
+    go('confirm'); /* v303: مراجعة فقط */
   }
   async function startNew() {
     if (NEW_TEACHER_DISABLED) return;
@@ -511,15 +557,133 @@ summary{cursor:pointer;font-weight:600;padding:4px 0}
     var d = S.draft;
     return h('div', { class: 'card' }, topbar('بياناتك'),
       h('h2', null, 'أهلًا ' + (pv('full_name').split(' ')[0] || '')),
-      h('p', { class: 'sub', style: 'text-align:right' }, 'راجع بياناتك المسجّلة. إن كانت صحيحة اضغط «بياناتي صحيحة»، وإلا عدّلها أو أكمل الناقص.'),
-      S.closed ? h('div', { class: 'warn', id: 'closed-banner' }, S.closedNote || 'فترة تعديل البيانات مغلقة حاليًا، يمكنك المراجعة فقط.') : null,
-      S.classesLocked && !S.closed ? h('div', { class: 'note', id: 'classes-locked-note' }, S.classesNote || 'المدرسة والفصول والحصص للعرض فقط، ويمكنك تعديل بياناتك الأساسية.') : null,
-      S.lookup.pending ? h('div', { class: 'note', id: 'pending-note' }, 'لديك طلب سابق قيد المراجعة (رقم ' + S.lookup.pending.ref + '). أي إرسال جديد يحلّ محله.') : null,
+      h('p', { class: 'sub', style: 'text-align:right' }, 'هذه بياناتك المسجّلة للمراجعة فقط. إن وجدت خطأ أو نقصًا فتواصل مع المنسق.'),
+      coordBar(),
+      h('div', { id: 'tt-entry-wrap' }, mkBtn('btn', '📅 جدولي الأسبوعي', function (ev) { openTimetable(ev.currentTarget); }, { id: 'tt-open' })),
+      h('div', { style: 'height:10px' }),
       otherN > 0 ? h('div', { class: 'note' }, 'لديك ' + otherN + ' فصل في مدرسة أخرى (انتداب/إعارة)؛ تُدار من المشرف ولا تتغير من هنا.') : null,
-      d ? h('div', { class: 'warn', id: 'draft-note' }, 'لديك مسودة غير مرسلة محفوظة على هذا الجهاز. ',
-        h('button', { type: 'button', class: 'link', id: 'draft-restore', onclick: function () { restoreDraft(d); S.draft = null; S.step = Math.min(d.step || 1, stepCount()); go('flow'); } }, 'متابعة المسودة'), ' · ',
-        h('button', { type: 'button', class: 'link', id: 'draft-drop', onclick: function () { dropDraft(dkey()); S.draft = null; render(); } }, 'تجاهلها')) : null,
-      h('div', { class: 'kv' }, rows), box, primary, h('div', { style: 'height:10px' }), second);
+      h('div', { class: 'kv' }, rows));
+  };
+
+
+  /* ---------- v305: جدولي الأسبوعي (المعلم يدخل جدوله بنفسه) ---------- */
+  var TT_DAYS = [6, 0, 1, 2, 3, 4], TT_NAMES = { 6: 'السبت', 0: 'الأحد', 1: 'الاثنين', 2: 'الثلاثاء', 3: 'الأربعاء', 4: 'الخميس' };
+  var TT_GRADES = { 'الأول': 1, 'الثاني': 2, 'الثالث': 3, 'الرابع': 4, 'الخامس': 5, 'السادس': 6 };
+  function ttShort(a) {
+    var g = a.grade_label || '', n = '';
+    for (var k in TT_GRADES) if (g.indexOf(k) >= 0) { n = TT_GRADES[k]; break; }
+    var m = /\d+/.exec(a.class_label || ''), c = m ? m[0] : (a.class_label || '');
+    return (n || g) + '/' + c;
+  }
+  function ttSubj(a) {
+    var s = a.subject || '';
+    return /فيزياء/.test(s) ? 'ف' : /كيمياء/.test(s) ? 'ك' : /أحياء|احياء/.test(s) ? 'أ' : /متكاملة/.test(s) ? 'م' : '';
+  }
+  function ttMsg(r) {
+    switch (r && r.reason) {
+      case 'closed': return 'إدخال الجدول مغلق حاليًا.';
+      case 'no_phone': return 'لا يوجد هاتف مسجّل لك في النظام، تواصل مع المنسق.';
+      case 'conflict': return 'أحد فصولك مشغول بمعلم آخر في حصة من اختيارك. حدّث الصفحة وأعد المحاولة.';
+      case 'bad_slot': case 'bad_slots': case 'bad_assignment': return 'تعذّر حفظ الجدول، حدّث الصفحة وحاول مرة أخرى.';
+    }
+    if (r && typeof r.reason === 'string' && /[؀-ۿ]/.test(r.reason)) return r.reason;
+    return reasonMsg(r || {});
+  }
+  async function ttFetch() {
+    var r = await rpc('teacher_portal_timetable_get', { p_civil: S.auth.civil, p_phone: S.auth.phone });
+    if (!r || r.ok !== true) throw (r || {});
+    var m = new Map(), busy = new Set(), byId = {};
+    (r.slots || []).forEach(function (x) { m.set(x.weekday + ':' + x.period, x.assignment_id); });
+    (r.busy || []).forEach(function (b) { busy.add(b.class_id + ':' + b.weekday + ':' + b.period); });
+    (r.assignments || []).forEach(function (a) { byId[a.assignment_id] = a; });
+    S.tt = { data: r, grid: m, base: new Map(m), byId: byId, busy: busy, sel: null, mode: (r.open && m.size === 0 && (r.assignments || []).length) ? 'edit' : 'view' };
+  }
+  function ttCount(T, aid) { var n = 0; T.grid.forEach(function (v) { if (v === aid) n++; }); return n; }
+  function ttTotals(T) { var tot = 0, got = 0; (T.data.assignments || []).forEach(function (a) { tot += a.periods; got += Math.min(ttCount(T, a.assignment_id), a.periods); }); return [got, tot]; }
+  async function openTimetable(btn) {
+    var box = errbox();
+    try { btnBusy(btn, true, 'جارٍ التحميل...'); await ttFetch(); go('timetable'); }
+    catch (e) { btnBusy(btn, false); var p = btn.parentNode; if (p) { p.insertBefore(box, btn); showErr(box, e && e.reason !== undefined ? ttMsg(e) : errMsg(e)); } }
+  }
+  VIEWS.timetable = function () {
+    var T = S.tt, d = T.data, box = errbox(), note = h('div', { class: 'tt-hint' });
+    var edit = function () { return T.mode === 'edit' && d.open; };
+    var chips = h('div', { class: 'tt-chips', id: 'tt-chips' }), tbody = h('tbody'), count = h('div', { class: 'tt-count', id: 'tt-count' }), actions = h('div', { id: 'tt-actions' });
+    var assigns = d.assignments || [];
+    function pickNext() {
+      var cur = T.sel && T.byId[T.sel];
+      if (cur && ttCount(T, T.sel) < cur.periods) return;
+      T.sel = null;
+      for (var i = 0; i < assigns.length; i++) if (ttCount(T, assigns[i].assignment_id) < assigns[i].periods) { T.sel = assigns[i].assignment_id; break; }
+    }
+    function drawChips() {
+      chips.replaceChildren();
+      if (!edit()) return;
+      var multi = {}; assigns.forEach(function (a) { multi[a.school_id] = 1; });
+      var showSchool = Object.keys(multi).length > 1, last = null;
+      assigns.forEach(function (a) {
+        if (showSchool && a.school_id !== last) { chips.appendChild(h('div', { class: 'tt-school' }, a.school_name)); last = a.school_id; }
+        var left = a.periods - ttCount(T, a.assignment_id);
+        chips.appendChild(h('button', { type: 'button', class: 'tt-chip' + (T.sel === a.assignment_id ? ' on' : '') + (left <= 0 ? ' done' : ''), 'data-aid': a.assignment_id,
+          onclick: function () { T.sel = a.assignment_id; note.textContent = ''; drawChips(); drawGrid(); } },
+          ttShort(a) + (ttSubj(a) ? ' ' + ttSubj(a) : ''), h('small', null, left <= 0 ? 'مكتمل ✓' : 'باقي ' + left)));
+      });
+    }
+    function drawGrid() {
+      tbody.replaceChildren();
+      for (var pp = 1; pp <= d.periods_per_day; pp++) (function (p) {
+        var tr = h('tr', null, h('td', { class: 'tt-p' }, String(p)));
+        TT_DAYS.forEach(function (w) {
+          var key = w + ':' + p, aid = T.grid.get(key), a = aid && T.byId[aid], cls = 'tt-cell', label = '', dis = !edit();
+          if (a) { cls += ' f'; label = [ttShort(a), ttSubj(a) ? h('small', null, ttSubj(a)) : null]; }
+          else if (edit() && T.sel && T.busy.has(T.byId[T.sel].class_id + ':' + w + ':' + p)) { cls += ' b'; label = '🔒'; }
+          tr.appendChild(h('td', null, h('button', { type: 'button', class: cls, 'data-k': key, disabled: dis, 'aria-label': TT_NAMES[w] + ' الحصة ' + p, onclick: function () { tap(w, p); } }, label)));
+        });
+        tbody.appendChild(tr);
+      })(pp);
+      var gt = ttTotals(T), left = gt[1] - gt[0];
+      count.className = 'tt-count' + (left === 0 && gt[1] > 0 ? ' ok' : '');
+      count.textContent = gt[1] === 0 ? '' : (left === 0 ? '✓ اكتمل جدولك: ' + gt[0] + ' حصة' : 'أُدخل ' + gt[0] + ' من ' + gt[1] + ' حصة · تبقّت ' + left);
+      drawActions();
+    }
+    function tap(w, p) {
+      if (!edit()) return;
+      var key = w + ':' + p, aid = T.grid.get(key);
+      note.textContent = '';
+      if (aid) { T.grid.delete(key); pickNext(); drawChips(); drawGrid(); return; }
+      if (!T.sel) { note.textContent = 'اختر الفصل أولًا من الأزرار أعلى الجدول.'; return; }
+      var a = T.byId[T.sel];
+      if (T.busy.has(a.class_id + ':' + w + ':' + p)) { note.textContent = 'هذا الفصل مشغول بمعلم آخر في هذه الحصة.'; return; }
+      if (ttCount(T, T.sel) >= a.periods) { note.textContent = 'اكتملت حصص هذا الفصل.'; return; }
+      T.grid.set(key, T.sel); pickNext(); drawChips(); drawGrid();
+    }
+    function same() { if (T.grid.size !== T.base.size) return false; var ok = true; T.grid.forEach(function (v, k) { if (T.base.get(k) !== v) ok = false; }); return ok; }
+    function drawActions() {
+      actions.replaceChildren();
+      if (!d.open) { actions.appendChild(h('div', { class: 'warn' }, 'إدخال الجدول مغلق حاليًا، يمكنك المراجعة فقط.')); return; }
+      if (!edit()) { actions.appendChild(mkBtn('btn2', 'تعديل الجدول', function () { T.mode = 'edit'; pickNext(); drawChips(); drawGrid(); }, { id: 'tt-edit' })); return; }
+      actions.appendChild(mkBtn('btn', 'حفظ الجدول', async function (ev) {
+        hideErr(box); var b = ev.currentTarget, slots = [];
+        T.grid.forEach(function (v, k) { var pr = k.split(':'); slots.push({ assignment_id: v, weekday: +pr[0], period_number: +pr[1] }); });
+        btnBusy(b, true, 'جارٍ الحفظ...');
+        try {
+          var r = await rpc('teacher_portal_timetable_save', { p_civil: S.auth.civil, p_phone: S.auth.phone, p_slots: slots });
+          if (!r || r.ok !== true) { showErr(box, ttMsg(r || {})); if (r && r.reason === 'conflict') { try { await ttFetch(); } catch (e2) { } } btnBusy(b, false); if (r && r.reason === 'conflict') render(); return; }
+          T.base = new Map(T.grid); T.mode = 'view'; T.sel = null; drawChips(); drawGrid();
+          note.textContent = '✓ تم حفظ جدولك.';
+        } catch (e) { showErr(box, e && e.reason !== undefined ? ttMsg(e) : errMsg(e)); btnBusy(b, false); }
+      }, { id: 'tt-save' }));
+      if (T.base.size) actions.appendChild(mkBtn('btn2', 'إلغاء التعديل', function () { T.grid = new Map(T.base); T.mode = 'view'; T.sel = null; drawChips(); drawGrid(); }, { id: 'tt-cancel', style: 'margin-top:8px' }));
+    }
+    var back = function () { if (edit() && !same() && !window.confirm('لديك تعديلات غير محفوظة. هل تريد الخروج؟')) return; go('confirm'); };
+    pickNext(); drawChips(); drawGrid();
+    var head = h('div', { class: 'top' }, h('button', { type: 'button', class: 'link', id: 'tt-back', onclick: back }, '‹ بياناتي'), h('strong', null, 'جدولي الأسبوعي'));
+    if (!assigns.length) {
+      return h('div', { class: 'card tt' }, head, h('div', { class: 'note', id: 'tt-empty' }, 'لا توجد فصول مسندة لك حتى الآن، فلا يمكن إدخال جدول. تواصل مع المنسق.'), coordBar());
+    }
+    return h('div', { class: 'card tt' }, head, chips,
+      h('table', { class: 'tt-grid' }, h('thead', null, h('tr', null, h('th'), TT_DAYS.map(function (w) { return h('th', null, TT_NAMES[w]); }))), tbody),
+      note, h('div', { class: 'tt-foot' }, count, actions), box);
   };
 
   function restoreDraft(d) {
@@ -997,13 +1161,12 @@ summary{cursor:pointer;font-weight:600;padding:4px 0}
   VIEWS.supgate = function () {
     var civil = h('input', { type: 'tel', id: 'sg_civil', inputmode: 'numeric', maxlength: '20', autocomplete: 'off', dir: 'ltr' });
     var phone = h('input', { type: 'tel', id: 'sg_phone', inputmode: 'numeric', maxlength: '20', autocomplete: 'off', dir: 'ltr' });
-    var code = h('input', { type: 'tel', id: 'sg_code', inputmode: 'numeric', maxlength: '12', autocomplete: 'off', dir: 'ltr' });
-    var hintC = h('div', { class: 'hint' }), hintP = h('div', { class: 'hint' }), hintK = h('div', { class: 'hint' }), box = errbox();
-    bindDigits(civil, 14, hintC); bindPhone(phone, hintP); bindDigits(code, 12, hintK);
+    var hintC = h('div', { class: 'hint' }), hintP = h('div', { class: 'hint' }), box = errbox();
+    bindDigits(civil, 14, hintC); bindPhone(phone, hintP);
     var btn = mkBtn('btn', 'دخول', null, { type: 'submit', id: 'sg_go' });
     var form = h('form', { novalidate: true, onsubmit: async function (ev) {
       ev.preventDefault(); hideErr(box);
-      var c = digits(civil.value), p = normPhone(phone.value), k = digits(code.value);
+      var c = digits(civil.value), p = normPhone(phone.value), k = '';
       if (c.length !== 14) { showErr(box, reasonMsg({ reason: 'bad_civil' })); civil.focus(); return; }
       if (p.length < 10) { showErr(box, reasonMsg({ reason: 'bad_phone' })); phone.focus(); return; }
       btnBusy(btn, true, 'جارٍ التحقق...');
@@ -1015,11 +1178,10 @@ summary{cursor:pointer;font-weight:600;padding:4px 0}
         if (S.sup.schools.length === 1) await openSchool(S.sup.schools[0].id); else go('supschools');
       } catch (e) { showErr(box, errMsg(e)); btnBusy(btn, false); }
     } },
-      h('p', { class: 'sub', style: 'text-align:right' }, 'اكتب رقمك المدني ورقم هاتفك المسجّل وكود المعلم الخاص بك في سجل المعلمين، وسنعرض لك معلمي مدرستك (لمشرف المدرسة: أقدم معلم أساسي).'),
+      h('p', { class: 'sub', style: 'text-align:right' }, 'اكتب رقمك المدني ورقم هاتفك المسجّل في سجل المعلمين، وسنعرض لك معلمي مدرستك (لمشرف المدرسة: أقدم معلم أساسي).'),
       h('div', { class: 'fg' }, h('label', { for: 'sg_civil' }, 'الرقم المدني (القومي)'), civil, hintC),
       h('div', { class: 'fg' }, h('label', { for: 'sg_phone' }, 'رقم الهاتف'), phone, hintP),
-      h('div', { class: 'fg' }, h('label', { for: 'sg_code' }, 'كود المعلم'), code, hintK,
-        h('div', { class: 'hint', id: 'sg_code_note', style: 'color:var(--muted)' }, 'الكود المسجّل لك في سجل المعلمين. إن لم يكن لك كود مسجّل اتركه فارغًا.')), box, btn);
+      box, btn);
     return h('div', { class: 'card' }, suptop('مشرف مدرسة', '‹ الرئيسية', goHome), form);
   };
 
@@ -1064,9 +1226,8 @@ summary{cursor:pointer;font-weight:600;padding:4px 0}
     return h('div', { class: 'card' },
       suptop(sch.name, sup.schools.length > 1 ? '‹ المدارس' : '‹ الرئيسية', sup.schools.length > 1 ? function () { go('supschools'); } : goHome),
       h('p', { class: 'sub', style: 'text-align:right' }, stageTitle(sch.stage_key) + ' · ' + sup.teachers.length + ' معلم'),
-      closedBanner(),
-      mkBtn('btn', '＋ إضافة معلم جديد', function () { supStart(null); }, { id: 'sup-add', disabled: S.closed }),
-      h('div', { style: 'height:10px' }), q, listEl);
+      h('div', { class: 'note' }, 'البوابة الآن لعرض البيانات والاستعلام فقط.'),
+      q, listEl);
   };
 
   VIEWS.supteacher = function () {
@@ -1087,14 +1248,8 @@ summary{cursor:pointer;font-weight:600;padding:4px 0}
     if (cl.length) rows.push(kvRow('إجمالي الحصص', h('span', { id: 'v-total' }, String(supTotal(t)))));
     return h('div', { class: 'card' },
       suptop('بيانات المعلم', '‹ المعلمون', function () { go('supschool'); }),
-      closedBanner(),
-      t.is_home ? null : h('div', { class: 'note', id: 'visitor-note' }, 'هذا المعلم منتدب إلى مدرستك؛ مدرسته الأصلية في مدرسة أخرى. يمكنك تعديل فصوله في ' + S.sup.school.name + ' فقط.'),
-      t.pending ? h('div', { class: 'note', id: 'pending-note' }, 'لديك طلب سابق لهذا المعلم قيد المراجعة. أي إرسال جديد يحلّ محله.') : null,
-      t.teacher_pending ? h('div', { class: 'note', id: 'tpending-note' }, 'أرسل المعلم نفسه طلب تعديل قيد المراجعة.') : null,
-      h('div', { class: 'kv' }, rows),
-      t.is_home ? mkBtn('btn', 'تعديل بيانات المعلم', function () { supStart(t, 'person'); }, { id: 'sup-edit-person', disabled: S.closed }) : null,
-      t.is_home ? h('div', { style: 'height:10px' }) : null,
-      mkBtn(t.is_home ? 'btn2' : 'btn', 'إسناد / تعديل الفصول', function () { supStart(t, 'classes'); }, { id: 'sup-edit-classes', disabled: S.closed }));
+      t.is_home ? null : h('div', { class: 'note', id: 'visitor-note' }, 'هذا المعلم منتدب إلى مدرستك؛ مدرسته الأصلية في مدرسة أخرى.'),
+      h('div', { class: 'kv' }, rows));
   };
 
   function supStart(t, startKey) {
