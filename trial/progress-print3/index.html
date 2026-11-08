@@ -1,5 +1,5 @@
 <!doctype html>
-<!-- v309: صفحة «إنجاز الجداول»: زر «رجوع» (من تفاصيل مدرسة يعود لصفحة الإنجاز، ومن الصفحة يعود للشاشة السابقة) وزر «🖨 طباعة» يفتح معاينة A4 لتقدم الإنجاز بنفس فلاتر الصفحة (المرحلة/المدرسة/ما تم إدخاله)؛ زر «تقرير» يبقى للتقرير الكامل (v306). -->
+<!-- v309: صفحة «إنجاز الجداول»: زر «رجوع» (من تفاصيل مدرسة يعود لصفحة الإنجاز، ومن الصفحة يعود للشاشة السابقة)؛ وفي قائمة المدارس زر «📄 تقرير» وحده (تقرير الإنجاز بفلاتر الصفحة)، وداخل المدرسة زران: «📄 تقرير» (إنجاز المدرسة) و«🖨 طباعة» (الجدول الفعلي للمدرسة: تقرير «الجدول الأسبوعي لمعلمي المدرسة» بعد جلب جدولها بـget_teacher_timetable_workspace؛ مخفي للموجه الأول لأن الطباعة تحتاج إدارة الجدول). -->
 <!-- v308: تقرير «جدول المعلم الأسبوعي» (A4): خلية الحصة مختصرة باسم الفصل فقط مثل 2/2 (وتضاف المادة للثانوي إن لم تكن علوم) بدل «الصف الثاني — 2/2 — علوم»، كما في تقرير جدول المدرسة (v166Short)؛ وتوسيط النص في خلايا الجدول؛ شاشة التحرير لم تُمس. -->
 <!-- v307: ترتيب القائمة الجانبية لكل دور بحسب الأولوية والاستخدام الفعلي (سجل التدقيق 23 أكتوبر ← 7 نوفمبر وطلبات الواجهة): الترتيب فقط دون إضافة أو حذف عنصر (دالة v307Order تُستدعى عند رسم القائمة وقائمة «المزيد» والمساعدة). -->
 <!-- v306: مؤشر إنجاز جداول المعلمين — صفحة مستقلة «إنجاز الجداول» (#/timetableProgress) بفلاتر المرحلة والمدرسة + بطاقة «إدخال جداول المعلمين» في شاشة الموجّه ولوحة المنسق (مكتمل/ناقص/لم يبدأ، المدارس الأضعف أولًا، نافذة المدرسة بزر «تذكير» واتساب لكل معلم) + تقرير A4 «تقدم إدخال جداول المعلمين»؛ قراءة فقط عبر الدالة timetable_progress (كتلة v306). -->
@@ -2041,6 +2041,7 @@ body.v293-ro select[onchange*="v101ChangeSlot"]{pointer-events:none;opacity:.65}
 }
 .v302-t{border:1px solid var(--line,#c8d2de);border-radius:var(--radius,12px);padding:10px 14px;margin-bottom:8px;background:#fff}.v302-h{display:flex;justify-content:space-between;gap:8px;align-items:center}.v302-g{color:#55657a;font-size:.92em;margin-top:4px}
 
+.v306-acts{display:flex;gap:8px;margin:6px 0 10px}.v306-acts .btn{flex:1}
 .v306-filters{display:flex;gap:10px;flex-wrap:wrap;margin:8px 0}.v306-filters label{display:flex;flex-direction:column;font-size:.85em;gap:2px;flex:1;min-width:150px}
 .v306-card{margin-bottom:12px}.v306-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:8px}.v306-head h3{margin:0}
 .v306-row{display:flex;align-items:center;gap:8px;width:100%;padding:8px 4px;border:0;border-bottom:1px solid var(--line,#e2e8f0);background:none;text-align:right;cursor:pointer;font:inherit;color:inherit}
@@ -12940,18 +12941,35 @@ function v306PageInner(rows){
   const list=v306Schools(fl).sort((a,b)=>v306F.status?(b.total+b.noc)-(a.total+a.noc)||String(a.name).localeCompare(String(b.name),'ar'):(a.total?0:1)-(b.total?0:1)||b.pct-a.pct||b.done-a.done||String(a.name).localeCompare(String(b.name),'ar'));
   body=`<div class="card">${list.map(g=>v306Line(g,true)).join('')}</div>`;
  }
- return filters+kpis+body;
+ const sel=v306F.school?v306Schools(rows.filter(r=>String(r.school_id)===v306F.school))[0]:null,canPrint=!!sel&&profile?.role!=='first_supervisor';
+ const acts=`<div class="v306-acts"><button type="button" class="btn primary" onclick="v306Print()">📄 تقرير</button>${canPrint?`<button type="button" class="btn secondary" onclick="v306PrintSchool('${esc(v306F.school)}')">🖨 طباعة</button>`:''}</div>`;
+ return filters+acts+kpis+body;
 }
 function v306Redraw(){const el=document.getElementById('v306Page');if(el&&v306Cache)el.innerHTML=v306PageInner(v306Cache.rows)}
 function v306SetStage(v){v306F.stage=v;v306F.school='';v306Redraw()}
 function v306SetSchool(v){v306F.school=v;v306Redraw()}
 function v306SetStatus(v){v306F.status=v;v306Redraw()}
 function v306Print(){v306F.apply=true;openReportById(V306_ID)}
+/* طباعة الجدول الفعلي للمدرسة المعروضة: يجلب جدولها ثم يفتح تقرير «الجدول الأسبوعي لمعلمي المدرسة» الموجود (v102/v167) */
+async function v306PrintSchool(schoolId){
+ const prevSchool=v101SchoolId,prevTeacher=v101TeacherId;
+ try{
+  if(!activeTerm?.id)return toast('لا توجد فترة دراسية نشطة');
+  const info=(v306Cache?.rows||[]).find(r=>String(r.school_id)===String(schoolId));
+  const {data,error}=await sb.rpc('get_teacher_timetable_workspace',{p_school_id:schoolId,p_term_id:activeTerm.id});
+  if(error)throw error;if(!data)throw new Error('تعذر تحميل جدول المدرسة');
+  v101Timetable={...data,school:{id:schoolId,name:info?.school_name||'',stage:info?.stage||''},context:v101Context()};
+  v101SchoolId=String(schoolId);v101Dirty=false;v101SettingsDirty=false;v101Saving=false;
+  v102AssertPrintReady(true);
+  await openReportById('schoolTeacherTimetable',v102PrintOptions(true));
+ }catch(error){toast(error?.message||'تعذرت طباعة جدول المدرسة')}
+ finally{v101SchoolId=prevSchool;v101TeacherId=prevTeacher}
+}
 /* رجوع: من تفاصيل مدرسة إلى صفحة الإنجاز (قائمة المدارس)، ومن القائمة إلى الشاشة السابقة */
 function v306Back(){if(v306F.school){v306SetSchool('');return}appNavGoBack()}
 async function v306Page({force=false}={}){
  let rows;try{rows=await v306Load(!!force)}catch(e){return `<div class="error">تعذر تحميل إنجاز الجداول: ${esc(e?.message||e)}</div>`}
- return `<div class="page-head"><div><h2>إنجاز إدخال الجداول</h2><p>من أدخل جدوله الفعلي ومن لم يكمله — للمتابعة والتذكير.</p></div><div class="actions"><button type="button" class="btn secondary" onclick="v306Back()">← رجوع</button><button type="button" class="btn secondary" onclick="refreshCurrentPage({invalidate:['page:timetableProgress']});v306Cache=null">تحديث</button><button type="button" class="btn primary" onclick="v306Print()">🖨 طباعة</button><button type="button" class="btn secondary" onclick="v306F.apply=false;openReportById('${V306_ID}')">📄 تقرير</button></div></div><div id="v306Page">${v306PageInner(rows)}</div>`;
+ return `<div class="page-head"><div><h2>إنجاز إدخال الجداول</h2><p>من أدخل جدوله الفعلي ومن لم يكمله — للمتابعة والتذكير.</p></div><div class="actions"><button type="button" class="btn secondary" onclick="v306Back()">← رجوع</button><button type="button" class="btn secondary" onclick="refreshCurrentPage({invalidate:['page:timetableProgress']});v306Cache=null">تحديث</button></div></div><div id="v306Page">${v306PageInner(rows)}</div>`;
 }
 {
  const add=(role,after)=>{const a=NAV[role];if(a&&!a.some(x=>x[0]==='timetableProgress')){const i=a.findIndex(x=>x[0]===after);a.splice(i<0?1:i+1,0,['timetableProgress','إنجاز الجداول','📅'])}};
