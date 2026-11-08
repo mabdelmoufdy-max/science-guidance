@@ -1,4 +1,5 @@
 <!doctype html>
+<!-- v309: صفحة «إنجاز الجداول»: زر «رجوع» (appNavGoBack) وزر «🖨 طباعة» يفتح معاينة A4 لتقدم الإنجاز بنفس فلاتر الصفحة (المرحلة/المدرسة/ما تم إدخاله)؛ زر «تقرير» يبقى للتقرير الكامل (v306). -->
 <!-- v308: تقرير «جدول المعلم الأسبوعي» (A4): خلية الحصة مختصرة باسم الفصل فقط مثل 2/2 (وتضاف المادة للثانوي إن لم تكن علوم) بدل «الصف الثاني — 2/2 — علوم»، كما في تقرير جدول المدرسة (v166Short)؛ وتوسيط النص في خلايا الجدول؛ شاشة التحرير لم تُمس. -->
 <!-- v307: ترتيب القائمة الجانبية لكل دور بحسب الأولوية والاستخدام الفعلي (سجل التدقيق 23 أكتوبر ← 7 نوفمبر وطلبات الواجهة): الترتيب فقط دون إضافة أو حذف عنصر (دالة v307Order تُستدعى عند رسم القائمة وقائمة «المزيد» والمساعدة). -->
 <!-- v306: مؤشر إنجاز جداول المعلمين — صفحة مستقلة «إنجاز الجداول» (#/timetableProgress) بفلاتر المرحلة والمدرسة + بطاقة «إدخال جداول المعلمين» في شاشة الموجّه ولوحة المنسق (مكتمل/ناقص/لم يبدأ، المدارس الأضعف أولًا، نافذة المدرسة بزر «تذكير» واتساب لكل معلم) + تقرير A4 «تقدم إدخال جداول المعلمين»؛ قراءة فقط عبر الدالة timetable_progress (كتلة v306). -->
@@ -8,7 +9,6 @@
 <!-- v300: إلغاء انتداب معلم له فصول مسندة في المدرسة المنتدب إليها (مدير النظام ومنسق المرحلة): بدل رسالة «فُك الإسناد أولًا» نافذة تأكيد بأسماء الفصول وحصصها و«هل فعلًا تريد إلغاء إسناد الحصص وإلغاء الانتداب؟»؛ عند التأكيد يُلغى إسنادها (unassign_class_atomic للمدير، والحذف المسموح بسياسة teaching_coord_remove للمنسق) فتعود غير مسندة ثم يُلغى الانتداب بالمسار نفسه؛ إن تعذر إلغاء أي إسناد لا يُلغى الانتداب. -->
 <!-- v299: لوحة منسق المرحلة — سطر «مدارس بها فصول غير مغطاة» في «③ ماذا أفعل الآن؟» (عدد المدارس، الفصول، الحصص المطلوبة للتغطية) وتقريره (المدرسة/الموجه/الفصول غير المغطاة بأسمائها/عددها/الحصص المطلوبة)؛ غير المغطى = المقرر أكبر من المسند لأي معلم ثابت أو بالأجر. عرض فقط. -->
 <!-- v298: «المعلمون» عند «المدرسة: الكل»: المعلم يظهر مرة واحدة — المنتدب جزئيًا كان يظهر بطاقتين (مدرسته الأصلية والمنتدب إليها)؛ يبقى سطر المدرسة الأصلية ونصه «منتدب جزئيًا إلى …»، والمنتدب كليًا بسطر المدرسة المنتدب إليها (v298OneRowPerTeacher). عند اختيار مدرسة بعينها بلا تغيير. -->
-<!-- v297: شاشة «المعلمون» على الهاتف فقط (≤760px، CSS فقط): شريط البحث والفلاتر لم يعد ثابتًا أعلى الشاشة عند التمرير (كان يغطي بطاقات المعلمين)؛ أزرار «الإجازات وتجديدها» و«توزيع العجز» و«المعلمون الموقوفون» في صف واحد بألوان مميزة (أزرق/ذهبي/أحمر فاتح من متغيرات info/warn/danger)، و«تقارير ▾» بجوار «تصدير Excel» في صف واحد. الحاسوب بلا تغيير. -->
 <html lang="ar" dir="rtl">
 <head>
 <!-- إعداد: أ/ محمود عبدالمفدي محمد أبوالنجا | الصفة: معلم -->
@@ -16,7 +16,7 @@
 <script>/* v226: العنوان الموحد — انظر التعليق أعلى الملف */(function(){try{if(/\.github\.io$/.test(location.hostname)&&/^\/science-guidance\/?(index\.html)?$/.test(location.pathname)&&!/[?&]stay\b/.test(location.search))location.replace('https://teachers-data-portal.vercel.app/app/'+location.hash)}catch(e){}})();</script>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#152c43">
-<title>نظام توجيه العلوم — v308</title>
+<title>نظام توجيه العلوم — v309</title>
 <link rel="manifest" href="./manifest.webmanifest">
 <link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png">
 <link rel="apple-touch-icon" href="./icon-192.png">
@@ -2390,6 +2390,7 @@ window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();window.v152
 window.addEventListener('appinstalled',()=>{window.v152InstallPrompt=null;v152SyncInstallBtn()});
 if('serviceWorker' in navigator&&location.protocol!=='file:')window.addEventListener('load',()=>navigator.serviceWorker.register('./service-worker.js').catch(()=>{}));
 const V145_NEWS=[
+ ['v309','صفحة إنجاز الجداول: زر رجوع وزر طباعة (يطبع حسب الفلاتر المختارة).'],
  ['v308','تقرير جدول المعلم الأسبوعي: الخلية تعرض اسم الفصل فقط (مثل 2/2) لوضوح الجدول.'],
  ['v307','ترتيب القائمة الجانبية: الأكثر أولوية واستخدامًا في الأعلى لكل دور (الترتيب فقط، بلا إضافة أو حذف).'],
  ['v306','مؤشر إنجاز جداول المعلمين: بطاقة في شاشة الموجّه ولوحة المنسق وتقرير A4، وزر تذكير واتساب لكل معلم لم يكتمل جدوله.'],
@@ -12912,7 +12913,7 @@ function v306SortTeachers(list){
  const ord={[V306_ST[2]]:0,[V306_ST[1]]:1,[V306_ST[0]]:2,[V306_ST[3]]:3};
  return [...list].sort((a,b)=>ord[v306Status(a)]-ord[v306Status(b)]||String(a.teacher_name).localeCompare(String(b.teacher_name),'ar'));
 }
-const v306F={stage:'',school:'',status:''};
+const v306F={stage:'',school:'',status:'',apply:false};
 function v306Line(g,page){
  const p=Math.round(g.pct*100),col=!g.total?'#cbd5e1':p>=100?'#2fa84f':p>=40?'#e8a317':'#e0584d';
  const act=page?`v306SetSchool('${esc(g.id)}')`:`v306Open('${esc(g.id)}')`,sm=page&&v306F.status;
@@ -12945,9 +12946,10 @@ function v306Redraw(){const el=document.getElementById('v306Page');if(el&&v306Ca
 function v306SetStage(v){v306F.stage=v;v306F.school='';v306Redraw()}
 function v306SetSchool(v){v306F.school=v;v306Redraw()}
 function v306SetStatus(v){v306F.status=v;v306Redraw()}
+function v306Print(){v306F.apply=true;openReportById(V306_ID)}
 async function v306Page({force=false}={}){
  let rows;try{rows=await v306Load(!!force)}catch(e){return `<div class="error">تعذر تحميل إنجاز الجداول: ${esc(e?.message||e)}</div>`}
- return `<div class="page-head"><div><h2>إنجاز إدخال الجداول</h2><p>من أدخل جدوله الفعلي ومن لم يكمله — للمتابعة والتذكير.</p></div><div class="actions"><button type="button" class="btn secondary" onclick="refreshCurrentPage({invalidate:['page:timetableProgress']});v306Cache=null">تحديث</button><button type="button" class="btn primary" onclick="openReportById('${V306_ID}')">📄 تقرير</button></div></div><div id="v306Page">${v306PageInner(rows)}</div>`;
+ return `<div class="page-head"><div><h2>إنجاز إدخال الجداول</h2><p>من أدخل جدوله الفعلي ومن لم يكمله — للمتابعة والتذكير.</p></div><div class="actions"><button type="button" class="btn secondary" onclick="appNavGoBack()">← رجوع</button><button type="button" class="btn secondary" onclick="refreshCurrentPage({invalidate:['page:timetableProgress']});v306Cache=null">تحديث</button><button type="button" class="btn primary" onclick="v306Print()">🖨 طباعة</button><button type="button" class="btn secondary" onclick="v306F.apply=false;openReportById('${V306_ID}')">📄 تقرير</button></div></div><div id="v306Page">${v306PageInner(rows)}</div>`;
 }
 {
  const add=(role,after)=>{const a=NAV[role];if(a&&!a.some(x=>x[0]==='timetableProgress')){const i=a.findIndex(x=>x[0]===after);a.splice(i<0?1:i+1,0,['timetableProgress','إنجاز الجداول','📅'])}};
@@ -12977,12 +12979,14 @@ function v306Metrics(schema){
 const __v306Rebuild=v103RebuildMetrics;
 v103RebuildMetrics=function(schema){return schema?.reportId===V306_ID?v306Metrics(schema):__v306Rebuild(schema)};
 ReportAdapters[V306_ID]={async load(ctx){
- const data=await v306Load(true),so=['ابتدائي','إعدادي','ثانوي عام','ثانوي صناعي'],sr=x=>{const i=so.indexOf(x);return i<0?9:i};
+ let data=await v306Load(true);const so=['ابتدائي','إعدادي','ثانوي عام','ثانوي صناعي'],sr=x=>{const i=so.indexOf(x);return i<0?9:i};
+ let scope='';
+ if(v306F.apply){const f=v306F;data=data.filter(r=>(!f.stage||r.stage===f.stage)&&(!f.school||String(r.school_id)===f.school)&&(!f.status||v306Status(r)===f.status));const sn=f.school&&(data[0]?.school_name||''),parts=[f.stage&&'المرحلة: '+f.stage,sn&&'المدرسة: '+sn,f.status&&'الحالة: '+({'مكتمل':'أدخلوا جدولهم','ناقص':'ناقص','لم يبدأ':'لم يدخلوا بعد'}[f.status]||f.status)].filter(Boolean);scope=parts.length?' — '+parts.join(' • '):''}
  const rows=data.map(r=>{const q=Number(r.required)||0,e=Number(r.entered)||0,st=v306Status(r);
   return {index:0,school:r.school_name,teacher:r.teacher_name+(r.work_type==='paid'?' (أجر)':''),required:q,entered:e,left:Math.max(0,q-e),status:st,_status:st,_tid:r.teacher_id,_schoolId:String(r.school_id),_schoolIds:[String(r.school_id)],_school:r.school_name,_schools:[r.school_name],_stage:r.stage,_stages:[r.stage],_stageSort:sr(r.stage),_search:[r.school_name,r.teacher_name,st,r.stage].filter(Boolean).join(' ')}});
  rows.sort((a,b)=>a._stageSort-b._stageSort||String(a.school).localeCompare(String(b.school),'ar')||String(a.teacher).localeCompare(String(b.teacher),'ar'));
  const C=(k,l,w,o={})=>reportColumn(k,l,w,o);
- const sc=v103BaseReport(V306_ID,ctx,[C('index','م',.3,{numeric:true}),C('school','المدرسة',2),C('teacher','المعلم',2),C('required','المطلوب',.6,{numeric:true}),C('entered','المدخل',.6,{numeric:true}),C('left','المتبقي',.6,{numeric:true}),C('status','الحالة',.9)],rows,'المطلوب = مجموع حصص المعلم المسندة له؛ المدخل = حصصه المسجّلة في جدوله. المعلم بلا فصول مسندة لا يُحسب عليه تقصير.');
+ const sc=v103BaseReport(V306_ID,ctx,[C('index','م',.3,{numeric:true}),C('school','المدرسة',2),C('teacher','المعلم',2),C('required','المطلوب',.6,{numeric:true}),C('entered','المدخل',.6,{numeric:true}),C('left','المتبقي',.6,{numeric:true}),C('status','الحالة',.9)],rows,'المطلوب = مجموع حصص المعلم المسندة له؛ المدخل = حصصه المسجّلة في جدوله. المعلم بلا فصول مسندة لا يُحسب عليه تقصير.'+scope);
  try{await v261Reorder(sc,r=>r._schoolId,'_tid')}catch(e){console.warn('v306 reorder skipped',e)}
  sc.v239KeepIndex=true;return sc;
 }};
