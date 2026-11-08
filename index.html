@@ -1,5 +1,5 @@
 <!doctype html>
-<!-- v309: صفحة «إنجاز الجداول»: زر «رجوع» (appNavGoBack) وزر «🖨 طباعة» يفتح معاينة A4 لتقدم الإنجاز بنفس فلاتر الصفحة (المرحلة/المدرسة/ما تم إدخاله)؛ زر «تقرير» يبقى للتقرير الكامل (v306). -->
+<!-- v309: صفحة «إنجاز الجداول»: زر «رجوع» (من تفاصيل مدرسة يعود لصفحة الإنجاز، ومن الصفحة يعود للشاشة السابقة) وزر «🖨 طباعة» يفتح معاينة A4 لتقدم الإنجاز بنفس فلاتر الصفحة (المرحلة/المدرسة/ما تم إدخاله)؛ زر «تقرير» يبقى للتقرير الكامل (v306). -->
 <!-- v308: تقرير «جدول المعلم الأسبوعي» (A4): خلية الحصة مختصرة باسم الفصل فقط مثل 2/2 (وتضاف المادة للثانوي إن لم تكن علوم) بدل «الصف الثاني — 2/2 — علوم»، كما في تقرير جدول المدرسة (v166Short)؛ وتوسيط النص في خلايا الجدول؛ شاشة التحرير لم تُمس. -->
 <!-- v307: ترتيب القائمة الجانبية لكل دور بحسب الأولوية والاستخدام الفعلي (سجل التدقيق 23 أكتوبر ← 7 نوفمبر وطلبات الواجهة): الترتيب فقط دون إضافة أو حذف عنصر (دالة v307Order تُستدعى عند رسم القائمة وقائمة «المزيد» والمساعدة). -->
 <!-- v306: مؤشر إنجاز جداول المعلمين — صفحة مستقلة «إنجاز الجداول» (#/timetableProgress) بفلاتر المرحلة والمدرسة + بطاقة «إدخال جداول المعلمين» في شاشة الموجّه ولوحة المنسق (مكتمل/ناقص/لم يبدأ، المدارس الأضعف أولًا، نافذة المدرسة بزر «تذكير» واتساب لكل معلم) + تقرير A4 «تقدم إدخال جداول المعلمين»؛ قراءة فقط عبر الدالة timetable_progress (كتلة v306). -->
@@ -12947,9 +12947,11 @@ function v306SetStage(v){v306F.stage=v;v306F.school='';v306Redraw()}
 function v306SetSchool(v){v306F.school=v;v306Redraw()}
 function v306SetStatus(v){v306F.status=v;v306Redraw()}
 function v306Print(){v306F.apply=true;openReportById(V306_ID)}
+/* رجوع: من تفاصيل مدرسة إلى صفحة الإنجاز (قائمة المدارس)، ومن القائمة إلى الشاشة السابقة */
+function v306Back(){if(v306F.school){v306SetSchool('');return}appNavGoBack()}
 async function v306Page({force=false}={}){
  let rows;try{rows=await v306Load(!!force)}catch(e){return `<div class="error">تعذر تحميل إنجاز الجداول: ${esc(e?.message||e)}</div>`}
- return `<div class="page-head"><div><h2>إنجاز إدخال الجداول</h2><p>من أدخل جدوله الفعلي ومن لم يكمله — للمتابعة والتذكير.</p></div><div class="actions"><button type="button" class="btn secondary" onclick="appNavGoBack()">← رجوع</button><button type="button" class="btn secondary" onclick="refreshCurrentPage({invalidate:['page:timetableProgress']});v306Cache=null">تحديث</button><button type="button" class="btn primary" onclick="v306Print()">🖨 طباعة</button><button type="button" class="btn secondary" onclick="v306F.apply=false;openReportById('${V306_ID}')">📄 تقرير</button></div></div><div id="v306Page">${v306PageInner(rows)}</div>`;
+ return `<div class="page-head"><div><h2>إنجاز إدخال الجداول</h2><p>من أدخل جدوله الفعلي ومن لم يكمله — للمتابعة والتذكير.</p></div><div class="actions"><button type="button" class="btn secondary" onclick="v306Back()">← رجوع</button><button type="button" class="btn secondary" onclick="refreshCurrentPage({invalidate:['page:timetableProgress']});v306Cache=null">تحديث</button><button type="button" class="btn primary" onclick="v306Print()">🖨 طباعة</button><button type="button" class="btn secondary" onclick="v306F.apply=false;openReportById('${V306_ID}')">📄 تقرير</button></div></div><div id="v306Page">${v306PageInner(rows)}</div>`;
 }
 {
  const add=(role,after)=>{const a=NAV[role];if(a&&!a.some(x=>x[0]==='timetableProgress')){const i=a.findIndex(x=>x[0]===after);a.splice(i<0?1:i+1,0,['timetableProgress','إنجاز الجداول','📅'])}};
