@@ -1,4 +1,5 @@
 <!doctype html>
+<!-- v311: شاشة الموجه: تسمية تبويب «لوحة المشرف» صارت «الرئيسية» (الاسم فقط). -->
 <!-- v310: تقرير المدرسة الشامل في صفحة A4 واحدة (كان نحو ١٠ صفحات): بطاقات للبيانات والأعداد، وسطر واحد لكل معلم (النصاب والفصول والتدريس والإشراف والريادة والمجدول والحالة)، والفصول مجمّعة بالصف؛ حُذف الرقم القومي والهاتف والجدول اليومي لكل معلم والأسطر المكررة والفارغة. تقرير الشاشة (ملف المدرسة) لم يُمس. -->
 <!-- v309: صفحة «إنجاز الجداول»: زر «رجوع» (من تفاصيل مدرسة يعود لصفحة الإنجاز، ومن الصفحة يعود للشاشة السابقة)؛ وفي قائمة المدارس زر «📄 تقرير» وحده (تقرير الإنجاز بفلاتر الصفحة)، وداخل المدرسة زران: «📄 تقرير» (إنجاز المدرسة) و«🖨 طباعة» (الجدول الفعلي للمدرسة: تقرير «الجدول الأسبوعي لمعلمي المدرسة» بعد جلب جدولها بـget_teacher_timetable_workspace؛ مخفي للموجه الأول لأن الطباعة تحتاج إدارة الجدول). -->
 <!-- v308: تقرير «جدول المعلم الأسبوعي» (A4): خلية الحصة مختصرة باسم الفصل فقط مثل 2/2 (وتضاف المادة للثانوي إن لم تكن علوم) بدل «الصف الثاني — 2/2 — علوم»، كما في تقرير جدول المدرسة (v166Short)؛ وتوسيط النص في خلايا الجدول؛ شاشة التحرير لم تُمس. -->
@@ -14,7 +15,7 @@
 <script>/* v226: العنوان الموحد — انظر التعليق أعلى الملف */(function(){try{if(/\.github\.io$/.test(location.hostname)&&/^\/science-guidance\/?(index\.html)?$/.test(location.pathname)&&!/[?&]stay\b/.test(location.search))location.replace('https://teachers-data-portal.vercel.app/app/'+location.hash)}catch(e){}})();</script>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#152c43">
-<title>نظام توجيه العلوم — v310</title>
+<title>نظام توجيه العلوم — v311</title>
 <link rel="manifest" href="./manifest.webmanifest">
 <link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png">
 <link rel="apple-touch-icon" href="./icon-192.png">
@@ -2389,6 +2390,7 @@ window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();window.v152
 window.addEventListener('appinstalled',()=>{window.v152InstallPrompt=null;v152SyncInstallBtn()});
 if('serviceWorker' in navigator&&location.protocol!=='file:')window.addEventListener('load',()=>navigator.serviceWorker.register('./service-worker.js').catch(()=>{}));
 const V145_NEWS=[
+ ['v311','شاشة الموجه: تبويب «لوحة المشرف» أصبح «الرئيسية».'],
  ['v310','تقرير المدرسة الشامل صار صفحة A4 واحدة: بيانات المدرسة وسطر لكل معلم والفصول بالصف، بلا رقم قومي ولا هاتف.'],
  ['v309','صفحة إنجاز الجداول: زر رجوع وزر طباعة (يطبع حسب الفلاتر المختارة).'],
  ['v308','تقرير جدول المعلم الأسبوعي: الخلية تعرض اسم الفصل فقط (مثل 2/2) لوضوح الجدول.'],
@@ -6677,7 +6679,7 @@ mySchool=async function(){
 };
 
 NAV.supervisor=[
- ['dashboard','لوحة المشرف','▦'],['alerts','التنبيهات','🔔'],['completion','استكمال البيانات','✎'],['supervisors','بياناتي','◎'],['schools','مدارسي','⌂'],['teachers','معلمو مدارسي','◉'],['classes','تعديل الفصول','▦'],['assignments','توزيع الفصول','Σ'],['approval','الحفظ والاعتماد','✓'],['statistics','الإحصائيات','◫'],['reports','التقارير','▤']
+ ['dashboard','الرئيسية','▦'],['alerts','التنبيهات','🔔'],['completion','استكمال البيانات','✎'],['supervisors','بياناتي','◎'],['schools','مدارسي','⌂'],['teachers','معلمو مدارسي','◉'],['classes','تعديل الفصول','▦'],['assignments','توزيع الفصول','Σ'],['approval','الحفظ والاعتماد','✓'],['statistics','الإحصائيات','◫'],['reports','التقارير','▤']
 ];
 
 function supervisorChooseSchoolV75(schoolId,target=currentPage){
