@@ -1,5 +1,5 @@
 <!doctype html>
-<!-- v314: شاشة الموجه ← «يحتاج تدخلك»: زر «فتح» يفتح ملف المدرسة في «مدارسي» بدل النافذة السريعة. -->
+<!-- v314: شاشة الموجه: زر «فتح» في «يحتاج تدخلك» يفتح ملف المدرسة في «مدارسي» بدل النافذة السريعة؛ وإصلاح «فتح المدرسة/فتح صفحة مدارسي/فتح شاشة المعلمين» التي كانت لا تفتح المدرسة لأن v163/v179 يفرّغان اختيار المدرسة عند دخول الشاشة (الحل بمسار v233OpenPage). -->
 <!-- v313: شاشة الموجه: زر «توزيع الفصول» في بطاقة المدرسة يفتح صفحة توزيع الفصول لتلك المدرسة، و«فتح شاشة المعلمين» يفتح معلمي المدرسة نفسها، وحُذف زر «الأنصبة» المعطّل من نافذة العجز والزيادة. -->
 <!-- v312: شاشة الموجه: تسمية تبويب «لوحة المشرف» صارت «الرئيسية» (الاسم فقط). -->
 <!-- v311: شاشة الموجّه: زر «فتح المدرسة» في بطاقة المدرسة وزر «فتح صفحة مدارسي» في نافذتها يفتحان ملف المدرسة نفسها في «مدارسي» (المدرسة والمرحلة مختارتان في الفلاتر) بدل النافذة/الصفحة العامة (v311OpenSchool). واجهة فقط. -->
@@ -2391,7 +2391,7 @@ window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();window.v152
 window.addEventListener('appinstalled',()=>{window.v152InstallPrompt=null;v152SyncInstallBtn()});
 if('serviceWorker' in navigator&&location.protocol!=='file:')window.addEventListener('load',()=>navigator.serviceWorker.register('./service-worker.js').catch(()=>{}));
 const V145_NEWS=[
- ['v314','شاشة الموجه: زر «فتح» في «يحتاج تدخلك» يفتح المدرسة نفسها في «مدارسي».'],
+ ['v314','شاشة الموجه: أزرار «فتح» و«فتح المدرسة» و«فتح صفحة مدارسي» و«فتح شاشة المعلمين» تفتح المدرسة نفسها فعلًا.'],
  ['v313','شاشة الموجه: إصلاح روابط بطاقة المدرسة (توزيع الفصول والمعلمون يفتحان المدرسة نفسها) وحذف زر الأنصبة المعطّل.'],
  ['v312','شاشة الموجه: تبويب «لوحة المشرف» أصبح «الرئيسية».'],
  ['v311','شاشة الموجّه: «فتح المدرسة» و«فتح صفحة مدارسي» يفتحان ملف المدرسة نفسها في مدارسي مباشرة.'],
@@ -13046,11 +13046,8 @@ function v311OpenSchool(schoolId){
  try{closeModal()}catch(_){}
  const id=String(schoolId||'');if(!id)return;
  const school=((window.__supervisorWorkspace||{}).schools||[]).find(s=>String(s.id)===id)||{};
- const key=v97StageKey('schools');
- if(school.stage)v97StageSelections.set(key,String(school.stage));
- v98SchoolSelections.set(key,id);v97StageRevision++;
  if(profile?.role==='supervisor')supervisorRememberSchoolV75(id);
- go('schools');
+ v233OpenPage('schools',{schoolId:id,stage:String(school.stage||'')}); // v314: v233 يمنع v163/v179 من تفريغ اختيار المدرسة عند الدخول
 }
 /* v311-end */
 /* v313-begin: «فتح شاشة المعلمين» من نافذة المدرسة يفتح «معلمو مدارسي» على المدرسة نفسها */
@@ -13058,11 +13055,8 @@ function v313OpenTeachers(schoolId){
  try{closeModal()}catch(_){}
  const id=String(schoolId||'');if(!id)return;
  const school=((window.__supervisorWorkspace||{}).schools||[]).find(s=>String(s.id)===id)||{};
- const key=v97StageKey('teachers');
- if(school.stage)v97StageSelections.set(key,String(school.stage));
- v98SchoolSelections.set(key,id);v97StageRevision++;
  if(profile?.role==='supervisor')supervisorRememberSchoolV75(id);
- go('teachers');
+ v233OpenPage('teachers',{schoolId:id,stage:String(school.stage||'')}); // v314: كما في v311
 }
 /* v313-end */
 </script>
