@@ -1,4 +1,5 @@
 <!doctype html>
+<!-- v318: فلتر الإجازة المجددة الصحيح (on_renewed_leave) في ترتيب أولوية الإشراف وتوزيع العجز بالأجر: المجاز خارج الترتيب والمؤهلين ونص حالته «إجازة مجددة — غير مؤهل للإشراف». -->
 <!-- v317: «توزيع الفصول»: استبعاد المعلم الذي في إجازة مجددة من قائمة المعلمين والمؤشرات (كان الفلتر يقرأ renewed_leave بينما القائمة تحمل on_renewed_leave فلا يعمل)؛ ويبقى ظاهرًا في «معلمو مدارسي» بحالة «إجازة». -->
 <!-- v316: لوحة منسق المرحلة وتقرير اجتماع المرحلة: «العجز» المعروض بعد الأجر المسند (لا تظهر المدرسة المغطاة بالأجر في «أعلى المدارس عجزًا» ولا في تقرير العجز)، واقتراحات الانتداب والتغطية بلا تغيير (على العجز قبل الأجر)، وعمود الجدول صار «العجز قبل الأجر». -->
 <!-- v315: العجز المعروض = المطلوب − (تدريس الثابتين + الأجر المسند): لا يظهر عجز إذا غُطّيت الحصص بالأجر، في شاشة الموجه والتنبيهات وتحذير الاعتماد والخطة الملخصة وتقرير العجز والزيادة وتقرير عجز المدارس (الحالة «مغطى بالأجر») والبحث الموحد؛ والعجز قبل الأجر محفوظ في deficit_before_paid ويُستخدم في احتساب الانتداب واقتراحات التغطية. -->
@@ -8,7 +9,6 @@
 <!-- v311: شاشة الموجّه: زر «فتح المدرسة» في بطاقة المدرسة وزر «فتح صفحة مدارسي» في نافذتها يفتحان ملف المدرسة نفسها في «مدارسي» (المدرسة والمرحلة مختارتان في الفلاتر) بدل النافذة/الصفحة العامة (v311OpenSchool). واجهة فقط. -->
 <!-- v310: تقرير المدرسة الشامل في صفحة A4 واحدة (كان نحو ١٠ صفحات): بطاقات للبيانات والأعداد، وسطر واحد لكل معلم (النصاب والفصول والتدريس والإشراف والريادة والمجدول والحالة)، والفصول مجمّعة بالصف؛ حُذف الرقم القومي والهاتف والجدول اليومي لكل معلم والأسطر المكررة والفارغة. تقرير الشاشة (ملف المدرسة) لم يُمس. -->
 <!-- v309: صفحة «إنجاز الجداول»: زر «رجوع» (من تفاصيل مدرسة يعود لصفحة الإنجاز، ومن الصفحة يعود للشاشة السابقة)؛ وفي قائمة المدارس زر «📄 تقرير» وحده (تقرير الإنجاز بفلاتر الصفحة)، وداخل المدرسة زران: «📄 تقرير» (إنجاز المدرسة) و«🖨 طباعة» (الجدول الفعلي للمدرسة: تقرير «الجدول الأسبوعي لمعلمي المدرسة» بعد جلب جدولها بـget_teacher_timetable_workspace؛ مخفي للموجه الأول لأن الطباعة تحتاج إدارة الجدول). -->
-<!-- v308: تقرير «جدول المعلم الأسبوعي» (A4): خلية الحصة مختصرة باسم الفصل فقط مثل 2/2 (وتضاف المادة للثانوي إن لم تكن علوم) بدل «الصف الثاني — 2/2 — علوم»، كما في تقرير جدول المدرسة (v166Short)؛ وتوسيط النص في خلايا الجدول؛ شاشة التحرير لم تُمس. -->
 <html lang="ar" dir="rtl">
 <head>
 <!-- إعداد: أ/ محمود عبدالمفدي محمد أبوالنجا | الصفة: معلم -->
@@ -16,7 +16,7 @@
 <script>/* v226: العنوان الموحد — انظر التعليق أعلى الملف */(function(){try{if(/\.github\.io$/.test(location.hostname)&&/^\/science-guidance\/?(index\.html)?$/.test(location.pathname)&&!/[?&]stay\b/.test(location.search))location.replace('https://teachers-data-portal.vercel.app/app/'+location.hash)}catch(e){}})();</script>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#152c43">
-<title>نظام توجيه العلوم — v317</title>
+<title>نظام توجيه العلوم — v318</title>
 <link rel="manifest" href="./manifest.webmanifest">
 <link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png">
 <link rel="apple-touch-icon" href="./icon-192.png">
@@ -2391,6 +2391,7 @@ window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();window.v152
 window.addEventListener('appinstalled',()=>{window.v152InstallPrompt=null;v152SyncInstallBtn()});
 if('serviceWorker' in navigator&&location.protocol!=='file:')window.addEventListener('load',()=>navigator.serviceWorker.register('./service-worker.js').catch(()=>{}));
 const V145_NEWS=[
+ ['v318','أولوية الإشراف وتوزيع العجز بالأجر: المعلم في إجازة مجددة خارج الترتيب والمؤهلين.'],
  ['v317','توزيع الفصول: المعلم الذي في إجازة لا يظهر في قائمة التوزيع، ويظهر في «معلمو مدارسي» بحالة إجازة.'],
  ['v316','لوحة منسق المرحلة وتقرير اجتماع المرحلة: العجز يُعرض بعد الأجر المسند، واقتراحات الانتداب كما هي.'],
  ['v315','العجز لا يظهر إذا كانت الحصص مغطاة بالأجر (يُحسب بعد الأجر المسند) في الشاشات والتقارير.'],
@@ -7316,12 +7317,12 @@ function v91PriorityRows(scopeRows=[]){
  const compare=(a,b)=>v91JobRank(b.job_title)-v91JobRank(a.job_title)||v91DateRank(a.grade_acquired_date).localeCompare(v91DateRank(b.grade_acquired_date))||v91DateRank(a.work_start_date).localeCompare(v91DateRank(b.work_start_date))||v91DateRank(a.appointment_date).localeCompare(v91DateRank(b.appointment_date))||String(a.full_name||'').localeCompare(String(b.full_name||''),'ar');
  const output=[];let general=0;
  Object.values(groups).forEach(list=>{
-  const eligible=list.filter(r=>!r.renewed_leave&&r.work_type!=='paid'&&String(r.school_relation||'')!=='delegated_in_partial').sort(compare);
+  const eligible=list.filter(r=>!(r.on_renewed_leave||r.renewed_leave)&&r.work_type!=='paid'&&String(r.school_relation||'')!=='delegated_in_partial').sort(compare);
   const rank=new Map(eligible.map((r,i)=>[v91TeacherId(r),i+1]));
   list.slice().sort((a,b)=>{const ar=rank.get(v91TeacherId(a))??9999,br=rank.get(v91TeacherId(b))??9999;return ar-br||compare(a,b)}).forEach(r=>{
    const partial=String(r.school_relation||'')==='delegated_in_partial',paid=r.work_type==='paid',schoolRank=rank.get(v91TeacherId(r));general++;
    output.push({...r,school_name:v91SchoolCell(r),stage:r.scope_school_stage||r.home_school_stage,general_priority:general,school_priority:schoolRank||0,
-    supervision_status:r.renewed_leave?'إجازة مجددة — غير مؤهل للإشراف':partial?'منتدب جزئيًا — الإشراف في المدرسة الأصلية فقط':paid?'غير داخل مفاضلة الإشراف (بالأجر)':r.is_senior_teacher?'مشرف المادة الحالي — حصتان في هذه المدرسة':'مرتب وفق أولوية الإشراف'});
+    supervision_status:(r.on_renewed_leave||r.renewed_leave)?'إجازة مجددة — غير مؤهل للإشراف':partial?'منتدب جزئيًا — الإشراف في المدرسة الأصلية فقط':paid?'غير داخل مفاضلة الإشراف (بالأجر)':r.is_senior_teacher?'مشرف المادة الحالي — حصتان في هذه المدرسة':'مرتب وفق أولوية الإشراف'});
   });
  });
  return output;
@@ -7363,7 +7364,7 @@ loadPaidShortageSchool=async function(schoolId){
   const planRow=(plan.rows||[]).find(r=>String(r.school_id)===String(schoolId)),s=v91OfficialRows(plan,ar.data||[]).find(r=>String(r.school_id)===String(schoolId));
   if(!planRow||!s)throw new Error('تعذر تكوين بيانات المدرسة للفترة الحالية.');if(!planRow.calculation_ready)throw new Error('بيانات الفصول أو حصص المواد غير مكتملة؛ لا يمكن توزيع العجز.');
   const detailByTeacher=new Map((planRow.teacher_capacity_details||[]).map(d=>[v91TeacherId(d.teacher),d])),alloc=new Map((ar.data||[]).map(x=>[String(x.teacher_id),x]));
-  const eligible=scopes.filter(t=>v91ScopeSchoolId(t)===String(schoolId)&&!t.renewed_leave&&t.work_type!=='paid'&&String(t.home_school_id||'')===String(schoolId)).map(t=>{
+  const eligible=scopes.filter(t=>v91ScopeSchoolId(t)===String(schoolId)&&!(t.on_renewed_leave||t.renewed_leave)&&t.work_type!=='paid'&&String(t.home_school_id||'')===String(schoolId)).map(t=>{
    const detail=detailByTeacher.get(v91TeacherId(t))||{},available=summaryPlanNumber(detail.available),raw=Math.max(summaryPlanNumber(detail.target)-summaryPlanNumber(detail.globalSupervision),0);
    return {...t,official_teaching_periods:summaryPlanNumber(t.teaching_periods),suggested_paid_periods:raw>0?Math.max(Math.ceil(raw/4)*4-raw,0):0};
   }).sort((a,b)=>String(a.full_name||'').localeCompare(String(b.full_name||''),'ar'));
