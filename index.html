@@ -1,4 +1,5 @@
 <!doctype html>
+<!-- v319: تبويب «الموجهون» لمدير النظام: زر «تعديل البيانات» مباشرة على بطاقة كل موجه (كان داخل «التفاصيل» فقط). -->
 <!-- v318: فلتر الإجازة المجددة الصحيح (on_renewed_leave) في ترتيب أولوية الإشراف وتوزيع العجز بالأجر: المجاز خارج الترتيب والمؤهلين ونص حالته «إجازة مجددة — غير مؤهل للإشراف». -->
 <!-- v317: «توزيع الفصول»: استبعاد المعلم الذي في إجازة مجددة من قائمة المعلمين والمؤشرات (كان الفلتر يقرأ renewed_leave بينما القائمة تحمل on_renewed_leave فلا يعمل)؛ ويبقى ظاهرًا في «معلمو مدارسي» بحالة «إجازة». -->
 <!-- v316: لوحة منسق المرحلة وتقرير اجتماع المرحلة: «العجز» المعروض بعد الأجر المسند (لا تظهر المدرسة المغطاة بالأجر في «أعلى المدارس عجزًا» ولا في تقرير العجز)، واقتراحات الانتداب والتغطية بلا تغيير (على العجز قبل الأجر)، وعمود الجدول صار «العجز قبل الأجر». -->
@@ -8,7 +9,6 @@
 <!-- v312: شاشة الموجه: تسمية تبويب «لوحة المشرف» صارت «الرئيسية» (الاسم فقط). -->
 <!-- v311: شاشة الموجّه: زر «فتح المدرسة» في بطاقة المدرسة وزر «فتح صفحة مدارسي» في نافذتها يفتحان ملف المدرسة نفسها في «مدارسي» (المدرسة والمرحلة مختارتان في الفلاتر) بدل النافذة/الصفحة العامة (v311OpenSchool). واجهة فقط. -->
 <!-- v310: تقرير المدرسة الشامل في صفحة A4 واحدة (كان نحو ١٠ صفحات): بطاقات للبيانات والأعداد، وسطر واحد لكل معلم (النصاب والفصول والتدريس والإشراف والريادة والمجدول والحالة)، والفصول مجمّعة بالصف؛ حُذف الرقم القومي والهاتف والجدول اليومي لكل معلم والأسطر المكررة والفارغة. تقرير الشاشة (ملف المدرسة) لم يُمس. -->
-<!-- v309: صفحة «إنجاز الجداول»: زر «رجوع» (من تفاصيل مدرسة يعود لصفحة الإنجاز، ومن الصفحة يعود للشاشة السابقة)؛ وفي قائمة المدارس زر «📄 تقرير» وحده (تقرير الإنجاز بفلاتر الصفحة)، وداخل المدرسة زران: «📄 تقرير» (إنجاز المدرسة) و«🖨 طباعة» (الجدول الفعلي للمدرسة: تقرير «الجدول الأسبوعي لمعلمي المدرسة» بعد جلب جدولها بـget_teacher_timetable_workspace؛ مخفي للموجه الأول لأن الطباعة تحتاج إدارة الجدول). -->
 <html lang="ar" dir="rtl">
 <head>
 <!-- إعداد: أ/ محمود عبدالمفدي محمد أبوالنجا | الصفة: معلم -->
@@ -16,7 +16,7 @@
 <script>/* v226: العنوان الموحد — انظر التعليق أعلى الملف */(function(){try{if(/\.github\.io$/.test(location.hostname)&&/^\/science-guidance\/?(index\.html)?$/.test(location.pathname)&&!/[?&]stay\b/.test(location.search))location.replace('https://teachers-data-portal.vercel.app/app/'+location.hash)}catch(e){}})();</script>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#152c43">
-<title>نظام توجيه العلوم — v318</title>
+<title>نظام توجيه العلوم — v319</title>
 <link rel="manifest" href="./manifest.webmanifest">
 <link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png">
 <link rel="apple-touch-icon" href="./icon-192.png">
@@ -2391,6 +2391,7 @@ window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();window.v152
 window.addEventListener('appinstalled',()=>{window.v152InstallPrompt=null;v152SyncInstallBtn()});
 if('serviceWorker' in navigator&&location.protocol!=='file:')window.addEventListener('load',()=>navigator.serviceWorker.register('./service-worker.js').catch(()=>{}));
 const V145_NEWS=[
+ ['v319','تبويب الموجهون: زر «تعديل البيانات» على بطاقة كل موجه لمدير النظام.'],
  ['v318','أولوية الإشراف وتوزيع العجز بالأجر: المعلم في إجازة مجددة خارج الترتيب والمؤهلين.'],
  ['v317','توزيع الفصول: المعلم الذي في إجازة لا يظهر في قائمة التوزيع، ويظهر في «معلمو مدارسي» بحالة إجازة.'],
  ['v316','لوحة منسق المرحلة وتقرير اجتماع المرحلة: العجز يُعرض بعد الأجر المسند، واقتراحات الانتداب كما هي.'],
@@ -12757,7 +12758,7 @@ function v252Render(){
   if(!v252CanEdit())body.querySelectorAll('select').forEach(x=>x.disabled=true);
   return;
  }
- const cards=M.cards.map(c=>{const x=c.sup,ph=supervisorDirectoryPhone(x);return `<div class="card v252-card"><div class="v252-top"><div><div class="v252-nm">${esc(supervisorDirectoryName(x))}</div>${ph?`<div class="v252-ph" dir="ltr">${esc(ph)}</div>`:''}</div><span class="v252-cnt">${c.schools.length} مدرسة</span></div><div class="v252-chips">${c.schools.length?v252Chips(c.schools,String(x.id),x.id):'<span class="muted">لا توجد مدارس مسندة.</span>'}</div><div class="v252-foot"><button type="button" class="btn secondary" onclick="openSupervisorDirectoryDetails('${esc(x.id)}');document.getElementById('supervisorDirectoryDetails')?.scrollIntoView({behavior:'smooth',block:'nearest'})">التفاصيل</button>${c.schools.length?`<button type="button" class="btn secondary" onclick="openReportById('v252Sup',{supId:'${esc(x.id)}',filterState:{active:false}})">📄 تقرير مدارسه</button>`:''}</div></div>`}).join('');
+ const cards=M.cards.map(c=>{const x=c.sup,ph=supervisorDirectoryPhone(x);return `<div class="card v252-card"><div class="v252-top"><div><div class="v252-nm">${esc(supervisorDirectoryName(x))}</div>${ph?`<div class="v252-ph" dir="ltr">${esc(ph)}</div>`:''}</div><span class="v252-cnt">${c.schools.length} مدرسة</span></div><div class="v252-chips">${c.schools.length?v252Chips(c.schools,String(x.id),x.id):'<span class="muted">لا توجد مدارس مسندة.</span>'}</div><div class="v252-foot">${profile?.role==='admin'?`<button type="button" class="btn primary" onclick="editSupervisorForm('${esc(x.id)}')">تعديل البيانات</button>`:''}<button type="button" class="btn secondary" onclick="openSupervisorDirectoryDetails('${esc(x.id)}');document.getElementById('supervisorDirectoryDetails')?.scrollIntoView({behavior:'smooth',block:'nearest'})">التفاصيل</button>${c.schools.length?`<button type="button" class="btn secondary" onclick="openReportById('v252Sup',{supId:'${esc(x.id)}',filterState:{active:false}})">📄 تقرير مدارسه</button>`:''}</div></div>`}).join('');
  const none=M.none.length?`<div class="card v252-card v252-none"><div class="v252-top"><div><div class="v252-nm">⚠ مدارس بلا موجه</div><div class="v252-ph">${v252CanEdit()?'اختر موجهًا لكل مدرسة':'لم يُحدَّد لها موجه'}</div></div><span class="v252-cnt">${M.none.length} مدرسة</span></div><div class="v252-chips">${v252Chips(M.none,'__none__','')}</div></div>`:'';
  body.innerHTML=(cards||none)?`<div class="v252-cards">${cards}${none}</div>${v252CanEdit()?'<div class="v252-note">▾ على أي مدرسة = نقلها لموجه آخر. مدارس الثانوي (موجهو المواد) تُعدَّل من «إدخال بيانات المدارس».</div>':''}`:'<div class="notice warn">لا توجد نتائج مطابقة.</div>';
 }
