@@ -1,4 +1,5 @@
 <!doctype html>
+<!-- v315: العجز المعروض = المطلوب − (تدريس الثابتين + الأجر المسند): لا يظهر عجز إذا غُطّيت الحصص بالأجر، في شاشة الموجه والتنبيهات وتحذير الاعتماد والخطة الملخصة وتقرير العجز والزيادة وتقرير عجز المدارس (الحالة «مغطى بالأجر») والبحث الموحد؛ والعجز قبل الأجر محفوظ في deficit_before_paid ويُستخدم في احتساب الانتداب واقتراحات التغطية. -->
 <!-- v314: شاشة الموجه: زر «فتح» في «يحتاج تدخلك» يفتح ملف المدرسة في «مدارسي» بدل النافذة السريعة؛ وإصلاح «فتح المدرسة/فتح صفحة مدارسي/فتح شاشة المعلمين» التي كانت لا تفتح المدرسة لأن v163/v179 يفرّغان اختيار المدرسة عند دخول الشاشة (الحل بمسار v233OpenPage). -->
 <!-- v313: شاشة الموجه: زر «توزيع الفصول» في بطاقة المدرسة يفتح صفحة توزيع الفصول لتلك المدرسة، و«فتح شاشة المعلمين» يفتح معلمي المدرسة نفسها، وحُذف زر «الأنصبة» المعطّل من نافذة العجز والزيادة. -->
 <!-- v312: شاشة الموجه: تسمية تبويب «لوحة المشرف» صارت «الرئيسية» (الاسم فقط). -->
@@ -8,7 +9,6 @@
 <!-- v308: تقرير «جدول المعلم الأسبوعي» (A4): خلية الحصة مختصرة باسم الفصل فقط مثل 2/2 (وتضاف المادة للثانوي إن لم تكن علوم) بدل «الصف الثاني — 2/2 — علوم»، كما في تقرير جدول المدرسة (v166Short)؛ وتوسيط النص في خلايا الجدول؛ شاشة التحرير لم تُمس. -->
 <!-- v307: ترتيب القائمة الجانبية لكل دور بحسب الأولوية والاستخدام الفعلي (سجل التدقيق 23 أكتوبر ← 7 نوفمبر وطلبات الواجهة): الترتيب فقط دون إضافة أو حذف عنصر (دالة v307Order تُستدعى عند رسم القائمة وقائمة «المزيد» والمساعدة). -->
 <!-- v306: مؤشر إنجاز جداول المعلمين — صفحة مستقلة «إنجاز الجداول» (#/timetableProgress) بفلاتر المرحلة والمدرسة + بطاقة «إدخال جداول المعلمين» في شاشة الموجّه ولوحة المنسق (مكتمل/ناقص/لم يبدأ، المدارس الأضعف أولًا، نافذة المدرسة بزر «تذكير» واتساب لكل معلم) + تقرير A4 «تقدم إدخال جداول المعلمين»؛ قراءة فقط عبر الدالة timetable_progress (كتلة v306). -->
-<!-- v303: ترتيب تقارير المعلمين (المعلمون/الأنصبة/التوجيه المالي/بيانات المدرسة…): الثابتون أولًا بالأقدمية ثم معلمو الأجر، بنوع الصف نفسه فلا يختلط الأجر بالأساسي حتى لو لم تُحمَّل الأقدمية (منسق المرحلة). -->
 <html lang="ar" dir="rtl">
 <head>
 <!-- إعداد: أ/ محمود عبدالمفدي محمد أبوالنجا | الصفة: معلم -->
@@ -16,7 +16,7 @@
 <script>/* v226: العنوان الموحد — انظر التعليق أعلى الملف */(function(){try{if(/\.github\.io$/.test(location.hostname)&&/^\/science-guidance\/?(index\.html)?$/.test(location.pathname)&&!/[?&]stay\b/.test(location.search))location.replace('https://teachers-data-portal.vercel.app/app/'+location.hash)}catch(e){}})();</script>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#152c43">
-<title>نظام توجيه العلوم — v314</title>
+<title>نظام توجيه العلوم — v315</title>
 <link rel="manifest" href="./manifest.webmanifest">
 <link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png">
 <link rel="apple-touch-icon" href="./icon-192.png">
@@ -2391,6 +2391,7 @@ window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();window.v152
 window.addEventListener('appinstalled',()=>{window.v152InstallPrompt=null;v152SyncInstallBtn()});
 if('serviceWorker' in navigator&&location.protocol!=='file:')window.addEventListener('load',()=>navigator.serviceWorker.register('./service-worker.js').catch(()=>{}));
 const V145_NEWS=[
+ ['v315','العجز لا يظهر إذا كانت الحصص مغطاة بالأجر (يُحسب بعد الأجر المسند) في الشاشات والتقارير.'],
  ['v314','شاشة الموجه: أزرار «فتح» و«فتح المدرسة» و«فتح صفحة مدارسي» و«فتح شاشة المعلمين» تفتح المدرسة نفسها فعلًا.'],
  ['v313','شاشة الموجه: إصلاح روابط بطاقة المدرسة (توزيع الفصول والمعلمون يفتحان المدرسة نفسها) وحذف زر الأنصبة المعطّل.'],
  ['v312','شاشة الموجه: تبويب «لوحة المشرف» أصبح «الرئيسية».'],
@@ -7240,7 +7241,7 @@ buildOperationalSchoolPlanData=function(input={}){
   const basicCapacity=targetDetails.reduce((sum,item)=>sum+item.localTeaching,0);
   const paidAssigned=summaryPlanNumber(paidAssignedBySchool[school.id]);
   const calculationReady=totalClasses>0&&(school.stage==='إعدادي'||(missingDetailed===0&&detailed.every(c=>planClassPeriods(c)>0))),paidRequired=calculationReady?Math.max(requiredPeriods-basicCapacity,0):null;
-  const remainingDeficit=calculationReady?paidRequired:null,surplus=calculationReady?Math.max(basicCapacity-requiredPeriods,0):null;
+  const deficitBeforePaid=calculationReady?paidRequired:null,remainingDeficit=calculationReady?Math.max(paidRequired-paidAssigned,0):null,surplus=calculationReady?Math.max(basicCapacity-requiredPeriods,0):null;
   const classSource=detailed.length===0?'school_total':missingDetailed>0?'mixed':'detailed';
   const homePermanent=permanent.filter(t=>['home','delegated_out_partial'].includes(String(t.school_relation||'home'))).length;
   const homePaid=paid.filter(t=>['home','delegated_out_partial'].includes(String(t.school_relation||'home'))).length; // v206: معلم الأجر المنتدب جزئيًا يُعد مرة واحدة
@@ -7262,7 +7263,7 @@ buildOperationalSchoolPlanData=function(input={}){
    total_classes:totalClasses,required_periods:requiredPeriods,roster_teachers:schoolTeachers.length,permanent_teachers:permanent.length,home_permanent_teachers:homePermanent,home_paid_teachers:homePaid,
    partial_delegates:partialDelegates,incoming_partial_delegates:incomingPartial,full_delegates:fullDelegates,delegated_coverage:delegatedCoverage,
    basic_norm_total:basicNormTotal,internal_duties:supervisionPeriods,supervision_periods:supervisionPeriods,personal_duties:supervisionPeriods,basic_capacity:basicCapacity,actual_teaching:basicCapacity,
-   paid_teachers:paid.length,paid_required:paidRequired,paid_assigned:paidAssigned,remaining_deficit:remainingDeficit,surplus,class_source:classSource,calculation_ready:calculationReady,
+   paid_teachers:paid.length,paid_required:paidRequired,paid_assigned:paidAssigned,remaining_deficit:remainingDeficit,deficit_before_paid:deficitBeforePaid,surplus,class_source:classSource,calculation_ready:calculationReady,
    teacher_capacity_details:targetDetails,notes:notes.join('؛ ')
   };
  }).sort((a,b)=>String(a.school_name||'').localeCompare(String(b.school_name||''),'ar'));
@@ -7299,7 +7300,7 @@ formatTeachersReport=function(raw,ctx){
 formatSummaryPlanReport=function(plan,ctx){
  const rows=(plan?.rows||[]).map((r,i)=>{const deficit=r.calculation_ready?reportNumber(r.remaining_deficit):'—',surplus=r.calculation_ready?reportNumber(r.surplus):'—',status=!r.calculation_ready?'بيانات غير مكتملة':deficit>0?'عجز':surplus>0?'زيادة':'متوازن';return {
   index:i+1,school:reportCellValue(r.school_name),g1:reportCellValue(r.grade1_classes),g2:reportCellValue(r.grade2_classes),g3:reportCellValue(r.grade3_classes),classes:reportNumber(r.total_classes),required:reportNumber(r.required_periods),
-  roster:reportNumber(r.roster_teachers),home:reportNumber(r.home_permanent_teachers),partial:reportNumber(r.incoming_partial_delegates),full:reportNumber(r.full_delegates),paid:reportNumber(r.paid_teachers),homePaid:reportNumber(r.home_paid_teachers),coverage:reportNumber(r.basic_capacity),paidAssigned:reportNumber(r.paid_assigned),deficit,surplus,status,netDeficit:r.calculation_ready?Math.max(reportNumber(r.remaining_deficit)-reportNumber(r.paid_assigned),0):'—',
+  roster:reportNumber(r.roster_teachers),home:reportNumber(r.home_permanent_teachers),partial:reportNumber(r.incoming_partial_delegates),full:reportNumber(r.full_delegates),paid:reportNumber(r.paid_teachers),homePaid:reportNumber(r.home_paid_teachers),coverage:reportNumber(r.basic_capacity),paidAssigned:reportNumber(r.paid_assigned),deficit,surplus,status,netDeficit:r.calculation_ready?reportNumber(r.remaining_deficit):'—',
   _schoolId:String(r.school_id||r.scope_school_id||''),_school:reportCellValue(r.school_name),_stage:reportCellValue(r.school_stage),_status:status};});
  const s=plan?.stats||{};
  return makeReportSchema({reportId:'summaryPlan',title:'الخطة الملخصة لتوجيه العلوم',subtitle:'الكادر الفعلي لكل مدرسة يشمل الأساسي والمنتدب والأجر. تغطية المنتدب الجزئي هي حصصه الفعلية في المدرسة، وإشرافه في المدرسة الأصلية فقط.',period:ctx.period,
@@ -8134,7 +8135,7 @@ ReportAdapters.staffRoster={async load(ctx){
 }};
 ReportAdapters.schoolShortage={async load(ctx){
  const data=await v91LoadReportsDataset(),plan=buildOperationalSchoolPlanData({schools:data.hierarchy?.schools||[],classes:data.classes||[],teachers:data.teacher_records||[],schoolTeacherRosters:v103ScopeRows(data),rules:data.rules||[],assignments:data.assignments||[]});
- const rows=plan.rows.map((s,i)=>{const ready=s.calculation_ready,shortage=ready?reportNumber(s.remaining_deficit):'—',status=!ready?'بيانات غير مكتملة':shortage>0?'عجز':reportNumber(s.surplus)>0?'زيادة':'متوازن';return {
+ const rows=plan.rows.map((s,i)=>{const ready=s.calculation_ready,shortage=ready?reportNumber(s.deficit_before_paid):'—',status=!ready?'بيانات غير مكتملة':reportNumber(s.remaining_deficit)>0?'عجز':shortage>0?'مغطى بالأجر':reportNumber(s.surplus)>0?'زيادة':'متوازن';return {
   index:i+1,school:reportCellValue(s.school_name),classes:reportNumber(s.total_classes),required:ready?reportNumber(s.required_periods):'—',coverage:reportNumber(s.basic_capacity),paid:reportNumber(s.paid_assigned),shortage,unfilled:ready?Math.max(reportNumber(s.required_periods)-reportNumber(s.basic_capacity)-reportNumber(s.paid_assigned),0):'—',status,_ready:ready,...v103ScopeMeta([{scope_school_id:s.school_id,scope_school_name:s.school_name,scope_school_stage:s.school_stage}]),_status:status,_search:[s.school_name,s.school_stage,status,s.notes].filter(Boolean).join(' ')
  }});
  return v103BaseReport('schoolShortage',ctx,[reportColumn('index','م',.3,{numeric:true}),reportColumn('school','المدرسة',2.2),reportColumn('classes','الفصول',.55,{numeric:true}),reportColumn('required','الحصص المطلوبة',.8,{numeric:true}),reportColumn('coverage','تدريس ثابت / منتدب',1,{numeric:true}),reportColumn('paid','تدريس الأجر',.7,{numeric:true}),reportColumn('shortage','العجز قبل الأجر',.8,{numeric:true}),reportColumn('unfilled','المتبقي بعد الأجر',.85,{numeric:true}),reportColumn('status','الحالة',1.1)],rows,'العجز قبل الأجر = المطلوب − تدريس الثابت والمنتدب. المتبقي بعد الأجر يخص التغطية الفعلية؛ حصص الأجر لا تغيّر العجز قبل الأجر. إجماليات المطلوب والعجز تخص المدارس المكتملة البيانات فقط.');
@@ -9448,7 +9449,7 @@ function v155BuildModel(data,subs){
  const plan=buildOperationalSchoolPlanData({schools,classes,teachers:data.teacher_records||[],schoolTeacherRosters:scopes,rules:data.rules||[],assignments:data.assignments||[]});
  const meta=new Map(schools.map(s=>[String(s.id),s]));
  const rows=(plan.rows||[]).map(p=>{
-  const id=String(p.school_id),sc=meta.get(id)||{},ready=!!p.calculation_ready,deficit=ready?reportNumber(p.remaining_deficit):0,details=p.teacher_capacity_details||[];
+  const id=String(p.school_id),sc=meta.get(id)||{},ready=!!p.calculation_ready,deficit=ready?reportNumber(p.deficit_before_paid):0,details=p.teacher_capacity_details||[];
   const spareRaw=details.reduce((n,d)=>n+Math.max(reportNumber(d.available)-reportNumber(d.localTeaching),0),0);
   const internal=ready?Math.min(deficit,spareRaw):0,need=ready?deficit-internal:0,spare=ready?v155Floor(spareRaw-internal,stage):0;
   // الأحدث في التعيين هو من يُنتدب؛ لا يُقترح الأقدم ولا مشرف المادة. إن نقص تاريخ تعيين أحد معلمي المدرسة الثابتين لا يمكن تحديد الأحدث.
@@ -10677,13 +10678,13 @@ async function v233BuildIndex(){
  try{
   const agg=await v91LoadReportsDataset(),ah=agg.hierarchy||{};
   const p=buildOperationalSchoolPlanData({schools:ah.schools||[],classes:agg.classes||[],teachers:agg.teacher_records||[],schoolTeacherRosters:v91ScopeRows(agg),rules:agg.rules||[],assignments:agg.assignments||[],includeAllStages:true});
-  (p.rows||[]).forEach(r=>{if(r.calculation_ready!==false)plan[r.school_id]={deficit:v233Num(r.remaining_deficit),paid:v233Num(r.paid_assigned)}});
+  (p.rows||[]).forEach(r=>{if(r.calculation_ready!==false)plan[r.school_id]={deficit:v233Num(r.remaining_deficit),before:v233Num(r.deficit_before_paid),paid:v233Num(r.paid_assigned)}});
  }catch(_){plan={}}
  const sups={};(h.sups||[]).forEach(s=>sups[s.id]=s);
  const schoolById={};(h.schools||[]).forEach(s=>schoolById[s.id]=s);
  const supSchools={};(h.schools||[]).forEach(s=>{if(s.supervisor_id)supSchools[s.supervisor_id]=(supSchools[s.supervisor_id]||0)+1});
  const rel={};(data.school_teacher_rosters||[]).forEach(r=>{const id=v91TeacherId(r),k=String(r.school_relation||'');if(!id||!k||k==='home')return;(rel[id]=rel[id]||[]).push({k,school:r.scope_school_name||schoolById[r.scope_school_id]?.name||''})});
- const schools=(h.schools||[]).map(s=>{const pl=plan[s.id],sup=sups[s.supervisor_id];return {type:'school',id:s.id,name:s.name||'',stage:s.stage||'',sup:sup?.full_name||'',supId:sup?s.supervisor_id:'',classes:v233Num(s.class_count),deficit:pl?pl.deficit:null,paid:pl?pl.paid:0,
+ const schools=(h.schools||[]).map(s=>{const pl=plan[s.id],sup=sups[s.supervisor_id];return {type:'school',id:s.id,name:s.name||'',stage:s.stage||'',sup:sup?.full_name||'',supId:sup?s.supervisor_id:'',classes:v233Num(s.class_count),deficit:pl?pl.deficit:null,before:pl?pl.before:0,paid:pl?pl.paid:0,
   w:v233Tokens(s.name),x:v233Tokens(s.stage),c:v233Compact(s.name)}});
  const teachers=(h.teachers||[]).map(t=>{const id=String(t.teacher_id||'');const st=String(t.workload_status||'');return {type:'teacher',id,name:t.full_name||'',civil:String(t.civil_id||''),school:t.home_school_name||'',schoolId:t.home_school_id||'',stage:t.home_school_stage||'',
   paid:t.work_type==='paid',senior:!!t.is_senior_teacher,target:v233Num(t.weekly_target),counted:v233Num(t.total_counted_periods),deficit:v233Num(t.deficit_periods),surplus:v233Num(t.surplus_periods),status:st,leave:st.includes('إجازة'),rel:rel[id]||[],
@@ -10775,7 +10776,7 @@ function v233Search(q){
 
 /* ---------- العرض ---------- */
 function v233Badge(it){
- if(it.type==='school'){if(it.deficit==null)return '';return it.deficit>0?`<span class="v233-b bad">عجز ${it.deficit}${it.paid?` · بعد الأجر ${Math.max(it.deficit-it.paid,0)}`:''}</span>`:'<span class="v233-b ok">بلا عجز</span>'}
+ if(it.type==='school'){if(it.deficit==null)return '';return it.deficit>0?`<span class="v233-b bad">عجز ${it.deficit}${it.paid?` (قبل الأجر ${it.before})`:''}</span>`:it.before>0?'<span class="v233-b ok">مغطى بالأجر</span>':'<span class="v233-b ok">بلا عجز</span>'}
  if(it.type==='teacher'){
   if(it.leave)return '<span class="v233-b mute">إجازة</span>';
   if(it.deficit>0)return `<span class="v233-b bad">عجز ${it.deficit}</span>`;
