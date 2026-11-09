@@ -1,4 +1,5 @@
 <!doctype html>
+<!-- v327: الموجه الأول: القائمة 5 عناصر (الرئيسية، التقارير، الموجهون، المدارس، المعلمون)؛ حُذفت التنبيهات وإنجاز الجداول والإحصائيات وجدول المعلم والإعلانات من قائمته، والتنبيهات (أهم 3 + الباقي مطوي) وآخر إعلان صارا في الرئيسية. عرض فقط. -->
 <!-- v326: الرئيسية للموجه الأول: بطاقة لكل مرحلة معًا (v323) بلا قائمة اختيار المرحلة، وصف «تقارير القرار» أعلاها (تقرير الاجتماع، عجز المدارس بعد الأجر، مقترح الانتداب من الفائض، إنجاز الجداول)؛ حُذفت منها بطاقات الأرقام العامة ونص «دورة العمل». عرض فقط. -->
 <!-- v324: تبويب «الموجهون» — «حسب المدرسة (التوزيع)»: يتبع فلتر المرحلة والبحث (كان يعرض كل المدارس). -->
 <!-- v323: الرئيسية للموجه الذي له أكثر من مرحلة: بطاقة لكل مرحلة (الأرقام الأربعة + ماذا أفعل الآن؟ + «المزيد» مطوي) بدل قائمة المرحلة، وزر «فتح» يفتح تقرير مرحلته؛ مناسبة للهاتف. -->
@@ -8,7 +9,6 @@
 <!-- v319: تبويب «الموجهون» لمدير النظام: زر «تعديل البيانات» مباشرة على بطاقة كل موجه (كان داخل «التفاصيل» فقط). -->
 <!-- v318: فلتر الإجازة المجددة الصحيح (on_renewed_leave) في ترتيب أولوية الإشراف وتوزيع العجز بالأجر: المجاز خارج الترتيب والمؤهلين ونص حالته «إجازة مجددة — غير مؤهل للإشراف». -->
 <!-- v317: «توزيع الفصول»: استبعاد المعلم الذي في إجازة مجددة من قائمة المعلمين والمؤشرات (كان الفلتر يقرأ renewed_leave بينما القائمة تحمل on_renewed_leave فلا يعمل)؛ ويبقى ظاهرًا في «معلمو مدارسي» بحالة «إجازة». -->
-<!-- v316: لوحة منسق المرحلة وتقرير اجتماع المرحلة: «العجز» المعروض بعد الأجر المسند (لا تظهر المدرسة المغطاة بالأجر في «أعلى المدارس عجزًا» ولا في تقرير العجز)، واقتراحات الانتداب والتغطية بلا تغيير (على العجز قبل الأجر)، وعمود الجدول صار «العجز قبل الأجر». -->
 <html lang="ar" dir="rtl">
 <head>
 <!-- إعداد: أ/ محمود عبدالمفدي محمد أبوالنجا | الصفة: معلم -->
@@ -16,7 +16,7 @@
 <script>/* v226: العنوان الموحد — انظر التعليق أعلى الملف */(function(){try{if(/\.github\.io$/.test(location.hostname)&&/^\/science-guidance\/?(index\.html)?$/.test(location.pathname)&&!/[?&]stay\b/.test(location.search))location.replace('https://teachers-data-portal.vercel.app/app/'+location.hash)}catch(e){}})();</script>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#152c43">
-<title>نظام توجيه العلوم — v326</title>
+<title>نظام توجيه العلوم — v327</title>
 <link rel="manifest" href="./manifest.webmanifest">
 <link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png">
 <link rel="apple-touch-icon" href="./icon-192.png">
@@ -2399,6 +2399,7 @@ window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();window.v152
 window.addEventListener('appinstalled',()=>{window.v152InstallPrompt=null;v152SyncInstallBtn()});
 if('serviceWorker' in navigator&&location.protocol!=='file:')window.addEventListener('load',()=>navigator.serviceWorker.register('./service-worker.js').catch(()=>{}));
 const V145_NEWS=[
+ ['v327','الموجه الأول: قائمة مختصرة، والتنبيهات وآخر إعلان في الرئيسية.'],
  ['v326','الرئيسية للموجه الأول: بطاقة لكل مرحلة وصف تقارير القرار في الأعلى.'],
  ['v324','تبويب الموجهون: «حسب المدرسة» يتبع فلتر المرحلة.'],
  ['v323','الرئيسية للموجه: بطاقة لكل مرحلة من مراحله بدل قائمة اختيار المرحلة.'],
@@ -5228,7 +5229,7 @@ function mobileDefaultActions(){
  const make=(label,icon,run,key)=>({label,icon,run,key:key||label});
  const sets={
   admin:[make('المدارس','⌂',()=>go('schools'),'schools'),make('المعلمون','◉',()=>go('teachers'),'teachers'),make('التقارير','▤',()=>go('reports'),'reports')],
-  first_supervisor:[make('المدارس','⌂',()=>go('schools'),'schools'),make('الموجهون','◎',()=>go('supervisors'),'supervisors'),make('التقارير','▤',()=>go('reports'),'reports')],
+  first_supervisor:[make('التقارير','▤',()=>go('reports'),'reports'),make('الموجهون','◎',()=>go('supervisors'),'supervisors')], // v327
   stage_coordinator:[make('المدارس','⌂',()=>go('schools'),'schools'),make('المعلمون','◉',()=>go('teachers'),'teachers'),make('التقارير','▤',()=>go('reports'),'reports')],
   supervisor:[make('الاعتماد','✓',()=>go('approval'),'approval'),make('المدارس','⌂',()=>go('schools'),'schools'),make('المعلمون','◉',()=>go('teachers'),'teachers')],
   school_manager:[make('الاعتماد','✓',()=>go('approval'),'approval'),make('المعلمون','◉',()=>go('teachers'),'teachers'),make('التقارير','▤',()=>go('reports'),'reports')],
@@ -13118,7 +13119,22 @@ async function v326FirstSupHome(force){
  const tpl=document.createElement('template');tpl.innerHTML=html;
  const head=tpl.content.querySelector('.v168-head');
  if(head)head.insertAdjacentHTML('afterend',bar);else tpl.content.prepend(document.createRange().createContextualFragment(bar));
+ const top=await v327TopInfo(force); // v327: التنبيهات وآخر إعلان أعلى البطاقات
+ const bar2=tpl.content.querySelector('.v326-bar');if(top&&bar2)bar2.insertAdjacentHTML('afterend',top);
  const wrap=document.createElement('div');wrap.appendChild(tpl.content);return wrap.innerHTML;
+}
+/* v327: قائمة الموجه الأول المختصرة + التنبيهات وآخر إعلان في الرئيسية (عرض فقط) */
+NAV.first_supervisor=[['dashboard','الرئيسية','▦'],['reports','التقارير','▤'],['supervisors','الموجهون','◎'],['schools','المدارس','⌂'],['teachers','المعلمون','◉']];
+V307_ORDER.first_supervisor=['dashboard','reports','supervisors','schools','teachers'];
+async function v327TopInfo(force){
+ let rows=[],ann=null;
+ try{rows=await loadSmartAlerts({force:!!force})}catch(_){}
+ try{const r=await cachedRead('v327:lastAnnouncement',async signal=>{const {data,error}=await abortable(sb.from('announcements').select('message,audience,created_at').order('created_at',{ascending:false}).limit(1),signal);if(error)throw error;return data||[]},{ttl:30000,force:!!force});ann=(r||[])[0]||null}catch(_){}
+ const rank={danger:0,warn:1,info:2},list=[...(rows||[])].sort((a,b)=>(rank[a.level]??3)-(rank[b.level]??3));
+ const item=a=>{const m=alertSeverityMeta(a.level);return `<article class="alert-item ${esc(a.level)}"><div class="alert-icon">${m.icon}</div><div class="alert-copy"><b>${esc(a.title)}</b><p>${esc(a.message)}</p><small>${esc(m.label)}${a.schoolName?` • ${esc(a.schoolName)}`:''}</small></div></article>`};
+ const alerts=list.length?`<div class="card v327-alerts"><h3>تنبيهات تحتاج انتباهك (${list.length})</h3>${list.slice(0,3).map(item).join('')}${list.length>3?`<details class="v323-more"><summary>عرض الكل (${list.length})</summary>${list.slice(3).map(item).join('')}</details>`:''}</div>`:'';
+ const annHtml=ann?`<div class="card v327-ann"><div class="card-title"><h3>آخر إعلان</h3><span class="badge info">${esc(new Date(ann.created_at).toLocaleDateString('ar-EG'))}</span></div><p>${esc(ann.message)}</p></div>`:'';
+ return alerts+annHtml;
 }
 function v326Pick(kind){
  const stages=(__v155Model&&__v155Model.stages)||[];
