@@ -1,4 +1,5 @@
 <!doctype html>
+<!-- v328: الموجه الأول: حذف زر «الإحصائيات والتقارير التفصيلية» من صفحة التقارير وعبارة «مع زر تعديل» من وصف «بيانات معلمي المدرسة»، والجرس 🔔 يفتح الرئيسية (فيها التنبيهات). عرض فقط. -->
 <!-- v327: الموجه الأول: القائمة 5 عناصر (الرئيسية، التقارير، الموجهون، المدارس، المعلمون)؛ حُذفت التنبيهات وإنجاز الجداول والإحصائيات وجدول المعلم والإعلانات من قائمته، والتنبيهات (أهم 3 + الباقي مطوي) وآخر إعلان صارا في الرئيسية. عرض فقط. -->
 <!-- v326: الرئيسية للموجه الأول: بطاقة لكل مرحلة معًا (v323) بلا قائمة اختيار المرحلة، وصف «تقارير القرار» أعلاها (تقرير الاجتماع، عجز المدارس بعد الأجر، مقترح الانتداب من الفائض، إنجاز الجداول)؛ حُذفت منها بطاقات الأرقام العامة ونص «دورة العمل». عرض فقط. -->
 <!-- v324: تبويب «الموجهون» — «حسب المدرسة (التوزيع)»: يتبع فلتر المرحلة والبحث (كان يعرض كل المدارس). -->
@@ -8,7 +9,6 @@
 <!-- v320: متابعة الاستكمال حسب المدرسة لا تعرض المدارس المكتملة 100% بلا انتظار اعتماد -->
 <!-- v319: تبويب «الموجهون» لمدير النظام: زر «تعديل البيانات» مباشرة على بطاقة كل موجه (كان داخل «التفاصيل» فقط). -->
 <!-- v318: فلتر الإجازة المجددة الصحيح (on_renewed_leave) في ترتيب أولوية الإشراف وتوزيع العجز بالأجر: المجاز خارج الترتيب والمؤهلين ونص حالته «إجازة مجددة — غير مؤهل للإشراف». -->
-<!-- v317: «توزيع الفصول»: استبعاد المعلم الذي في إجازة مجددة من قائمة المعلمين والمؤشرات (كان الفلتر يقرأ renewed_leave بينما القائمة تحمل on_renewed_leave فلا يعمل)؛ ويبقى ظاهرًا في «معلمو مدارسي» بحالة «إجازة». -->
 <html lang="ar" dir="rtl">
 <head>
 <!-- إعداد: أ/ محمود عبدالمفدي محمد أبوالنجا | الصفة: معلم -->
@@ -16,7 +16,7 @@
 <script>/* v226: العنوان الموحد — انظر التعليق أعلى الملف */(function(){try{if(/\.github\.io$/.test(location.hostname)&&/^\/science-guidance\/?(index\.html)?$/.test(location.pathname)&&!/[?&]stay\b/.test(location.search))location.replace('https://teachers-data-portal.vercel.app/app/'+location.hash)}catch(e){}})();</script>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#152c43">
-<title>نظام توجيه العلوم — v327</title>
+<title>نظام توجيه العلوم — v328</title>
 <link rel="manifest" href="./manifest.webmanifest">
 <link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png">
 <link rel="apple-touch-icon" href="./icon-192.png">
@@ -2399,6 +2399,7 @@ window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();window.v152
 window.addEventListener('appinstalled',()=>{window.v152InstallPrompt=null;v152SyncInstallBtn()});
 if('serviceWorker' in navigator&&location.protocol!=='file:')window.addEventListener('load',()=>navigator.serviceWorker.register('./service-worker.js').catch(()=>{}));
 const V145_NEWS=[
+ ['v328','الموجه الأول: صفحة التقارير بلا تكرار، والجرس يفتح الرئيسية.'],
  ['v327','الموجه الأول: قائمة مختصرة، والتنبيهات وآخر إعلان في الرئيسية.'],
  ['v326','الرئيسية للموجه الأول: بطاقة لكل مرحلة وصف تقارير القرار في الأعلى.'],
  ['v324','تبويب الموجهون: «حسب المدرسة» يتبع فلتر المرحلة.'],
@@ -13140,6 +13141,21 @@ function v326Pick(kind){
  const stages=(__v155Model&&__v155Model.stages)||[];
  if(stages.length<=1)return v155Report(kind);
  modal(`<h3>${esc(V326_STAGE_REPORTS[kind]||'التقرير')} — اختر المرحلة</h3><div class="v326-bar">${stages.map(st=>`<button type="button" class="btn secondary" onclick='closeModal();v323Report(${JSON.stringify(String(st))},"${kind}")'>${esc(st)}</button>`).join('')}</div><div class="actions"><button type="button" class="btn danger" onclick="closeModal()">إغلاق</button></div>`);
+}
+/* v328: صفحة التقارير بلا زر الإحصائيات ولا عبارة «مع زر تعديل»، والجرس يفتح الرئيسية — للموجه الأول فقط */
+{
+ const __v328Reports=reportsPage;
+ reportsPage=async function(){
+  let h=await __v328Reports.apply(this,arguments);
+  if(profile?.role==='first_supervisor'&&typeof h==='string')h=h.replace(`<button type="button" class="btn secondary" onclick="go('statistics')">الإحصائيات والتقارير التفصيلية</button>`,'').replace(/ مع زر تعديل/g,'');
+  return h;
+ };
+ document.addEventListener('click',e=>{
+  if(profile?.role!=='first_supervisor')return;
+  const b=e.target&&e.target.closest&&e.target.closest('button.alert-bell');
+  if(!b)return;
+  e.preventDefault();e.stopImmediatePropagation();go('dashboard');
+ },true);
 }
 /* v326-end */
 </script>
