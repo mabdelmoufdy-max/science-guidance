@@ -1,4 +1,5 @@
 <!doctype html>
+<!-- v320: متابعة الاستكمال حسب المدرسة لا تعرض المدارس المكتملة 100% بلا انتظار اعتماد -->
 <!-- v319: تبويب «الموجهون» لمدير النظام: زر «تعديل البيانات» مباشرة على بطاقة كل موجه (كان داخل «التفاصيل» فقط). -->
 <!-- v318: فلتر الإجازة المجددة الصحيح (on_renewed_leave) في ترتيب أولوية الإشراف وتوزيع العجز بالأجر: المجاز خارج الترتيب والمؤهلين ونص حالته «إجازة مجددة — غير مؤهل للإشراف». -->
 <!-- v317: «توزيع الفصول»: استبعاد المعلم الذي في إجازة مجددة من قائمة المعلمين والمؤشرات (كان الفلتر يقرأ renewed_leave بينما القائمة تحمل on_renewed_leave فلا يعمل)؛ ويبقى ظاهرًا في «معلمو مدارسي» بحالة «إجازة». -->
@@ -16,7 +17,7 @@
 <script>/* v226: العنوان الموحد — انظر التعليق أعلى الملف */(function(){try{if(/\.github\.io$/.test(location.hostname)&&/^\/science-guidance\/?(index\.html)?$/.test(location.pathname)&&!/[?&]stay\b/.test(location.search))location.replace('https://teachers-data-portal.vercel.app/app/'+location.hash)}catch(e){}})();</script>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#152c43">
-<title>نظام توجيه العلوم — v319</title>
+<title>نظام توجيه العلوم — v320</title>
 <link rel="manifest" href="./manifest.webmanifest">
 <link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png">
 <link rel="apple-touch-icon" href="./icon-192.png">
@@ -3649,7 +3650,7 @@ function completionHierarchyHtml(data){
  const pmap=completionPendingMap(data.changes), rows=completionEntityRows(data).filter(x=>x.entity!=='supervisor');
  const bySchool=new Map();for(const s of data.schools)bySchool.set(s.id,{school:s,total:0,done:0,pending:0});
  for(const r of rows){const o=bySchool.get(r.schoolId);if(!o)continue;for(const [f] of COMPLETION_FIELDS[r.entity]){if(completionOptional(r.entity,f,r.record))continue;o.total++;if(!completionEmpty(r.record?.[f]))o.done++;if(pmap.has(`${r.entity}:${r.id}:${f}`))o.pending++;}}
- const items=[...bySchool.values()].map(o=>({...o,pct:o.total?Math.round(o.done*100/o.total):100})).sort((a,b)=>a.pct-b.pct).slice(0,30);
+ const items=[...bySchool.values()].map(o=>({...o,pct:o.total?Math.round(o.done*100/o.total):100})).filter(o=>o.pct<100||o.pending>0).sort((a,b)=>a.pct-b.pct).slice(0,30);
  return `<div class="statistics-section-caption"><h3>متابعة الاستكمال حسب المدرسة</h3><small>الأقل اكتمالًا أولًا</small></div><div class="completion-hierarchy">${items.map(o=>`<div class="mini"><b>${esc(o.school.name)}</b><span>${esc(o.school.stage)} - اكتمال ${o.pct}% - انتظار اعتماد ${o.pending}</span></div>`).join('')}</div>`;
 }
 async function dataCompletionPage(){
