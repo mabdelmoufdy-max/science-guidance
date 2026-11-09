@@ -1,4 +1,5 @@
 <!doctype html>
+<!-- v322: الصفحة الرئيسية للموجه بتخطيط لوحة منسق المرحلة (v168StageBoard) محسوبة على مدارسه فقط: بلا «حالة الموجهين»، ومع سطر «مدارس تنتظر اعتمادك» يفتح الاعتمادات؛ بطاقات «مدارسي» (v321) بلا تغيير. -->
 <!-- v321: بطاقات «مدارسي» انتقلت من الشاشة الرئيسية للموجه إلى صفحة مدارسي -->
 <!-- v320: متابعة الاستكمال حسب المدرسة لا تعرض المدارس المكتملة 100% بلا انتظار اعتماد -->
 <!-- v319: تبويب «الموجهون» لمدير النظام: زر «تعديل البيانات» مباشرة على بطاقة كل موجه (كان داخل «التفاصيل» فقط). -->
@@ -8,9 +9,6 @@
 <!-- v315: العجز المعروض = المطلوب − (تدريس الثابتين + الأجر المسند): لا يظهر عجز إذا غُطّيت الحصص بالأجر، في شاشة الموجه والتنبيهات وتحذير الاعتماد والخطة الملخصة وتقرير العجز والزيادة وتقرير عجز المدارس (الحالة «مغطى بالأجر») والبحث الموحد؛ والعجز قبل الأجر محفوظ في deficit_before_paid ويُستخدم في احتساب الانتداب واقتراحات التغطية. -->
 <!-- v314: شاشة الموجه: زر «فتح» في «يحتاج تدخلك» يفتح ملف المدرسة في «مدارسي» بدل النافذة السريعة؛ وإصلاح «فتح المدرسة/فتح صفحة مدارسي/فتح شاشة المعلمين» التي كانت لا تفتح المدرسة لأن v163/v179 يفرّغان اختيار المدرسة عند دخول الشاشة (الحل بمسار v233OpenPage). -->
 <!-- v313: شاشة الموجه: زر «توزيع الفصول» في بطاقة المدرسة يفتح صفحة توزيع الفصول لتلك المدرسة، و«فتح شاشة المعلمين» يفتح معلمي المدرسة نفسها، وحُذف زر «الأنصبة» المعطّل من نافذة العجز والزيادة. -->
-<!-- v312: شاشة الموجه: تسمية تبويب «لوحة المشرف» صارت «الرئيسية» (الاسم فقط). -->
-<!-- v311: شاشة الموجّه: زر «فتح المدرسة» في بطاقة المدرسة وزر «فتح صفحة مدارسي» في نافذتها يفتحان ملف المدرسة نفسها في «مدارسي» (المدرسة والمرحلة مختارتان في الفلاتر) بدل النافذة/الصفحة العامة (v311OpenSchool). واجهة فقط. -->
-<!-- v310: تقرير المدرسة الشامل في صفحة A4 واحدة (كان نحو ١٠ صفحات): بطاقات للبيانات والأعداد، وسطر واحد لكل معلم (النصاب والفصول والتدريس والإشراف والريادة والمجدول والحالة)، والفصول مجمّعة بالصف؛ حُذف الرقم القومي والهاتف والجدول اليومي لكل معلم والأسطر المكررة والفارغة. تقرير الشاشة (ملف المدرسة) لم يُمس. -->
 <html lang="ar" dir="rtl">
 <head>
 <!-- إعداد: أ/ محمود عبدالمفدي محمد أبوالنجا | الصفة: معلم -->
@@ -18,7 +16,7 @@
 <script>/* v226: العنوان الموحد — انظر التعليق أعلى الملف */(function(){try{if(/\.github\.io$/.test(location.hostname)&&/^\/science-guidance\/?(index\.html)?$/.test(location.pathname)&&!/[?&]stay\b/.test(location.search))location.replace('https://teachers-data-portal.vercel.app/app/'+location.hash)}catch(e){}})();</script>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#152c43">
-<title>نظام توجيه العلوم — v321</title>
+<title>نظام توجيه العلوم — v322</title>
 <link rel="manifest" href="./manifest.webmanifest">
 <link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png">
 <link rel="apple-touch-icon" href="./icon-192.png">
@@ -2073,7 +2071,7 @@ function closeModal(){document.getElementById('modal')?.remove();document.body.c
 function moneySafeError(e){console.error(e);toast(e?.message||'حدث خطأ غير متوقع')}
 
 async function dashboardPage({force=false}={}){
- if(profile?.role==='supervisor')return supervisorWorkspacePage({force});
+ if(profile?.role==='supervisor'){try{return await v168StageBoard(!!force)}catch(error){return `<div class="notice danger">تعذر تحميل الصفحة الرئيسية: ${esc(error?.message||error)}</div>`}} // v322: تخطيط لوحة المنسق لمدارس الموجه
  const payload=await cachedRead('dashboard:stats',async signal=>{
   let q=sb.rpc('get_dashboard_stats',{p_term_id:activeTerm?.id||null});q=abortable(q,signal);const {data,error}=await q;if(error)throw error;return data||{};
  },{ttl:20000,force});
@@ -2393,6 +2391,7 @@ window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();window.v152
 window.addEventListener('appinstalled',()=>{window.v152InstallPrompt=null;v152SyncInstallBtn()});
 if('serviceWorker' in navigator&&location.protocol!=='file:')window.addEventListener('load',()=>navigator.serviceWorker.register('./service-worker.js').catch(()=>{}));
 const V145_NEWS=[
+ ['v322','الصفحة الرئيسية للموجه: نفس تخطيط لوحة المنسق لمدارسه، مع سطر «مدارس تنتظر اعتمادك».'],
  ['v319','تبويب الموجهون: زر «تعديل البيانات» على بطاقة كل موجه لمدير النظام.'],
  ['v318','أولوية الإشراف وتوزيع العجز بالأجر: المعلم في إجازة مجددة خارج الترتيب والمؤهلين.'],
  ['v317','توزيع الفصول: المعلم الذي في إجازة لا يظهر في قائمة التوزيع، ويظهر في «معلمو مدارسي» بحالة إجازة.'],
@@ -9613,6 +9612,7 @@ adminCancelDelegation=async function(delegationId,teacherId,btn){
 async function v168StageBoard(force){
  const m=await v155LoadModel(force),t=m.totals;
  if(!m.rows.length)return `<div class="card v155-board"><h3>لوحة قرارات المرحلة</h3><div class="notice warn">لا توجد مدارس ضمن مرحلتك في هذه الفترة.</div></div>`;
+ const v322Sup=profile?.role==='supervisor'; // v322
  const C=V158_C,approved=m.rows.filter(r=>r.status==='approved').length,returned=m.rows.filter(r=>r.status==='returned_for_edit').length;
  const perm=(m.unentered||[]).filter(x=>x.type==='أساسي'),paidZ=(m.unentered||[]).filter(x=>x.type==='بالأجر');
  const capZ=perm.reduce((n,x)=>n+x.cap,0),schoolsZ=new Set((m.unentered||[]).map(x=>x.school)).size;
@@ -9624,9 +9624,10 @@ async function v168StageBoard(force){
  const pct=t.required?Math.round(t.actual/t.required*100):0;
  const kpis=`<div class="v124-kpis v168-kpis">${v124Kpi('② الحصص المطلوبة',t.required)}${v124Kpi('التدريس الفعلي',`${t.actual} (${pct}%)`)}${v124Kpi('العجز',t.net,t.net>0?'danger':'ok')}${v124Kpi('مدارس معتمدة',`${approved} من ${t.schools}`,approved<t.schools?'danger':'ok')}</div><div class="v168-ctx">${t.schools} مدرسة • ${t.classes} فصلًا • ${m.permCount} أساسي • ${m.paidCount} بالأجر • ${m.supervisors.length} موجهين</div>`;
  const tasks=[],add=(n,title,sub,kind,red)=>{if(n>0)tasks.push(`<button type="button" class="v168-task${red?' red':''}" onclick="v155Report('${kind}')"><span class="v168-n">${n}</span><span class="v168-tt"><b>${esc(title)}</b><small>${esc(sub)}</small></span><span class="v168-go">فتح ←</span></button>`)};
+ if(v322Sup){const n=m.rows.filter(r=>r.status==='pending_manager_approval').length;if(n>0)tasks.push(`<button type="button" class="v168-task red" onclick="go('approval')"><span class="v168-n">${n}</span><span class="v168-tt"><b>مدارس تنتظر اعتمادك</b><small>مراجعة واعتماد أو إعادة للتعديل</small></span><span class="v168-go">فتح ←</span></button>`)} // v322
  add((m.unentered||[]).length,'معلمًا لم تُدخل حصصهم',`${perm.length} أساسي + ${paidZ.length} بالأجر — استكمال الإدخال أولًا`,'unentered',true);
  add(returned,'مدرسة ملفها معاد للتعديل','متابعة الموجه','status',true);
- add(t.schools-approved-returned,'مدرسة لم تُعتمد بعد','متابعة الموجهين المتأخرين','status',false);
+ add(t.schools-approved-returned,'مدرسة لم تُعتمد بعد',v322Sup?'متابعة الإرسال والاعتماد':'متابعة الموجهين المتأخرين','status',false);
  add(Math.min(5,m.ready.filter(r=>r.net>0).length),'أعلى المدارس عجزًا','بالأسماء والأرقام','deficit',false);
  if(m.uncov)add(m.uncov.schools.length,'مدارس بها فصول غير مغطاة',`${m.uncov.classes} فصلًا • ${m.uncov.periods} حصة تحتاج تغطية`,'uncoveredClasses',true); // v299
  add(m.proposals.length,'مقترح انتداب من الفائض',`يغطي ${t.proposed} حصة — مراجعة واعتماد`,'proposals',false);
@@ -9641,10 +9642,10 @@ async function v168StageBoard(force){
  const eqChart=eq.map(x=>`<div class="v158-row"><div class="v158-name"><b>${esc(x.label)}</b></div><div class="v158-track">${v158Bar([x],x.value,x.value/eqMax*100)}</div><b class="v158-val">${x.value}</b></div>`).join('');
  const fold=(label,html)=>`<details class="v158-details v168-fold"><summary>${label}</summary>${html}</details>`;
  const details=fold(`④ أعلى ${top.length} مدارس عجزًا`,top.length?`${v158Legend(defParts({internal:0,proposed:0,paidCov:0,uncovered:0}),0)}<div class="v158-rows v158-chart">${schoolChart}</div><button type="button" class="btn secondary v118-edit-btn" onclick="v155Report('deficit')">كل المدارس</button>`:'<div class="muted">لا يوجد عجز في المدارس المكتملة البيانات.</div>')
-  +fold('حالة الموجهين',`${v158Legend([{label:'الاستكمال',value:null,color:C.actual},{label:'الإرسال للاعتماد',value:null,color:C.internal}],0)}<div class="v158-rows v158-chart">${supChart||'<div class="muted">لا يوجد موجهون.</div>'}</div><button type="button" class="btn secondary v118-edit-btn" onclick="v155Report('supervisors')">طباعة</button>`)
+  +(v322Sup?'':fold('حالة الموجهين',`${v158Legend([{label:'الاستكمال',value:null,color:C.actual},{label:'الإرسال للاعتماد',value:null,color:C.internal}],0)}<div class="v158-rows v158-chart">${supChart||'<div class="muted">لا يوجد موجهون.</div>'}</div><button type="button" class="btn secondary v118-edit-btn" onclick="v155Report('supervisors')">طباعة</button>`))
   +fold('عدالة توزيع الكادر',`<div class="v124-kpis">${v124Kpi('اتساق الكادر مع الاحتياج',m.r2==null?'—':v155Pct(m.r2),m.r2!=null&&m.r2<.8?'warn':'ok')}</div><div class="v158-rows v158-chart">${eqChart}</div>`);
  return `<div class="v155-board v168-board">
- <div class="v168-head"><h2>لوحة قرارات المرحلة — ${esc(m.stage)}</h2><div class="v155-actions">${stageSel}<button type="button" class="btn secondary" onclick="loadPage(true)">تحديث</button></div></div>
+ <div class="v168-head"><h2>${v322Sup?'الرئيسية':'لوحة قرارات المرحلة'} — ${esc(m.stage)}</h2><div class="v155-actions">${stageSel}<button type="button" class="btn secondary" onclick="loadPage(true)">تحديث</button></div></div>
  ${decision}${warn}${kpis}${taskHtml}${details}
  <button type="button" class="btn primary v168-meeting" onclick="v155Report('meeting')">تقرير الاجتماع</button>
  </div>`;
