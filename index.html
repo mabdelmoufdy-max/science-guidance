@@ -1,4 +1,5 @@
 <!doctype html>
+<!-- v329: فلتر «النوع» بين «المرحلة» و«المدرسة» (مدارس المرحلة/المعلمون/التقارير): يظهر حين يكون للمرحلة أكثر من نوع — الإعدادي بنوع المدرسة (عام/مهني/تربية خاصة)، والثانوي الصناعي بأنواع مجموعاتها (عام/مهني/مسار/تعليم مزدوج) — في صفحة المدارس فقط، ويضيّق قائمة المدارس والبطاقات والقائمة وتقارير/Excel الصفحة. -->
 <!-- v328: الموجه الأول: حذف زر «الإحصائيات والتقارير التفصيلية» من صفحة التقارير وعبارة «مع زر تعديل» من وصف «بيانات معلمي المدرسة»، والجرس 🔔 يفتح الرئيسية (فيها التنبيهات). عرض فقط. -->
 <!-- v327: الموجه الأول: القائمة 5 عناصر (الرئيسية، التقارير، الموجهون، المدارس، المعلمون)؛ حُذفت التنبيهات وإنجاز الجداول والإحصائيات وجدول المعلم والإعلانات من قائمته، والتنبيهات (أهم 3 + الباقي مطوي) وآخر إعلان صارا في الرئيسية. عرض فقط. -->
 <!-- v326: الرئيسية للموجه الأول: بطاقة لكل مرحلة معًا (v323) بلا قائمة اختيار المرحلة، وصف «تقارير القرار» أعلاها (تقرير الاجتماع، عجز المدارس بعد الأجر، مقترح الانتداب من الفائض، إنجاز الجداول)؛ حُذفت منها بطاقات الأرقام العامة ونص «دورة العمل». عرض فقط. -->
@@ -8,7 +9,6 @@
 <!-- v321: بطاقات «مدارسي» انتقلت من الشاشة الرئيسية للموجه إلى صفحة مدارسي -->
 <!-- v320: متابعة الاستكمال حسب المدرسة لا تعرض المدارس المكتملة 100% بلا انتظار اعتماد -->
 <!-- v319: تبويب «الموجهون» لمدير النظام: زر «تعديل البيانات» مباشرة على بطاقة كل موجه (كان داخل «التفاصيل» فقط). -->
-<!-- v318: فلتر الإجازة المجددة الصحيح (on_renewed_leave) في ترتيب أولوية الإشراف وتوزيع العجز بالأجر: المجاز خارج الترتيب والمؤهلين ونص حالته «إجازة مجددة — غير مؤهل للإشراف». -->
 <html lang="ar" dir="rtl">
 <head>
 <!-- إعداد: أ/ محمود عبدالمفدي محمد أبوالنجا | الصفة: معلم -->
@@ -16,7 +16,7 @@
 <script>/* v226: العنوان الموحد — انظر التعليق أعلى الملف */(function(){try{if(/\.github\.io$/.test(location.hostname)&&/^\/science-guidance\/?(index\.html)?$/.test(location.pathname)&&!/[?&]stay\b/.test(location.search))location.replace('https://teachers-data-portal.vercel.app/app/'+location.hash)}catch(e){}})();</script>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#152c43">
-<title>نظام توجيه العلوم — v328</title>
+<title>نظام توجيه العلوم — v329</title>
 <link rel="manifest" href="./manifest.webmanifest">
 <link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png">
 <link rel="apple-touch-icon" href="./icon-192.png">
@@ -2399,6 +2399,7 @@ window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();window.v152
 window.addEventListener('appinstalled',()=>{window.v152InstallPrompt=null;v152SyncInstallBtn()});
 if('serviceWorker' in navigator&&location.protocol!=='file:')window.addEventListener('load',()=>navigator.serviceWorker.register('./service-worker.js').catch(()=>{}));
 const V145_NEWS=[
+ ['v329','فلتر «النوع» بعد المرحلة (إعدادي: عام/مهني/تربية خاصة؛ ثانوي صناعي: عام/مهني/مسار/تعليم مزدوج) في صفحة المدارس: يغيّر القائمة والأرقام والتقارير.'],
  ['v328','الموجه الأول: صفحة التقارير بلا تكرار، والجرس يفتح الرئيسية.'],
  ['v327','الموجه الأول: قائمة مختصرة، والتنبيهات وآخر إعلان في الرئيسية.'],
  ['v326','الرئيسية للموجه الأول: بطاقة لكل مرحلة وصف تقارير القرار في الأعلى.'],
@@ -6679,14 +6680,14 @@ async function supervisorOwnedSchoolsV75({force=false}={}){
   q=abortable(q,signal);const {data:supervisor,error:supervisorError}=await q;
   if(supervisorError)throw supervisorError;
   if(!supervisor?.id)return [];
-  let sq=sb.from('schools').select('id,name,stage,class_count,status,approval_authority,supervisor_id').eq('supervisor_id',supervisor.id).order('name');
+  let sq=sb.from('schools').select('id,name,stage,school_type,class_count,status,approval_authority,supervisor_id').eq('supervisor_id',supervisor.id).order('name');
   sq=abortable(sq,signal);const {data,error}=await sq;if(error)throw error;
   // v271: مدارس الثانوي تُسند للموجه بالمادة (supervisor_school_subjects) و schools.supervisor_id فيها فارغ.
   const lq=abortable(sb.from('supervisor_school_subjects').select('school_id').eq('supervisor_id',supervisor.id).eq('active',true),signal);
   const {data:links,error:linkError}=await lq;if(linkError)throw linkError;
   const have=new Set((data||[]).map(x=>String(x.id))),extra=[...new Set((links||[]).map(x=>String(x.school_id)))].filter(id=>!have.has(id));
   let more=[];
-  if(extra.length){const xq=abortable(sb.from('schools').select('id,name,stage,class_count,status,approval_authority,supervisor_id').in('id',extra),signal);const r=await xq;if(r.error)throw r.error;more=r.data||[];}
+  if(extra.length){const xq=abortable(sb.from('schools').select('id,name,stage,school_type,class_count,status,approval_authority,supervisor_id').in('id',extra),signal);const r=await xq;if(r.error)throw r.error;more=r.data||[];}
   const all=[...(data||[]),...more].sort((a,b)=>String(a.name||'').localeCompare(String(b.name||''),'ar'));
   v271SupStagesPid=profile?.id||'';v271SupStages=new Set(all.map(x=>String(x.stage||'').trim()).filter(Boolean));
   return all;
@@ -7542,7 +7543,7 @@ function v97FilterDataset(source,stage=v97Stage()){
  const byId=new Map((h.schools||[]).map(s=>[String(s.id),s]));
  const scopes=v91ScopeRows(source).filter(t=>{
   const id=v91ScopeSchoolId(t),school=byId.get(id);
-  return v97StageMatches(school?.stage||v97TeacherStage(t),stage)&&v98SchoolMatches(id);
+  return v97StageMatches(school?.stage||v97TeacherStage(t),stage)&&v98SchoolMatches(id)&&v329Ok(id);
  });
  const teacherIds=new Set(scopes.map(v91TeacherId));
  const teachers=(h.teachers||[]).filter(t=>teacherIds.has(v91TeacherId(t))||(!scopes.length&&ids.has(String(t.home_school_id))));
@@ -7574,7 +7575,7 @@ function v97InstallStageFilter(root){
  }
  if(document.getElementById('v97Stage'))return;
  const bar=document.createElement('div');bar.className='card no-print';bar.id='v97StageBar';
- bar.innerHTML=`<div class="auto-filter-options-row"><div class="auto-filter-field"><label for="v97Stage">المرحلة</label><select id="v97Stage" aria-label="المرحلة" onchange="v97SetStage(this.value)">${v97StageOptions()}</select></div>${v98SchoolFilterHtml()}<span class="muted">العرض وتقارير الطباعة حسب الفلاتر المختارة.</span></div>`;
+ bar.innerHTML=`<div class="auto-filter-options-row"><div class="auto-filter-field"><label for="v97Stage">المرحلة</label><select id="v97Stage" aria-label="المرحلة" onchange="v97SetStage(this.value)">${v97StageOptions()}</select></div>${v329FilterHtml()}${v98SchoolFilterHtml()}<span class="muted">العرض وتقارير الطباعة حسب الفلاتر المختارة.</span></div>`;
  root.prepend(bar);
 }
 function v97BudgetStage(snapshot=budgetSnapshot){return SECONDARY_BUDGET_LABELS_V95[snapshot]?(String(snapshot).includes('industrial')?'ثانوي صناعي':'ثانوي عام'):(['oct_2026_preparatory_qous','aug_2026_preparatory_qous'].includes(snapshot)?'إعدادي':'')}
@@ -7583,7 +7584,7 @@ async function v97SetStage(value){
  if(!['','ابتدائي','إعدادي','ثانوي عام','ثانوي صناعي'].includes(value)||(value==='ابتدائي'&&currentPage==='budget'))return;
  v97StageRevision++;
  v97StageSelections.set(v97StageKey(),value);
- v98SchoolSelections.delete(v97StageKey());
+ v98SchoolSelections.delete(v97StageKey());v329Sel.delete(v97StageKey());
  if(currentPage==='budget'&&value&&!v97StageMatches(v97BudgetStage(),value))budgetSnapshot=value==='ثانوي صناعي'?'sep_2026_industrial_secondary_qous':value==='ثانوي عام'?'sep_2026_general_secondary_qous':'oct_2026_preparatory_qous';
  // Close stale print output immediately; the next preview captures the new scope.
  if(__activeReportSchema)closeReportPreview();
@@ -7647,7 +7648,7 @@ const v98SchoolFilterPages=new Set(['schools','teachers','reports']);
 const v98SchoolSelections=new Map(),v98SchoolDirectories=new Map();
 function v98School(){return v98SchoolFilterPages.has(currentPage)?v98SchoolSelections.get(v97StageKey())||'':''}
 function v98SchoolMatches(id){return !v98School()||String(id||'')===v98School()}
-function v98FilterSchoolRows(rows){return (rows||[]).filter(s=>v98SchoolMatches(s.id))}
+function v98FilterSchoolRows(rows){return v329Filter((rows||[]).filter(s=>v98SchoolMatches(s.id)))} // v329: + النوع
 /* v142: «المدرسة: الكل» للموجّه في شاشة معلمو مدارسي. عرض فقط: دمج كشوف مدارسه كما تعيدها
    get_school_teacher_roster، دون تغيير قواعد الحساب أو الصلاحيات. */
 const v142SupervisorAllKeys=new Set();
@@ -7663,7 +7664,7 @@ async function v142ReadSchoolRosters(schools,signal){
  return {data:results.flatMap((r,i)=>(r.data||[]).map(t=>({...t,_v142School:schools[i]}))),error:null};
 }
 function v98SchoolOptions(){
- const rows=v97SchoolRows(v98SchoolDirectories.get(v97StageKey())||[]),selected=v98School();
+ const rows=v329Filter(v97SchoolRows(v98SchoolDirectories.get(v97StageKey())||[])),selected=v98School();
  const singleSchool=currentPage==='teachers'&&['school_manager','senior_teacher'].includes(profile?.role);
  const first=singleSchool?'<option value="" disabled>اختر المدرسة</option>':'<option value="">المدرسة: الكل</option>';
  const L=window.__v206Links||new Map(),opt=s=>`<option value="${esc(s.id)}" ${String(s.id)===selected?'selected':''}>${esc(s.name)}</option>`;
@@ -7684,12 +7685,13 @@ async function v98PrepareSchoolFilter(options={}){
  else if(['school_manager','senior_teacher'].includes(role)){
   const school=await mySchool();rows=school?[school]:[];
  }else rows=await cachedRead(`school-filter:v98:${key}`,async signal=>{
-  const result=await abortable(sb.from('schools').select('id,name,stage').order('name'),signal);
+  const result=await abortable(sb.from('schools').select('id,name,stage,school_type').order('name'),signal);
   if(result.error)throw result.error;return result.data||[];
  },{ttl:30000,force:options.force===true});
  if(epoch!==v96SessionEpoch||key!==v97StageKey()||options.signal?.aborted)return false;
  const unique=new Map();for(const school of rows||[])if(school.id)unique.set(String(school.id),school);
  rows=[...unique.values()];window.__v206Links=await v161AggregateLinks();v98SchoolDirectories.set(key,rows);
+ if(rows.some(x=>x.stage==='ثانوي صناعي'))try{await v329LoadKinds(options)}catch(_){} // v329
  const choices=v97SchoolRows(rows),selected=v98SchoolSelections.get(key)||'';
  if(!choices.some(s=>String(s.id)===selected))v98SchoolSelections.delete(key);
  if(page==='schools'&&role==='supervisor'&&v98SchoolSelections.get(key))supervisorRememberSchoolV75(v98SchoolSelections.get(key));
@@ -7717,6 +7719,59 @@ async function v98SetSchool(value){
  __activeReportSchema=null;__activeReportSignature='';resetReportShareCache();
  try{await loadPage();if(currentPage==='schools'&&v98School()===value)window.scrollTo({top:0,left:0,behavior:'instant'})}catch(error){moneySafeError(error)}
 }
+
+/* v329-begin: فلتر «النوع» بين المرحلة والمدرسة — يضيّق قائمة المدارس فقط */
+const v329Sel=new Map();let v329Kinds=new Map();
+async function v329LoadKinds(options={}){
+ const term=activeTerm?.id||'';
+ v329Kinds=await cachedRead(`school-kinds:v329:${term}`,async signal=>{
+  let q=sb.from('school_classes').select('school_id,class_name').eq('stage','ثانوي صناعي');if(term)q=q.eq('term_id',term);
+  const r=await abortable(q,signal);if(r.error)throw r.error;
+  const m=new Map();for(const c of r.data||[]){const k=String(c.class_name||'').split(' — ')[0].trim();if(!k||k===c.class_name)continue;const id=String(c.school_id);if(!m.has(id))m.set(id,new Set());m.get(id).add(k)}
+  return m;
+ },{ttl:30000,force:options.force===true});
+}
+function v329TypesOf(s){
+ if(s?.stage==='إعدادي')return [String(s.school_type||'').trim()||'عام'];
+ if(s?.stage==='ثانوي صناعي')return [...(v329Kinds.get(String(s.id))||[])];
+ return [];
+}
+const V329_ORDER=['عام','مهني','مسار','تعليم مزدوج','تربية خاصة'];
+function v329Available(){
+ if(currentPage!=='schools'||!v97Stage())return []; // v329: صفحة المدارس فقط
+ const set=new Set();v97SchoolRows(v98SchoolDirectories.get(v97StageKey())||[]).forEach(s=>v329TypesOf(s).forEach(t=>set.add(t)));
+ const list=[...set].sort((a,b)=>{const i=V329_ORDER.indexOf(a),j=V329_ORDER.indexOf(b);return (i<0?99:i)-(j<0?99:j)||a.localeCompare(b,'ar')});
+ return list.length>1?list:[];
+}
+function v329Type(){const v=v329Sel.get(v97StageKey())||'';return v&&v329Available().includes(v)?v:''}
+function v329Filter(rows){const t=v329Type();if(!t)return rows;const ok=new Set((v98SchoolDirectories.get(v97StageKey())||[]).filter(s=>v329TypesOf(s).includes(t)).map(s=>String(s.id)));return (rows||[]).filter(s=>ok.has(String(s.id)))}
+function v329Ok(id){const t=v329Type();return !t||v329Filter([{id}]).length>0}
+function v329FilterHtml(){
+ const list=v329Available();if(!list.length)return '';const sel=v329Type();
+ return `<div class="auto-filter-field"><label for="v329Type">النوع</label><select id="v329Type" aria-label="النوع" onchange="v329SetType(this.value)"><option value="">النوع: الكل</option>${list.map(t=>`<option value="${esc(t)}" ${t===sel?'selected':''}>${esc(t)}</option>`).join('')}</select></div>`;
+}
+async function v329SetType(value){
+ v111CloseSidebar();value=String(value||'');
+ if(value&&!v329Available().includes(value))return;
+ const key=v97StageKey();v329Sel.set(key,value);
+ const cur=v98SchoolSelections.get(key)||'';
+ if(cur&&value){const s=(v98SchoolDirectories.get(key)||[]).find(x=>String(x.id)===cur);if(!s||!v329TypesOf(s).includes(value))v98SchoolSelections.delete(key)}
+ v97StageRevision++;
+ if(__activeReportSchema)closeReportPreview();
+ __activeReportSchema=null;__activeReportSignature='';resetReportShareCache();
+ try{await loadPage()}catch(error){moneySafeError(error)}
+}
+const v329BaseReportState=currentReportFilterState;
+currentReportFilterState=function(reportId){
+ const state=v329BaseReportState(reportId),t=v329Type();
+ if(!t||currentPage!=='schools'||v98School())return state;
+ const ids=v329Filter(v97SchoolRows(v98SchoolDirectories.get(v97StageKey())||[])).map(s=>String(s.id));
+ const shown=(state.displayFilters||state.filters||[]).filter(f=>f.label!=='معرف المدرسة');
+ state.filters=[...(state.filters||[]),{label:'معرف المدرسة',values:ids.length?ids:['__none__']}];
+ state.displayFilters=[...shown,{label:'النوع',value:t}];state.active=true;
+ return state;
+};
+/* v329-end */
 
 /* v163: شاشة المعلمين للأدوار متعددة المدارس: تبدأ فارغة، وتظهر القائمة باختيار مدرسة أو بالبحث/التصفية؛
    وزرّا «تصدير Excel» و«تقرير» يعملان على الفلاتر الحالية. عرض فقط. */
