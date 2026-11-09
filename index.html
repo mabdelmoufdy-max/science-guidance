@@ -1,4 +1,5 @@
 <!doctype html>
+<!-- v323: الرئيسية للموجه الذي له أكثر من مرحلة: بطاقة لكل مرحلة (الأرقام الأربعة + ماذا أفعل الآن؟ + «المزيد» مطوي) بدل قائمة المرحلة، وزر «فتح» يفتح تقرير مرحلته؛ مناسبة للهاتف. -->
 <!-- v322: الصفحة الرئيسية للموجه بتخطيط لوحة منسق المرحلة (v168StageBoard) محسوبة على مدارسه فقط: بلا «حالة الموجهين»، ومع سطر «مدارس تنتظر اعتمادك» يفتح الاعتمادات؛ بطاقات «مدارسي» (v321) بلا تغيير. -->
 <!-- v321: بطاقات «مدارسي» انتقلت من الشاشة الرئيسية للموجه إلى صفحة مدارسي -->
 <!-- v320: متابعة الاستكمال حسب المدرسة لا تعرض المدارس المكتملة 100% بلا انتظار اعتماد -->
@@ -8,7 +9,6 @@
 <!-- v316: لوحة منسق المرحلة وتقرير اجتماع المرحلة: «العجز» المعروض بعد الأجر المسند (لا تظهر المدرسة المغطاة بالأجر في «أعلى المدارس عجزًا» ولا في تقرير العجز)، واقتراحات الانتداب والتغطية بلا تغيير (على العجز قبل الأجر)، وعمود الجدول صار «العجز قبل الأجر». -->
 <!-- v315: العجز المعروض = المطلوب − (تدريس الثابتين + الأجر المسند): لا يظهر عجز إذا غُطّيت الحصص بالأجر، في شاشة الموجه والتنبيهات وتحذير الاعتماد والخطة الملخصة وتقرير العجز والزيادة وتقرير عجز المدارس (الحالة «مغطى بالأجر») والبحث الموحد؛ والعجز قبل الأجر محفوظ في deficit_before_paid ويُستخدم في احتساب الانتداب واقتراحات التغطية. -->
 <!-- v314: شاشة الموجه: زر «فتح» في «يحتاج تدخلك» يفتح ملف المدرسة في «مدارسي» بدل النافذة السريعة؛ وإصلاح «فتح المدرسة/فتح صفحة مدارسي/فتح شاشة المعلمين» التي كانت لا تفتح المدرسة لأن v163/v179 يفرّغان اختيار المدرسة عند دخول الشاشة (الحل بمسار v233OpenPage). -->
-<!-- v313: شاشة الموجه: زر «توزيع الفصول» في بطاقة المدرسة يفتح صفحة توزيع الفصول لتلك المدرسة، و«فتح شاشة المعلمين» يفتح معلمي المدرسة نفسها، وحُذف زر «الأنصبة» المعطّل من نافذة العجز والزيادة. -->
 <html lang="ar" dir="rtl">
 <head>
 <!-- إعداد: أ/ محمود عبدالمفدي محمد أبوالنجا | الصفة: معلم -->
@@ -16,7 +16,7 @@
 <script>/* v226: العنوان الموحد — انظر التعليق أعلى الملف */(function(){try{if(/\.github\.io$/.test(location.hostname)&&/^\/science-guidance\/?(index\.html)?$/.test(location.pathname)&&!/[?&]stay\b/.test(location.search))location.replace('https://teachers-data-portal.vercel.app/app/'+location.hash)}catch(e){}})();</script>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#152c43">
-<title>نظام توجيه العلوم — v322</title>
+<title>نظام توجيه العلوم — v323</title>
 <link rel="manifest" href="./manifest.webmanifest">
 <link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png">
 <link rel="apple-touch-icon" href="./icon-192.png">
@@ -1832,6 +1832,13 @@ td .btn,.report-preview-toolbar .btn{min-height:var(--ctl-h-sm);padding:4px 10px
 .v168-go{font-size:12px;color:#1f4274;font-weight:700;white-space:nowrap}
 .v168-fold{margin-bottom:8px}
 .v168-meeting{width:100%;margin-top:4px}
+/* v323: الرئيسية للموجه — بطاقة لكل مرحلة */
+.v323-card{margin-bottom:14px}
+.v323-card-head{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:10px}
+.v323-card-head h3{margin:0}
+.v323-more>summary{cursor:pointer;font-weight:700;color:#1f4274;padding:6px 0}
+.v323-more[open]>summary{margin-bottom:8px}
+@media(max-width:760px){.v323-card .v168-kpis{grid-template-columns:repeat(2,minmax(0,1fr))!important}.v323-card .v168-big{font-size:30px}.v323-card .v168-task{padding:8px;gap:8px}.v323-card .v168-task .v168-n{min-width:34px;height:34px}}
 /* v173: زر تبديل الدور في القائمة الجانبية واضح على الخلفية الكحلية */
 .sidebar .side-user .role-switch-side{color:#fbe599!important;background:rgba(206,158,72,.18)!important;border:1px solid rgba(251,229,153,.55)!important;border-radius:8px;padding:6px 12px;font-weight:700;margin-top:8px;min-height:36px}
 .sidebar .side-user .role-switch-side:hover{background:rgba(206,158,72,.32)!important}
@@ -2071,7 +2078,7 @@ function closeModal(){document.getElementById('modal')?.remove();document.body.c
 function moneySafeError(e){console.error(e);toast(e?.message||'حدث خطأ غير متوقع')}
 
 async function dashboardPage({force=false}={}){
- if(profile?.role==='supervisor'){try{return await v168StageBoard(!!force)}catch(error){return `<div class="notice danger">تعذر تحميل الصفحة الرئيسية: ${esc(error?.message||error)}</div>`}} // v322: تخطيط لوحة المنسق لمدارس الموجه
+ if(profile?.role==='supervisor'){try{return await v323SupervisorHome(!!force)}catch(error){return `<div class="notice danger">تعذر تحميل الصفحة الرئيسية: ${esc(error?.message||error)}</div>`}} // v322: تخطيط لوحة المنسق لمدارس الموجه
  const payload=await cachedRead('dashboard:stats',async signal=>{
   let q=sb.rpc('get_dashboard_stats',{p_term_id:activeTerm?.id||null});q=abortable(q,signal);const {data,error}=await q;if(error)throw error;return data||{};
  },{ttl:20000,force});
@@ -2391,6 +2398,7 @@ window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();window.v152
 window.addEventListener('appinstalled',()=>{window.v152InstallPrompt=null;v152SyncInstallBtn()});
 if('serviceWorker' in navigator&&location.protocol!=='file:')window.addEventListener('load',()=>navigator.serviceWorker.register('./service-worker.js').catch(()=>{}));
 const V145_NEWS=[
+ ['v323','الرئيسية للموجه: بطاقة لكل مرحلة من مراحله بدل قائمة اختيار المرحلة.'],
  ['v322','الصفحة الرئيسية للموجه: نفس تخطيط لوحة المنسق لمدارسه، مع سطر «مدارس تنتظر اعتمادك».'],
  ['v319','تبويب الموجهون: زر «تعديل البيانات» على بطاقة كل موجه لمدير النظام.'],
  ['v318','أولوية الإشراف وتوزيع العجز بالأجر: المعلم في إجازة مجددة خارج الترتيب والمؤهلين.'],
@@ -13077,6 +13085,30 @@ function v313OpenTeachers(schoolId){
  v233OpenPage('teachers',{schoolId:id,stage:String(school.stage||'')}); // v314: كما في v311
 }
 /* v313-end */
+/* v323-begin: الرئيسية للموجه — بطاقة لكل مرحلة من مراحله (بلا قائمة مرحلة)؛ زر «فتح» يفتح تقرير مرحلته */
+async function v323SupervisorHome(force){
+ const first=await v155LoadModel(force),stages=first.stages||[];
+ if(stages.length<=1)return v168StageBoard(false);
+ const keep=v155StageSel,cards=[];
+ try{
+  for(const st of stages){
+   v155StageSel=st;const html=await v168StageBoard(false);
+   const tpl=document.createElement('template');tpl.innerHTML=html;const root=tpl.content;
+   root.querySelectorAll('[onclick*="v155Report("]').forEach(el=>el.setAttribute('onclick',el.getAttribute('onclick').replace(/v155Report\(/g,`v323Report(${JSON.stringify(st).replace(/"/g,"'")},`)));
+   const pick=sel=>{const el=root.querySelector(sel);return el?el.outerHTML:''};
+   const n=(__v155Model?.rows||[]).length;
+   const tasks=root.querySelector('.v168-task')?.closest('.card');
+   const tasksHtml=tasks?[...tasks.children].filter(el=>el.tagName!=='H3').map(el=>el.outerHTML).join(''):'';
+   const more=pick('.v168-decision')+pick('.v168-warn')+[...root.querySelectorAll('details.v168-fold')].map(el=>el.outerHTML).join('')+pick('.v168-meeting');
+   cards.push(`<div class="card v323-card"><div class="v323-card-head"><h3>${esc(st)}</h3><span class="badge info">${n} مدرسة</span></div>${pick('.v168-kpis')}${pick('.v168-ctx')}<h4 style="margin:10px 0 6px">ماذا أفعل الآن؟</h4>${tasksHtml||'<div class="muted">لا توجد قرارات معلقة في هذه المرحلة.</div>'}<details class="v323-more"><summary>المزيد: القرار المطلوب، العجز، الكادر، تقرير الاجتماع</summary>${more}</details></div>`);
+  }
+ }finally{v155StageSel=keep}
+ return `<div class="v155-board v168-board v323-home"><div class="v168-head"><h2>الرئيسية</h2><div class="v155-actions"><button type="button" class="btn secondary" onclick="loadPage(true)">تحديث</button></div></div>${cards.join('')}</div>`;
+}
+async function v323Report(stage,kind){
+ try{v155StageSel=stage;await v155LoadModel(false);return v155Report(kind)}catch(e){moneySafeError(e)}
+}
+/* v323-end */
 </script>
 
 <div id="reportPreviewOverlay" class="report-preview-overlay" role="dialog" aria-modal="true" aria-label="معاينة التقرير" aria-hidden="true">
