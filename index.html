@@ -1,5 +1,5 @@
 <!doctype html>
-<!-- v329: فلتر «النوع» بين «المرحلة» و«المدرسة» (مدارس المرحلة/المعلمون/التقارير): يظهر حين يكون للمرحلة أكثر من نوع — الإعدادي بنوع المدرسة (عام/مهني/تربية خاصة)، والثانوي الصناعي بأنواع مجموعاتها (عام/مهني/مسار/تعليم مزدوج) — ويضيّق قائمة المدارس فقط؛ الأرقام عند «المدرسة: الكل» للمرحلة كاملة. -->
+<!-- v329: فلتر «النوع» بين «المرحلة» و«المدرسة» (مدارس المرحلة/المعلمون/التقارير): يظهر حين يكون للمرحلة أكثر من نوع — الإعدادي بنوع المدرسة (عام/مهني/تربية خاصة)، والثانوي الصناعي بأنواع مجموعاتها (عام/مهني/مسار/تعليم مزدوج) — في صفحة المدارس فقط، ويضيّق قائمة المدارس والبطاقات والقائمة وتقارير/Excel الصفحة. -->
 <!-- v328: الموجه الأول: حذف زر «الإحصائيات والتقارير التفصيلية» من صفحة التقارير وعبارة «مع زر تعديل» من وصف «بيانات معلمي المدرسة»، والجرس 🔔 يفتح الرئيسية (فيها التنبيهات). عرض فقط. -->
 <!-- v327: الموجه الأول: القائمة 5 عناصر (الرئيسية، التقارير، الموجهون، المدارس، المعلمون)؛ حُذفت التنبيهات وإنجاز الجداول والإحصائيات وجدول المعلم والإعلانات من قائمته، والتنبيهات (أهم 3 + الباقي مطوي) وآخر إعلان صارا في الرئيسية. عرض فقط. -->
 <!-- v326: الرئيسية للموجه الأول: بطاقة لكل مرحلة معًا (v323) بلا قائمة اختيار المرحلة، وصف «تقارير القرار» أعلاها (تقرير الاجتماع، عجز المدارس بعد الأجر، مقترح الانتداب من الفائض، إنجاز الجداول)؛ حُذفت منها بطاقات الأرقام العامة ونص «دورة العمل». عرض فقط. -->
@@ -2399,7 +2399,7 @@ window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();window.v152
 window.addEventListener('appinstalled',()=>{window.v152InstallPrompt=null;v152SyncInstallBtn()});
 if('serviceWorker' in navigator&&location.protocol!=='file:')window.addEventListener('load',()=>navigator.serviceWorker.register('./service-worker.js').catch(()=>{}));
 const V145_NEWS=[
- ['v329','فلتر «النوع» بعد المرحلة (إعدادي: عام/مهني/تربية خاصة؛ ثانوي صناعي: عام/مهني/مسار/تعليم مزدوج) يضيّق قائمة المدارس.'],
+ ['v329','فلتر «النوع» بعد المرحلة (إعدادي: عام/مهني/تربية خاصة؛ ثانوي صناعي: عام/مهني/مسار/تعليم مزدوج) في صفحة المدارس: يغيّر القائمة والأرقام والتقارير.'],
  ['v328','الموجه الأول: صفحة التقارير بلا تكرار، والجرس يفتح الرئيسية.'],
  ['v327','الموجه الأول: قائمة مختصرة، والتنبيهات وآخر إعلان في الرئيسية.'],
  ['v326','الرئيسية للموجه الأول: بطاقة لكل مرحلة وصف تقارير القرار في الأعلى.'],
@@ -7543,7 +7543,7 @@ function v97FilterDataset(source,stage=v97Stage()){
  const byId=new Map((h.schools||[]).map(s=>[String(s.id),s]));
  const scopes=v91ScopeRows(source).filter(t=>{
   const id=v91ScopeSchoolId(t),school=byId.get(id);
-  return v97StageMatches(school?.stage||v97TeacherStage(t),stage)&&v98SchoolMatches(id);
+  return v97StageMatches(school?.stage||v97TeacherStage(t),stage)&&v98SchoolMatches(id)&&v329Ok(id);
  });
  const teacherIds=new Set(scopes.map(v91TeacherId));
  const teachers=(h.teachers||[]).filter(t=>teacherIds.has(v91TeacherId(t))||(!scopes.length&&ids.has(String(t.home_school_id))));
@@ -7648,7 +7648,7 @@ const v98SchoolFilterPages=new Set(['schools','teachers','reports']);
 const v98SchoolSelections=new Map(),v98SchoolDirectories=new Map();
 function v98School(){return v98SchoolFilterPages.has(currentPage)?v98SchoolSelections.get(v97StageKey())||'':''}
 function v98SchoolMatches(id){return !v98School()||String(id||'')===v98School()}
-function v98FilterSchoolRows(rows){return (rows||[]).filter(s=>v98SchoolMatches(s.id))}
+function v98FilterSchoolRows(rows){return v329Filter((rows||[]).filter(s=>v98SchoolMatches(s.id)))} // v329: + النوع
 /* v142: «المدرسة: الكل» للموجّه في شاشة معلمو مدارسي. عرض فقط: دمج كشوف مدارسه كما تعيدها
    get_school_teacher_roster، دون تغيير قواعد الحساب أو الصلاحيات. */
 const v142SupervisorAllKeys=new Set();
@@ -7738,13 +7738,14 @@ function v329TypesOf(s){
 }
 const V329_ORDER=['عام','مهني','مسار','تعليم مزدوج','تربية خاصة'];
 function v329Available(){
- if(!v98SchoolFilterPages.has(currentPage)||!v97Stage())return [];
+ if(currentPage!=='schools'||!v97Stage())return []; // v329: صفحة المدارس فقط
  const set=new Set();v97SchoolRows(v98SchoolDirectories.get(v97StageKey())||[]).forEach(s=>v329TypesOf(s).forEach(t=>set.add(t)));
  const list=[...set].sort((a,b)=>{const i=V329_ORDER.indexOf(a),j=V329_ORDER.indexOf(b);return (i<0?99:i)-(j<0?99:j)||a.localeCompare(b,'ar')});
  return list.length>1?list:[];
 }
 function v329Type(){const v=v329Sel.get(v97StageKey())||'';return v&&v329Available().includes(v)?v:''}
-function v329Filter(rows){const t=v329Type();return t?(rows||[]).filter(s=>v329TypesOf(s).includes(t)):rows}
+function v329Filter(rows){const t=v329Type();if(!t)return rows;const ok=new Set((v98SchoolDirectories.get(v97StageKey())||[]).filter(s=>v329TypesOf(s).includes(t)).map(s=>String(s.id)));return (rows||[]).filter(s=>ok.has(String(s.id)))}
+function v329Ok(id){const t=v329Type();return !t||v329Filter([{id}]).length>0}
 function v329FilterHtml(){
  const list=v329Available();if(!list.length)return '';const sel=v329Type();
  return `<div class="auto-filter-field"><label for="v329Type">النوع</label><select id="v329Type" aria-label="النوع" onchange="v329SetType(this.value)"><option value="">النوع: الكل</option>${list.map(t=>`<option value="${esc(t)}" ${t===sel?'selected':''}>${esc(t)}</option>`).join('')}</select></div>`;
@@ -7760,6 +7761,16 @@ async function v329SetType(value){
  __activeReportSchema=null;__activeReportSignature='';resetReportShareCache();
  try{await loadPage()}catch(error){moneySafeError(error)}
 }
+const v329BaseReportState=currentReportFilterState;
+currentReportFilterState=function(reportId){
+ const state=v329BaseReportState(reportId),t=v329Type();
+ if(!t||currentPage!=='schools'||v98School())return state;
+ const ids=v329Filter(v97SchoolRows(v98SchoolDirectories.get(v97StageKey())||[])).map(s=>String(s.id));
+ const shown=(state.displayFilters||state.filters||[]).filter(f=>f.label!=='معرف المدرسة');
+ state.filters=[...(state.filters||[]),{label:'معرف المدرسة',values:ids.length?ids:['__none__']}];
+ state.displayFilters=[...shown,{label:'النوع',value:t}];state.active=true;
+ return state;
+};
 /* v329-end */
 
 /* v163: شاشة المعلمين للأدوار متعددة المدارس: تبدأ فارغة، وتظهر القائمة باختيار مدرسة أو بالبحث/التصفية؛
