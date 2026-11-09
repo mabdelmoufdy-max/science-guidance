@@ -1,4 +1,5 @@
 <!doctype html>
+<!-- v324: تبويب «الموجهون» — «حسب المدرسة (التوزيع)»: يتبع فلتر المرحلة والبحث (كان يعرض كل المدارس). -->
 <!-- v323: الرئيسية للموجه الذي له أكثر من مرحلة: بطاقة لكل مرحلة (الأرقام الأربعة + ماذا أفعل الآن؟ + «المزيد» مطوي) بدل قائمة المرحلة، وزر «فتح» يفتح تقرير مرحلته؛ مناسبة للهاتف. -->
 <!-- v322: الصفحة الرئيسية للموجه بتخطيط لوحة منسق المرحلة (v168StageBoard) محسوبة على مدارسه فقط: بلا «حالة الموجهين»، ومع سطر «مدارس تنتظر اعتمادك» يفتح الاعتمادات؛ بطاقات «مدارسي» (v321) بلا تغيير. -->
 <!-- v321: بطاقات «مدارسي» انتقلت من الشاشة الرئيسية للموجه إلى صفحة مدارسي -->
@@ -8,7 +9,6 @@
 <!-- v317: «توزيع الفصول»: استبعاد المعلم الذي في إجازة مجددة من قائمة المعلمين والمؤشرات (كان الفلتر يقرأ renewed_leave بينما القائمة تحمل on_renewed_leave فلا يعمل)؛ ويبقى ظاهرًا في «معلمو مدارسي» بحالة «إجازة». -->
 <!-- v316: لوحة منسق المرحلة وتقرير اجتماع المرحلة: «العجز» المعروض بعد الأجر المسند (لا تظهر المدرسة المغطاة بالأجر في «أعلى المدارس عجزًا» ولا في تقرير العجز)، واقتراحات الانتداب والتغطية بلا تغيير (على العجز قبل الأجر)، وعمود الجدول صار «العجز قبل الأجر». -->
 <!-- v315: العجز المعروض = المطلوب − (تدريس الثابتين + الأجر المسند): لا يظهر عجز إذا غُطّيت الحصص بالأجر، في شاشة الموجه والتنبيهات وتحذير الاعتماد والخطة الملخصة وتقرير العجز والزيادة وتقرير عجز المدارس (الحالة «مغطى بالأجر») والبحث الموحد؛ والعجز قبل الأجر محفوظ في deficit_before_paid ويُستخدم في احتساب الانتداب واقتراحات التغطية. -->
-<!-- v314: شاشة الموجه: زر «فتح» في «يحتاج تدخلك» يفتح ملف المدرسة في «مدارسي» بدل النافذة السريعة؛ وإصلاح «فتح المدرسة/فتح صفحة مدارسي/فتح شاشة المعلمين» التي كانت لا تفتح المدرسة لأن v163/v179 يفرّغان اختيار المدرسة عند دخول الشاشة (الحل بمسار v233OpenPage). -->
 <html lang="ar" dir="rtl">
 <head>
 <!-- إعداد: أ/ محمود عبدالمفدي محمد أبوالنجا | الصفة: معلم -->
@@ -16,7 +16,7 @@
 <script>/* v226: العنوان الموحد — انظر التعليق أعلى الملف */(function(){try{if(/\.github\.io$/.test(location.hostname)&&/^\/science-guidance\/?(index\.html)?$/.test(location.pathname)&&!/[?&]stay\b/.test(location.search))location.replace('https://teachers-data-portal.vercel.app/app/'+location.hash)}catch(e){}})();</script>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#152c43">
-<title>نظام توجيه العلوم — v323</title>
+<title>نظام توجيه العلوم — v324</title>
 <link rel="manifest" href="./manifest.webmanifest">
 <link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png">
 <link rel="apple-touch-icon" href="./icon-192.png">
@@ -2398,6 +2398,7 @@ window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();window.v152
 window.addEventListener('appinstalled',()=>{window.v152InstallPrompt=null;v152SyncInstallBtn()});
 if('serviceWorker' in navigator&&location.protocol!=='file:')window.addEventListener('load',()=>navigator.serviceWorker.register('./service-worker.js').catch(()=>{}));
 const V145_NEWS=[
+ ['v324','تبويب الموجهون: «حسب المدرسة» يتبع فلتر المرحلة.'],
  ['v323','الرئيسية للموجه: بطاقة لكل مرحلة من مراحله بدل قائمة اختيار المرحلة.'],
  ['v322','الصفحة الرئيسية للموجه: نفس تخطيط لوحة المنسق لمدارسه، مع سطر «مدارس تنتظر اعتمادك».'],
  ['v319','تبويب الموجهون: زر «تعديل البيانات» على بطاقة كل موجه لمدير النظام.'],
@@ -12766,7 +12767,7 @@ function v252Render(){
  const st=document.getElementById('v252Stats');
  if(st)st.innerHTML=`<div><span>الموجهون</span><b>${M.sups.length}</b></div><div><span>المدارس</span><b>${M.schools.length}</b></div><div><span>مسندة لموجه</span><b>${assigned}</b></div><div class="${M.noneAll.length?'warn':''}"><span>بلا موجه</span><b>${M.noneAll.length}</b></div>`;
  if(v252S.view==='dist'){
-  body.innerHTML='<div id="v202Out"></div>';__v252BaseV202Render();
+  body.innerHTML='<div id="v202Out"></div>';{const all=v202State.schools,q0=v202State.q;v202State.schools=M.schools;v202State.q='';try{__v252BaseV202Render()}finally{v202State.schools=all;v202State.q=q0}}
   if(!v252CanEdit())body.querySelectorAll('select').forEach(x=>x.disabled=true);
   return;
  }
