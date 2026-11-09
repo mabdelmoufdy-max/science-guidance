@@ -1,4 +1,5 @@
 <!doctype html>
+<!-- v326: الرئيسية للموجه الأول: بطاقة لكل مرحلة معًا (v323) بلا قائمة اختيار المرحلة، وصف «تقارير القرار» أعلاها (تقرير الاجتماع، عجز المدارس بعد الأجر، مقترح الانتداب من الفائض، إنجاز الجداول)؛ حُذفت منها بطاقات الأرقام العامة ونص «دورة العمل». عرض فقط. -->
 <!-- v324: تبويب «الموجهون» — «حسب المدرسة (التوزيع)»: يتبع فلتر المرحلة والبحث (كان يعرض كل المدارس). -->
 <!-- v323: الرئيسية للموجه الذي له أكثر من مرحلة: بطاقة لكل مرحلة (الأرقام الأربعة + ماذا أفعل الآن؟ + «المزيد» مطوي) بدل قائمة المرحلة، وزر «فتح» يفتح تقرير مرحلته؛ مناسبة للهاتف. -->
 <!-- v322: الصفحة الرئيسية للموجه بتخطيط لوحة منسق المرحلة (v168StageBoard) محسوبة على مدارسه فقط: بلا «حالة الموجهين»، ومع سطر «مدارس تنتظر اعتمادك» يفتح الاعتمادات؛ بطاقات «مدارسي» (v321) بلا تغيير. -->
@@ -8,7 +9,6 @@
 <!-- v318: فلتر الإجازة المجددة الصحيح (on_renewed_leave) في ترتيب أولوية الإشراف وتوزيع العجز بالأجر: المجاز خارج الترتيب والمؤهلين ونص حالته «إجازة مجددة — غير مؤهل للإشراف». -->
 <!-- v317: «توزيع الفصول»: استبعاد المعلم الذي في إجازة مجددة من قائمة المعلمين والمؤشرات (كان الفلتر يقرأ renewed_leave بينما القائمة تحمل on_renewed_leave فلا يعمل)؛ ويبقى ظاهرًا في «معلمو مدارسي» بحالة «إجازة». -->
 <!-- v316: لوحة منسق المرحلة وتقرير اجتماع المرحلة: «العجز» المعروض بعد الأجر المسند (لا تظهر المدرسة المغطاة بالأجر في «أعلى المدارس عجزًا» ولا في تقرير العجز)، واقتراحات الانتداب والتغطية بلا تغيير (على العجز قبل الأجر)، وعمود الجدول صار «العجز قبل الأجر». -->
-<!-- v315: العجز المعروض = المطلوب − (تدريس الثابتين + الأجر المسند): لا يظهر عجز إذا غُطّيت الحصص بالأجر، في شاشة الموجه والتنبيهات وتحذير الاعتماد والخطة الملخصة وتقرير العجز والزيادة وتقرير عجز المدارس (الحالة «مغطى بالأجر») والبحث الموحد؛ والعجز قبل الأجر محفوظ في deficit_before_paid ويُستخدم في احتساب الانتداب واقتراحات التغطية. -->
 <html lang="ar" dir="rtl">
 <head>
 <!-- إعداد: أ/ محمود عبدالمفدي محمد أبوالنجا | الصفة: معلم -->
@@ -16,7 +16,7 @@
 <script>/* v226: العنوان الموحد — انظر التعليق أعلى الملف */(function(){try{if(/\.github\.io$/.test(location.hostname)&&/^\/science-guidance\/?(index\.html)?$/.test(location.pathname)&&!/[?&]stay\b/.test(location.search))location.replace('https://teachers-data-portal.vercel.app/app/'+location.hash)}catch(e){}})();</script>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#152c43">
-<title>نظام توجيه العلوم — v324</title>
+<title>نظام توجيه العلوم — v326</title>
 <link rel="manifest" href="./manifest.webmanifest">
 <link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png">
 <link rel="apple-touch-icon" href="./icon-192.png">
@@ -2056,6 +2056,7 @@ body.v293-ro select[onchange*="v101ChangeSlot"]{pointer-events:none;opacity:.65}
 .v306-t{display:flex;align-items:center;gap:8px;padding:8px 2px;border-bottom:1px solid var(--line,#e2e8f0)}.v306-t .nm{flex:1;font-weight:700}
 .v306-tag{font-size:.8em;border-radius:8px;padding:2px 8px;font-weight:700;white-space:nowrap}.v306-tag.s2{background:#e3f6e9;color:#0a7a35}.v306-tag.s1{background:#fff3d6;color:#b7791f}.v306-tag.s0{background:#fde8e6;color:#c0392b}.v306-tag.sx{background:#eef2f7;color:#55657a}
 .v306-wa{background:#25d366;color:#fff!important;border-radius:8px;padding:5px 10px;font-size:.85em;font-weight:700;text-decoration:none;white-space:nowrap}
+.v326-bar{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 12px}
 </style>
 </head>
 <body>
@@ -2398,6 +2399,7 @@ window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();window.v152
 window.addEventListener('appinstalled',()=>{window.v152InstallPrompt=null;v152SyncInstallBtn()});
 if('serviceWorker' in navigator&&location.protocol!=='file:')window.addEventListener('load',()=>navigator.serviceWorker.register('./service-worker.js').catch(()=>{}));
 const V145_NEWS=[
+ ['v326','الرئيسية للموجه الأول: بطاقة لكل مرحلة وصف تقارير القرار في الأعلى.'],
  ['v324','تبويب الموجهون: «حسب المدرسة» يتبع فلتر المرحلة.'],
  ['v323','الرئيسية للموجه: بطاقة لكل مرحلة من مراحله بدل قائمة اختيار المرحلة.'],
  ['v322','الصفحة الرئيسية للموجه: نفس تخطيط لوحة المنسق لمدارسه، مع سطر «مدارس تنتظر اعتمادك».'],
@@ -9669,9 +9671,7 @@ dashboardPage=async function(options={}){
 const v221BaseDashboard=dashboardPage;
 dashboardPage=async function(options={}){
  if(profile?.role!=='first_supervisor')return v221BaseDashboard(options);
- let board='';try{board=await v168StageBoard(!!options.force)}catch(error){board=`<div class="notice danger">تعذر تحميل لوحة قرارات المرحلة: ${esc(error?.message||error)}</div>`}
- let base='';try{base=await v221BaseDashboard(options)}catch(_){}
- return board+base;
+ try{return await v326FirstSupHome(!!options.force)}catch(error){return `<div class="notice danger">تعذر تحميل الصفحة الرئيسية: ${esc(error?.message||error)}</div>`} // v326: بطاقة لكل مرحلة + تقارير القرار، بلا الأرقام العامة و«دورة العمل»
 };
 
 /* v156: بحث المعلم في نافذة الإجازات الطويلة بالاسم أو الرقم القومي */
@@ -13110,6 +13110,22 @@ async function v323Report(stage,kind){
  try{v155StageSel=stage;await v155LoadModel(false);return v155Report(kind)}catch(e){moneySafeError(e)}
 }
 /* v323-end */
+/* v326-begin: الرئيسية للموجه الأول — بطاقات المراحل (v323SupervisorHome) + صف «تقارير القرار» أعلاها؛ عرض فقط */
+const V326_STAGE_REPORTS={meeting:'تقرير الاجتماع',proposals:'مقترح الانتداب من الفائض'};
+async function v326FirstSupHome(force){
+ const html=await v323SupervisorHome(force);
+ const bar=`<div class="v326-bar"><button type="button" class="btn primary" onclick="v326Pick('meeting')">تقرير الاجتماع</button><button type="button" class="btn secondary" onclick="openReportById('shortageAfterPaid')">عجز المدارس بعد الأجر</button><button type="button" class="btn secondary" onclick="v326Pick('proposals')">مقترح الانتداب من الفائض</button><button type="button" class="btn secondary" onclick="openReportById('timetableProgress')">إنجاز الجداول</button></div>`;
+ const tpl=document.createElement('template');tpl.innerHTML=html;
+ const head=tpl.content.querySelector('.v168-head');
+ if(head)head.insertAdjacentHTML('afterend',bar);else tpl.content.prepend(document.createRange().createContextualFragment(bar));
+ const wrap=document.createElement('div');wrap.appendChild(tpl.content);return wrap.innerHTML;
+}
+function v326Pick(kind){
+ const stages=(__v155Model&&__v155Model.stages)||[];
+ if(stages.length<=1)return v155Report(kind);
+ modal(`<h3>${esc(V326_STAGE_REPORTS[kind]||'التقرير')} — اختر المرحلة</h3><div class="v326-bar">${stages.map(st=>`<button type="button" class="btn secondary" onclick='closeModal();v323Report(${JSON.stringify(String(st))},"${kind}")'>${esc(st)}</button>`).join('')}</div><div class="actions"><button type="button" class="btn danger" onclick="closeModal()">إغلاق</button></div>`);
+}
+/* v326-end */
 </script>
 
 <div id="reportPreviewOverlay" class="report-preview-overlay" role="dialog" aria-modal="true" aria-label="معاينة التقرير" aria-hidden="true">
