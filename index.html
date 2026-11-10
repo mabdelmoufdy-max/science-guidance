@@ -1,4 +1,5 @@
 <!doctype html>
+<!-- v337: حقول التاريخ يوم/شهر/سنة لكل الأدوار (كتلة v337 آخر السكربت): بجانب كل input[type=date] حقل نص ظاهر dd/mm/yyyy (أرقام عادية، يقبل العربية، «/» تلقائي) + أيقونة تقويم فوقها الحقل الأصلي شفافًا (showPicker)؛ الحقل الأصلي يبقى بقيمته YYYY-MM-DD (لا تغيير في الحفظ)، ومزامنة الاتجاهين وضبط .value برمجيًا، وتاريخ غير صحيح يمنع الحفظ؛ MutationObserver للصفحة وshadowRoot شاشة إدخال المدارس (CSS في SE_CSS أيضًا)؛ تواريخ «استكمال البيانات» والحقلان للقراءة فقط بنفس الصيغة. -->
 <!-- v336: السرعة: loadContext يطلب الحساب والأدوار والعام معًا (Promise.all)؛ تقرير البيانات المشترك v162ReportsDatasetRaw دقيقتان بدل 30ث ويُستعمل بدل استدعاءين مباشرين (فحص الاعتماد، بيانات المعلم)؛ loadCompletionData تُخزّن البيانات الخام دقيقة (يمسحها حفظ completion/teachers/schools/supervisors)؛ الشعار مضغوط (174←112 ك.ب base64)؛ supabase-js مثبت 2.119.0 (نفس النسخة الحالية). مع قاعدة البيانات v336a (get_reports_dataset أسرع ~2×). -->
 <!-- v335: تنظيف آمن لورقة الأنماط appStyles (بطلب المستخدم، الخيار 1): حذف قواعد 8 أصناف غير مستعملة في أي مكان (ولا تُبنى ديناميكيًا) و39 تعريفًا يلغيه تعريف لاحق بنفس المحدد وسياق يغطيه (25 قاعدة صارت فارغة فحُذفت) — 1572←1547 قاعدة، 144.9←141.6 ك.ب. التحقق: الأنماط المحسوبة لكل عنصر متطابقة قبل/بعد في 63 سيناريو (3 أدوار × 9 صفحات، 1400/390/طباعة، وشاشة الدخول)، ولا تمرير أفقي. -->
 <!-- v334: صفحة «استكمال البيانات»: حُذف قسم «متابعة الاستكمال حسب المدرسة» (نسبة الاكتمال لكل مدرسة) بطلب المستخدم لأن البطاقات أسفله تعرض الناقص للاستكمال؛ الدالة completionHierarchyHtml باقية بلا استدعاء. -->
@@ -8,7 +9,6 @@
 <!-- v329: فلتر «النوع» بين «المرحلة» و«المدرسة» (مدارس المرحلة/المعلمون/التقارير): يظهر حين يكون للمرحلة أكثر من نوع — الإعدادي بنوع المدرسة (عام/مهني/تربية خاصة)، والثانوي الصناعي بأنواع مجموعاتها (عام/مهني/مسار/تعليم مزدوج) — في صفحة المدارس فقط، ويضيّق قائمة المدارس والبطاقات والقائمة وتقارير/Excel الصفحة. -->
 <!-- v328: الموجه الأول: حذف زر «الإحصائيات والتقارير التفصيلية» من صفحة التقارير وعبارة «مع زر تعديل» من وصف «بيانات معلمي المدرسة»، والجرس 🔔 يفتح الرئيسية (فيها التنبيهات). عرض فقط. -->
 <!-- v327: الموجه الأول: القائمة 5 عناصر (الرئيسية، التقارير، الموجهون، المدارس، المعلمون)؛ حُذفت التنبيهات وإنجاز الجداول والإحصائيات وجدول المعلم والإعلانات من قائمته، والتنبيهات (أهم 3 + الباقي مطوي) وآخر إعلان صارا في الرئيسية. عرض فقط. -->
-<!-- v326: الرئيسية للموجه الأول: بطاقة لكل مرحلة معًا (v323) بلا قائمة اختيار المرحلة، وصف «تقارير القرار» أعلاها (تقرير الاجتماع، عجز المدارس بعد الأجر، مقترح الانتداب من الفائض، إنجاز الجداول)؛ حُذفت منها بطاقات الأرقام العامة ونص «دورة العمل». عرض فقط. -->
 <html lang="ar" dir="rtl">
 <head>
 <!-- إعداد: أ/ محمود عبدالمفدي محمد أبوالنجا | الصفة: معلم -->
@@ -16,7 +16,7 @@
 <script>/* v226: العنوان الموحد — انظر التعليق أعلى الملف */(function(){try{if(/\.github\.io$/.test(location.hostname)&&/^\/science-guidance\/?(index\.html)?$/.test(location.pathname)&&!/[?&]stay\b/.test(location.search))location.replace('https://teachers-data-portal.vercel.app/app/'+location.hash)}catch(e){}})();</script>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#152c43">
-<title>نظام توجيه العلوم — v336</title>
+<title>نظام توجيه العلوم — v337</title>
 <link rel="manifest" href="./manifest.webmanifest">
 <link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png">
 <link rel="apple-touch-icon" href="./icon-192.png">
@@ -2056,6 +2056,12 @@ body.v293-ro select[onchange*="v101ChangeSlot"]{pointer-events:none;opacity:.65}
  .app-shell>.sidebar{direction:ltr}
  .app-shell>.sidebar>*{direction:rtl}
 }
+/* v337: حقول التاريخ يوم/شهر/سنة (الحقل الأصلي شفاف فوق أيقونة التقويم) */
+.v337-wrap{position:relative;display:block;width:100%}
+.v337-wrap>.v337-text{width:100%;box-sizing:border-box;text-align:right;padding-left:38px}
+.v337-wrap>.v337-ico{position:absolute;left:10px;top:50%;transform:translateY(-50%);font-size:17px;line-height:1;pointer-events:none}
+.v337-wrap>input.v337-native{position:absolute!important;left:0!important;top:0!important;width:38px!important;min-width:0!important;max-width:38px!important;height:100%!important;min-height:0!important;padding:0!important;margin:0!important;border:0!important;opacity:0!important;cursor:pointer;background:transparent!important;box-shadow:none!important}
+.v337-wrap.v337-off>input.v337-native,.v337-wrap.v337-off>.v337-ico{display:none!important}
 </style>
 </head>
 <body>
@@ -2423,6 +2429,7 @@ window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();window.v152
 window.addEventListener('appinstalled',()=>{window.v152InstallPrompt=null;v152SyncInstallBtn()});
 if('serviceWorker' in navigator&&location.protocol!=='file:')window.addEventListener('load',()=>navigator.serviceWorker.register('./service-worker.js').catch(()=>{}));
 const V145_NEWS=[
+ ['v337','التاريخ في كل شاشات الإدخال صار يوم/شهر/سنة (مثل 10/11/2026) مع أيقونة تقويم.'],
  ['v336','البرنامج أسرع: فتح أسرع، وتقارير أسرع بنحو الضعف، وطلبات أقل عند التنقل بين الصفحات، وملف أخف.'],
  ['v335','تنظيف ملف التنسيق من القواعد غير المستعملة والمكررة دون أي تغيير في الشكل.'],
  ['v334','صفحة «استكمال البيانات»: حُذف قسم نسب الاكتمال حسب المدرسة؛ تبقى بطاقات الناقص للاستكمال مباشرة.'],
@@ -3688,8 +3695,8 @@ function completionFieldHtml(row,field,label,pmap){
  const v=row.record?.[field],pending=pmap.get(`${row.entity}:${row.id}:${field}`),missing=completionEmpty(v),optional=completionOptional(row.entity,field,row.record);
  const state=pending?'pending':missing?(optional?'done':'missing'):'done';
  const stateText=pending?'🟡 انتظار الاعتماد':missing?(optional?'⚪ تكميلي (اختياري)':'🔴 ناقص'):'🟢 مكتمل';
- const shown=field==='manager_profile_id'?(v?'حساب مدير مرتبط':'غير محدد'):(v||'غير مدخل');
- return `<div class="completion-field"><div class="cf-copy"><span class="cf-label">${esc(label)} <span class="completion-state ${state}">${stateText}</span></span><div class="cf-value">${esc(shown)}</div>${pending?`<small class="muted">القيمة السابقة: ${esc(pending.old_value||'فارغ')}</small>`:''}</div><button class="btn secondary" onclick="openCompletionEdit('${row.entity}','${row.id}','${field}',${handlerArg(String(v||''))})">${missing?'إدخال':'تعديل'}</button></div>`;
+ const shown=field==='manager_profile_id'?(v?'حساب مدير مرتبط':'غير محدد'):(v?(/_date$/.test(field)?v337DateText(v):v):'غير مدخل');
+ return `<div class="completion-field"><div class="cf-copy"><span class="cf-label">${esc(label)} <span class="completion-state ${state}">${stateText}</span></span><div class="cf-value">${esc(shown)}</div>${pending?`<small class="muted">القيمة السابقة: ${esc(pending.old_value?(/_date$/.test(field)?v337DateText(pending.old_value):pending.old_value):'فارغ')}</small>`:''}</div><button class="btn secondary" onclick="openCompletionEdit('${row.entity}','${row.id}','${field}',${handlerArg(String(v||''))})">${missing?'إدخال':'تعديل'}</button></div>`;
 }
 function completionCardHtml(row,pmap){
  const miss=completionEntityMissing(row),pend=completionRowPendingCount(row,pmap);
@@ -3712,7 +3719,7 @@ async function dataCompletionPage(){
  return `<div class="completion-page"><div class="page-head"><div><h2>استكمال البيانات</h2><p>استكمل الحقول الناقصة مباشرة. تعديل أي بيان مكتمل يُسجل ويظهر بعلامة انتظار الاعتماد حتى يراجعه مدير النظام.</p></div></div><div class="completion-summary"><div class="card"><b>${missing.length}</b><span>سجلات بها نواقص</span></div><div class="card"><b>${pendingChanges.length}</b><span>تعديلات بانتظار الاعتماد</span></div><div class="card"><b>${data.schools.length}</b><span>مدارس في نطاقك</span></div><div class="card"><b>${data.teachers.length}</b><span>معلمون في نطاقك</span></div></div>${adminApproval}<div class="completion-toolbar"><button class="btn secondary ${completionTab==='missing'?'active':''}" onclick="setCompletionTab('missing')">🔴 الناقص</button><button class="btn secondary ${completionTab==='pending'?'active':''}" onclick="setCompletionTab('pending')">🟡 انتظار الاعتماد</button><button class="btn secondary ${completionTab==='all'?'active':''}" onclick="setCompletionTab('all')">كل البيانات</button></div><div class="completion-grid">${rows.map(r=>completionCardHtml(r,pmap)).join('')||'<div class="card notice ok">لا توجد بيانات في هذه الحالة.</div>'}</div><div class="card" style="margin-top:12px"><h3>سجل التغييرات الأخير</h3>${data.changes.slice(0,30).map(c=>`<div class="completion-change-row"><b>${esc(completionFieldLabel(c.entity_type,c.field_name))}</b> - ${esc(ROLE_LABELS[c.changed_by_role]||c.changed_by_role)} - ${new Date(c.changed_at).toLocaleString('ar-EG')}<br><small>${esc(c.old_value||'فارغ')} ← ${esc(c.new_value||'')}</small> <span class="badge ${c.status==='pending_admin_approval'?'warn':c.status==='rejected'?'danger':'ok'}">${esc(completionStatusLabel(c.status))}</span></div>`).join('')||'<p class="muted">لا يوجد سجل تغييرات بعد.</p>'}</div></div>`;
 }
 function setCompletionTab(v){completionTab=v;refreshCurrentPage({invalidate:['completion']}).catch(moneySafeError)}
-function completionChangeHtml(c,rows){const r=rows.find(x=>x.entity===c.entity_type&&x.id===c.entity_id);return `<div class="completion-change-row"><b>${esc(r?.name||c.entity_type)} - ${esc(completionFieldLabel(c.entity_type,c.field_name))}</b><div class="completion-compare"><div><small>القديم</small><br>${esc(c.old_value||'فارغ')}</div><b>←</b><div><small>الجديد</small><br>${esc(c.new_value||'')}</div></div><small class="muted">بواسطة ${esc(ROLE_LABELS[c.changed_by_role]||c.changed_by_role)} - ${new Date(c.changed_at).toLocaleString('ar-EG')}</small><div class="completion-actions"><button class="btn ok" onclick="reviewCompletionChange('${c.id}','approve')">اعتماد</button><button class="btn danger" onclick="reviewCompletionChange('${c.id}','reject')">رفض</button></div></div>`}
+function completionChangeHtml(c,rows){const r=rows.find(x=>x.entity===c.entity_type&&x.id===c.entity_id);return `<div class="completion-change-row"><b>${esc(r?.name||c.entity_type)} - ${esc(completionFieldLabel(c.entity_type,c.field_name))}</b><div class="completion-compare"><div><small>القديم</small><br>${esc(c.old_value?(/_date$/.test(c.field_name)?v337DateText(c.old_value):c.old_value):'فارغ')}</div><b>←</b><div><small>الجديد</small><br>${esc(/_date$/.test(c.field_name)?v337DateText(c.new_value):(c.new_value||''))}</div></div><small class="muted">بواسطة ${esc(ROLE_LABELS[c.changed_by_role]||c.changed_by_role)} - ${new Date(c.changed_at).toLocaleString('ar-EG')}</small><div class="completion-actions"><button class="btn ok" onclick="reviewCompletionChange('${c.id}','approve')">اعتماد</button><button class="btn danger" onclick="reviewCompletionChange('${c.id}','reject')">رفض</button></div></div>`}
 async function completionManagerOptions(){const {data}=await sb.from('profiles').select('id,full_name,role,is_active').eq('is_active',true).in('role',['school_manager']);return data||[]}
 async function openCompletionEdit(entity,id,field,current){
  const label=completionFieldLabel(entity,field),isExisting=!completionEmpty(current);let input='';
@@ -11625,7 +11632,7 @@ function teacherForm(s,t){
   ${f('email','البريد الإلكتروني',t.email,'type="email"')}
   ${isSec(s)?`<div class="field"><label for="t_resp">الموجه المسؤول عن المعلم</label><select id="t_resp" name="resp_sup"><option value="">— بدون —</option>${secSupOpts([S.trs[t.id]]).map(x=>`<option value="${x.id}" ${x.id===S.trs[t.id]?'selected':''}>${esc(x.full_name)}</option>`).join('')}</select></div>`:''}
   ${isNew?f('work_start_date','تاريخ استلام العمل','','type="date"')+f('grade_acquired_date','تاريخ الحصول على الدرجة','','type="date"')
-   :f('ws_x','تاريخ استلام العمل',t.work_start_date||'—','readonly title="يعدّله مدير النظام"')+f('gd_x','تاريخ الحصول على الدرجة',t.grade_acquired_date||'—','readonly title="يعدّله مدير النظام"')}
+   :f('ws_x','تاريخ استلام العمل',v337DateText(t.work_start_date)||'—','readonly title="يعدّله مدير النظام"')+f('gd_x','تاريخ الحصول على الدرجة',v337DateText(t.grade_acquired_date)||'—','readonly title="يعدّله مدير النظام"')}
   ${isNew?'':`<div class="field"><label for="t_home">المدرسة الأصلية (للنقل)</label><select id="t_home" name="home_school_id">${same.map(x=>`<option value="${x.id}" ${x.id===t.home_school_id?'selected':''}>${esc(x.name)}</option>`).join('')}${same.some(x=>x.id===t.home_school_id)?'':`<option value="${t.home_school_id||''}" selected>${esc(schoolName(t.home_school_id))}</option>`}</select></div>`}
  </div>
  ${isNew?'':(()=>{const tid=t.id,r=(S.roster||[]).find(x=>(x.teacher_id||x.id)===tid),cls=(S.tassign[tid]||[]).slice().sort((a,b)=>String(a.school_classes?.class_name).localeCompare(String(b.school_classes?.class_name),'ar',{numeric:true}));
@@ -11750,6 +11757,13 @@ function approve(s){
 
 /* ---------- v263: التركيب داخل صفحة البرنامج (Shadow DOM: تنسيق معزول عن البرنامج) ---------- */
 const SE_CSS=`
+/* v337: حقول التاريخ يوم/شهر/سنة (الحقل الأصلي شفاف فوق أيقونة التقويم) */
+.v337-wrap{position:relative;display:block;width:100%}
+.v337-wrap>.v337-text{width:100%;box-sizing:border-box;text-align:right;padding-left:38px}
+.v337-wrap>.v337-ico{position:absolute;left:10px;top:50%;transform:translateY(-50%);font-size:17px;line-height:1;pointer-events:none}
+.v337-wrap>input.v337-native{position:absolute!important;left:0!important;top:0!important;width:38px!important;min-width:0!important;max-width:38px!important;height:100%!important;min-height:0!important;padding:0!important;margin:0!important;border:0!important;opacity:0!important;cursor:pointer;background:transparent!important;box-shadow:none!important}
+.v337-wrap.v337-off>input.v337-native,.v337-wrap.v337-off>.v337-ico{display:none!important}
+
 :host{
  all:initial;display:block;direction:rtl;
  --navy:#0f214d;--primary:#1f4274;--gold:#ce9e48;--gold-soft:#fbe599;
@@ -11964,7 +11978,7 @@ function seFit(){
 }
 function seMount(){
  const el=document.getElementById('seHost');if(!el)return;
- ROOT=el.shadowRoot||el.attachShadow({mode:'open'});
+ ROOT=el.shadowRoot||el.attachShadow({mode:'open'});try{window.v337Watch&&window.v337Watch(ROOT)}catch(e){}
  ROOT.innerHTML=`<style>${SE_CSS}</style><div class="se-box" id="seBox"><div class="loading">جارٍ تحميل المدارس…</div></div>`;
  seFit();start();
 }
@@ -13248,6 +13262,52 @@ function v326Pick(kind){
  },true);
 }
 /* v326-end */
+/* v337-begin: حقول التاريخ تُعرض وتُكتب «يوم/شهر/سنة» لكل الأدوار — المتصفح يرسم input[type=date] بلغة الجهاز (شهر/يوم/سنة)؛
+   يُضاف بجانب كل حقل تاريخ حقل نص ظاهر + أيقونة تقويم، والحقل الأصلي يبقى بقيمته YYYY-MM-DD فلا يتغير أي كود حفظ. */
+function v337DateText(v){const m=/^(\d{4})-(\d{2})-(\d{2})/.exec(String(v||''));return m?`${m[3]}/${m[2]}/${m[1]}`:(v==null?'':String(v))}
+(function(){
+ if(window.__v337)return;window.__v337=true;
+ const D=Object.getOwnPropertyDescriptor(HTMLInputElement.prototype,'value');
+ const dig=s=>String(s??'').replace(/[٠-٩]/g,d=>'٠١٢٣٤٥٦٧٨٩'.indexOf(d)).replace(/[۰-۹]/g,d=>'۰۱۲۳۴۵۶۷۸۹'.indexOf(d));
+ const toIso=t=>{t=dig(t).trim();if(!t)return '';const m=/^(\d{1,2})[\/\-.\s](\d{1,2})[\/\-.\s](\d{4})$/.exec(t);if(!m)return null;
+  const d=+m[1],mo=+m[2],y=+m[3];if(y<1900||y>2100)return null;const x=new Date(Date.UTC(y,mo-1,d));
+  if(x.getUTCMonth()!==mo-1||x.getUTCDate()!==d)return null;return y+'-'+String(mo).padStart(2,'0')+'-'+String(d).padStart(2,'0')};
+ const MSG='تاريخ غير صحيح — اكتب يوم/شهر/سنة مثل 05/03/2019';
+ function enhance(inp){
+  if(inp.dataset.v337||!inp.parentNode)return;inp.dataset.v337='1';
+  const wrap=document.createElement('span');wrap.className='v337-wrap';
+  const txt=document.createElement('input');txt.type='text';txt.className='v337-text';txt.setAttribute('inputmode','numeric');txt.autocomplete='off';txt.dir='ltr';txt.placeholder='يوم/شهر/سنة';
+  try{const root=inp.getRootNode(),lab=inp.id&&root.querySelector?root.querySelector('label[for="'+CSS.escape(inp.id)+'"]'):null;if(lab)txt.setAttribute('aria-label',lab.textContent.trim())}catch(e){}
+  if(inp.title)txt.title=inp.title;
+  const ico=document.createElement('span');ico.className='v337-ico';ico.textContent='📅';ico.setAttribute('aria-hidden','true');
+  inp.parentNode.insertBefore(wrap,inp);wrap.append(txt,ico,inp);inp.classList.add('v337-native');inp.tabIndex=-1;
+  const mirror=()=>{txt.required=inp.required;txt.disabled=inp.disabled;txt.readOnly=inp.readOnly;wrap.classList.toggle('v337-off',inp.disabled||inp.readOnly)};
+  const show=()=>{txt.value=v337DateText(D.get.call(inp));txt.setCustomValidity('')};
+  const put=iso=>{if(D.get.call(inp)===iso)return;D.set.call(inp,iso);inp.dispatchEvent(new Event('input',{bubbles:true}));inp.dispatchEvent(new Event('change',{bubbles:true}))};
+  Object.defineProperty(inp,'value',{configurable:true,get(){return D.get.call(this)},set(v){D.set.call(this,v);show()}});
+  inp.addEventListener('input',show);inp.addEventListener('change',show);
+  inp.addEventListener('click',()=>{try{inp.showPicker&&inp.showPicker()}catch(e){}});
+  new MutationObserver(mirror).observe(inp,{attributes:true,attributeFilter:['disabled','readonly','required']});
+  if(inp.form)inp.form.addEventListener('reset',()=>setTimeout(show));
+  let back=false;
+  txt.addEventListener('keydown',e=>{back=e.key==='Backspace'||e.key==='Delete'});
+  txt.addEventListener('input',()=>{let v=dig(txt.value).replace(/[^\d\/]/g,'').replace(/\/{2,}/g,'/');
+   if(!back&&(/^\d{2}$/.test(v)||/^\d{1,2}\/\d{2}$/.test(v)))v+='/';
+   if(v!==txt.value)txt.value=v;
+   const iso=toIso(v);if(iso!==null){txt.setCustomValidity('');if(iso===''||/^\d{1,2}\/\d{1,2}\/\d{4}$/.test(v))put(iso)}});
+  txt.__v337commit=()=>{const iso=toIso(txt.value);if(iso===null){txt.setCustomValidity(MSG);return false}txt.setCustomValidity('');put(iso);if(iso)txt.value=v337DateText(iso);return true};
+  txt.addEventListener('change',txt.__v337commit);txt.addEventListener('blur',txt.__v337commit);
+  mirror();show();
+ }
+ function scan(root){if(root&&root.querySelectorAll)root.querySelectorAll('input[type=date]:not([data-v337])').forEach(enhance)}
+ function guard(e){const f=e.target;if(!f||!f.querySelectorAll)return;for(const t of f.querySelectorAll('.v337-text')){if(t.__v337commit&&!t.__v337commit()){e.preventDefault();e.stopImmediatePropagation();try{t.reportValidity()}catch(x){}return}}}
+ const watched=new WeakSet();
+ const obs=new MutationObserver(ms=>{for(const m of ms)for(const n of m.addedNodes){if(n.nodeType!==1)continue;if(n.matches&&n.matches('input[type=date]'))enhance(n);else scan(n)}});
+ function watch(root){if(!root||watched.has(root))return;watched.add(root);scan(root);obs.observe(root,{childList:true,subtree:true});root.addEventListener('submit',guard,true)}
+ window.v337Watch=watch;
+ watch(document);
+})();
+/* v337-end */
 </script>
 
 <div id="reportPreviewOverlay" class="report-preview-overlay" role="dialog" aria-modal="true" aria-label="معاينة التقرير" aria-hidden="true">
