@@ -1,4 +1,5 @@
 <!doctype html>
+<!-- v338: زر «تذكير» في صفحة إنجاز الجداول (v306TeacherRows/v306Wa): يفتح تطبيق واتساب المثبّت مباشرة برابط whatsapp://send (يتجاوز واتساب ويب الذي كان يعطي «تعذر تحميل» ويسجّل الخروج عند فتح تبويب جديد لكل تذكير)، وإن لم يفتح التطبيق خلال 1.5 ثانية يرجع تلقائيًا إلى wa.me في نافذة واحدة ثابتة (v306wa) لا تبويب جديد كل مرة. واجهة فقط. -->
 <!-- v337: حقول التاريخ يوم/شهر/سنة لكل الأدوار (كتلة v337 آخر السكربت): بجانب كل input[type=date] حقل نص ظاهر dd/mm/yyyy (أرقام عادية، يقبل العربية، «/» تلقائي) + أيقونة تقويم فوقها الحقل الأصلي شفافًا (showPicker)؛ الحقل الأصلي يبقى بقيمته YYYY-MM-DD (لا تغيير في الحفظ)، ومزامنة الاتجاهين وضبط .value برمجيًا، وتاريخ غير صحيح يمنع الحفظ؛ MutationObserver للصفحة وshadowRoot شاشة إدخال المدارس (CSS في SE_CSS أيضًا)؛ تواريخ «استكمال البيانات» والحقلان للقراءة فقط بنفس الصيغة. -->
 <!-- v336: السرعة: loadContext يطلب الحساب والأدوار والعام معًا (Promise.all)؛ تقرير البيانات المشترك v162ReportsDatasetRaw دقيقتان بدل 30ث ويُستعمل بدل استدعاءين مباشرين (فحص الاعتماد، بيانات المعلم)؛ loadCompletionData تُخزّن البيانات الخام دقيقة (يمسحها حفظ completion/teachers/schools/supervisors)؛ الشعار مضغوط (174←112 ك.ب base64)؛ supabase-js مثبت 2.119.0 (نفس النسخة الحالية). مع قاعدة البيانات v336a (get_reports_dataset أسرع ~2×). -->
 <!-- v335: تنظيف آمن لورقة الأنماط appStyles (بطلب المستخدم، الخيار 1): حذف قواعد 8 أصناف غير مستعملة في أي مكان (ولا تُبنى ديناميكيًا) و39 تعريفًا يلغيه تعريف لاحق بنفس المحدد وسياق يغطيه (25 قاعدة صارت فارغة فحُذفت) — 1572←1547 قاعدة، 144.9←141.6 ك.ب. التحقق: الأنماط المحسوبة لكل عنصر متطابقة قبل/بعد في 63 سيناريو (3 أدوار × 9 صفحات، 1400/390/طباعة، وشاشة الدخول)، ولا تمرير أفقي. -->
@@ -8,7 +9,6 @@
 <!-- v330: فلتر «النوع» (v329) في «معلمو المرحلة» أيضًا: يضيّق قائمة المدارس، ويعرض معلمي مدارس النوع عند «المدرسة: الكل»، والتقرير وExcel حسبه. -->
 <!-- v329: فلتر «النوع» بين «المرحلة» و«المدرسة» (مدارس المرحلة/المعلمون/التقارير): يظهر حين يكون للمرحلة أكثر من نوع — الإعدادي بنوع المدرسة (عام/مهني/تربية خاصة)، والثانوي الصناعي بأنواع مجموعاتها (عام/مهني/مسار/تعليم مزدوج) — في صفحة المدارس فقط، ويضيّق قائمة المدارس والبطاقات والقائمة وتقارير/Excel الصفحة. -->
 <!-- v328: الموجه الأول: حذف زر «الإحصائيات والتقارير التفصيلية» من صفحة التقارير وعبارة «مع زر تعديل» من وصف «بيانات معلمي المدرسة»، والجرس 🔔 يفتح الرئيسية (فيها التنبيهات). عرض فقط. -->
-<!-- v327: الموجه الأول: القائمة 5 عناصر (الرئيسية، التقارير، الموجهون، المدارس، المعلمون)؛ حُذفت التنبيهات وإنجاز الجداول والإحصائيات وجدول المعلم والإعلانات من قائمته، والتنبيهات (أهم 3 + الباقي مطوي) وآخر إعلان صارا في الرئيسية. عرض فقط. -->
 <html lang="ar" dir="rtl">
 <head>
 <!-- إعداد: أ/ محمود عبدالمفدي محمد أبوالنجا | الصفة: معلم -->
@@ -16,7 +16,7 @@
 <script>/* v226: العنوان الموحد — انظر التعليق أعلى الملف */(function(){try{if(/\.github\.io$/.test(location.hostname)&&/^\/science-guidance\/?(index\.html)?$/.test(location.pathname)&&!/[?&]stay\b/.test(location.search))location.replace('https://teachers-data-portal.vercel.app/app/'+location.hash)}catch(e){}})();</script>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#152c43">
-<title>نظام توجيه العلوم — v337</title>
+<title>نظام توجيه العلوم — v338</title>
 <link rel="manifest" href="./manifest.webmanifest">
 <link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png">
 <link rel="apple-touch-icon" href="./icon-192.png">
@@ -2429,6 +2429,7 @@ window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();window.v152
 window.addEventListener('appinstalled',()=>{window.v152InstallPrompt=null;v152SyncInstallBtn()});
 if('serviceWorker' in navigator&&location.protocol!=='file:')window.addEventListener('load',()=>navigator.serviceWorker.register('./service-worker.js').catch(()=>{}));
 const V145_NEWS=[
+ ['v338','زر «تذكير» في إنجاز الجداول يفتح تطبيق واتساب مباشرة (لا واتساب ويب)، ويرجع لرابط الويب في نافذة واحدة إن لم يفتح التطبيق.'],
  ['v337','التاريخ في كل شاشات الإدخال صار يوم/شهر/سنة (مثل 10/11/2026) مع أيقونة تقويم.'],
  ['v336','البرنامج أسرع: فتح أسرع، وتقارير أسرع بنحو الضعف، وطلبات أقل عند التنقل بين الصفحات، وملف أخف.'],
  ['v335','تنظيف ملف التنسيق من القواعد غير المستعملة والمكررة دون أي تغيير في الشكل.'],
@@ -13024,12 +13025,27 @@ function v306Msg(r){
  const q=Number(r.required)||0,e=Number(r.entered)||0,left=Math.max(0,q-e),first=String(r.teacher_name||'').trim().split(/\s+/)[0]||'';
  return `السلام عليكم أ/ ${first}،\n`+(e>0?`باقي لك ${v306Per(left)} لاكتمال جدولك الأسبوعي في بوابة المعلمين.`:`لم يُسجَّل جدولك الأسبوعي بعد (${v306Per(q)}) في بوابة المعلمين.`)+`\nالرابط: https://teachers-data-portal.vercel.app/#teacher\nشكرًا لتعاونك 🌹`;
 }
+/* v338: فتح تطبيق واتساب مباشرة (whatsapp://) ثم الرجوع إلى wa.me في نافذة واحدة إن لم يفتح التطبيق */
+function v306Wa(ev,a){
+ try{
+  const u=new URL(a.href),ph=u.pathname.replace(/\D/g,''),text=u.searchParams.get('text')||'';
+  if(!ph)return true;
+  ev.preventDefault();
+  const app='whatsapp://send?phone='+ph+'&text='+encodeURIComponent(text),web=a.href;
+  let left=false;const mark=()=>{left=true};
+  document.addEventListener('visibilitychange',mark,{once:true});window.addEventListener('blur',mark,{once:true});window.addEventListener('pagehide',mark,{once:true});
+  const ios=/iP(hone|ad|od)/.test(navigator.userAgent);
+  if(ios){location.href=app}else{const f=document.createElement('iframe');f.style.display='none';f.src=app;document.body.appendChild(f);setTimeout(()=>f.remove(),3000)}
+  setTimeout(()=>{document.removeEventListener('visibilitychange',mark);window.removeEventListener('blur',mark);window.removeEventListener('pagehide',mark);if(!left&&!document.hidden)window.open(web,'v306wa','noopener')},1500);
+  return false;
+ }catch(e){return true}
+}
 function v306TeacherRows(list){
   const cls=st=>st===V306_ST[0]?'s2':st===V306_ST[1]?'s1':st===V306_ST[2]?'s0':'sx';
   return list.map(r=>{
    const st=v306Status(r),q=Number(r.required)||0,e=Number(r.entered)||0,ph=v306Phone(r.phone);
    const lbl=st===V306_ST[1]?`ناقص ${e}/${q}`:st===V306_ST[0]?`مكتمل ${e}/${q}`:st===V306_ST[3]?'لا فصول مسندة':'لم يبدأ';
-   const act=(st===V306_ST[1]||st===V306_ST[2])?(ph?`<a class="v306-wa" target="_blank" rel="noopener" href="https://wa.me/${ph}?text=${encodeURIComponent(v306Msg(r))}">تذكير</a>`:'<span class="muted" style="font-size:.8em">بلا هاتف</span>'):(st===V306_ST[3]?'<span class="muted" style="font-size:.8em">أسند أولًا</span>':'');
+   const act=(st===V306_ST[1]||st===V306_ST[2])?(ph?`<a class="v306-wa" target="v306wa" rel="noopener" href="https://wa.me/${ph}?text=${encodeURIComponent(v306Msg(r))}" onclick="return v306Wa(event,this)">تذكير</a>`:'<span class="muted" style="font-size:.8em">بلا هاتف</span>'):(st===V306_ST[3]?'<span class="muted" style="font-size:.8em">أسند أولًا</span>':'');
    return `<div class="v306-t"><span class="nm">${esc(r.teacher_name)}${r.work_type==='paid'?' <small class="muted">(أجر)</small>':''}</span><span class="v306-tag ${cls(st)}">${esc(lbl)}</span>${act}</div>`;
   }).join('');
 }
