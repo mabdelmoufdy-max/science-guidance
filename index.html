@@ -1,4 +1,5 @@
 <!doctype html>
+<!-- v333: الشاشات الكبيرة (>800px) فقط: الصفحة تتمرر داخل إطارها (.app-shell>.main) وشريطها على يمينها بجوار القائمة، والقائمة الجانبية شريطها على يمينها عند حافة النافذة (direction:ltr للحاوية وrtl لأبنائها)؛ الهاتف بلا تغيير؛ v333ScrollTop بدل window.scrollTo. -->
 <!-- v332: رسائل الأخطاء بالعربية (v332ErrText في moneySafeError: الرقم القومي المكرر، مشرف مادة ثانٍ، انتهاء الجلسة، مهلة الطلب، الصلاحية، قيمة مطلوبة، دالة غير موجودة…؛ الرسالة العربية من القاعدة تمر كما هي)؛ و«تعديل بيانات المعلم» يحفظ تاريخ استلام العمل وتاريخ الحصول على الدرجة عبر submit_data_completion_change (الفارغ مباشرة، والمعدّل بانتظار اعتماد المدير). مع قاعدة البيانات v332a–d. -->
 <!-- v330: فلتر «النوع» (v329) في «معلمو المرحلة» أيضًا: يضيّق قائمة المدارس، ويعرض معلمي مدارس النوع عند «المدرسة: الكل»، والتقرير وExcel حسبه. -->
 <!-- v329: فلتر «النوع» بين «المرحلة» و«المدرسة» (مدارس المرحلة/المعلمون/التقارير): يظهر حين يكون للمرحلة أكثر من نوع — الإعدادي بنوع المدرسة (عام/مهني/تربية خاصة)، والثانوي الصناعي بأنواع مجموعاتها (عام/مهني/مسار/تعليم مزدوج) — في صفحة المدارس فقط، ويضيّق قائمة المدارس والبطاقات والقائمة وتقارير/Excel الصفحة. -->
@@ -8,7 +9,6 @@
 <!-- v324: تبويب «الموجهون» — «حسب المدرسة (التوزيع)»: يتبع فلتر المرحلة والبحث (كان يعرض كل المدارس). -->
 <!-- v323: الرئيسية للموجه الذي له أكثر من مرحلة: بطاقة لكل مرحلة (الأرقام الأربعة + ماذا أفعل الآن؟ + «المزيد» مطوي) بدل قائمة المرحلة، وزر «فتح» يفتح تقرير مرحلته؛ مناسبة للهاتف. -->
 <!-- v322: الصفحة الرئيسية للموجه بتخطيط لوحة منسق المرحلة (v168StageBoard) محسوبة على مدارسه فقط: بلا «حالة الموجهين»، ومع سطر «مدارس تنتظر اعتمادك» يفتح الاعتمادات؛ بطاقات «مدارسي» (v321) بلا تغيير. -->
-<!-- v321: بطاقات «مدارسي» انتقلت من الشاشة الرئيسية للموجه إلى صفحة مدارسي -->
 <html lang="ar" dir="rtl">
 <head>
 <!-- إعداد: أ/ محمود عبدالمفدي محمد أبوالنجا | الصفة: معلم -->
@@ -16,7 +16,7 @@
 <script>/* v226: العنوان الموحد — انظر التعليق أعلى الملف */(function(){try{if(/\.github\.io$/.test(location.hostname)&&/^\/science-guidance\/?(index\.html)?$/.test(location.pathname)&&!/[?&]stay\b/.test(location.search))location.replace('https://teachers-data-portal.vercel.app/app/'+location.hash)}catch(e){}})();</script>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#152c43">
-<title>نظام توجيه العلوم — v332</title>
+<title>نظام توجيه العلوم — v333</title>
 <link rel="manifest" href="./manifest.webmanifest">
 <link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png">
 <link rel="apple-touch-icon" href="./icon-192.png">
@@ -2057,6 +2057,15 @@ body.v293-ro select[onchange*="v101ChangeSlot"]{pointer-events:none;opacity:.65}
 .v306-tag{font-size:.8em;border-radius:8px;padding:2px 8px;font-weight:700;white-space:nowrap}.v306-tag.s2{background:#e3f6e9;color:#0a7a35}.v306-tag.s1{background:#fff3d6;color:#b7791f}.v306-tag.s0{background:#fde8e6;color:#c0392b}.v306-tag.sx{background:#eef2f7;color:#55657a}
 .v306-wa{background:#25d366;color:#fff!important;border-radius:8px;padding:5px 10px;font-size:.85em;font-weight:700;text-decoration:none;white-space:nowrap}
 .v326-bar{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 12px}
+/* v333: شريط تمرير القائمة على يمينها، وشريط تمرير الصفحة على يمين الصفحة — الشاشات الكبيرة فقط */
+@media screen and (min-width:801px){
+ html,body{height:100%;overflow:hidden}
+ .app-shell{height:100vh;min-height:0}
+ .app-shell>.main{height:100vh;overflow-y:auto;overflow-x:hidden;direction:ltr}
+ .app-shell>.main>*{direction:rtl}
+ .app-shell>.sidebar{direction:ltr}
+ .app-shell>.sidebar>*{direction:rtl}
+}
 </style>
 </head>
 <body>
@@ -2077,6 +2086,8 @@ function modal(html){let m=document.getElementById('modal');if(!m){m=document.cr
 function closeModal(){document.getElementById('modal')?.remove();document.body.classList.remove('mobile-modal-open');requestAnimationFrame(()=>refreshMobileActionBar(document.getElementById('content')))}
 
 /* v332: ترجمة رسائل القاعدة الإنجليزية إلى العربية؛ الرسالة العربية تمر كما هي */
+/* v333: الرجوع لأعلى الصفحة في إطارها (الكمبيوتر) أو النافذة (الهاتف) */
+function v333ScrollTop(){const m=document.querySelector('.app-shell>.main');if(m&&m.scrollHeight>m.clientHeight&&getComputedStyle(m).overflowY!=='visible')m.scrollTo({top:0,left:0,behavior:'instant'});else window.scrollTo({top:0,left:0,behavior:'instant'})}
 function v332ErrText(e){const m=String(e?.message||e?.error_description||e||'').trim(),c=String(e?.code||'');
  if(!m)return 'حدث خطأ غير متوقع';
  if(/[\u0600-\u06FF]/.test(m))return m;
@@ -2416,6 +2427,7 @@ window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();window.v152
 window.addEventListener('appinstalled',()=>{window.v152InstallPrompt=null;v152SyncInstallBtn()});
 if('serviceWorker' in navigator&&location.protocol!=='file:')window.addEventListener('load',()=>navigator.serviceWorker.register('./service-worker.js').catch(()=>{}));
 const V145_NEWS=[
+ ['v333','شريط تمرير القائمة صار على يمين القائمة، وشريط تمرير الصفحة على يمين الصفحة (الكمبيوتر فقط).'],
  ['v332','رسائل الأخطاء صارت بالعربية، و«تعديل بيانات المعلم» يحفظ تاريخ استلام العمل وتاريخ الحصول على الدرجة.'],
  ['v330','فلتر «النوع» في «معلمو المرحلة»: يعرض معلمي مدارس النوع المختار.'],
  ['v329','فلتر «النوع» بعد المرحلة (إعدادي: عام/مهني/تربية خاصة؛ ثانوي صناعي: عام/مهني/مسار/تعليم مزدوج) في صفحة المدارس: يغيّر القائمة والأرقام والتقارير.'],
@@ -7741,7 +7753,7 @@ async function v98SetSchool(value){
  if(['schools','teachers'].includes(currentPage)&&profile?.role==='supervisor'&&value)supervisorRememberSchoolV75(value);
  if(__activeReportSchema)closeReportPreview();
  __activeReportSchema=null;__activeReportSignature='';resetReportShareCache();
- try{await loadPage();if(currentPage==='schools'&&v98School()===value)window.scrollTo({top:0,left:0,behavior:'instant'})}catch(error){moneySafeError(error)}
+ try{await loadPage();if(currentPage==='schools'&&v98School()===value)v333ScrollTop()}catch(error){moneySafeError(error)}
 }
 
 /* v329-begin: فلتر «النوع» بين المرحلة والمدرسة — يضيّق قائمة المدارس فقط */
