@@ -1,4 +1,5 @@
 <!doctype html>
+<!-- v332: رسائل الأخطاء بالعربية (v332ErrText في moneySafeError: الرقم القومي المكرر، مشرف مادة ثانٍ، انتهاء الجلسة، مهلة الطلب، الصلاحية، قيمة مطلوبة، دالة غير موجودة…؛ الرسالة العربية من القاعدة تمر كما هي)؛ و«تعديل بيانات المعلم» يحفظ تاريخ استلام العمل وتاريخ الحصول على الدرجة عبر submit_data_completion_change (الفارغ مباشرة، والمعدّل بانتظار اعتماد المدير). مع قاعدة البيانات v332a–d. -->
 <!-- v330: فلتر «النوع» (v329) في «معلمو المرحلة» أيضًا: يضيّق قائمة المدارس، ويعرض معلمي مدارس النوع عند «المدرسة: الكل»، والتقرير وExcel حسبه. -->
 <!-- v329: فلتر «النوع» بين «المرحلة» و«المدرسة» (مدارس المرحلة/المعلمون/التقارير): يظهر حين يكون للمرحلة أكثر من نوع — الإعدادي بنوع المدرسة (عام/مهني/تربية خاصة)، والثانوي الصناعي بأنواع مجموعاتها (عام/مهني/مسار/تعليم مزدوج) — في صفحة المدارس فقط، ويضيّق قائمة المدارس والبطاقات والقائمة وتقارير/Excel الصفحة. -->
 <!-- v328: الموجه الأول: حذف زر «الإحصائيات والتقارير التفصيلية» من صفحة التقارير وعبارة «مع زر تعديل» من وصف «بيانات معلمي المدرسة»، والجرس 🔔 يفتح الرئيسية (فيها التنبيهات). عرض فقط. -->
@@ -8,7 +9,6 @@
 <!-- v323: الرئيسية للموجه الذي له أكثر من مرحلة: بطاقة لكل مرحلة (الأرقام الأربعة + ماذا أفعل الآن؟ + «المزيد» مطوي) بدل قائمة المرحلة، وزر «فتح» يفتح تقرير مرحلته؛ مناسبة للهاتف. -->
 <!-- v322: الصفحة الرئيسية للموجه بتخطيط لوحة منسق المرحلة (v168StageBoard) محسوبة على مدارسه فقط: بلا «حالة الموجهين»، ومع سطر «مدارس تنتظر اعتمادك» يفتح الاعتمادات؛ بطاقات «مدارسي» (v321) بلا تغيير. -->
 <!-- v321: بطاقات «مدارسي» انتقلت من الشاشة الرئيسية للموجه إلى صفحة مدارسي -->
-<!-- v320: متابعة الاستكمال حسب المدرسة لا تعرض المدارس المكتملة 100% بلا انتظار اعتماد -->
 <html lang="ar" dir="rtl">
 <head>
 <!-- إعداد: أ/ محمود عبدالمفدي محمد أبوالنجا | الصفة: معلم -->
@@ -16,7 +16,7 @@
 <script>/* v226: العنوان الموحد — انظر التعليق أعلى الملف */(function(){try{if(/\.github\.io$/.test(location.hostname)&&/^\/science-guidance\/?(index\.html)?$/.test(location.pathname)&&!/[?&]stay\b/.test(location.search))location.replace('https://teachers-data-portal.vercel.app/app/'+location.hash)}catch(e){}})();</script>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#152c43">
-<title>نظام توجيه العلوم — v330</title>
+<title>نظام توجيه العلوم — v332</title>
 <link rel="manifest" href="./manifest.webmanifest">
 <link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png">
 <link rel="apple-touch-icon" href="./icon-192.png">
@@ -2076,7 +2076,24 @@ function modal(html){let m=document.getElementById('modal');if(!m){m=document.cr
 
 function closeModal(){document.getElementById('modal')?.remove();document.body.classList.remove('mobile-modal-open');requestAnimationFrame(()=>refreshMobileActionBar(document.getElementById('content')))}
 
-function moneySafeError(e){console.error(e);toast(e?.message||'حدث خطأ غير متوقع')}
+/* v332: ترجمة رسائل القاعدة الإنجليزية إلى العربية؛ الرسالة العربية تمر كما هي */
+function v332ErrText(e){const m=String(e?.message||e?.error_description||e||'').trim(),c=String(e?.code||'');
+ if(!m)return 'حدث خطأ غير متوقع';
+ if(/[\u0600-\u06FF]/.test(m))return m;
+ if(/duplicate key|unique constraint/i.test(m)&&/civil/i.test(m))return 'الرقم القومي مسجل بالفعل لمعلم آخر (قد يكون في مدرسة أخرى). راجع مدير النظام لنقله.';
+ if(/one_active_senior_teacher_per_school/i.test(m))return 'المدرسة بها مشرف مادة بالفعل. غيّر مشرف المدرسة أولًا ثم أعد المحاولة.';
+ if(/jwt|PGRST30[0-9]/i.test(m+' '+c))return 'انتهت جلسة الدخول. حدّث الصفحة وسجّل الدخول من جديد.';
+ if(/statement timeout|canceling statement/i.test(m)||c==='57014')return 'استغرق الطلب وقتًا أطول من المسموح. أعد المحاولة بعد قليل.';
+ if(/row-level security|permission denied/i.test(m)||c==='42501')return 'لا توجد صلاحية لهذا الإجراء.';
+ if(/not-null constraint/i.test(m)||c==='23502')return 'تعذر الحفظ لأن بيانًا مطلوبًا غير موجود. أبلغ مدير النظام.';
+ if(/Could not find the function|PGRST202/i.test(m+' '+c))return 'هذه العملية غير متاحة حاليًا. أبلغ مدير النظام.';
+ if(/duplicate key|unique constraint/i.test(m)||c==='23505')return 'هذا السجل موجود بالفعل ولا يمكن تكراره.';
+ if(/foreign key/i.test(m)||c==='23503')return 'لا يمكن تنفيذ العملية لارتباط السجل ببيانات أخرى.';
+ if(/invalid input syntax|out of range/i.test(m)||['22P02','22007','22008','22003'].includes(c))return 'قيمة غير صحيحة في أحد الحقول (تاريخ أو رقم). راجع البيانات.';
+ if(/Failed to fetch|NetworkError|Load failed/i.test(m))return 'تعذر الاتصال بالخادم. تحقق من الإنترنت وأعد المحاولة.';
+ return 'تعذر تنفيذ العملية ('+m.slice(0,140)+')';
+}
+function moneySafeError(e){console.error(e);toast(v332ErrText(e))}
 
 async function dashboardPage({force=false}={}){
  if(profile?.role==='supervisor'){try{return await v323SupervisorHome(!!force)}catch(error){return `<div class="notice danger">تعذر تحميل الصفحة الرئيسية: ${esc(error?.message||error)}</div>`}} // v322: تخطيط لوحة المنسق لمدارس الموجه
@@ -2399,6 +2416,7 @@ window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();window.v152
 window.addEventListener('appinstalled',()=>{window.v152InstallPrompt=null;v152SyncInstallBtn()});
 if('serviceWorker' in navigator&&location.protocol!=='file:')window.addEventListener('load',()=>navigator.serviceWorker.register('./service-worker.js').catch(()=>{}));
 const V145_NEWS=[
+ ['v332','رسائل الأخطاء صارت بالعربية، و«تعديل بيانات المعلم» يحفظ تاريخ استلام العمل وتاريخ الحصول على الدرجة.'],
  ['v330','فلتر «النوع» في «معلمو المرحلة»: يعرض معلمي مدارس النوع المختار.'],
  ['v329','فلتر «النوع» بعد المرحلة (إعدادي: عام/مهني/تربية خاصة؛ ثانوي صناعي: عام/مهني/مسار/تعليم مزدوج) في صفحة المدارس: يغيّر القائمة والأرقام والتقارير.'],
  ['v328','الموجه الأول: صفحة التقارير بلا تكرار، والجرس يفتح الرئيسية.'],
@@ -3081,6 +3099,11 @@ async function saveTeacherEdit(e,id,oldSchoolId,expectedVersion){
    p_academic_year_id:activeYear?.id||null,p_term_id:activeTerm?.id||null,p_expected_version:Number(expectedVersion||1)
  });
  if(error)return moneySafeError(error);
+ /* v332: التاريخان عبر مسار استكمال البيانات (الفارغ يُحفظ مباشرة، والمعدّل بانتظار اعتماد مدير النظام) */
+ let v332Pending=0;const v332DateErr=[];
+ for(const k of lockedDates){const v=String(form.elements.namedItem(k).value||'').trim();if(!v){v332DateErr.push(k);continue}
+  const {data:ch,error:de}=await sb.rpc('submit_data_completion_change',{p_entity_type:'teacher',p_entity_id:id,p_field_name:k,p_new_value:v});
+  if(de){console.error(de);v332DateErr.push(k)}else if(ch?.status==='pending_admin_approval')v332Pending++}
  const clean=v=>{v=String(v??'').trim();return v||null};
  const yearRaw=clean(f.qualification_year),year=yearRaw===null?null:Number(yearRaw);
  if(year!==null&&!(Number.isInteger(year)&&year>=1950&&year<=2100)){closeModal();refreshCurrentPage({invalidate:['teachers']}).catch(()=>{});return toast('حُفظت البيانات الأساسية، ولم تُحفظ البيانات الإضافية لأن سنة المؤهل غير صحيحة')}
@@ -3088,7 +3111,7 @@ async function saveTeacherEdit(e,id,oldSchoolId,expectedVersion){
  const {data:extraRows,error:extraError}=await sb.from('teacher_records').update(extra).eq('id',id).select('id');
  if(!extraError&&!(extraRows||[]).length){closeModal();refreshCurrentPage({invalidate:['teachers']}).catch(()=>{});return toast('حُفظت البيانات الأساسية، ولم تُحفظ البيانات الإضافية لأن السجل خارج نطاق صلاحيتك')}
  if(extraError){closeModal();refreshCurrentPage({invalidate:['teachers']}).catch(()=>{});return toast('حُفظت البيانات الأساسية، وتعذر حفظ التخصص والمؤهل والكود ومحل الإقامة: '+(extraError.message||''))}
- closeModal();toast(lockedDates.length?'تم تحديث بيانات المعلم. تنبيه: تاريخ الحصول على الدرجة وتاريخ استلام العمل لا يُحفظان من هذه الشاشة حاليًا':'تم تحديث بيانات المعلم وإعادة احتساب أولوية الإشراف');refreshCurrentPage({invalidate:['teachers','hierarchy','dashboard','assignments','page:reports','teacher:self','school:self']}).catch(moneySafeError)
+ closeModal();toast(v332DateErr.length?'تم تحديث بيانات المعلم، ولم يُحفظ '+v332DateErr.map(k=>k==='work_start_date'?'تاريخ استلام العمل':'تاريخ الحصول على الدرجة').join(' و')+' (لا يمكن تفريغ التاريخ، أو حدث خطأ).':v332Pending?'تم تحديث بيانات المعلم. تعديل التاريخ محفوظ ويظهر بانتظار اعتماد مدير النظام.':'تم تحديث بيانات المعلم وإعادة احتساب أولوية الإشراف');refreshCurrentPage({invalidate:['teachers','hierarchy','dashboard','assignments','page:reports','teacher:self','school:self']}).catch(moneySafeError)
 }
 
 
@@ -3627,7 +3650,7 @@ function completionOptional(entity,field,rec){return (COMPLETION_OPTIONAL[entity
 let completionTab='missing';
 function completionEmpty(v){return v==null||String(v).trim()===''}
 function completionStatusLabel(v){return v==='pending_admin_approval'?'🟡 انتظار الاعتماد':v==='approved'?'🔵 تعديل معتمد':v==='applied'?'🟢 مكتمل':'🔴 ناقص'}
-function completionFieldLabel(entity,field){return COMPLETION_FIELDS[entity]?.find(x=>x[0]===field)?.[1]||field}
+function completionFieldLabel(entity,field){return COMPLETION_FIELDS[entity]?.find(x=>x[0]===field)?.[1]||({grade_acquired_date:'تاريخ الحصول على الدرجة'})[field]||field}
 async function loadCompletionData(){
  const [schoolsR,teachersR,supsR,changesR]=await Promise.all([
   sb.from('schools').select('id,name,stage,school_type,gender_type,address,phone,manager_profile_id,supervisor_id').order('name'),
