@@ -1,4 +1,5 @@
 <!doctype html>
+<!-- v341: صفحة المعلمين: فلتر «حالة المعلم» بعد «المرحلة» (كتلة v341 بعد v329): الكل/أساسي/أجر/إجازة/منتدب بالعدد بجانب كل حالة ويتبع المرحلة والمدرسة؛ أساسي = الثابت القائم على العمل، إجازة = الإجازة المجددة فقط، منتدب حالة إضافية متداخلة؛ اختيار حالة يعرض القائمة، ويتبعه تصدير Excel و«تقرير المعلمين (حسب الفلاتر)» (حقل _tstates). عرض فقط بلا قاعدة بيانات. -->
 <!-- v339: مدير النظام: «تعديل بيانات المعلم» صفحة بملء الشاشة (#modal.v339-page + شريط «← رجوع») — المراحل الثلاث: الرقم القومي قابل للتعديل (admin_change_teacher_civil_id: سجل المعلم + حسابه + الموجه المرتبط + بريد الدخول، مع تأكيد)، وتعديل تاريخ استلام العمل/الحصول على الدرجة يُعتمد مباشرة للمدير (review_data_completion_change)؛ بطاقتا «مسؤول بيانات المدرسة» (set_school_data_officer) و«حساب الدخول» (إنشاء بـcreate-system-user v12 وإعادة تعيين بـadmin-reset-user-password v5، كلمة يولّدها النظام بلا إلزام بالتغيير)؛ و«تغيير كلمة المرور» في «بياناتي» لدور المعلم. الأدوار الأخرى بلا تغيير. -->
 <!-- v338: زر «تذكير» في صفحة إنجاز الجداول (v306TeacherRows/v306Wa): يفتح تطبيق واتساب المثبّت مباشرة برابط whatsapp://send (يتجاوز واتساب ويب الذي كان يعطي «تعذر تحميل» ويسجّل الخروج عند فتح تبويب جديد لكل تذكير)، وإن لم يفتح التطبيق خلال 1.5 ثانية يرجع تلقائيًا إلى wa.me في نافذة واحدة ثابتة (v306wa) لا تبويب جديد كل مرة. واجهة فقط. -->
 <!-- v337: حقول التاريخ يوم/شهر/سنة لكل الأدوار (كتلة v337 آخر السكربت): بجانب كل input[type=date] حقل نص ظاهر dd/mm/yyyy (أرقام عادية، يقبل العربية، «/» تلقائي) + أيقونة تقويم فوقها الحقل الأصلي شفافًا (showPicker)؛ الحقل الأصلي يبقى بقيمته YYYY-MM-DD (لا تغيير في الحفظ)، ومزامنة الاتجاهين وضبط .value برمجيًا، وتاريخ غير صحيح يمنع الحفظ؛ MutationObserver للصفحة وshadowRoot شاشة إدخال المدارس (CSS في SE_CSS أيضًا)؛ تواريخ «استكمال البيانات» والحقلان للقراءة فقط بنفس الصيغة. -->
@@ -8,7 +9,6 @@
 <!-- v333: الشاشات الكبيرة (>800px) فقط: الصفحة تتمرر داخل إطارها (.app-shell>.main) وشريطها على يمينها بجوار القائمة، والقائمة الجانبية شريطها على يمينها عند حافة النافذة (direction:ltr للحاوية وrtl لأبنائها)؛ الهاتف بلا تغيير؛ v333ScrollTop بدل window.scrollTo. -->
 <!-- v332: رسائل الأخطاء بالعربية (v332ErrText في moneySafeError: الرقم القومي المكرر، مشرف مادة ثانٍ، انتهاء الجلسة، مهلة الطلب، الصلاحية، قيمة مطلوبة، دالة غير موجودة…؛ الرسالة العربية من القاعدة تمر كما هي)؛ و«تعديل بيانات المعلم» يحفظ تاريخ استلام العمل وتاريخ الحصول على الدرجة عبر submit_data_completion_change (الفارغ مباشرة، والمعدّل بانتظار اعتماد المدير). مع قاعدة البيانات v332a–d. -->
 <!-- v330: فلتر «النوع» (v329) في «معلمو المرحلة» أيضًا: يضيّق قائمة المدارس، ويعرض معلمي مدارس النوع عند «المدرسة: الكل»، والتقرير وExcel حسبه. -->
-<!-- v329: فلتر «النوع» بين «المرحلة» و«المدرسة» (مدارس المرحلة/المعلمون/التقارير): يظهر حين يكون للمرحلة أكثر من نوع — الإعدادي بنوع المدرسة (عام/مهني/تربية خاصة)، والثانوي الصناعي بأنواع مجموعاتها (عام/مهني/مسار/تعليم مزدوج) — في صفحة المدارس فقط، ويضيّق قائمة المدارس والبطاقات والقائمة وتقارير/Excel الصفحة. -->
 <html lang="ar" dir="rtl">
 <head>
 <!-- إعداد: أ/ محمود عبدالمفدي محمد أبوالنجا | الصفة: معلم -->
@@ -16,7 +16,7 @@
 <script>/* v226: العنوان الموحد — انظر التعليق أعلى الملف */(function(){try{if(/\.github\.io$/.test(location.hostname)&&/^\/science-guidance\/?(index\.html)?$/.test(location.pathname)&&!/[?&]stay\b/.test(location.search))location.replace('https://teachers-data-portal.vercel.app/app/'+location.hash)}catch(e){}})();</script>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#152c43">
-<title>نظام توجيه العلوم — v339</title>
+<title>نظام توجيه العلوم — v341</title>
 <link rel="manifest" href="./manifest.webmanifest">
 <link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png">
 <link rel="apple-touch-icon" href="./icon-192.png">
@@ -2443,6 +2443,7 @@ window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();window.v152
 window.addEventListener('appinstalled',()=>{window.v152InstallPrompt=null;v152SyncInstallBtn()});
 if('serviceWorker' in navigator&&location.protocol!=='file:')window.addEventListener('load',()=>navigator.serviceWorker.register('./service-worker.js').catch(()=>{}));
 const V145_NEWS=[
+ ['v341','صفحة المعلمين: فلتر «حالة المعلم» بجوار المرحلة — الكل / أساسي / أجر / إجازة / منتدب — وبجانب كل حالة عددها حسب المرحلة والمدرسة المختارة. يتبعه تصدير Excel وتقرير المعلمين.'],
  ['v339','مدير النظام: «تعديل بيانات المعلم» صفحة كاملة: تغيير الرقم القومي (واسم الدخول معه)، المدرسة والانتداب، الإشراف، مسؤول بيانات المدرسة، وإنشاء حساب دخول أو إعادة تعيين كلمة المرور. والمعلم يغيّر كلمة مروره من «بياناتي».'],
  ['v338','زر «تذكير» في إنجاز الجداول يفتح تطبيق واتساب مباشرة (لا واتساب ويب)، ويرجع لرابط الويب في نافذة واحدة إن لم يفتح التطبيق.'],
  ['v337','التاريخ في كل شاشات الإدخال صار يوم/شهر/سنة (مثل 10/11/2026) مع أيقونة تقويم.'],
@@ -3077,7 +3078,7 @@ async function teachersPage({force=false}={}){
    return result.error?result:{data:v91ScopeRows(result.data),error:null}
  },{ttl:30000,force});
  if(error)return `<div class="error">${esc(error.message)}</div>`;
- const teachers=(Array.isArray(teachersRaw)?teachersRaw:[]).filter(t=>v97StageMatches(v97TeacherStage(t,t._v142School||scopeSchool))&&v98SchoolMatches(scopeSchool?.id||v91ScopeSchoolId(t))&&v329Ok(scopeSchool?.id||v91ScopeSchoolId(t)));await v277Ready();v277Sort(teachers,t=>t.teacher_id,t=>t.full_name);if(typeof v298OneRowPerTeacher==='function'&&!v98School())v298OneRowPerTeacher(teachers);
+ const teachers=(Array.isArray(teachersRaw)?teachersRaw:[]).filter(t=>v97StageMatches(v97TeacherStage(t,t._v142School||scopeSchool))&&v98SchoolMatches(scopeSchool?.id||v91ScopeSchoolId(t))&&v329Ok(scopeSchool?.id||v91ScopeSchoolId(t)));await v277Ready();v277Sort(teachers,t=>t.teacher_id,t=>t.full_name);if(typeof v298OneRowPerTeacher==='function'&&!v98School())v298OneRowPerTeacher(teachers);v341Counts=Object.assign(v341Count(teachers),{rev:v97StageRevision,key:v97StageKey()});if(v341Value())teachers.splice(0,teachers.length,...teachers.filter(v341Ok)); // v341: حالة المعلم
  const canAdd=['supervisor','senior_teacher'].includes(profile.role),canEdit=TEACHER_ACTION_ROLES.edit.includes(profile.role),canDelegate=TEACHER_ACTION_ROLES.delegate.includes(profile.role);
  const scopeNotice=allSchools?`<div class="notice info"><b>نطاق العرض: كل مدارسي (${allSchools.length})</b> — يظهر معلمو كل مدرسة والمنتدبون إليها، والمنتدب جزئيًا يظهر في المدرستين.</div>`:schoolScopedRole?(scopeSchool?`<div class="notice info"><b>نطاق العرض: ${esc(scopeSchool.name)}</b> — يظهر معلمو المدرسة والمنتدبون إليها فقط، وتطبق قاعدة الإشراف بحسب مدرسة العمل الحالية.</div>`:`<div class="notice warn">لا توجد مدرسة مرتبطة بالحساب.</div>`):'';
  const relationLabel=t=>{
@@ -7364,7 +7365,7 @@ formatTeachersReport=function(raw,ctx){
   return {_home:['home','delegated_out_partial'].includes(String(t.school_relation||'home')),teacherId:v91TeacherId(t),name:reportCellValue(t.full_name),civil:reportCellValue(t.civil_id),school:v91SchoolCell(t),workType:t.work_type==='paid'?'بالأجر':'ثابت',job:reportCellValue(t.job_title),
    teaching,supervision,functionalTotal:teaching+supervision,target:workloadTargetLabel(t),
    deficit:isPaidTeacher(t)?'—':(t.deficit_periods==null?'—':reportNumber(t.deficit_periods)),surplus:isPaidTeacher(t)||t.surplus_periods==null?'—':reportNumber(t.surplus_periods),status:isPaidTeacher(t)?'حسب الحصص المسندة':reportCellValue(t.workload_status),
-   _schoolId:v91ScopeSchoolId(t),_school:reportCellValue(t.scope_school_name||t.home_school_name),_stage:reportCellValue(t.scope_school_stage||t.home_school_stage),_status:isPaidTeacher(t)?'حسب الحصص المسندة':reportCellValue(t.workload_status),_search:[t.full_name,t.civil_id,t.scope_school_name,t.home_school_name,t.delegation_from_school_name,t.delegation_to_school_name,t.job_title].filter(Boolean).join(' ')};
+   _tstates:v341States(t),_schoolId:v91ScopeSchoolId(t),_school:reportCellValue(t.scope_school_name||t.home_school_name),_stage:reportCellValue(t.scope_school_stage||t.home_school_stage),_status:isPaidTeacher(t)?'حسب الحصص المسندة':reportCellValue(t.workload_status),_search:[t.full_name,t.civil_id,t.scope_school_name,t.home_school_name,t.delegation_from_school_name,t.delegation_to_school_name,t.job_title].filter(Boolean).join(' ')};
  });
  const unique=new Map();source.forEach(t=>{const id=v91TeacherId(t);if(id&&!unique.has(id))unique.set(id,t)});
  const uniqueDef=[...unique.values()].reduce((n,t)=>n+(isPaidTeacher(t)?0:reportNumber(t.deficit_periods)),0);
@@ -7633,7 +7634,7 @@ function v97InstallStageFilter(root){
  }
  if(document.getElementById('v97Stage'))return;
  const bar=document.createElement('div');bar.className='card no-print';bar.id='v97StageBar';
- bar.innerHTML=`<div class="auto-filter-options-row"><div class="auto-filter-field"><label for="v97Stage">المرحلة</label><select id="v97Stage" aria-label="المرحلة" onchange="v97SetStage(this.value)">${v97StageOptions()}</select></div>${v329FilterHtml()}${v98SchoolFilterHtml()}<span class="muted">العرض وتقارير الطباعة حسب الفلاتر المختارة.</span></div>`;
+ bar.innerHTML=`<div class="auto-filter-options-row"><div class="auto-filter-field"><label for="v97Stage">المرحلة</label><select id="v97Stage" aria-label="المرحلة" onchange="v97SetStage(this.value)">${v97StageOptions()}</select></div>${v341FilterHtml()}${v329FilterHtml()}${v98SchoolFilterHtml()}<span class="muted">العرض وتقارير الطباعة حسب الفلاتر المختارة.</span></div>`;
  root.prepend(bar);
 }
 function v97BudgetStage(snapshot=budgetSnapshot){return SECONDARY_BUDGET_LABELS_V95[snapshot]?(String(snapshot).includes('industrial')?'ثانوي صناعي':'ثانوي عام'):(['oct_2026_preparatory_qous','aug_2026_preparatory_qous'].includes(snapshot)?'إعدادي':'')}
@@ -7831,12 +7832,57 @@ currentReportFilterState=function(reportId){
 };
 /* v329-end */
 
+/* v341-begin: فلتر «حالة المعلم» بعد «المرحلة» في صفحة المعلمين (الكل/أساسي/أجر/إجازة/منتدب) بالعدد بجانب كل حالة — عرض فقط.
+   أساسي = ثابت قائم على العمل؛ إجازة = إجازة مجددة فقط (workload_status «إجازة» من كشف المدرسة)؛ منتدب = حالة إضافية متداخلة. */
+const v341Sel=new Map();let v341Counts=null;
+const V341_OPTS=[['permanent','أساسي'],['paid','أجر'],['leave','إجازة'],['delegated','منتدب']];
+function v341Available(){return currentPage==='teachers'&&!!profile&&!v115SingleSchoolRole()} // حيث يوجد شريط المرحلة (حساب المدرسة/مدير المدرسة/المعلم بلا شريط منذ v115)
+function v341Value(){if(!v341Available())return '';const v=v341Sel.get(v97StageKey())||'';return V341_OPTS.some(o=>o[0]===v)?v:''}
+function v341Leave(t){return t?.on_renewed_leave===true||t?.workload_status==='إجازة'}
+function v341States(t){const s=[v341Leave(t)?'leave':(t?.work_type==='paid'?'paid':'permanent')];if(String(t?.school_relation||'').startsWith('delegated_'))s.push('delegated');return s}
+function v341Ok(t){const v=v341Value();return !v||v341States(t).includes(v)}
+function v341Count(list){const c={all:0,permanent:0,paid:0,leave:0,delegated:0};(list||[]).forEach(t=>{c.all++;v341States(t).forEach(k=>{c[k]++})});return c}
+function v341FilterHtml(){
+ if(!v341Available())return '';
+ const sel=v341Value(),c=v341Counts&&v341Counts.rev===v97StageRevision&&v341Counts.key===v97StageKey()?v341Counts:null,n=k=>c?` (${c[k]})`:'';
+ return `<div class="auto-filter-field"><label for="v341State">حالة المعلم</label><select id="v341State" aria-label="حالة المعلم" onchange="v341Set(this.value)"><option value="">حالة المعلم: الكل${n('all')}</option>${V341_OPTS.map(([k,l])=>`<option value="${k}" ${k===sel?'selected':''}>${l}${n(k)}</option>`).join('')}</select></div>`;
+}
+async function v341Set(value){
+ v111CloseSidebar();value=String(value||'');
+ if(value&&!V341_OPTS.some(o=>o[0]===value))return;
+ v341Sel.set(v97StageKey(),value);
+ v97StageRevision++;
+ if(__activeReportSchema)closeReportPreview();
+ __activeReportSchema=null;__activeReportSignature='';resetReportShareCache();
+ try{await loadPage()}catch(error){moneySafeError(error)}
+}
+const v341BaseReportState=currentReportFilterState;
+currentReportFilterState=function(reportId){
+ const state=v341BaseReportState(reportId),v=v341Value();
+ if(!v||reportId!=='teachers')return state;
+ const label=(V341_OPTS.find(o=>o[0]===v)||[])[1]||'';
+ state.filters=[...(state.filters||[]),{label:'حالة المعلم',value:label}];
+ if(state.displayFilters)state.displayFilters=[...state.displayFilters,{label:'حالة المعلم',value:label}];
+ state.active=true;
+ return state;
+};
+const v341BaseReportPred=v129ReportPred;
+v129ReportPred=function(schema,row,f){
+ if(String(f?.label||'').trim()==='حالة المعلم'){
+  const k=(V341_OPTS.find(o=>o[1]===f.value)||[])[0];
+  if(!k||!Array.isArray(row?._tstates))return true; // تقرير بلا حقل الحالة: لا يُصفّى
+  return row._tstates.includes(k);
+ }
+ return v341BaseReportPred(schema,row,f);
+};
+/* v341-end */
+
 /* v163: شاشة المعلمين للأدوار متعددة المدارس: تبدأ فارغة، وتظهر القائمة باختيار مدرسة أو بالبحث/التصفية؛
    وزرّا «تصدير Excel» و«تقرير» يعملان على الفلاتر الحالية. عرض فقط. */
 function v163TeachersMode(){return currentPage==='teachers'&&!!profile&&!['school_manager','senior_teacher','teacher'].includes(profile.role)}
 function v179SchoolsMode(){return currentPage==='schools'&&!!profile&&!['school_manager','senior_teacher','teacher'].includes(profile.role)}
 function v163Gate(tableId,controls){
- if(!(v163TeachersMode()||v179SchoolsMode())||v98School()||v329Type())return false; // v330: اختيار النوع يعرض القائمة
+ if(!(v163TeachersMode()||v179SchoolsMode())||v98School()||v329Type()||v341Value())return false; // v330: اختيار النوع يعرض القائمة؛ v341: وكذلك حالة المعلم
  if(tableId!==document.querySelector('#content table.table')?.id)return false;
  return !(controls||[]).some(c=>filterNormalize(c.value));
 }
