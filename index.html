@@ -1,4 +1,5 @@
 <!doctype html>
+<!-- v339: مدير النظام: «تعديل بيانات المعلم» صفحة بملء الشاشة (#modal.v339-page + شريط «← رجوع») — المراحل الثلاث: الرقم القومي قابل للتعديل (admin_change_teacher_civil_id: سجل المعلم + حسابه + الموجه المرتبط + بريد الدخول، مع تأكيد)، وتعديل تاريخ استلام العمل/الحصول على الدرجة يُعتمد مباشرة للمدير (review_data_completion_change)؛ بطاقتا «مسؤول بيانات المدرسة» (set_school_data_officer) و«حساب الدخول» (إنشاء بـcreate-system-user v12 وإعادة تعيين بـadmin-reset-user-password v5، كلمة يولّدها النظام بلا إلزام بالتغيير)؛ و«تغيير كلمة المرور» في «بياناتي» لدور المعلم. الأدوار الأخرى بلا تغيير. -->
 <!-- v338: زر «تذكير» في صفحة إنجاز الجداول (v306TeacherRows/v306Wa): يفتح تطبيق واتساب المثبّت مباشرة برابط whatsapp://send (يتجاوز واتساب ويب الذي كان يعطي «تعذر تحميل» ويسجّل الخروج عند فتح تبويب جديد لكل تذكير)، وإن لم يفتح التطبيق خلال 1.5 ثانية يرجع تلقائيًا إلى wa.me في نافذة واحدة ثابتة (v306wa) لا تبويب جديد كل مرة. واجهة فقط. -->
 <!-- v337: حقول التاريخ يوم/شهر/سنة لكل الأدوار (كتلة v337 آخر السكربت): بجانب كل input[type=date] حقل نص ظاهر dd/mm/yyyy (أرقام عادية، يقبل العربية، «/» تلقائي) + أيقونة تقويم فوقها الحقل الأصلي شفافًا (showPicker)؛ الحقل الأصلي يبقى بقيمته YYYY-MM-DD (لا تغيير في الحفظ)، ومزامنة الاتجاهين وضبط .value برمجيًا، وتاريخ غير صحيح يمنع الحفظ؛ MutationObserver للصفحة وshadowRoot شاشة إدخال المدارس (CSS في SE_CSS أيضًا)؛ تواريخ «استكمال البيانات» والحقلان للقراءة فقط بنفس الصيغة. -->
 <!-- v336: السرعة: loadContext يطلب الحساب والأدوار والعام معًا (Promise.all)؛ تقرير البيانات المشترك v162ReportsDatasetRaw دقيقتان بدل 30ث ويُستعمل بدل استدعاءين مباشرين (فحص الاعتماد، بيانات المعلم)؛ loadCompletionData تُخزّن البيانات الخام دقيقة (يمسحها حفظ completion/teachers/schools/supervisors)؛ الشعار مضغوط (174←112 ك.ب base64)؛ supabase-js مثبت 2.119.0 (نفس النسخة الحالية). مع قاعدة البيانات v336a (get_reports_dataset أسرع ~2×). -->
@@ -8,7 +9,6 @@
 <!-- v332: رسائل الأخطاء بالعربية (v332ErrText في moneySafeError: الرقم القومي المكرر، مشرف مادة ثانٍ، انتهاء الجلسة، مهلة الطلب، الصلاحية، قيمة مطلوبة، دالة غير موجودة…؛ الرسالة العربية من القاعدة تمر كما هي)؛ و«تعديل بيانات المعلم» يحفظ تاريخ استلام العمل وتاريخ الحصول على الدرجة عبر submit_data_completion_change (الفارغ مباشرة، والمعدّل بانتظار اعتماد المدير). مع قاعدة البيانات v332a–d. -->
 <!-- v330: فلتر «النوع» (v329) في «معلمو المرحلة» أيضًا: يضيّق قائمة المدارس، ويعرض معلمي مدارس النوع عند «المدرسة: الكل»، والتقرير وExcel حسبه. -->
 <!-- v329: فلتر «النوع» بين «المرحلة» و«المدرسة» (مدارس المرحلة/المعلمون/التقارير): يظهر حين يكون للمرحلة أكثر من نوع — الإعدادي بنوع المدرسة (عام/مهني/تربية خاصة)، والثانوي الصناعي بأنواع مجموعاتها (عام/مهني/مسار/تعليم مزدوج) — في صفحة المدارس فقط، ويضيّق قائمة المدارس والبطاقات والقائمة وتقارير/Excel الصفحة. -->
-<!-- v328: الموجه الأول: حذف زر «الإحصائيات والتقارير التفصيلية» من صفحة التقارير وعبارة «مع زر تعديل» من وصف «بيانات معلمي المدرسة»، والجرس 🔔 يفتح الرئيسية (فيها التنبيهات). عرض فقط. -->
 <html lang="ar" dir="rtl">
 <head>
 <!-- إعداد: أ/ محمود عبدالمفدي محمد أبوالنجا | الصفة: معلم -->
@@ -16,7 +16,7 @@
 <script>/* v226: العنوان الموحد — انظر التعليق أعلى الملف */(function(){try{if(/\.github\.io$/.test(location.hostname)&&/^\/science-guidance\/?(index\.html)?$/.test(location.pathname)&&!/[?&]stay\b/.test(location.search))location.replace('https://teachers-data-portal.vercel.app/app/'+location.hash)}catch(e){}})();</script>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#152c43">
-<title>نظام توجيه العلوم — v338</title>
+<title>نظام توجيه العلوم — v339</title>
 <link rel="manifest" href="./manifest.webmanifest">
 <link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png">
 <link rel="apple-touch-icon" href="./icon-192.png">
@@ -2062,6 +2062,20 @@ body.v293-ro select[onchange*="v101ChangeSlot"]{pointer-events:none;opacity:.65}
 .v337-wrap>.v337-ico{position:absolute;left:10px;top:50%;transform:translateY(-50%);font-size:17px;line-height:1;pointer-events:none}
 .v337-wrap>input.v337-native{position:absolute!important;left:0!important;top:0!important;width:38px!important;min-width:0!important;max-width:38px!important;height:100%!important;min-height:0!important;padding:0!important;margin:0!important;border:0!important;opacity:0!important;cursor:pointer;background:transparent!important;box-shadow:none!important}
 .v337-wrap.v337-off>input.v337-native,.v337-wrap.v337-off>.v337-ico{display:none!important}
+/* v339: صفحة «تعديل بيانات المعلم» الكاملة لمدير النظام */
+#modal.v339-page{padding:0!important;place-items:stretch}
+#modal.v339-page>.modal-card{width:100%!important;max-width:none!important;height:100%;max-height:none!important;border-radius:0!important;border-top:0;box-shadow:none;padding:0 18px 24px}
+#modal.v339-page .v339-bar{position:sticky;top:0;z-index:3;display:flex;align-items:center;gap:12px;background:#fff;border-bottom:1px solid #e2e8f0;margin:0 -18px 14px;padding:10px 18px}
+#modal.v339-page .v339-bar h3{margin:0}
+#modal.v339-page>.modal-card>form,#modal.v339-page>.modal-card>.notice{max-width:1100px;margin-inline:auto}
+#modal.v339-page .v339-civil-note{display:block;color:#64748b;margin-top:4px}
+@media(min-width:761px){#modal.v339-page form .form-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+#modal.v339-page .v339-extra{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;max-width:1100px;margin:0 auto 14px}
+#modal.v339-page .v339-box h3{margin:0 0 8px}
+#modal.v339-page .v339-row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+#modal.v339-page .v339-pw{margin-top:10px}
+#modal.v339-page .v339-pass{font-size:18px;user-select:all}
+@media(max-width:760px){#modal.v339-page .v339-extra{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -2429,6 +2443,7 @@ window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();window.v152
 window.addEventListener('appinstalled',()=>{window.v152InstallPrompt=null;v152SyncInstallBtn()});
 if('serviceWorker' in navigator&&location.protocol!=='file:')window.addEventListener('load',()=>navigator.serviceWorker.register('./service-worker.js').catch(()=>{}));
 const V145_NEWS=[
+ ['v339','مدير النظام: «تعديل بيانات المعلم» صفحة كاملة: تغيير الرقم القومي (واسم الدخول معه)، المدرسة والانتداب، الإشراف، مسؤول بيانات المدرسة، وإنشاء حساب دخول أو إعادة تعيين كلمة المرور. والمعلم يغيّر كلمة مروره من «بياناتي».'],
  ['v338','زر «تذكير» في إنجاز الجداول يفتح تطبيق واتساب مباشرة (لا واتساب ويب)، ويرجع لرابط الويب في نافذة واحدة إن لم يفتح التطبيق.'],
  ['v337','التاريخ في كل شاشات الإدخال صار يوم/شهر/سنة (مثل 10/11/2026) مع أيقونة تقويم.'],
  ['v336','البرنامج أسرع: فتح أسرع، وتقارير أسرع بنحو الضعف، وطلبات أقل عند التنقل بين الصفحات، وملف أخف.'],
@@ -13324,6 +13339,142 @@ function v337DateText(v){const m=/^(\d{4})-(\d{2})-(\d{2})/.exec(String(v||''));
  watch(document);
 })();
 /* v337-end */
+/* v339-begin: «تعديل بيانات المعلم» صفحة كاملة لمدير النظام (المرحلة 1): ملء الشاشة + الرقم القومي (admin_change_teacher_civil_id) + اعتماد تعديل التاريخين مباشرة */
+function v339Digits(v){return String(v??'').replace(/[٠-٩]/g,d=>String('٠١٢٣٤٥٦٧٨٩'.indexOf(d))).replace(/[۰-۹]/g,d=>String('۰۱۲۳۴۵۶۷۸۹'.indexOf(d))).replace(/\D/g,'')}
+const __v339BaseEditTeacherForm=editTeacherForm;
+editTeacherForm=async function(id){
+ await __v339BaseEditTeacherForm(id);
+ if(profile?.role!=='admin')return;
+ const m=document.getElementById('modal'),card=m?.querySelector('.modal-card'),form=card?.querySelector('form');if(!form||form.dataset.v339)return;
+ form.dataset.v339='1';m.classList.add('v339-page');
+ let civil=null;
+ form.querySelectorAll('.field').forEach(f=>{if(civil)return;const l=f.querySelector('label'),i=f.querySelector('input');if(l&&i&&i.disabled&&l.textContent.trim()==='الرقم القومي')civil=i});
+ if(civil){
+  civil.disabled=false;civil.name='v339_civil';civil.dataset.old=civil.value;civil.setAttribute('inputmode','numeric');civil.setAttribute('maxlength','14');civil.setAttribute('dir','ltr');
+  const s=document.createElement('small');s.className='v339-civil-note';s.textContent='تغييره يغيّر اسم الدخول للمعلم إن كان له حساب.';civil.after(s);
+ }
+ card.querySelectorAll(':scope>.notice.info').forEach(n=>{if(/الرقم القومي هو مفتاح المعلم/.test(n.textContent))n.remove()});
+ const h3=card.querySelector(':scope>h3');
+ if(h3){const name=form.elements.namedItem('full_name')?.value||'';const bar=document.createElement('div');bar.className='v339-bar';bar.innerHTML=`<button type="button" class="btn secondary" onclick="closeModal()">← رجوع</button><div><h3>تعديل بيانات المعلم</h3><div class="muted">${esc(name)}</div></div>`;h3.replaceWith(bar)}
+ v339Pw=null;const ex=document.createElement('div');ex.className='v339-extra';form.before(ex);v339Extras(id);
+ card.scrollTop=0;
+};
+const __v339BaseSaveTeacherEdit=saveTeacherEdit;
+saveTeacherEdit=async function(e,id,oldSchoolId,expectedVersion,...rest){
+ const form=e?.target;
+ if(profile?.role!=='admin'||!form?.dataset?.v339)return __v339BaseSaveTeacherEdit(e,id,oldSchoolId,expectedVersion,...rest);
+ e.preventDefault();
+ let ver=Number(form.dataset.v339ver||expectedVersion||1);
+ const inp=form.elements.namedItem('v339_civil');
+ if(inp){
+  const nv=v339Digits(inp.value),ov=String(inp.dataset.old||'');
+  if(nv!==ov){
+   if(!/^\d{14}$/.test(nv)){inp.focus();return toast('الرقم القومي يجب أن يكون 14 رقمًا')}
+   if(!confirm(`تغيير الرقم القومي\nمن: ${ov}\nإلى: ${nv}\n\nإن كان للمعلم حساب دخول فسيدخل بالرقم الجديد.`))return;
+   const {data,error}=await sb.rpc('admin_change_teacher_civil_id',{p_teacher_id:id,p_new_civil:nv});
+   if(error)return moneySafeError(error);
+   inp.dataset.old=String(data?.civil_id||nv);inp.value=inp.dataset.old;
+   if(data?.row_version){ver=Number(data.row_version);form.dataset.v339ver=String(ver)}
+   toast(data?.login_changed?'تم تغيير الرقم القومي، وصار الدخول بالرقم الجديد':'تم تغيير الرقم القومي');
+  }
+ }
+ await __v339BaseSaveTeacherEdit(e,id,oldSchoolId,ver,...rest);
+ if(document.body.contains(form))return;
+ try{
+  const {data:rows,error}=await sb.from('data_completion_changes').select('id').eq('entity_type','teacher').eq('entity_id',id).eq('status','pending_admin_approval').eq('changed_by',profile.id).in('field_name',['work_start_date','grade_acquired_date']);
+  if(error)throw error;
+  let n=0;for(const r of rows||[]){const {error:re}=await sb.rpc('review_data_completion_change',{p_change_id:r.id,p_action:'approve',p_note:null});if(!re)n++}
+  if(n)toast('تم اعتماد تعديل التاريخ مباشرة (مدير النظام)');
+ }catch(err){console.warn('v339 dates',err)}
+};
+/* v339 المرحلتان 2 و3: «مسؤول بيانات المدرسة» و«حساب الدخول» داخل الصفحة (set_school_data_officer، create-system-user v12 بـno_force_change، admin-reset-user-password v5 بـforce_change:false) + «تغيير كلمة المرور» في «بياناتي» للمعلم */
+let V339X=null,v339Pw=null;
+async function v339Extras(id){
+ const host=document.querySelector('#modal.v339-page .v339-extra');if(!host)return;
+ host.innerHTML='<div class="muted">جارٍ تحميل مسؤول البيانات وحساب الدخول…</div>';
+ try{
+  const {data:t,error}=await sb.from('teacher_records').select('id,civil_id,full_name,phone,email,job_title,appointment_date,work_type,home_school_id,is_senior_teacher,profile_id,grade_acquired_date,work_start_date').eq('id',id).maybeSingle();
+  if(error)throw error;if(!t){host.innerHTML='';return}
+  const none=Promise.resolve({data:null});
+  const [info,prof,roles,sch]=await Promise.all([
+   t.home_school_id?sb.rpc('school_data_officer_info',{p_school:t.home_school_id}):none,
+   t.profile_id?sb.from('profiles').select('id,is_active').eq('id',t.profile_id).maybeSingle():none,
+   t.profile_id?sb.from('user_roles').select('role,is_active').eq('profile_id',t.profile_id):none,
+   t.home_school_id?sb.from('schools').select('name').eq('id',t.home_school_id).maybeSingle():none]);
+  if(!document.body.contains(host))return;
+  V339X={t,info:info?.data||{},prof:prof?.data||null,roles:roles?.data||[],school:sch?.data?.name||''};
+  v339RenderExtras();
+ }catch(e){host.innerHTML=`<div class="notice danger">${esc(e?.message||'تعذر تحميل مسؤول البيانات وحساب الدخول')}</div>`}
+}
+function v339RenderExtras(){
+ const host=document.querySelector('#modal.v339-page .v339-extra');if(!host||!V339X)return;
+ host.innerHTML=v339OfficerCard()+v339AccountCard();
+}
+function v339OfficerCard(){
+ const {t,info:I,school}=V339X;let body;
+ if(t.work_type!=='permanent'||!t.home_school_id)body='<span class="muted">مسؤول البيانات يكون من المعلمين الثابتين في مدرستهم الأصلية فقط.</span>';
+ else if(String(I.teacher_id||'')===String(t.id)){
+  body=`<span class="badge ok">مسؤول بيانات ${esc(school)}</span> <span class="badge info">${I.source==='manual'?'اختيار يدوي':'تلقائي: مشرف المادة'}</span>`+
+   (I.source==='manual'?`<button class="btn secondary" type="button" onclick="v339SetOfficer(false,this)">إلغاء (العودة للتلقائي)</button>`:`<div class="muted" style="flex-basis:100%">لأنه مشرف المادة. لإلغائه عيّن معلمًا آخر مسؤولًا للمدرسة، أو ألغِ إشرافه من حقل «مشرف المادة» ثم احفظ.</div>`);
+ }else body=`<span class="muted">المسؤول الحالي: ${esc(I.full_name||'لا يوجد')}</span><button class="btn primary" type="button" onclick="v339SetOfficer(true,this)">تعيينه مسؤول بيانات المدرسة</button>`;
+ return `<div class="card v339-box"><h3>مسؤول بيانات المدرسة</h3><div class="v339-row">${body}</div></div>`;
+}
+function v339AccountCard(){
+ const {t,prof,roles}=V339X;
+ const pw=v339Pw&&String(v339Pw.id)===String(t.id)?`<div class="notice ok v339-pw"><b>${esc(v339Pw.title)}</b><br>اسم الدخول (الرقم القومي): <b dir="ltr">${esc(v339Pw.civil)}</b><br>كلمة المرور: <b dir="ltr" class="v339-pass">${esc(v339Pw.password)}</b><br>سلّمها للمعلم؛ يدخل بها ويستطيع تغييرها من «بياناتي».<div class="actions"><button class="btn secondary" type="button" onclick="v339CopyPw()">نسخ كلمة المرور</button></div></div>`:'';
+ let body;
+ if(!t.profile_id){
+  const can=t.home_school_id&&/^\d{14}$/.test(String(t.civil_id||''));
+  body=`<span class="badge warn">لا يوجد حساب دخول</span>${can?`<button class="btn ok" type="button" onclick="v339CreateAccount(this)">+ إنشاء حساب دخول</button>`:'<span class="muted">يلزم رقم قومي صحيح (14 رقمًا) ومدرسة أصلية.</span>'}`;
+ }else{
+  const act=r=>roles.some(x=>x.role===r&&x.is_active);
+  body=`<span class="badge ok">له حساب دخول</span><span>اسم الدخول: <b dir="ltr">${esc(t.civil_id||'')}</b></span>${act('teacher')?'<span class="badge info">معلم</span>':''}${act('senior_teacher')?'<span class="badge info">حساب المدرسة</span>':''}${prof&&prof.is_active===false?'<span class="badge danger">الحساب معطل</span>':''}<button class="btn secondary" type="button" onclick="v339ResetPw(this)">إعادة تعيين كلمة المرور</button>`;
+ }
+ return `<div class="card v339-box"><h3>حساب الدخول</h3><div class="v339-row">${body}</div>${pw}</div>`;
+}
+async function v339SetOfficer(on,btn){
+ const t=V339X?.t;if(!t)return;
+ if(!confirm(on?`تعيين «${t.full_name}» مسؤولًا لبيانات مدرسته؟\nيأخذ دخول «حساب المدرسة» ويكون وحده من يعدّل بياناتها.`:'إلغاء الاختيار: يعود مسؤول البيانات تلقائيًا لمشرف المادة. متابعة؟'))return;
+ if(btn)btn.disabled=true;
+ const {error}=await sb.rpc('set_school_data_officer',{p_school:t.home_school_id,p_teacher:on?t.id:null});
+ if(error){if(btn)btn.disabled=false;return moneySafeError(error)}
+ toast('تم حفظ مسؤول بيانات المدرسة');try{invalidateData('teachers','hierarchy')}catch(_){}
+ await v339Extras(t.id);
+}
+function v339ErrMsg(data,error,def){return data?.error||error?.message||def}
+async function v339CreateAccount(btn){
+ const id=V339X?.t?.id;if(!id)return;
+ const {data:t,error:e0}=await sb.from('teacher_records').select('id,civil_id,full_name,phone,email,job_title,appointment_date,work_type,home_school_id,profile_id,grade_acquired_date,work_start_date').eq('id',id).maybeSingle();
+ if(e0||!t)return moneySafeError(e0||new Error('سجل المعلم غير موجود'));
+ if(t.profile_id){toast('للمعلم حساب دخول بالفعل');return v339Extras(id)}
+ if(!confirm(`إنشاء حساب دخول للمعلم «${t.full_name}»؟\nاسم الدخول: ${t.civil_id}\nستظهر كلمة مرور يولّدها النظام لتسلّمها له، ويستطيع تغييرها من «بياناتي». لا تتغير بياناته المسجلة.`))return;
+ if(btn)btn.disabled=true;
+ /* نرسل البيانات الحالية كما هي لأن دالة الإنشاء تكتب التاريخين ونوع التعاقد كما تصلها */
+ const body={role:'teacher',civil_id:String(t.civil_id).trim(),full_name:t.full_name,phone:t.phone||null,email:t.email||null,school_id:t.home_school_id,job_title:t.job_title||null,appointment_date:t.appointment_date||null,work_type:t.work_type==='paid'?'paid':'permanent',grade_acquired_date:t.grade_acquired_date||null,work_start_date:t.work_start_date||null,no_force_change:true};
+ const {data,error}=await sb.functions.invoke('create-system-user',{body});
+ if(error||data?.error){if(btn)btn.disabled=false;return moneySafeError(new Error(v339ErrMsg(data,error,'تعذر إنشاء الحساب')))}
+ v339Pw={id,title:'تم إنشاء حساب الدخول ✅',civil:data.civil_id||t.civil_id,password:data.temporary_password||''};
+ try{invalidateData('teachers')}catch(_){}
+ await v339Extras(id);
+}
+async function v339ResetPw(btn){
+ const t=V339X?.t;if(!t?.profile_id)return;
+ if(!confirm(`إعادة تعيين كلمة المرور للمعلم «${t.full_name}»؟\nتتوقف كلمة المرور الحالية وتظهر كلمة جديدة يولّدها النظام.`))return;
+ if(btn)btn.disabled=true;
+ const {data,error}=await sb.functions.invoke('admin-reset-user-password',{body:{profile_id:t.profile_id,force_change:false}});
+ if(error||data?.error){if(btn)btn.disabled=false;return moneySafeError(new Error(v339ErrMsg(data,error,'تعذر إعادة تعيين كلمة المرور')))}
+ v339Pw={id:t.id,title:'تمت إعادة تعيين كلمة المرور ✅',civil:data.civil_id||t.civil_id,password:data.temporary_password||''};
+ v339RenderExtras();
+}
+function v339CopyPw(){const p=v339Pw?.password||'';if(!p)return;try{navigator.clipboard.writeText(p).then(()=>toast('تم نسخ كلمة المرور'),()=>toast('انسخها يدويًا'))}catch(_){toast('انسخها يدويًا')}}
+/* «بياناتي» للمعلم: تغيير كلمة المرور (نفس نموذج الموجه v270 ودالته) */
+const __v339BaseDashboard=dashboardPage;
+dashboardPage=async function(options={}){
+ const base=await __v339BaseDashboard(options);
+ if(profile?.role!=='teacher')return base;
+ return base+`<div class="card v339-mypw" style="margin-top:14px"><h3>تغيير كلمة المرور</h3><form id="v270PwForm" onsubmit="v270ChangePassword(event)" autocomplete="off"><div class="form-grid"><div class="field"><label>كلمة المرور الحالية</label><input name="current" type="password" autocomplete="current-password" required></div><div class="field"><label>كلمة المرور الجديدة</label><input name="password" type="password" minlength="8" autocomplete="new-password" required></div><div class="field"><label>تأكيد كلمة المرور الجديدة</label><input name="confirm" type="password" minlength="8" autocomplete="new-password" required></div></div><div class="actions"><button class="btn primary">تغيير كلمة المرور</button></div></form></div>`;
+};
+/* v339-end */
 </script>
 
 <div id="reportPreviewOverlay" class="report-preview-overlay" role="dialog" aria-modal="true" aria-label="معاينة التقرير" aria-hidden="true">
