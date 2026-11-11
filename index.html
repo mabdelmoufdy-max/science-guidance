@@ -1,4 +1,5 @@
 <!doctype html>
+<!-- v345: modal() يزيل الصنف v339-page عند فتح أي نافذة، فالنوافذ المفتوحة من داخل صفحة «تعديل بيانات المعلم» (مثل حذف المعلم) لا ترث ملء الشاشة. -->
 <!-- v344: «تعديل بيانات المعلم» صفحة كاملة بأقسام لكل أدوار التعديل (admin/stage_coordinator/supervisor/senior_teacher) — كتلة v344 آخر السكربت: ① الأساسية (مع الرقم القومي) ② الوظيفية (الدرجة والتواريخ ومشرف المادة) ③ المدرسة والانتداب ④ مسؤول البيانات وحساب الدخول (الحساب للمدير)؛ «حفظ» في كل قسم يحفظ النموذج ويعيد الصفحة بموضع التمرير نفسه؛ تغيير المدرسة الأساسية/الانتداب/إلغاؤه فوري برسالة الفصول المسندة وإلغاء إسنادها (المدير unassign_class_atomic، والبقية الحذف بسياسات نطاقهم)؛ «🏠 الرئيسية» و«رجوع» مع تنبيه عند عدم الحفظ. v295/v339/إلغاء الانتداب صارت لهذه الأدوار (حذف المعلم وحساب الدخول للمدير فقط). قاعدة البيانات v344: الرقم القومي لكل دور في نطاقه، وسياسة teaching_sup_remove للموجه. -->
 <!-- v343: ترويسة تقارير A4: شعار التوجيه (REPORT_LOGO_SRC نسخة 144px) يمين كل صفحة وبجواره سطرا تعريف بالنظام (REPORT_BRAND_NAME/REPORT_BRAND_ABOUT) ثم عنوان التقرير — بطلب المستخدم «تعريف بسيط بالنظام» بلا رابط؛ مسافات الترويسة قُلّلت (الفاصل 14←5، الحشو والهامش 7←4) فالمساحة الرأسية 95px كما كانت ولا ينقص صف من أي صفحة؛ reportRenderSharePageBlob يرسم الشعار في صورة واتساب/PDF. الأعمدة والتذييل والحسابات بلا تغيير. -->
 <!-- v342: إصلاح: زر «تقرير المعلمين (حسب الفلاتر)» في صفحة المعلمين يفتح «أنصبة المعلمين» (teacherWorkload) فلم يكن يتبع «حالة المعلم» (v341 ربطه بتقرير المعلمين القديم فقط) — الآن غلاف currentReportFilterState يشمل teacherWorkload وصفوفه تحمل _tstates (v341ListStates من كل صفوف المعلم)، والتصفية في كتلة v342 بعد غلاف v132 (قبل طبقة v103 التي تُسقط الصفوف لأي فلتر لا تعرفه) بدل غلاف v129ReportPred. -->
@@ -8,7 +9,6 @@
 <!-- v337: حقول التاريخ يوم/شهر/سنة لكل الأدوار (كتلة v337 آخر السكربت): بجانب كل input[type=date] حقل نص ظاهر dd/mm/yyyy (أرقام عادية، يقبل العربية، «/» تلقائي) + أيقونة تقويم فوقها الحقل الأصلي شفافًا (showPicker)؛ الحقل الأصلي يبقى بقيمته YYYY-MM-DD (لا تغيير في الحفظ)، ومزامنة الاتجاهين وضبط .value برمجيًا، وتاريخ غير صحيح يمنع الحفظ؛ MutationObserver للصفحة وshadowRoot شاشة إدخال المدارس (CSS في SE_CSS أيضًا)؛ تواريخ «استكمال البيانات» والحقلان للقراءة فقط بنفس الصيغة. -->
 <!-- v336: السرعة: loadContext يطلب الحساب والأدوار والعام معًا (Promise.all)؛ تقرير البيانات المشترك v162ReportsDatasetRaw دقيقتان بدل 30ث ويُستعمل بدل استدعاءين مباشرين (فحص الاعتماد، بيانات المعلم)؛ loadCompletionData تُخزّن البيانات الخام دقيقة (يمسحها حفظ completion/teachers/schools/supervisors)؛ الشعار مضغوط (174←112 ك.ب base64)؛ supabase-js مثبت 2.119.0 (نفس النسخة الحالية). مع قاعدة البيانات v336a (get_reports_dataset أسرع ~2×). -->
 <!-- v335: تنظيف آمن لورقة الأنماط appStyles (بطلب المستخدم، الخيار 1): حذف قواعد 8 أصناف غير مستعملة في أي مكان (ولا تُبنى ديناميكيًا) و39 تعريفًا يلغيه تعريف لاحق بنفس المحدد وسياق يغطيه (25 قاعدة صارت فارغة فحُذفت) — 1572←1547 قاعدة، 144.9←141.6 ك.ب. التحقق: الأنماط المحسوبة لكل عنصر متطابقة قبل/بعد في 63 سيناريو (3 أدوار × 9 صفحات، 1400/390/طباعة، وشاشة الدخول)، ولا تمرير أفقي. -->
-<!-- v334: صفحة «استكمال البيانات»: حُذف قسم «متابعة الاستكمال حسب المدرسة» (نسبة الاكتمال لكل مدرسة) بطلب المستخدم لأن البطاقات أسفله تعرض الناقص للاستكمال؛ الدالة completionHierarchyHtml باقية بلا استدعاء. -->
 <html lang="ar" dir="rtl">
 <head>
 <!-- إعداد: أ/ محمود عبدالمفدي محمد أبوالنجا | الصفة: معلم -->
@@ -16,7 +16,7 @@
 <script>/* v226: العنوان الموحد — انظر التعليق أعلى الملف */(function(){try{if(/\.github\.io$/.test(location.hostname)&&/^\/science-guidance\/?(index\.html)?$/.test(location.pathname)&&!/[?&]stay\b/.test(location.search))location.replace('https://teachers-data-portal.vercel.app/app/'+location.hash)}catch(e){}})();</script>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#152c43">
-<title>نظام توجيه العلوم — v344</title>
+<title>نظام توجيه العلوم — v345</title>
 <link rel="manifest" href="./manifest.webmanifest">
 <link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png">
 <link rel="apple-touch-icon" href="./icon-192.png">
@@ -2102,7 +2102,7 @@ function statusBadge(s){const l=STATUS_LABELS[s]||s;const cls=s==='approved'?'ok
 
 function intakeStatusBadge(s){const l=INTAKE_STATUS_LABELS[s]||s;const cls=s==='imported'?'ok':s==='rejected'?'danger':s==='approved_for_import'?'warn':s==='under_review'?'info':'info';return `<span class="badge ${cls}">${esc(l)}</span>`}
 
-function modal(html){let m=document.getElementById('modal');if(!m){m=document.createElement('div');m.id='modal';m.className='modal-backdrop';document.body.appendChild(m)}m.innerHTML=`<div class="modal-card">${html}</div>`;m.classList.add('show');document.body.classList.add('mobile-modal-open');requestAnimationFrame(()=>enhanceResponsiveReports(m))}
+function modal(html){let m=document.getElementById('modal');if(!m){m=document.createElement('div');m.id='modal';m.className='modal-backdrop';document.body.appendChild(m)}m.classList.remove('v339-page');/* v345: نافذة جديدة لا ترث ملء الشاشة من صفحة تعديل المعلم */m.innerHTML=`<div class="modal-card">${html}</div>`;m.classList.add('show');document.body.classList.add('mobile-modal-open');requestAnimationFrame(()=>enhanceResponsiveReports(m))}
 
 function closeModal(){document.getElementById('modal')?.remove();document.body.classList.remove('mobile-modal-open');requestAnimationFrame(()=>refreshMobileActionBar(document.getElementById('content')))}
 
@@ -2454,6 +2454,7 @@ window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();window.v152
 window.addEventListener('appinstalled',()=>{window.v152InstallPrompt=null;v152SyncInstallBtn()});
 if('serviceWorker' in navigator&&location.protocol!=='file:')window.addEventListener('load',()=>navigator.serviceWorker.register('./service-worker.js').catch(()=>{}));
 const V145_NEWS=[
+ ['v345','صفحة تعديل بيانات المعلم: النوافذ المفتوحة منها (مثل حذف المعلم) تظهر بحجمها العادي.'],
  ['v344','«تعديل بيانات المعلم» صفحة كاملة بأقسام (الأساسية، الوظيفية، المدرسة والانتداب) للمدير والمنسق والموجه وحساب المدرسة: الحفظ يبقيك في الصفحة، وتغيير المدرسة أو الانتداب يلغي إسناد الفصول المسندة بعد رسالة، والرقم القومي قابل للتعديل.'],
  ['v343','التقارير: شعار التوجيه وتعريف بسيط بالنظام في ترويسة كل صفحة، ويظهران في الطباعة وPDF وصورة واتساب.'],
  ['v342','إصلاح: «تقرير المعلمين (حسب الفلاتر)» صار يتبع «حالة المعلم» المختارة (أساسي/أجر/إجازة/منتدب).'],
