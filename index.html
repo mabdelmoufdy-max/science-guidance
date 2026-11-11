@@ -1,4 +1,5 @@
 <!doctype html>
+<!-- v346: صفحة تعديل بيانات المعلم — بطاقة «حساب الدخول»: زر «إرسال واتساب» بجوار «نسخ كلمة المرور» بعد إنشاء الحساب أو إعادة تعيين كلمة المرور (v346WaBtn): رسالة جاهزة برابط البرنامج واسم المستخدم (الرقم القومي) وكلمة المرور إلى هاتف المعلم، تفتح تطبيق واتساب على الهاتف (عادي أو أعمال) عبر v306Wa وإلا wa.me. واجهة فقط. -->
 <!-- v345: modal() يزيل الصنف v339-page عند فتح أي نافذة، فالنوافذ المفتوحة من داخل صفحة «تعديل بيانات المعلم» (مثل حذف المعلم) لا ترث ملء الشاشة. -->
 <!-- v344: «تعديل بيانات المعلم» صفحة كاملة بأقسام لكل أدوار التعديل (admin/stage_coordinator/supervisor/senior_teacher) — كتلة v344 آخر السكربت: ① الأساسية (مع الرقم القومي) ② الوظيفية (الدرجة والتواريخ ومشرف المادة) ③ المدرسة والانتداب ④ مسؤول البيانات وحساب الدخول (الحساب للمدير)؛ «حفظ» في كل قسم يحفظ النموذج ويعيد الصفحة بموضع التمرير نفسه؛ تغيير المدرسة الأساسية/الانتداب/إلغاؤه فوري برسالة الفصول المسندة وإلغاء إسنادها (المدير unassign_class_atomic، والبقية الحذف بسياسات نطاقهم)؛ «🏠 الرئيسية» و«رجوع» مع تنبيه عند عدم الحفظ. v295/v339/إلغاء الانتداب صارت لهذه الأدوار (حذف المعلم وحساب الدخول للمدير فقط). قاعدة البيانات v344: الرقم القومي لكل دور في نطاقه، وسياسة teaching_sup_remove للموجه. -->
 <!-- v343: ترويسة تقارير A4: شعار التوجيه (REPORT_LOGO_SRC نسخة 144px) يمين كل صفحة وبجواره سطرا تعريف بالنظام (REPORT_BRAND_NAME/REPORT_BRAND_ABOUT) ثم عنوان التقرير — بطلب المستخدم «تعريف بسيط بالنظام» بلا رابط؛ مسافات الترويسة قُلّلت (الفاصل 14←5، الحشو والهامش 7←4) فالمساحة الرأسية 95px كما كانت ولا ينقص صف من أي صفحة؛ reportRenderSharePageBlob يرسم الشعار في صورة واتساب/PDF. الأعمدة والتذييل والحسابات بلا تغيير. -->
@@ -8,7 +9,6 @@
 <!-- v338: زر «تذكير» في صفحة إنجاز الجداول (v306TeacherRows/v306Wa): يفتح تطبيق واتساب المثبّت مباشرة برابط whatsapp://send (يتجاوز واتساب ويب الذي كان يعطي «تعذر تحميل» ويسجّل الخروج عند فتح تبويب جديد لكل تذكير)، وإن لم يفتح التطبيق خلال 1.5 ثانية يرجع تلقائيًا إلى wa.me في نافذة واحدة ثابتة (v306wa) لا تبويب جديد كل مرة. واجهة فقط. -->
 <!-- v337: حقول التاريخ يوم/شهر/سنة لكل الأدوار (كتلة v337 آخر السكربت): بجانب كل input[type=date] حقل نص ظاهر dd/mm/yyyy (أرقام عادية، يقبل العربية، «/» تلقائي) + أيقونة تقويم فوقها الحقل الأصلي شفافًا (showPicker)؛ الحقل الأصلي يبقى بقيمته YYYY-MM-DD (لا تغيير في الحفظ)، ومزامنة الاتجاهين وضبط .value برمجيًا، وتاريخ غير صحيح يمنع الحفظ؛ MutationObserver للصفحة وshadowRoot شاشة إدخال المدارس (CSS في SE_CSS أيضًا)؛ تواريخ «استكمال البيانات» والحقلان للقراءة فقط بنفس الصيغة. -->
 <!-- v336: السرعة: loadContext يطلب الحساب والأدوار والعام معًا (Promise.all)؛ تقرير البيانات المشترك v162ReportsDatasetRaw دقيقتان بدل 30ث ويُستعمل بدل استدعاءين مباشرين (فحص الاعتماد، بيانات المعلم)؛ loadCompletionData تُخزّن البيانات الخام دقيقة (يمسحها حفظ completion/teachers/schools/supervisors)؛ الشعار مضغوط (174←112 ك.ب base64)؛ supabase-js مثبت 2.119.0 (نفس النسخة الحالية). مع قاعدة البيانات v336a (get_reports_dataset أسرع ~2×). -->
-<!-- v335: تنظيف آمن لورقة الأنماط appStyles (بطلب المستخدم، الخيار 1): حذف قواعد 8 أصناف غير مستعملة في أي مكان (ولا تُبنى ديناميكيًا) و39 تعريفًا يلغيه تعريف لاحق بنفس المحدد وسياق يغطيه (25 قاعدة صارت فارغة فحُذفت) — 1572←1547 قاعدة، 144.9←141.6 ك.ب. التحقق: الأنماط المحسوبة لكل عنصر متطابقة قبل/بعد في 63 سيناريو (3 أدوار × 9 صفحات، 1400/390/طباعة، وشاشة الدخول)، ولا تمرير أفقي. -->
 <html lang="ar" dir="rtl">
 <head>
 <!-- إعداد: أ/ محمود عبدالمفدي محمد أبوالنجا | الصفة: معلم -->
@@ -16,7 +16,7 @@
 <script>/* v226: العنوان الموحد — انظر التعليق أعلى الملف */(function(){try{if(/\.github\.io$/.test(location.hostname)&&/^\/science-guidance\/?(index\.html)?$/.test(location.pathname)&&!/[?&]stay\b/.test(location.search))location.replace('https://teachers-data-portal.vercel.app/app/'+location.hash)}catch(e){}})();</script>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#152c43">
-<title>نظام توجيه العلوم — v345</title>
+<title>نظام توجيه العلوم — v346</title>
 <link rel="manifest" href="./manifest.webmanifest">
 <link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png">
 <link rel="apple-touch-icon" href="./icon-192.png">
@@ -2454,6 +2454,7 @@ window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();window.v152
 window.addEventListener('appinstalled',()=>{window.v152InstallPrompt=null;v152SyncInstallBtn()});
 if('serviceWorker' in navigator&&location.protocol!=='file:')window.addEventListener('load',()=>navigator.serviceWorker.register('./service-worker.js').catch(()=>{}));
 const V145_NEWS=[
+ ['v346','حساب دخول المعلم: زر «إرسال واتساب» بجوار كلمة المرور يرسل له رابط البرنامج واسم المستخدم وكلمة المرور مباشرة.'],
  ['v345','صفحة تعديل بيانات المعلم: النوافذ المفتوحة منها (مثل حذف المعلم) تظهر بحجمها العادي.'],
  ['v344','«تعديل بيانات المعلم» صفحة كاملة بأقسام (الأساسية، الوظيفية، المدرسة والانتداب) للمدير والمنسق والموجه وحساب المدرسة: الحفظ يبقيك في الصفحة، وتغيير المدرسة أو الانتداب يلغي إسناد الفصول المسندة بعد رسالة، والرقم القومي قابل للتعديل.'],
  ['v343','التقارير: شعار التوجيه وتعريف بسيط بالنظام في ترويسة كل صفحة، ويظهران في الطباعة وPDF وصورة واتساب.'],
@@ -13492,7 +13493,7 @@ function v339OfficerCard(){
 }
 function v339AccountCard(){
  const {t,prof,roles}=V339X;
- const pw=v339Pw&&String(v339Pw.id)===String(t.id)?`<div class="notice ok v339-pw"><b>${esc(v339Pw.title)}</b><br>اسم الدخول (الرقم القومي): <b dir="ltr">${esc(v339Pw.civil)}</b><br>كلمة المرور: <b dir="ltr" class="v339-pass">${esc(v339Pw.password)}</b><br>سلّمها للمعلم؛ يدخل بها ويستطيع تغييرها من «بياناتي».<div class="actions"><button class="btn secondary" type="button" onclick="v339CopyPw()">نسخ كلمة المرور</button></div></div>`:'';
+ const pw=v339Pw&&String(v339Pw.id)===String(t.id)?`<div class="notice ok v339-pw"><b>${esc(v339Pw.title)}</b><br>اسم الدخول (الرقم القومي): <b dir="ltr">${esc(v339Pw.civil)}</b><br>كلمة المرور: <b dir="ltr" class="v339-pass">${esc(v339Pw.password)}</b><br>سلّمها للمعلم؛ يدخل بها ويستطيع تغييرها من «بياناتي».<div class="actions"><button class="btn secondary" type="button" onclick="v339CopyPw()">نسخ كلمة المرور</button>${v346WaBtn(t)}</div></div>`:'';
  let body;
  if(!t.profile_id){
   const can=t.home_school_id&&/^\d{14}$/.test(String(t.civil_id||''));
@@ -13536,6 +13537,12 @@ async function v339ResetPw(btn){
  if(error||data?.error){if(btn)btn.disabled=false;return moneySafeError(new Error(v339ErrMsg(data,error,'تعذر إعادة تعيين كلمة المرور')))}
  v339Pw={id:t.id,title:'تمت إعادة تعيين كلمة المرور ✅',civil:data.civil_id||t.civil_id,password:data.temporary_password||''};
  v339RenderExtras();
+}
+/* v346: إرسال بيانات الدخول للمعلم بواتساب (تطبيق الهاتف عادي/أعمال عبر v306Wa، وإلا wa.me) */
+function v346WaBtn(t){
+ const url=v233Wa(t?.phone);if(!url||!v339Pw?.password)return '<span class="muted">لا يوجد هاتف صحيح للمعلم لإرسال واتساب</span>';
+ const msg=`السلام عليكم أ/ ${t.full_name||''}\nبيانات دخولك على برنامج نظام توجيه العلوم:\nالرابط: https://teachers-data-portal.vercel.app/app/\nاسم المستخدم (الرقم القومي): ${v339Pw.civil||t.civil_id||''}\nكلمة المرور: ${v339Pw.password}\nيمكنك تغيير كلمة المرور بعد الدخول.`;
+ return `<a class="btn ok" target="v306wa" rel="noopener" href="${url}?text=${encodeURIComponent(msg)}" onclick="return v306Wa(event,this)">إرسال واتساب</a>`;
 }
 function v339CopyPw(){const p=v339Pw?.password||'';if(!p)return;try{navigator.clipboard.writeText(p).then(()=>toast('تم نسخ كلمة المرور'),()=>toast('انسخها يدويًا'))}catch(_){toast('انسخها يدويًا')}}
 /* «بياناتي» للمعلم: تغيير كلمة المرور (نفس نموذج الموجه v270 ودالته) */
