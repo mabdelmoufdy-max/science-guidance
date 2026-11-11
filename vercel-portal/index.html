@@ -363,7 +363,7 @@ summary{cursor:pointer;font-weight:600;padding:4px 0}
       S.statusErr ? h('div', { class: 'warn' }, 'تعذّر الاتصال بالخادم. ', h('button', { type: 'button', class: 'link', onclick: boot }, 'إعادة المحاولة')) : null,
       h('div', { class: 'roles' },
         role('👨‍🏫', 'معلم', 'راجع بياناتك المسجّلة (عرض فقط)', function () { S.mode = 'registered'; go('gate'); }),
-        role('🏫', 'مشرف مدرسة', 'اعرض معلمي مدرستك وبياناتهم وفصولهم (عرض فقط)', function () { go('supgate'); }),
+        role('🏫', 'مشرف مدرسة', 'اعرض معلمي مدرستك وبياناتهم وفصولهم، وأدخل جدول كل معلم', function () { go('supgate'); }),
         role('📝', 'معلم بالأجر — تقديم طلب', 'نموذج التقدم للتعاقد', function () { window.location.href = CFG.paid; }),
         ownerMode() ? role('📋', 'طلبات معلمي الأجر', 'عرض الطلبات وإضافة المعلم إلى البرنامج الرئيسي', function () { window.location.href = '/app/#/paidRequests'; }) : null,
         role('🧭', 'إدخال بيانات المدارس', 'لمنسق المرحلة: بيانات مدارس مرحلتك وفصولها ومعلميها، وإسناد الفصول واعتماد البيانات', function () { window.location.href = '/coordinator/'; }),
@@ -584,24 +584,28 @@ summary{cursor:pointer;font-weight:600;padding:4px 0}
       case 'closed': return 'إدخال الجدول مغلق حاليًا.';
       case 'no_phone': return 'لا يوجد هاتف مسجّل لك في النظام، تواصل مع المنسق.';
       case 'conflict': return 'أحد فصولك مشغول بمعلم آخر في حصة من اختيارك. حدّث الصفحة وأعد المحاولة.';
+      case 'teacher_busy': return 'المعلم لديه حصة في مدرسة أخرى في أحد الأوقات المختارة. اختر خانة أخرى.'; // v339
       case 'bad_slot': case 'bad_slots': case 'bad_assignment': return 'تعذّر حفظ الجدول، حدّث الصفحة وحاول مرة أخرى.';
     }
     if (r && typeof r.reason === 'string' && /[؀-ۿ]/.test(r.reason)) return r.reason;
     return reasonMsg(r || {});
   }
   async function ttFetch() {
-    var r = await rpc('teacher_portal_timetable_get', { p_civil: S.auth.civil, p_phone: S.auth.phone });
+    var sup = !!S.ttSup; // v339: مشرف المدرسة يضع جدول المعلم (فصول مدرسته فقط)
+    var r = sup ? await rpc('teacher_portal_sup_timetable_get', { p_civil: S.sup.auth.civil, p_phone: S.sup.auth.phone, p_teacher_id: S.sup.t.id })
+      : await rpc('teacher_portal_timetable_get', { p_civil: S.auth.civil, p_phone: S.auth.phone });
     if (!r || r.ok !== true) throw (r || {});
-    var m = new Map(), busy = new Set(), byId = {};
+    var m = new Map(), busy = new Set(), byId = {}, other = new Map();
+    (r.other || []).forEach(function (o) { other.set(o.weekday + ':' + o.period, o.school_name || ''); });
     (r.slots || []).forEach(function (x) { m.set(x.weekday + ':' + x.period, x.assignment_id); });
     (r.busy || []).forEach(function (b) { busy.add(b.class_id + ':' + b.weekday + ':' + b.period); });
     (r.assignments || []).forEach(function (a) { byId[a.assignment_id] = a; });
-    S.tt = { data: r, grid: m, base: new Map(m), byId: byId, busy: busy, sel: null, mode: (r.open && m.size === 0 && (r.assignments || []).length) ? 'edit' : 'view' };
+    S.tt = { data: r, grid: m, base: new Map(m), byId: byId, busy: busy, other: other, sup: sup, sel: null, mode: (r.open && m.size === 0 && (r.assignments || []).length) ? 'edit' : 'view' };
   }
   function ttCount(T, aid) { var n = 0; T.grid.forEach(function (v) { if (v === aid) n++; }); return n; }
   function ttTotals(T) { var tot = 0, got = 0; (T.data.assignments || []).forEach(function (a) { tot += a.periods; got += Math.min(ttCount(T, a.assignment_id), a.periods); }); return [got, tot]; }
-  async function openTimetable(btn) {
-    var box = errbox();
+  async function openTimetable(btn, sup) {
+    var box = errbox(); S.ttSup = !!sup;
     try { btnBusy(btn, true, 'جارٍ التحميل...'); await ttFetch(); go('timetable'); }
     catch (e) { btnBusy(btn, false); var p = btn.parentNode; if (p) { p.insertBefore(box, btn); showErr(box, e && e.reason !== undefined ? ttMsg(e) : errMsg(e)); } }
   }
@@ -636,6 +640,7 @@ summary{cursor:pointer;font-weight:600;padding:4px 0}
         TT_DAYS.forEach(function (w) {
           var key = w + ':' + p, aid = T.grid.get(key), a = aid && T.byId[aid], cls = 'tt-cell', label = '', dis = !edit();
           if (a) { cls += ' f'; label = [ttShort(a), ttSubj(a) ? h('small', null, ttSubj(a)) : null]; }
+          else if (T.other.has(key)) { cls += ' b'; label = '🏫'; }
           else if (edit() && T.sel && T.busy.has(T.byId[T.sel].class_id + ':' + w + ':' + p)) { cls += ' b'; label = '🔒'; }
           tr.appendChild(h('td', null, h('button', { type: 'button', class: cls, 'data-k': key, disabled: dis, 'aria-label': TT_NAMES[w] + ' الحصة ' + p, onclick: function () { tap(w, p); } }, label)));
         });
@@ -643,7 +648,7 @@ summary{cursor:pointer;font-weight:600;padding:4px 0}
       })(pp);
       var gt = ttTotals(T), left = gt[1] - gt[0];
       count.className = 'tt-count' + (left === 0 && gt[1] > 0 ? ' ok' : '');
-      count.textContent = gt[1] === 0 ? '' : (left === 0 ? '✓ اكتمل جدولك: ' + gt[0] + ' حصة' : 'أُدخل ' + gt[0] + ' من ' + gt[1] + ' حصة · تبقّت ' + left);
+      count.textContent = gt[1] === 0 ? '' : (left === 0 ? (T.sup ? '✓ اكتمل الجدول: ' : '✓ اكتمل جدولك: ') + gt[0] + ' حصة' : 'أُدخل ' + gt[0] + ' من ' + gt[1] + ' حصة · تبقّت ' + left);
       drawActions();
     }
     function tap(w, p) {
@@ -651,6 +656,7 @@ summary{cursor:pointer;font-weight:600;padding:4px 0}
       var key = w + ':' + p, aid = T.grid.get(key);
       note.textContent = '';
       if (aid) { T.grid.delete(key); pickNext(); drawChips(); drawGrid(); return; }
+      if (T.other.has(key)) { note.textContent = 'المعلم لديه حصة في ' + (T.other.get(key) || 'مدرسة أخرى') + ' في هذا الوقت.'; return; }
       if (!T.sel) { note.textContent = 'اختر الفصل أولًا من الأزرار أعلى الجدول.'; return; }
       var a = T.byId[T.sel];
       if (T.busy.has(a.class_id + ':' + w + ':' + p)) { note.textContent = 'هذا الفصل مشغول بمعلم آخر في هذه الحصة.'; return; }
@@ -667,22 +673,28 @@ summary{cursor:pointer;font-weight:600;padding:4px 0}
         T.grid.forEach(function (v, k) { var pr = k.split(':'); slots.push({ assignment_id: v, weekday: +pr[0], period_number: +pr[1] }); });
         btnBusy(b, true, 'جارٍ الحفظ...');
         try {
-          var r = await rpc('teacher_portal_timetable_save', { p_civil: S.auth.civil, p_phone: S.auth.phone, p_slots: slots });
-          if (!r || r.ok !== true) { showErr(box, ttMsg(r || {})); if (r && r.reason === 'conflict') { try { await ttFetch(); } catch (e2) { } } btnBusy(b, false); if (r && r.reason === 'conflict') render(); return; }
+          var r = T.sup ? await rpc('teacher_portal_sup_timetable_save', { p_civil: S.sup.auth.civil, p_phone: S.sup.auth.phone, p_teacher_id: S.sup.t.id, p_slots: slots })
+            : await rpc('teacher_portal_timetable_save', { p_civil: S.auth.civil, p_phone: S.auth.phone, p_slots: slots });
+          var stale = r && (r.reason === 'conflict' || r.reason === 'teacher_busy');
+          if (!r || r.ok !== true) { showErr(box, ttMsg(r || {})); if (stale) { try { await ttFetch(); S.tt.err = ttMsg(r); } catch (e2) { } } btnBusy(b, false); if (stale) render(); return; }
           T.base = new Map(T.grid); T.mode = 'view'; T.sel = null; drawChips(); drawGrid();
-          note.textContent = '✓ تم حفظ جدولك.';
+          note.textContent = T.sup ? '✓ تم حفظ جدول المعلم.' : '✓ تم حفظ جدولك.';
         } catch (e) { showErr(box, e && e.reason !== undefined ? ttMsg(e) : errMsg(e)); btnBusy(b, false); }
       }, { id: 'tt-save' }));
       if (T.base.size) actions.appendChild(mkBtn('btn2', 'إلغاء التعديل', function () { T.grid = new Map(T.base); T.mode = 'view'; T.sel = null; drawChips(); drawGrid(); }, { id: 'tt-cancel', style: 'margin-top:8px' }));
     }
-    var back = function () { if (edit() && !same() && !window.confirm('لديك تعديلات غير محفوظة. هل تريد الخروج؟')) return; go('confirm'); };
+    var back = function () { if (edit() && !same() && !window.confirm('لديك تعديلات غير محفوظة. هل تريد الخروج؟')) return; go(T.sup ? 'supteacher' : 'confirm'); };
     pickNext(); drawChips(); drawGrid();
-    var head = h('div', { class: 'top' }, h('button', { type: 'button', class: 'link', id: 'tt-back', onclick: back }, '‹ بياناتي'), h('strong', null, 'جدولي الأسبوعي'));
+    if (T.err) { showErr(box, T.err); T.err = null; } // v339: تبقى رسالة التعارض بعد تحديث الجدول
+    var head = h('div', { class: 'top' }, h('button', { type: 'button', class: 'link', id: 'tt-back', onclick: back }, T.sup ? '‹ بيانات المعلم' : '‹ بياناتي'), h('strong', null, T.sup ? 'جدول المعلم' : 'جدولي الأسبوعي'));
+    var who = T.sup ? h('p', { class: 'sub', id: 'tt-who', style: 'text-align:right;margin:4px 2px' }, (d.name || '') + ' · ' + (d.school_name || '')) : null;
     if (!assigns.length) {
-      return h('div', { class: 'card tt' }, head, h('div', { class: 'note', id: 'tt-empty' }, 'لا توجد فصول مسندة لك حتى الآن، فلا يمكن إدخال جدول. تواصل مع المنسق.'), coordBar());
+      return h('div', { class: 'card tt' }, head, who, T.sup ? h('div', { class: 'note', id: 'tt-empty' }, 'لا توجد فصول مسندة لهذا المعلم في مدرستك، فلا يمكن إدخال جدوله.')
+        : [h('div', { class: 'note', id: 'tt-empty' }, 'لا توجد فصول مسندة لك حتى الآن، فلا يمكن إدخال جدول. تواصل مع المنسق.'), coordBar()]);
     }
-    return h('div', { class: 'card tt' }, head, chips,
+    return h('div', { class: 'card tt' }, head, who, chips,
       h('table', { class: 'tt-grid' }, h('thead', null, h('tr', null, h('th'), TT_DAYS.map(function (w) { return h('th', null, TT_NAMES[w]); }))), tbody),
+      T.other.size ? h('div', { class: 'tt-hint', id: 'tt-other-note' }, '🏫 = حصة للمعلم في مدرسة أخرى، لا تتغير من هنا.') : null,
       note, h('div', { class: 'tt-foot' }, count, actions), box);
   };
 
@@ -1226,7 +1238,7 @@ summary{cursor:pointer;font-weight:600;padding:4px 0}
     return h('div', { class: 'card' },
       suptop(sch.name, sup.schools.length > 1 ? '‹ المدارس' : '‹ الرئيسية', sup.schools.length > 1 ? function () { go('supschools'); } : goHome),
       h('p', { class: 'sub', style: 'text-align:right' }, stageTitle(sch.stage_key) + ' · ' + sup.teachers.length + ' معلم'),
-      h('div', { class: 'note' }, 'البوابة الآن لعرض البيانات والاستعلام فقط.'),
+      h('div', { class: 'note' }, 'البوابة الآن لعرض البيانات والاستعلام، ويمكنك إدخال جدول المعلم من بطاقته.'),
       q, listEl);
   };
 
@@ -1249,6 +1261,7 @@ summary{cursor:pointer;font-weight:600;padding:4px 0}
     return h('div', { class: 'card' },
       suptop('بيانات المعلم', '‹ المعلمون', function () { go('supschool'); }),
       t.is_home ? null : h('div', { class: 'note', id: 'visitor-note' }, 'هذا المعلم منتدب إلى مدرستك؛ مدرسته الأصلية في مدرسة أخرى.'),
+      cl.length ? h('div', { id: 'sup-tt-wrap', style: 'margin:8px 0 12px' }, mkBtn('btn', '📅 جدول المعلم', function (ev) { openTimetable(ev.currentTarget, true); }, { id: 'sup-tt-open' })) : null, // v339
       h('div', { class: 'kv' }, rows));
   };
 
