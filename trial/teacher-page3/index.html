@@ -13550,21 +13550,18 @@ dashboardPage=async function(options={}){
    قاعدة البيانات v344: الرقم القومي لكل دور في نطاقه (admin_change_teacher_civil_id)، والموجه يلغي إسناد فصول مدارسه (سياسة teaching_sup_remove). */
 const V344_ROLES=['admin','stage_coordinator','supervisor','senior_teacher'];
 function v344Can(){return V344_ROLES.includes(profile?.role)}
-const V344={ret:null,scroll:0,inFlow:false};
+const V344={ret:null,scroll:0,inFlow:false,pendingUnassign:null};
 function v344Card(){return document.querySelector('#modal .modal-card')}
+function v344Vals(form){const o={};if(!form)return o;for(const el of form.querySelectorAll('input[name],select[name],textarea[name]')){if(el.disabled||el.type==='search')continue;o[el.name]=(el.type==='checkbox'||el.type==='radio')?String(el.checked):String(el.value??'')}return o}
 function v344Dirty(form){
- if(!form)return false;
- for(const el of form.querySelectorAll('input[name],select[name],textarea[name]')){
-  if(el.disabled||el.type==='hidden'||el.type==='search')continue;
-  if(el.tagName==='SELECT'){if([...el.options].some(o=>o.selected!==o.defaultSelected))return true;continue}
-  if(el.type==='checkbox'||el.type==='radio'){if(el.checked!==el.defaultChecked)return true;continue}
-  if(String(el.value)!==String(el.defaultValue))return true;
- }
- return false;
+ if(!form||!form.__v344Snap)return false;
+ const now=v344Vals(form),was=form.__v344Snap;
+ return Object.keys(now).some(k=>k in was&&now[k]!==was[k]);
 }
+function v344Discard(form){try{uxClearDraft(form)}catch(_){}}
 function v344Leave(page){
  const form=document.querySelector('#modal.v344-page form');
- if(v344Dirty(form)&&!confirm('لم تحفظ التعديلات في هذه الصفحة.\nهل تريد المغادرة دون حفظ؟'))return;
+ if(v344Dirty(form)){if(!confirm('لم تحفظ التعديلات في هذه الصفحة.\nهل تريد المغادرة دون حفظ؟'))return;v344Discard(form)}
  V344.ret=null;closeModal();if(page)go(page);
 }
 async function v344Reopen(id){
@@ -13614,6 +13611,7 @@ editTeacherForm=async function(id){
  const acts=form.querySelector(':scope>.actions');
  if(acts){const b=acts.querySelector('button.btn.primary');if(b)b.textContent='حفظ كل التعديلات';const c=acts.querySelector('button.secondary');if(c){c.removeAttribute('onclick');c.textContent='رجوع';c.onclick=()=>v344Leave()}}
  card.querySelectorAll(':scope>.notice.info').forEach(n=>{if(/الرقم القومي هو مفتاح المعلم/.test(n.textContent))n.remove()});
+ form.__v344Snap=v344Vals(form);
  if(box)v344RenderDeleg(id);
 };
 async function v344RenderDeleg(id){
@@ -13642,6 +13640,18 @@ async function v344ClassesIn(teacherId,schoolId){
  const {data,error}=await sb.from('teaching_assignments').select('id,weekly_periods,school_classes(class_name,school_id,term_id)').eq('teacher_id',teacherId);if(error)throw error;
  return (data||[]).filter(a=>a.school_classes&&String(a.school_classes.school_id)===String(schoolId)&&String(a.school_classes.term_id)===String(activeTerm.id)).map(a=>({id:a.id,name:a.school_classes.class_name,periods:Number(a.weekly_periods||0)})).sort((a,b)=>String(a.name).localeCompare(String(b.name),'ar',{numeric:true}));
 }
+async function v344InScope(ids){
+ if(profile?.role==='admin')return true;
+ for(const x of ids){if(!x)continue;const {data,error}=await sb.rpc('can_access_school',{target_school:x});if(error||data!==true)return false}
+ return true;
+}
+async function v344DelegScopeOk(delegationId,teacherId){
+ const [{data:d},{data:t}]=await Promise.all([sb.from('delegations').select('from_school_id,to_school_id').eq('id',delegationId).maybeSingle(),sb.from('teacher_records').select('home_school_id').eq('id',teacherId).maybeSingle()]);
+ if(!d)return true;
+ if(await v344InScope([d.from_school_id||t?.home_school_id,d.to_school_id]))return true;
+ alert('هذا الانتداب بين مدرسة في نطاقك ومدرسة خارج نطاقك، فلا يمكن إلغاؤه أو تغييره من حسابك دون أن يبقى المعلم مرتبطًا بالمدرسة الأخرى.\nيتم ذلك من منسق المرحلة أو مدير النظام.');
+ return false;
+}
 function v344ListText(list){return list.map(a=>`• ${a.name} (${a.periods} حصة)`).join('\n')}
 /* تغيير المدرسة الأساسية: فوري — رسالة بالفصول المسندة في المدرسة الحالية، إلغاء إسنادها، ثم الحفظ والبقاء في الصفحة */
 const __v344BaseConfirmHome=v295ConfirmHome;
@@ -13653,6 +13663,7 @@ v295ConfirmHome=async function(){
  const old=form.querySelector('.v295-box')?.dataset.home||'';
  if(sid===old){document.getElementById('v295HomeEdit').hidden=true;return toast('هذه هي المدرسة الأساسية الحالية')}
  const nm=V295.schools.find(x=>String(x.id)===sid)?.name||'المدرسة الجديدة';
+ if(!(await v344InScope([sid])))return alert(`«${nm}» خارج نطاق صلاحيتك، فلا يمكنك نقل المعلم إليها.\nالنقل إليها من منسق مرحلتها أو مدير النظام.`);
  let list=[];
  try{
   const {data:dl,error:de}=await sb.from('delegations').select('id').eq('teacher_id',id).eq('to_school_id',old).eq('active',true);if(de)throw de;
@@ -13662,9 +13673,7 @@ v295ConfirmHome=async function(){
  const msg=list.length?`⚠️ للمعلم ${list.length} فصل/فصول مسندة في مدرسته الأساسية الحالية (${total} حصة):\n${v344ListText(list)}\n\nتغيير المدرسة الأساسية إلى «${nm}» يلغي إسناد هذه الفصول فتعود غير مسندة.\nهل تريد إلغاء الإسناد وتغيير المدرسة؟`:`تغيير المدرسة الأساسية إلى «${nm}»؟\n(تُحفظ معها أي تعديلات أخرى في الصفحة.)`;
  if(!confirm(msg))return;
  v344Keep();
- if(list.length){const failed=await v344Unassign(list);invalidateData('teachers','hierarchy','dashboard','assignments','page:reports','school:self');
-  if(failed.length){alert(`لم تتغير المدرسة الأساسية لأنه تعذر إلغاء إسناد:\n${failed.join('\n')}`);return v344Reopen(id)}
-  toast(`أُلغي إسناد ${list.length} فصل`)}
+ V344.pendingUnassign=list.length?{id:String(id),list}:null; // يُلغى الإسناد بعد نجاح حفظ المدرسة الجديدة فقط
  const sel=form.elements.namedItem('home_school_id');if(!sel)return;
  if(![...sel.options].some(o=>o.value===sid)){const s=V295.schools.find(x=>String(x.id)===sid);const o=document.createElement('option');o.value=sid;o.dataset.stage=s?.stage||'';o.textContent=s?.name||'';sel.appendChild(o)}
  sel.value=sid;sel.dispatchEvent(new Event('change',{bubbles:true}));
@@ -13676,17 +13685,19 @@ v295ConfirmHome=async function(){
 async function v344DelegChange(id,delegationId,count){
  if(count>1)return toast('للمعلم أكثر من انتداب ساري؛ ألغِ الزائد أولًا');
  const form=document.querySelector('#modal.v344-page form');
- if(v344Dirty(form)&&!confirm('لديك تعديلات لم تُحفظ في الصفحة وستضيع عند فتح نموذج الانتداب.\nمتابعة؟'))return;
+ if(v344Dirty(form)){if(!confirm('لديك تعديلات لم تُحفظ في الصفحة وستضيع عند فتح نموذج الانتداب.\nمتابعة؟'))return;v344Discard(form)}
+ if(delegationId&&!(await v344DelegScopeOk(delegationId,id)))return;
  v344Keep();V344.ret=String(id);
  __v295Replace=delegationId?{teacherId:String(id),delegationId:String(delegationId)}:null;
  await openTeacherDelegationForm(id);
  const c=v344Card(),f=c?.querySelector('form');if(!f)return;
  c.querySelectorAll('button.secondary').forEach(b=>{if(/إلغاء/.test(b.textContent)){b.removeAttribute('onclick');b.textContent='رجوع لصفحة المعلم';b.onclick=()=>v344Reopen(id)}});
+ f.dataset.v344ret=String(id);
  if(delegationId){const n=document.createElement('div');n.className='notice warn';n.textContent='سيُلغى الانتداب الحالي ثم يُنشأ الجديد. إن كان له فصول مسندة في المدرسة المنتدب إليها الحالية تظهر لتأكيد إلغاء إسنادها.';f.before(n)}
 }
 const __v344BaseSaveDeleg=saveTeacherDelegation;
 saveTeacherDelegation=async function(e,teacherId){
- const ours=V344.ret===String(teacherId),form=e?.target;
+ const form=e?.target,ours=form?.dataset?.v344ret===String(teacherId);
  if(!ours)return __v344BaseSaveDeleg(e,teacherId);
  V344.inFlow=true;
  try{await __v344BaseSaveDeleg(e,teacherId)}finally{V344.inFlow=false}
@@ -13696,7 +13707,8 @@ saveTeacherDelegation=async function(e,teacherId){
 };
 async function v344CancelDeleg(delegationId,teacherId){
  const form=document.querySelector('#modal.v344-page form');
- if(v344Dirty(form)&&!confirm('لديك تعديلات لم تُحفظ في الصفحة وستضيع عند إلغاء الانتداب.\nمتابعة؟'))return;
+ if(v344Dirty(form)){if(!confirm('لديك تعديلات لم تُحفظ في الصفحة وستضيع عند إلغاء الانتداب.\nمتابعة؟'))return;v344Discard(form)}
+ if(!(await v344DelegScopeOk(delegationId,teacherId)))return;
  v344Keep();
  let n=0,toName='';
  try{const {data:d,error}=await sb.from('delegations').select('to_school_id').eq('id',delegationId).maybeSingle();if(error)throw error;
@@ -13721,9 +13733,14 @@ saveTeacherEdit=async function(e,id,...rest){
  if(!v344Can()||!form?.dataset?.v344)return __v344BaseSaveTeacherEdit(e,id,...rest);
  v344Keep();
  const btn=e.submitter;let t='';if(btn){t=btn.textContent;btn.disabled=true;btn.textContent='جارٍ الحفظ...'}
+ const pend=V344.pendingUnassign&&V344.pendingUnassign.id===String(id)?V344.pendingUnassign:null;V344.pendingUnassign=null;
  try{await __v344BaseSaveTeacherEdit(e,id,...rest)}
  finally{if(btn&&document.body.contains(btn)){btn.disabled=false;btn.textContent=t}}
- if(!document.body.contains(form))await v344Reopen(id);
+ if(document.body.contains(form)){if(pend)alert('لم تُحفظ المدرسة الأساسية الجديدة، ولم يُلغَ إسناد أي فصل.');return}
+ if(pend){const failed=await v344Unassign(pend.list);invalidateData('teachers','hierarchy','dashboard','assignments','page:reports','school:self');
+  if(failed.length)alert(`تغيّرت المدرسة الأساسية، لكن تعذر إلغاء إسناد:\n${failed.join('\n')}\nألغِ إسنادها من «توزيع الفصول».`);
+  else toast(`تغيّرت المدرسة الأساسية وأُلغي إسناد ${pend.list.length} فصل`)}
+ await v344Reopen(id);
 };
 /* v344-end */
 </script>
