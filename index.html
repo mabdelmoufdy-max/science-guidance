@@ -1,4 +1,5 @@
 <!doctype html>
+<!-- v339: مدير النظام: «تعديل بيانات المعلم» صفحة بملء الشاشة (#modal.v339-page + شريط «← رجوع») — المرحلة 1 من 3: الرقم القومي قابل للتعديل (admin_change_teacher_civil_id: سجل المعلم + حسابه + الموجه المرتبط + بريد الدخول، مع تأكيد)، وتعديل تاريخ استلام العمل/الحصول على الدرجة يُعتمد مباشرة للمدير (review_data_completion_change). الأدوار الأخرى بلا تغيير. -->
 <!-- v338: زر «تذكير» في صفحة إنجاز الجداول (v306TeacherRows/v306Wa): يفتح تطبيق واتساب المثبّت مباشرة برابط whatsapp://send (يتجاوز واتساب ويب الذي كان يعطي «تعذر تحميل» ويسجّل الخروج عند فتح تبويب جديد لكل تذكير)، وإن لم يفتح التطبيق خلال 1.5 ثانية يرجع تلقائيًا إلى wa.me في نافذة واحدة ثابتة (v306wa) لا تبويب جديد كل مرة. واجهة فقط. -->
 <!-- v337: حقول التاريخ يوم/شهر/سنة لكل الأدوار (كتلة v337 آخر السكربت): بجانب كل input[type=date] حقل نص ظاهر dd/mm/yyyy (أرقام عادية، يقبل العربية، «/» تلقائي) + أيقونة تقويم فوقها الحقل الأصلي شفافًا (showPicker)؛ الحقل الأصلي يبقى بقيمته YYYY-MM-DD (لا تغيير في الحفظ)، ومزامنة الاتجاهين وضبط .value برمجيًا، وتاريخ غير صحيح يمنع الحفظ؛ MutationObserver للصفحة وshadowRoot شاشة إدخال المدارس (CSS في SE_CSS أيضًا)؛ تواريخ «استكمال البيانات» والحقلان للقراءة فقط بنفس الصيغة. -->
 <!-- v336: السرعة: loadContext يطلب الحساب والأدوار والعام معًا (Promise.all)؛ تقرير البيانات المشترك v162ReportsDatasetRaw دقيقتان بدل 30ث ويُستعمل بدل استدعاءين مباشرين (فحص الاعتماد، بيانات المعلم)؛ loadCompletionData تُخزّن البيانات الخام دقيقة (يمسحها حفظ completion/teachers/schools/supervisors)؛ الشعار مضغوط (174←112 ك.ب base64)؛ supabase-js مثبت 2.119.0 (نفس النسخة الحالية). مع قاعدة البيانات v336a (get_reports_dataset أسرع ~2×). -->
@@ -8,7 +9,6 @@
 <!-- v332: رسائل الأخطاء بالعربية (v332ErrText في moneySafeError: الرقم القومي المكرر، مشرف مادة ثانٍ، انتهاء الجلسة، مهلة الطلب، الصلاحية، قيمة مطلوبة، دالة غير موجودة…؛ الرسالة العربية من القاعدة تمر كما هي)؛ و«تعديل بيانات المعلم» يحفظ تاريخ استلام العمل وتاريخ الحصول على الدرجة عبر submit_data_completion_change (الفارغ مباشرة، والمعدّل بانتظار اعتماد المدير). مع قاعدة البيانات v332a–d. -->
 <!-- v330: فلتر «النوع» (v329) في «معلمو المرحلة» أيضًا: يضيّق قائمة المدارس، ويعرض معلمي مدارس النوع عند «المدرسة: الكل»، والتقرير وExcel حسبه. -->
 <!-- v329: فلتر «النوع» بين «المرحلة» و«المدرسة» (مدارس المرحلة/المعلمون/التقارير): يظهر حين يكون للمرحلة أكثر من نوع — الإعدادي بنوع المدرسة (عام/مهني/تربية خاصة)، والثانوي الصناعي بأنواع مجموعاتها (عام/مهني/مسار/تعليم مزدوج) — في صفحة المدارس فقط، ويضيّق قائمة المدارس والبطاقات والقائمة وتقارير/Excel الصفحة. -->
-<!-- v328: الموجه الأول: حذف زر «الإحصائيات والتقارير التفصيلية» من صفحة التقارير وعبارة «مع زر تعديل» من وصف «بيانات معلمي المدرسة»، والجرس 🔔 يفتح الرئيسية (فيها التنبيهات). عرض فقط. -->
 <html lang="ar" dir="rtl">
 <head>
 <!-- إعداد: أ/ محمود عبدالمفدي محمد أبوالنجا | الصفة: معلم -->
@@ -16,7 +16,7 @@
 <script>/* v226: العنوان الموحد — انظر التعليق أعلى الملف */(function(){try{if(/\.github\.io$/.test(location.hostname)&&/^\/science-guidance\/?(index\.html)?$/.test(location.pathname)&&!/[?&]stay\b/.test(location.search))location.replace('https://teachers-data-portal.vercel.app/app/'+location.hash)}catch(e){}})();</script>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#152c43">
-<title>نظام توجيه العلوم — v338</title>
+<title>نظام توجيه العلوم — v339</title>
 <link rel="manifest" href="./manifest.webmanifest">
 <link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png">
 <link rel="apple-touch-icon" href="./icon-192.png">
@@ -2062,6 +2062,14 @@ body.v293-ro select[onchange*="v101ChangeSlot"]{pointer-events:none;opacity:.65}
 .v337-wrap>.v337-ico{position:absolute;left:10px;top:50%;transform:translateY(-50%);font-size:17px;line-height:1;pointer-events:none}
 .v337-wrap>input.v337-native{position:absolute!important;left:0!important;top:0!important;width:38px!important;min-width:0!important;max-width:38px!important;height:100%!important;min-height:0!important;padding:0!important;margin:0!important;border:0!important;opacity:0!important;cursor:pointer;background:transparent!important;box-shadow:none!important}
 .v337-wrap.v337-off>input.v337-native,.v337-wrap.v337-off>.v337-ico{display:none!important}
+/* v339: صفحة «تعديل بيانات المعلم» الكاملة لمدير النظام */
+#modal.v339-page{padding:0!important;place-items:stretch}
+#modal.v339-page>.modal-card{width:100%!important;max-width:none!important;height:100%;max-height:none!important;border-radius:0!important;border-top:0;box-shadow:none;padding:0 18px 24px}
+#modal.v339-page .v339-bar{position:sticky;top:0;z-index:3;display:flex;align-items:center;gap:12px;background:#fff;border-bottom:1px solid #e2e8f0;margin:0 -18px 14px;padding:10px 18px}
+#modal.v339-page .v339-bar h3{margin:0}
+#modal.v339-page>.modal-card>form,#modal.v339-page>.modal-card>.notice{max-width:1100px;margin-inline:auto}
+#modal.v339-page .v339-civil-note{display:block;color:#64748b;margin-top:4px}
+@media(min-width:761px){#modal.v339-page form .form-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
 </style>
 </head>
 <body>
@@ -2429,6 +2437,7 @@ window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();window.v152
 window.addEventListener('appinstalled',()=>{window.v152InstallPrompt=null;v152SyncInstallBtn()});
 if('serviceWorker' in navigator&&location.protocol!=='file:')window.addEventListener('load',()=>navigator.serviceWorker.register('./service-worker.js').catch(()=>{}));
 const V145_NEWS=[
+ ['v339','مدير النظام: «تعديل بيانات المعلم» يفتح صفحة كاملة، ويمكن منها تغيير الرقم القومي (ويتغير اسم الدخول معه)، وتعديل التاريخين يُعتمد مباشرة.'],
  ['v338','زر «تذكير» في إنجاز الجداول يفتح تطبيق واتساب مباشرة (لا واتساب ويب)، ويرجع لرابط الويب في نافذة واحدة إن لم يفتح التطبيق.'],
  ['v337','التاريخ في كل شاشات الإدخال صار يوم/شهر/سنة (مثل 10/11/2026) مع أيقونة تقويم.'],
  ['v336','البرنامج أسرع: فتح أسرع، وتقارير أسرع بنحو الضعف، وطلبات أقل عند التنقل بين الصفحات، وملف أخف.'],
@@ -13324,6 +13333,54 @@ function v337DateText(v){const m=/^(\d{4})-(\d{2})-(\d{2})/.exec(String(v||''));
  watch(document);
 })();
 /* v337-end */
+/* v339-begin: «تعديل بيانات المعلم» صفحة كاملة لمدير النظام (المرحلة 1): ملء الشاشة + الرقم القومي (admin_change_teacher_civil_id) + اعتماد تعديل التاريخين مباشرة */
+function v339Digits(v){return String(v??'').replace(/[٠-٩]/g,d=>String('٠١٢٣٤٥٦٧٨٩'.indexOf(d))).replace(/[۰-۹]/g,d=>String('۰۱۲۳۴۵۶۷۸۹'.indexOf(d))).replace(/\D/g,'')}
+const __v339BaseEditTeacherForm=editTeacherForm;
+editTeacherForm=async function(id){
+ await __v339BaseEditTeacherForm(id);
+ if(profile?.role!=='admin')return;
+ const m=document.getElementById('modal'),card=m?.querySelector('.modal-card'),form=card?.querySelector('form');if(!form||form.dataset.v339)return;
+ form.dataset.v339='1';m.classList.add('v339-page');
+ let civil=null;
+ form.querySelectorAll('.field').forEach(f=>{if(civil)return;const l=f.querySelector('label'),i=f.querySelector('input');if(l&&i&&i.disabled&&l.textContent.trim()==='الرقم القومي')civil=i});
+ if(civil){
+  civil.disabled=false;civil.name='v339_civil';civil.dataset.old=civil.value;civil.setAttribute('inputmode','numeric');civil.setAttribute('maxlength','14');civil.setAttribute('dir','ltr');
+  const s=document.createElement('small');s.className='v339-civil-note';s.textContent='تغييره يغيّر اسم الدخول للمعلم إن كان له حساب.';civil.after(s);
+ }
+ card.querySelectorAll(':scope>.notice.info').forEach(n=>{if(/الرقم القومي هو مفتاح المعلم/.test(n.textContent))n.remove()});
+ const h3=card.querySelector(':scope>h3');
+ if(h3){const name=form.elements.namedItem('full_name')?.value||'';const bar=document.createElement('div');bar.className='v339-bar';bar.innerHTML=`<button type="button" class="btn secondary" onclick="closeModal()">← رجوع</button><div><h3>تعديل بيانات المعلم</h3><div class="muted">${esc(name)}</div></div>`;h3.replaceWith(bar)}
+ card.scrollTop=0;
+};
+const __v339BaseSaveTeacherEdit=saveTeacherEdit;
+saveTeacherEdit=async function(e,id,oldSchoolId,expectedVersion,...rest){
+ const form=e?.target;
+ if(profile?.role!=='admin'||!form?.dataset?.v339)return __v339BaseSaveTeacherEdit(e,id,oldSchoolId,expectedVersion,...rest);
+ e.preventDefault();
+ let ver=Number(form.dataset.v339ver||expectedVersion||1);
+ const inp=form.elements.namedItem('v339_civil');
+ if(inp){
+  const nv=v339Digits(inp.value),ov=String(inp.dataset.old||'');
+  if(nv!==ov){
+   if(!/^\d{14}$/.test(nv)){inp.focus();return toast('الرقم القومي يجب أن يكون 14 رقمًا')}
+   if(!confirm(`تغيير الرقم القومي\nمن: ${ov}\nإلى: ${nv}\n\nإن كان للمعلم حساب دخول فسيدخل بالرقم الجديد.`))return;
+   const {data,error}=await sb.rpc('admin_change_teacher_civil_id',{p_teacher_id:id,p_new_civil:nv});
+   if(error)return moneySafeError(error);
+   inp.dataset.old=String(data?.civil_id||nv);inp.value=inp.dataset.old;
+   if(data?.row_version){ver=Number(data.row_version);form.dataset.v339ver=String(ver)}
+   toast(data?.login_changed?'تم تغيير الرقم القومي، وصار الدخول بالرقم الجديد':'تم تغيير الرقم القومي');
+  }
+ }
+ await __v339BaseSaveTeacherEdit(e,id,oldSchoolId,ver,...rest);
+ if(document.body.contains(form))return;
+ try{
+  const {data:rows,error}=await sb.from('data_completion_changes').select('id').eq('entity_type','teacher').eq('entity_id',id).eq('status','pending_admin_approval').eq('changed_by',profile.id).in('field_name',['work_start_date','grade_acquired_date']);
+  if(error)throw error;
+  let n=0;for(const r of rows||[]){const {error:re}=await sb.rpc('review_data_completion_change',{p_change_id:r.id,p_action:'approve',p_note:null});if(!re)n++}
+  if(n)toast('تم اعتماد تعديل التاريخ مباشرة (مدير النظام)');
+ }catch(err){console.warn('v339 dates',err)}
+};
+/* v339-end */
 </script>
 
 <div id="reportPreviewOverlay" class="report-preview-overlay" role="dialog" aria-modal="true" aria-label="معاينة التقرير" aria-hidden="true">
