@@ -1,14 +1,14 @@
 <!doctype html>
+<!-- v359: نافذة «ما الذي يراه ويفعله؟»: كل إجراء زر — منع/سماح لهذا الشخص فقط (دائم حتى يُلغى أو أسبوع/شهر/أيام) عبر admin_grant_add، أو إلغاء استثنائه عبر admin_grant_revoke، ثم يُعاد الحساب. قاعدة البيانات v359_person_permission_toggle (expires_at فارغ = دائم؛ الإضافة تلغي الاستثناء السابق على الإجراء نفسه). -->
+<!-- v358: مركز التحكم — المرحلة 4: تبويب «الوصول المؤقت والمراجعة» (admin_grants_list/admin_grant_add/admin_grant_revoke، admin_access_review_list/admin_access_review_decide)، «ما الذي يراه ويفعله؟» في ملف المستخدم (admin_view_as قراءة فقط)، و«تراجع» في التدقيق لأفعال cc_* (admin_revert_action مرة واحدة لكل فعل). قاعدة البيانات v358_control_center_governance. -->
+<!-- v357: مركز التحكم — المرحلة 3: تبويب «الصلاحيات» (مصفوفة 12 إجراء × 6 أدوار، جدول على الكمبيوتر وبطاقات على الهاتف، تغييرات معلّقة بمعاينة الأثر ثم تطبيق بكلمة تأكيد). قاعدة البيانات v357_permission_matrix: permission_capabilities/permission_rules + private.cap_allowed + مشغلات trg_v357_* على 15 جدولًا (مدير النظام والمشغلات المتداخلة لا تُفحص)، admin_permission_matrix/admin_set_permissions. -->
+<!-- v356: مركز التحكم — المرحلة 2 (أفعال): ملف المستخدم (إعادة كلمة المرور + واتساب، إلزام/إلغاء إلزام التغيير، إنهاء الجلسات، تعطيل/تفعيل بكلمة تأكيد، تعديل الأدوار ومراحل المنسق)، نقل مدارس الابتدائي/الإعدادي بين الموجهين بمعاينة الأثر، ومفاتيح البوابة. قاعدة البيانات v356_control_center_actions: admin_account_action وadmin_move_schools وadmin_set_flag (مدير النظام فقط، كل فعل في audit_log بالأفعال cc_*). -->
+<!-- v355: مركز التحكم لمدير النظام — المرحلة 1 (عرض فقط): تبويب controlCenter بعد «لوحة النظام» فيه نظرة عامة وإشارات الخطر، المستخدمون وملف كل مستخدم (الأدوار والنطاق والحساب ونشاط 30 يومًا)، خريطة النطاق لكل مرحلة، والتدقيق بالفلاتر والقيمة قبل/بعد. قاعدة البيانات v355_control_center_read: admin_control_center() وadmin_audit_search() للدور النشط admin فقط. -->
 <!-- v354: «المتصلون الآن» ← «محاولات مرفوضة»: تجميع بالشخص (v354DenGroups: ما كتبه + المصدر) — الشاشة سطر لكل شخص (عدد المحاولات، الأسباب v354Why، آخر محاولة، المصدر، الجهاز) يُفتح لعرض محاولاته، والتقرير deniedAttempts صف لكل شخص (المحاولات، السبب، أول/آخر محاولة) مرتب بالأكثر محاولات؛ وإن كان البحث على شخص واحد فالتقرير صف لكل محاولة كما كان. واجهة فقط. -->
 <!-- v353: «المتصلون الآن»: تنسيق الهاتف (التبويبات الثلاثة في صف وأزرار الفترة في صف، وسطر مختصر لكل مستخدم يُفتح بالضغط لعرض جلساته، وسطر مختصر لكل محاولة مرفوضة) + تقريرا طباعة A4 بمحرك التقارير: «سجل الدخول على البرنامج» (accessLog: صف لكل مستخدم، أو صف لكل دخول عند البحث عن مستخدم واحد) و«محاولات الدخول المرفوضة» (deniedAttempts) يتبعان الفترة والبحث المختارين؛ لمدير النظام فقط، واجهة فقط. -->
 <!-- v352: «المتصلون الآن» (مدير النظام): تبويبان جديدان — «سجل الدخول» (admin_access_report: اليوم/أسبوع/شهر/فترة محددة + بحث بالاسم + ملخص لكل مستخدم وتفاصيل كل دخول) و«محاولات مرفوضة» (admin_denied_attempts: شاشة دخول البرنامج + بوابة المعلمين)؛ login() يسجّل المحاولة الفاشلة بـlog_login_failure (بلا كلمة المرور). قاعدة البيانات v352_access_reports. -->
 <!-- v351: renderReportSchema: إن لم تكن للتقرير إجماليات والاعتماد معطّل (approval.enabled===false) لا يُضاف الذيل الفارغ (report-approval-space بارتفاع 66px) فلا ينفرد بصفحة فارغة أخيرة (مثال: «الجدول الأسبوعي لمعلمي المدرسة» ابن دقيق العيد 24 صفًا). بقية التقارير بلا تغيير. -->
 <!-- v350: معلم الأجر: حقل «الدرجة الوظيفية» يُخفى ويظهر بدله نص ثابت «معلم بالأجر» عند اختيار نوع العمل «بالأجر» في كل نماذج المعلم (تعديل المعلم وصفحته، الإضافة السريعة، إنشاء حساب، شاشة إدخال بيانات المدارس داخل الجذر المعزول) — كتلة v350 آخر السكربت (MutationObserver + v350Watch للجذر المعزول)؛ القيمة تضبطها قاعدة البيانات (مشغّل v349 trg_v349_paid_job_title)، ولا يُطلب إدخالها. -->
-<!-- v346: صفحة تعديل بيانات المعلم — بطاقة «حساب الدخول»: زر «إرسال واتساب» بجوار «نسخ كلمة المرور» بعد إنشاء الحساب أو إعادة تعيين كلمة المرور (v346WaBtn): رسالة جاهزة برابط البرنامج واسم المستخدم (الرقم القومي) وكلمة المرور إلى هاتف المعلم، تفتح تطبيق واتساب على الهاتف (عادي أو أعمال) عبر v306Wa وإلا wa.me. واجهة فقط. -->
-<!-- v345: modal() يزيل الصنف v339-page عند فتح أي نافذة، فالنوافذ المفتوحة من داخل صفحة «تعديل بيانات المعلم» (مثل حذف المعلم) لا ترث ملء الشاشة. -->
-<!-- v344: «تعديل بيانات المعلم» صفحة كاملة بأقسام لكل أدوار التعديل (admin/stage_coordinator/supervisor/senior_teacher) — كتلة v344 آخر السكربت: ① الأساسية (مع الرقم القومي) ② الوظيفية (الدرجة والتواريخ ومشرف المادة) ③ المدرسة والانتداب ④ مسؤول البيانات وحساب الدخول (الحساب للمدير)؛ «حفظ» في كل قسم يحفظ النموذج ويعيد الصفحة بموضع التمرير نفسه؛ تغيير المدرسة الأساسية/الانتداب/إلغاؤه فوري برسالة الفصول المسندة وإلغاء إسنادها (المدير unassign_class_atomic، والبقية الحذف بسياسات نطاقهم)؛ «🏠 الرئيسية» و«رجوع» مع تنبيه عند عدم الحفظ. v295/v339/إلغاء الانتداب صارت لهذه الأدوار (حذف المعلم وحساب الدخول للمدير فقط). قاعدة البيانات v344: الرقم القومي لكل دور في نطاقه، وسياسة teaching_sup_remove للموجه. -->
-<!-- v343: ترويسة تقارير A4: شعار التوجيه (REPORT_LOGO_SRC نسخة 144px) يمين كل صفحة وبجواره سطرا تعريف بالنظام (REPORT_BRAND_NAME/REPORT_BRAND_ABOUT) ثم عنوان التقرير — بطلب المستخدم «تعريف بسيط بالنظام» بلا رابط؛ مسافات الترويسة قُلّلت (الفاصل 14←5، الحشو والهامش 7←4) فالمساحة الرأسية 95px كما كانت ولا ينقص صف من أي صفحة؛ reportRenderSharePageBlob يرسم الشعار في صورة واتساب/PDF. الأعمدة والتذييل والحسابات بلا تغيير. -->
-<!-- v342: إصلاح: زر «تقرير المعلمين (حسب الفلاتر)» في صفحة المعلمين يفتح «أنصبة المعلمين» (teacherWorkload) فلم يكن يتبع «حالة المعلم» (v341 ربطه بتقرير المعلمين القديم فقط) — الآن غلاف currentReportFilterState يشمل teacherWorkload وصفوفه تحمل _tstates (v341ListStates من كل صفوف المعلم)، والتصفية في كتلة v342 بعد غلاف v132 (قبل طبقة v103 التي تُسقط الصفوف لأي فلتر لا تعرفه) بدل غلاف v129ReportPred. -->
 <html lang="ar" dir="rtl">
 <head>
 <!-- إعداد: أ/ محمود عبدالمفدي محمد أبوالنجا | الصفة: معلم -->
@@ -16,7 +16,7 @@
 <script>/* v226: العنوان الموحد — انظر التعليق أعلى الملف */(function(){try{if(/\.github\.io$/.test(location.hostname)&&/^\/science-guidance\/?(index\.html)?$/.test(location.pathname)&&!/[?&]stay\b/.test(location.search))location.replace('https://teachers-data-portal.vercel.app/app/'+location.hash)}catch(e){}})();</script>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#152c43">
-<title>نظام توجيه العلوم — v354</title>
+<title>نظام توجيه العلوم — v359</title>
 <link rel="manifest" href="./manifest.webmanifest">
 <link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png">
 <link rel="apple-touch-icon" href="./icon-192.png">
@@ -2097,6 +2097,123 @@ body.v293-ro select[onchange*="v101ChangeSlot"]{pointer-events:none;opacity:.65}
 .v352-u{border-bottom:1px solid var(--line,#e2e8f0)}.v352-u>summary{cursor:pointer;padding:8px 2px;list-style:none}.v352-u>summary::-webkit-details-marker{display:none}.v352-u>summary b{display:block}
 .v352-ses{padding:0 10px 8px;font-size:13px}.v352-ses>div{padding:3px 0}
 .v352-d{padding:8px 2px;border-bottom:1px solid var(--line,#e2e8f0)}.v352-u:last-child,.v352-d:last-child{border-bottom:0}
+/* v355: مركز التحكم — تخطيط فقط (الألوان والمقاسات من نظام التصميم الموحد) */
+.v355{display:grid;gap:14px;min-width:0}
+.v355-body{display:grid;gap:12px;min-width:0}
+.v355-tabs{display:flex;gap:6px;overflow-x:auto;padding-bottom:2px;-webkit-overflow-scrolling:touch}
+.v355-tab{flex:0 0 auto;border:1px solid var(--line);background:transparent;color:inherit;border-radius:999px;padding:7px 14px;font:inherit;cursor:pointer;white-space:nowrap}
+.v355-tab.on{background:var(--primary);border-color:var(--primary);color:#fff}
+.v355-tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px}
+.v355-tile{border:1px solid var(--line);border-inline-start:4px solid var(--info);border-radius:10px;padding:10px 12px;display:grid;gap:2px}
+.v355-tile b{font-size:22px;font-variant-numeric:tabular-nums}
+.v355-tile span{font-size:12.5px;color:var(--muted)}
+.v355-tile.ok{border-inline-start-color:var(--ok)}.v355-tile.warn{border-inline-start-color:var(--warn)}.v355-tile.danger{border-inline-start-color:var(--danger)}
+.v355-h{font-size:15px;margin:4px 0 6px}
+.v355-sig,.v355-det,.v355-stage,.v355-arow{border:1px solid var(--line);border-radius:10px;padding:0;min-width:0}
+.v355-sig>summary,.v355-det>summary,.v355-stage>summary,.v355-arow>summary,.v355-asum{display:flex;gap:8px;align-items:center;flex-wrap:wrap;padding:9px 11px;cursor:pointer;list-style:none}
+.v355-asum{cursor:default}
+.v355-sig>summary::-webkit-details-marker,.v355-det>summary::-webkit-details-marker,.v355-stage>summary::-webkit-details-marker,.v355-arow>summary::-webkit-details-marker{display:none}
+.v355-sig.danger{border-inline-start:4px solid var(--danger)}.v355-sig.warn{border-inline-start:4px solid var(--warn)}.v355-sig.info{border-inline-start:4px solid var(--info)}
+.v355-grow{flex:1 1 180px;min-width:0;overflow-wrap:anywhere}
+.v355-grow .cell-sub{display:block}
+.v355-count{font-variant-numeric:tabular-nums;font-size:17px}
+.v355-items{display:flex;flex-wrap:wrap;gap:6px;padding:0 11px 10px}
+.v355-items>span,.v355-items>.v355-link{border:1px solid var(--line);border-radius:8px;padding:3px 9px;font-size:13px}
+.v355-link{background:none;border:0;color:var(--primary);font:inherit;cursor:pointer;padding:0;text-decoration:underline;text-underline-offset:3px}
+.v355-items>.v355-link{text-decoration:none}
+.v355-clean{display:flex;flex-wrap:wrap;gap:6px}
+.v355-two{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.v355-box{border:1px solid var(--line);border-radius:10px;padding:12px;display:grid;gap:8px;align-content:start;min-width:0}
+.v355-bar{display:grid;grid-template-columns:minmax(90px,30%) 1fr auto;gap:8px;align-items:center;font-size:13px}
+.v355-bar i{display:block;height:10px;border-radius:6px;background:var(--primary);width:var(--w);min-width:3px;opacity:.8}
+.v355-bar b{font-variant-numeric:tabular-nums}
+.v355-chips{display:flex;flex-wrap:wrap;gap:6px}
+.v355-chip{border:1px solid var(--line);background:transparent;color:inherit;border-radius:999px;padding:4px 11px;font:inherit;font-size:13px;cursor:pointer}
+.v355-flag{display:flex;gap:8px;align-items:center;font-size:13.5px}
+.v355-tools{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,190px),1fr));gap:8px}
+.v355-tools>*{width:100%;max-width:100%;min-width:0}
+.v355-user{display:flex;gap:10px;align-items:center;width:100%;text-align:start;border:1px solid var(--line);background:transparent;color:inherit;border-radius:10px;padding:9px 11px;font:inherit;cursor:pointer;margin-top:6px}
+.v355-user:hover,.v355-user:focus-visible{border-color:var(--primary)}
+.v355-when{font-size:12px;color:var(--muted);white-space:nowrap}
+.v355-prof-head{display:flex;gap:12px;align-items:flex-start;flex-wrap:wrap}
+.v355-prof-head h3{margin:0 0 6px}
+.v355-kv{display:flex;gap:10px;justify-content:space-between;align-items:baseline;border-bottom:1px dashed var(--line);padding-bottom:5px;font-size:13.5px;flex-wrap:wrap}
+.v355-kv>span{color:var(--muted)}
+.v355-kv>b{font-weight:600;text-align:end;min-width:0;overflow-wrap:anywhere}
+.v355-scope-body{display:grid;gap:8px;padding:0 11px 11px}
+.v355-gap{font-size:13px;line-height:1.9}
+.v355-diff{display:grid;gap:4px;padding:0 11px 10px;font-size:12.5px}
+.v355-diff>div{display:flex;gap:8px;flex-wrap:wrap;align-items:baseline;overflow-wrap:anywhere}
+.v355-diff .k{color:var(--muted);direction:ltr;font-family:ui-monospace,monospace;font-size:11.5px}
+.v355-diff .m{color:var(--danger)}.v355-diff .a{color:var(--ok)}
+@media (max-width:760px){
+ .v355-two{grid-template-columns:1fr}
+ .v355-tabs{display:grid;grid-template-columns:1fr 1fr;overflow:visible}
+ .v355-tab{white-space:normal;padding:7px 8px}
+ .v355-tab:last-child:nth-child(odd){grid-column:1/-1}
+ .v355-tiles{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .v355-tile b{font-size:19px}
+ .v355-when{flex-basis:100%;white-space:normal}
+ .v355-user{flex-wrap:wrap}
+ .v355-bar{grid-template-columns:minmax(80px,40%) 1fr auto}
+}
+/* v356: مركز التحكم — أفعال المرحلة 2 (تخطيط فقط) */
+.v356-actions{display:flex;gap:8px;flex-wrap:wrap}
+.v356-boxhead{display:flex;gap:8px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+.v356-cbody{display:grid;gap:8px;margin-bottom:8px}
+.v356-lbl{display:block;font-size:13px;margin:10px 0 4px}
+#modal .modal-card input#v356Reason,#modal .modal-card input#v356Word,#modal .modal-card select#v356MTo{width:100%}
+.v356-chk{display:flex;gap:8px;align-items:center;font-size:14px;padding:5px 0;cursor:pointer;min-width:0;overflow-wrap:anywhere}
+.v356-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,170px),1fr));gap:2px 12px}
+.v356-schools{max-height:min(40vh,320px);overflow:auto;border:1px solid var(--line);border-radius:10px;padding:6px 10px;margin:8px 0}
+.v356-impact{display:grid;gap:4px;border:1px solid var(--line);border-inline-start:4px solid var(--warn);border-radius:10px;padding:10px 12px;margin-top:10px;font-size:13.5px}
+.v356-warn{color:var(--warn);font-weight:600}
+.v356-pw{font-size:20px;letter-spacing:.04em}
+.v356-sw{flex:0 0 auto;width:42px;height:24px;border-radius:99px;border:0;background:var(--line);position:relative;cursor:pointer;padding:0}
+.v356-sw::after{content:"";position:absolute;top:3px;inset-inline-start:3px;width:18px;height:18px;border-radius:50%;background:#fff;transition:inset-inline-start .15s}
+.v356-sw.on{background:var(--ok)}
+.v356-sw.on::after{inset-inline-start:21px}
+.v356-sw:focus-visible{outline:2px solid var(--primary);outline-offset:2px}
+@media (max-width:760px){.v356-actions>.btn{flex:1 1 calc(50% - 8px)}}
+/* v357: مصفوفة الصلاحيات (تخطيط فقط) */
+.v357-intro{display:flex;gap:10px;align-items:flex-start;justify-content:space-between;flex-wrap:wrap}
+.v357-intro>div{flex:1 1 260px;min-width:0}
+.v357-tablebox{overflow-x:auto;border:1px solid var(--line);border-radius:10px}
+.v357-table{width:100%;border-collapse:collapse;font-size:13px;min-width:820px}
+.v357-table th,.v357-table td{padding:8px;border-bottom:1px solid var(--line);text-align:center;vertical-align:middle}
+.v357-table th:first-child,.v357-table td:first-child{text-align:start;min-width:200px}
+.v357-table th small,.v357-table td small{display:block;font-weight:400;color:var(--muted);font-size:11.5px}
+.v357-cell{border:1px solid var(--line);border-radius:7px;padding:4px 10px;font:inherit;font-size:12.5px;font-weight:600;cursor:pointer;min-width:66px;background:transparent}
+.v357-cell.on{color:var(--ok);background:var(--ok-bg,transparent);border-color:var(--ok)}
+.v357-cell.off{color:var(--danger);border-color:var(--danger)}
+.v357-cell.chg{outline:3px solid var(--gold,#c79a2d);outline-offset:1px}
+.v357-cell:focus-visible{outline:2px solid var(--primary);outline-offset:2px}
+.v357-fixed{font-size:12px;color:var(--muted)}
+.v357-cards{display:none;gap:10px}
+.v357-card{border:1px solid var(--line);border-radius:10px;padding:10px 12px;display:grid;gap:6px}
+.v357-card>small{color:var(--muted);font-size:12px}
+.v357-roles{display:grid;gap:6px}
+.v357-rr{display:flex;justify-content:space-between;align-items:center;gap:8px;font-size:13.5px}
+.v357-bar{position:sticky;bottom:0;border:1px solid var(--line);border-inline-start:4px solid var(--warn);border-radius:10px;padding:10px 12px;display:grid;gap:8px;background:var(--card);box-shadow:0 -6px 18px -12px rgba(0,0,0,.35)}
+.v357-impact{display:grid;gap:3px;font-size:13px}
+@media (max-width:900px){.v357-tablebox{display:none}.v357-cards{display:grid}}
+@media (max-width:760px){.v357-bar{bottom:calc(64px + env(safe-area-inset-bottom,0px))}}
+/* v358: الوصول المؤقت والمراجعة (تخطيط فقط) */
+.v358-row{cursor:default;flex-wrap:wrap}
+.v358-btns{display:flex;gap:6px;flex-wrap:wrap}
+.v358-sug{color:var(--warn)}
+.v358-sec{display:grid;gap:2px}
+.v358-old{display:grid;gap:2px;padding:0 11px 10px}
+.v358-caps{display:grid;gap:6px}
+.v358-rv{padding:3px 10px;font-size:12.5px}
+#modal .modal-card select#v358P,#modal .modal-card select#v358C,#modal .modal-card select#v358A,#modal .modal-card input#v358D{width:100%}
+@media (max-width:760px){.v358-btns{flex-basis:100%}.v358-btns>.btn{flex:1 1 0}}
+/* v359: أزرار إجراءات الشخص في نافذة «ما الذي يراه ويفعله؟» */
+.v359-cap{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;width:100%;text-align:start;border:1px solid var(--line);border-radius:10px;padding:8px 10px;background:transparent;color:inherit;font:inherit;font-size:14px;cursor:pointer}
+.v359-cap:hover,.v359-cap:focus-visible{border-color:var(--primary)}
+.v359-cap.has{border-inline-start:4px solid var(--warn)}
+.v359-cap>span:first-child{flex:1 1 140px;min-width:0}
+#modal .modal-card select#v359Dur,#modal .modal-card input#v359Days{width:100%}
 </style>
 </head>
 <body>
@@ -2464,6 +2581,11 @@ window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();window.v152
 window.addEventListener('appinstalled',()=>{window.v152InstallPrompt=null;v152SyncInstallBtn()});
 if('serviceWorker' in navigator&&location.protocol!=='file:')window.addEventListener('load',()=>navigator.serviceWorker.register('./service-worker.js').catch(()=>{}));
 const V145_NEWS=[
+ ['v359','مركز التحكم: في نافذة «ما الذي يراه ويفعله؟» اضغط على أي إجراء لتمنعه على هذا الشخص وحده أو تسمح له به (دائمًا حتى تلغيه أو لمدة محددة)، أو لتلغي استثناءه.'],
+ ['v358','مركز التحكم — المرحلة 4: تبويب «الوصول المؤقت والمراجعة» (استثناء لشخص بمدة تنتهي وحدها، ومراجعة كل الأدوار النشطة بإبقاء أو إلغاء)، وفي ملف المستخدم «ما الذي يراه ويفعله؟» لكل دور، وزر «تراجع» في التدقيق لأفعال مركز التحكم.'],
+ ['v357','مركز التحكم — المرحلة 3: تبويب «الصلاحيات»: مصفوفة لكل إجراء حساس (إضافة معلم، تعديل بياناته، الرقم القومي، الانتداب، الفصول، الإسناد، الجداول، الاعتماد، الاستكمال، حصص الأجر، إعدادات المدرسة) ولكل دور؛ «ممنوع» يوقف الإجراء للدور فورًا داخل قاعدة البيانات، مع معاينة الأثر قبل التطبيق.'],
+ ['v356','مركز التحكم — المرحلة 2: من ملف المستخدم: إعادة كلمة المرور مع إرسالها بالواتساب، إلزام أو إلغاء إلزام تغييرها، إنهاء الجلسات، تعطيل الحساب وتفعيله، وتعديل الأدوار ومراحل المنسق؛ ونقل مدارس بين الموجهين بمعاينة الأثر قبل التطبيق؛ ومفاتيح البوابة تُفتح وتُغلق من النظرة العامة. كل فعل يُسجَّل في التدقيق.'],
+ ['v355','مركز التحكم (مدير النظام): شاشة جديدة فيها نظرة عامة وإشارات الخطر، وقائمة المستخدمين وملف كامل لكل مستخدم (أدواره ونطاقه وحسابه ونشاطه)، وخريطة النطاق لكل مرحلة، وسجل التدقيق بالقيمة قبل/بعد. المرحلة 1: عرض فقط.'],
  ['v354','المتصلون الآن ← محاولات مرفوضة: الشخص يظهر مرة واحدة بعدد محاولاته وأسبابها وأول/آخر محاولة (في الشاشة والتقرير)؛ والتفاصيل بالضغط على اسمه أو بالبحث عنه.'],
  ['v353','المتصلون الآن: شكل مختصر مناسب للهاتف (سطر لكل مستخدم يُفتح بالضغط) وزر «📄 تقرير» لطباعة سجل الدخول والمحاولات المرفوضة A4 حسب الفترة والبحث.'],
  ['v352','المتصلون الآن (مدير النظام): تبويبان جديدان «سجل الدخول» (اليوم/أسبوع/شهر/فترة محددة مع بحث بالاسم) و«محاولات مرفوضة» لمحاولات الدخول الفاشلة على البرنامج وبوابة المعلمين.'],
@@ -2633,7 +2755,7 @@ async function loadPage(force=false){
  if(currentPage==='studyPlans'||currentPage==='budget')currentPage='dashboard';
  if(currentPage==='reports'&&typeof V186_MERGED!=='undefined'&&V186_MERGED.has(profile?.role))currentPage='statistics'; // v186
  __pageLoadController?.abort();__pageLoadController=new AbortController();const local=__pageLoadController;
- const pages={timetableProgress:v306Page,onlineUsers:v294Page,paidRequests:v288Page,teacherTimetable:teacherTimetablePage,dashboard:dashboardPage,users:usersPage,supervisors:supervisorsPage,schools:schoolsPage,incoming:incomingDataPage,teachers:teachersPage,classes:classesPage,assignments:assignmentsPage,approval:approvalPage,myAssignments:myAssignmentsPage,workload:workloadPage,budget:budgetPage,completion:dataCompletionPage,alerts:alertsPage,statistics:statisticsPage,reports:reportsPage,announcements:announcementsPage,supervisorHealth:supervisorHealthPage,supDistribution:supDistributionPage,schoolEntry:v236SchoolEntryPage};
+ const pages={controlCenter:v355Page,timetableProgress:v306Page,onlineUsers:v294Page,paidRequests:v288Page,teacherTimetable:teacherTimetablePage,dashboard:dashboardPage,users:usersPage,supervisors:supervisorsPage,schools:schoolsPage,incoming:incomingDataPage,teachers:teachersPage,classes:classesPage,assignments:assignmentsPage,approval:approvalPage,myAssignments:myAssignmentsPage,workload:workloadPage,budget:budgetPage,completion:dataCompletionPage,alerts:alertsPage,statistics:statisticsPage,reports:reportsPage,announcements:announcementsPage,supervisorHealth:supervisorHealthPage,supDistribution:supDistributionPage,schoolEntry:v236SchoolEntryPage};
  const renderPage=pages[currentPage]||dashboardPage;
  const html=await v97RenderPage(renderPage,{force,signal:local.signal});if(local.signal.aborted)return;
  c.innerHTML=html;appNavRenderStrip();initializeCurrentPageUi(c);v97InstallStageFilter(c);enhanceMobileWorkspace(c);refreshMobileActionBar(c);if(currentPage==='dashboard')injectCompletionDashboardCards(c).catch(()=>{});
@@ -13936,6 +14058,528 @@ applyCurrentFiltersToReportSchema=function(schema,state){
 };
 function v353Report(id){if(profile?.role!=='admin')return toast('هذا التقرير لمدير النظام فقط.');return openReportById(id)}
 /* v353-end */
+/* v355-begin: مركز التحكم لمدير النظام — المرحلة 1 (عرض فقط): نظرة عامة ومخاطر، المستخدمون وملف كل مستخدم، خريطة النطاق، التدقيق. قاعدة البيانات: admin_control_center() وadmin_audit_search() (للدور النشط admin فقط) */
+const V355={data:null,tab:'over',q:'',role:'',sel:null,userAudit:{},audit:{days:'7',actor:'',q:'',rows:[],loaded:false,err:''},err:''};
+const V355_ACTIONS={teacher_record_updated:'تعديل بيانات معلم',teacher_record_created:'إضافة معلم',admin_remove_teacher:'حذف معلم',admin_change_teacher_civil_id:'تغيير رقم قومي',admin_reset_password:'إعادة كلمة مرور',create_user:'إنشاء حساب',grant_role:'منح دور',disable_forced_password_change:'إلغاء إلزام تغيير كلمة المرور',execute_teacher_delegation:'انتداب',school_submission_created:'إرسال للاعتماد',school_submission_status_changed:'تغيير حالة اعتماد',supervisor_direct_save_and_approve:'حفظ واعتماد الموجه',set_school_data_officer:'تعيين مسؤول بيانات',set_school_manager_contact:'بيانات مدير المدرسة',teacher_portal_approved:'اعتماد طلب بوابة',teacher_portal_rejected:'رفض طلب بوابة',teacher_portal_undo_reject:'تراجع عن رفض طلب',teacher_portal_editing_toggle:'فتح/إغلاق البوابة',teacher_portal_timetable_saved:'جدول معلم من البوابة',teacher_portal_sup_timetable_saved:'جدول معلم (مشرف البوابة)',teacher_timetable_saved:'حفظ جدول معلم',teaching_assignment_reassigned:'نقل إسناد',bulk_create_school_classes:'إضافة فصول',INSERT:'إضافة',UPDATE:'تعديل',DELETE:'حذف'};
+const V355_STAGES=['ابتدائي','إعدادي','ثانوي عام','ثانوي صناعي'];
+function v355Act(a){return V355_ACTIONS[a]||String(a||'—').replace(/_/g,' ')}
+function v355N(n){return Number(n||0).toLocaleString('ar-EG')}
+function v355Users(){return (V355.data&&V355.data.users)||[]}
+function v355User(id){return v355Users().find(u=>u.id===id)}
+async function v355Load(){const r=await sb.rpc('admin_control_center');if(r.error)throw r.error;V355.data=r.data||{};return V355.data}
+function v355Render(){const w=document.getElementById('v355Wrap');if(w)w.innerHTML=v355Inner()}
+function v355Tab(t){V355.tab=t;V355.sel=null;v355Render();if(t==='audit'&&!V355.audit.loaded)v355AuditLoad()}
+async function v355Refresh(){const w=document.getElementById('v355Wrap');try{await v355Load();V355.err=''}catch(e){V355.err=e.message||String(e)}if(V355.tab==='audit')await v355AuditLoad(true);else v355Render();if(w)toast('تم التحديث')}
+function v355Inner(){
+ const tabs=[['over','نظرة عامة ومخاطر'],['users','المستخدمون'],['scope','خريطة النطاق'],['perm','الصلاحيات'],['access','الوصول المؤقت والمراجعة'],['audit','التدقيق']];
+ const head=`<div class="v355-tabs" role="tablist">${tabs.map(([k,l])=>`<button type="button" role="tab" class="v355-tab${V355.tab===k?' on':''}" aria-selected="${V355.tab===k}" onclick="v355Tab('${k}')">${l}</button>`).join('')}</div>`;
+ const err=V355.err?`<div class="notice danger">تعذّر التحميل: ${esc(V355.err)}</div>`:'';
+ let body='';
+ if(V355.tab==='over')body=v355Over();
+ else if(V355.tab==='users')body=V355.sel?v355Profile(V355.sel):v355UsersList();
+ else if(V355.tab==='scope')body=v355Scope();
+ else if(V355.tab==='perm')body=v357Perm();
+ else if(V355.tab==='access')body=v358Access();
+ else body=v355Audit();
+ return head+err+`<div class="v355-body">${body}</div>`;
+}
+/* ── نظرة عامة ── */
+function v355Over(){
+ const d=V355.data||{},s=d.stats||{},sig=d.signals||[],f=d.flags||{};
+ const tile=(n,l,c)=>`<div class="v355-tile ${c}"><b>${v355N(n)}</b><span>${l}</span></div>`;
+ const risky=sig.filter(x=>(x.items||[]).length),clean=sig.filter(x=>!(x.items||[]).length);
+ const lv={bad:['danger','خطر'],warn:['warn','تنبيه'],info:['info','معلومة']};
+ const sigRow=x=>{const [c,l]=lv[x.level]||lv.info;const it=x.items||[];
+  return `<details class="v355-sig ${c}"><summary><span class="badge ${c}">${l}</span><span class="v355-grow">${esc(x.title)}</span><b class="v355-count">${v355N(it.length)}</b></summary>
+  <div class="v355-items">${it.slice(0,80).map(i=>i.id&&v355User(i.id)?`<button type="button" class="v355-link" onclick="v355Open('${esc(i.id)}')">${esc(i.name||'—')}</button>`:`<span>${esc(i.name||'—')}${i.stage?` <small>(${esc(i.stage)})</small>`:''}${i.count?` <small>— ${v355N(i.count)} محاولة</small>`:''}</span>`).join('')}${it.length>80?`<span class="cell-sub">و${v355N(it.length-80)} أخرى</span>`:''}</div></details>`};
+ const roles=s.roles||{},byRole=s.actions_by_role_7d||{};
+ const maxA=Math.max(1,...Object.values(byRole).map(Number));
+ const bars=Object.entries(byRole).sort((a,b)=>b[1]-a[1]).map(([r,c])=>`<div class="v355-bar"><span>${esc(r==='—'?'النظام / بلا دور':v294Role(r))}</span><i style="--w:${Math.round(c/maxA*100)}%"></i><b>${v355N(c)}</b></div>`).join('');
+ const flag=(on,l)=>`<div class="v355-flag"><span class="badge ${on?'ok':'danger'}">${on?'مفتوح':'مغلق'}</span><span>${l}</span></div>`;
+ return `<div class="v355-tiles">${tile(s.accounts,'حساب نشط','info')}${tile(s.online,'متصل الآن','ok')}${tile(s.sessions_today,'دخول اليوم','info')}${tile(s.failures_24h,'محاولة مرفوضة (24 ساعة)',Number(s.failures_24h)?'warn':'ok')}${tile(s.actions_7d,'إجراء مسجّل (7 أيام)','info')}${tile(risky.length,'إشارة تحتاج قرارًا',risky.length?'danger':'ok')}</div>
+ <h3 class="v355-h">إشارات الخطر</h3>
+ ${risky.length?risky.map(sigRow).join(''):'<div class="notice ok">لا توجد إشارات خطر الآن.</div>'}
+ ${clean.length?`<div class="v355-clean">${clean.map(x=>`<span class="badge ok">✓ ${esc(x.title)}</span>`).join('')}</div>`:''}
+ <div class="v355-two">
+  <div class="v355-box"><h3 class="v355-h">من يعمل في البرنامج (آخر 7 أيام)</h3>${bars||'<div class="cell-sub">لا إجراءات.</div>'}</div>
+  <div class="v355-box"><h3 class="v355-h">الأدوار النشطة</h3><div class="v355-chips">${Object.entries(roles).sort((a,b)=>b[1]-a[1]).map(([r,c])=>`<button type="button" class="v355-chip" onclick="V355.role='${esc(r)}';v355Tab('users')">${esc(v294Role(r))} <b>${v355N(c)}</b></button>`).join('')}</div>
+   <h3 class="v355-h">مفاتيح البوابة</h3>${flag(f.editing_open,'تسجيل البيانات من بوابة المعلمين')}${flag(f.timetable_open,'إدخال المعلم لجدوله من البوابة')}<div class="cell-sub">التحكم في المفاتيح يُضاف في المرحلة 2.</div></div>
+ </div>`;
+}
+/* ── المستخدمون ── */
+function v355UsersList(){
+ const q=v288Norm(V355.q),r=V355.role;
+ const all=v355Users();
+ const list=all.filter(u=>(!q||v288Norm(u.name).includes(q)||String(u.civil_id||'').includes(q)||String(u.phone||'').includes(q))&&(!r||(u.roles||[]).includes(r)));
+ const roleOpts=['',...Object.keys(ROLE_LABELS)].map(k=>`<option value="${k}"${k===r?' selected':''}>${k?esc(ROLE_LABELS[k]):'كل الأدوار'}</option>`).join('');
+ return `<div class="v355-tools"><input id="v355Q" type="search" placeholder="بحث بالاسم أو الرقم القومي أو الهاتف" value="${esc(V355.q)}" oninput="V355.q=this.value;v355ListOnly()"><select id="v355Role" onchange="V355.role=this.value;v355ListOnly()">${roleOpts}</select></div>
+ <div id="v355List">${v355ListRows(list,all.length)}</div>`;
+}
+function v355ListOnly(){const q=v288Norm(V355.q),r=V355.role,all=v355Users();const list=all.filter(u=>(!q||v288Norm(u.name).includes(q)||String(u.civil_id||'').includes(q)||String(u.phone||'').includes(q))&&(!r||(u.roles||[]).includes(r)));const el=document.getElementById('v355List');if(el)el.innerHTML=v355ListRows(list,all.length)}
+function v355ListRows(list,total){
+ if(!list.length)return '<div class="cell-sub" style="padding:10px">لا يوجد حساب بهذا البحث.</div>';
+ return `<div class="cell-sub">${v355N(list.length)} من ${v355N(total)} حساب</div>`+list.map(u=>{
+  const sc=(u.schools||[]).length,st=(u.coord_stages||[]);
+  const scope=[st.length?'منسق: '+st.join('، '):'',sc?v355N(sc)+' مدرسة':'',u.home_school?esc(u.home_school.name):''].filter(Boolean).join(' · ');
+  return `<button type="button" class="v355-user" onclick="v355Open('${esc(u.id)}')"><span class="v294-dot${u.online?' on':''}"></span><span class="v355-grow"><b>${esc(u.name||'—')}</b>${u.active?'':' <span class="badge danger">معطل</span>'}${u.must_change_password?' <span class="badge warn">كلمة مرور مؤقتة</span>':''}<span class="cell-sub">${(u.roles||[]).map(v294Role).join('، ')||'بلا دور'}${scope?' — '+scope:''}</span></span><span class="v355-when">${u.online?'متصل الآن':esc(v294Ago(u.last_seen_at||u.last_sign_in_at))}</span></button>`}).join('');
+}
+function v355Open(id){V355.tab='users';V355.sel=id;v355Render();v333ScrollTopSafe();if(!V355.userAudit[id])v355LoadUserAudit(id)}
+function v333ScrollTopSafe(){try{if(typeof v333ScrollTop==='function')v333ScrollTop();else window.scrollTo(0,0)}catch(e){}}
+async function v355LoadUserAudit(id){
+ try{const r=await sb.rpc('admin_audit_search',{p_from:new Date(Date.now()-30*864e5).toISOString(),p_to:new Date(Date.now()+6e4).toISOString(),p_actor:id,p_q:null,p_limit:30});if(r.error)throw r.error;V355.userAudit[id]=r.data||[]}catch(e){V355.userAudit[id]={err:e.message||String(e)}}
+ if(V355.sel===id)v355Render();
+}
+function v355Profile(id){
+ const u=v355User(id);if(!u)return '<div class="notice warn">الحساب غير موجود.</div>';
+ const kv=(k,v)=>`<div class="v355-kv"><span>${k}</span><b>${v}</b></div>`;
+ const st=u.coord_stages||[],sch=u.schools||[],h=u.home_school;
+ const byStage={};sch.forEach(s=>{(byStage[s.stage]=byStage[s.stage]||[]).push(s)});
+ const schoolsHtml=Object.keys(byStage).length?Object.entries(byStage).map(([stg,arr])=>`<details class="v355-det"><summary>${esc(stg)} — ${v355N(arr.length)} مدرسة</summary><div class="v355-items">${arr.map(s=>`<span>${esc(s.name)}${s.how==='subject'&&s.subjects?` <small>(${esc((s.subjects||[]).join('، '))})</small>`:''}</span>`).join('')}</div></details>`).join(''):'<span class="cell-sub">لا مدارس مسندة إليه كموجه.</span>';
+ const ua=V355.userAudit[id];
+ const acts=!ua?'<div class="cell-sub">جارٍ التحميل…</div>':ua.err?`<div class="notice danger">${esc(ua.err)}</div>`:ua.length?ua.map(v355AuditRow).join(''):'<div class="cell-sub">لا إجراءات خلال 30 يومًا.</div>';
+ return `<div class="v355-prof-head"><button type="button" class="btn secondary" onclick="V355.sel=null;v355Render()">← رجوع للقائمة</button><div class="v355-grow"><h3>${esc(u.name||'—')}</h3><div class="v355-chips">${u.active?'<span class="badge ok">نشط</span>':'<span class="badge danger">معطل</span>'}${u.online?'<span class="badge info">متصل الآن</span>':''}${(u.roles||[]).map(r=>`<span class="badge">${esc(v294Role(r))}</span>`).join('')}</div></div></div>
+ <div class="v355-two">
+  <div class="v355-box"><h3 class="v355-h">الأدوار والنطاق</h3>
+   ${kv('الأدوار',esc((u.roles||[]).map(v294Role).join('، ')||'بلا دور'))}
+   ${st.length?kv('منسق المرحلة',esc(st.join('، '))):''}
+   ${h?kv('المدرسة الأصلية',esc(h.name)+' <small>('+esc(h.stage||'')+')</small>')+kv('في المدرسة',[h.is_senior?'مشرف المادة':'',h.is_officer?'مسؤول البيانات (يدوي)':''].filter(Boolean).join('، ')||'—'):''}
+   ${sch.length||(u.roles||[]).includes('supervisor')?`<div class="v355-kv"><span>مدارس الموجه</span><b>${v355N(sch.length)}</b></div>${schoolsHtml}`:''}
+  </div>
+  <div class="v355-box"><h3 class="v355-h">الحساب والأمان</h3>
+   ${kv('اسم الدخول (الرقم القومي)',`<span dir="ltr">${esc(u.civil_id||'—')}</span>`)}
+   ${kv('الهاتف',`<span dir="ltr">${esc(u.phone||'—')}</span>`)}
+   ${kv('كلمة المرور',u.must_change_password?'<span class="badge warn">مؤقتة — مطلوب تغييرها</span>':'غيّرها المستخدم أو لا يُلزم بتغييرها')}
+   ${kv('أُنشئ الحساب',esc(v294Time(u.created_at)))}
+   ${kv('آخر تسجيل دخول',esc(v294Time(u.last_sign_in_at)))}
+   ${kv('آخر ظهور',u.online?'متصل الآن'+(u.active_role?' — '+esc(v294Role(u.active_role)):''):esc(v294Ago(u.last_seen_at)))}
+   ${kv('آخر جهاز',esc(u.last_device==='mobile'?'هاتف':u.last_device==='desktop'?'كمبيوتر':(u.last_device||'—')))}
+   ${kv('مرات الدخول (30 يومًا)',v355N(u.sessions30))}
+   <div class="cell-sub">أزرار التعطيل وإعادة كلمة المرور وإنهاء الجلسات تُضاف في المرحلة 2.</div>
+  </div>
+ </div>
+ <div class="v355-box"><h3 class="v355-h">نشاطه آخر 30 يومًا (${v355N(u.actions30)} إجراء)</h3>${acts}</div>`;
+}
+/* ── خريطة النطاق ── */
+function v355Scope(){
+ const users=v355Users().filter(u=>u.active),sig=(V355.data&&V355.data.signals)||[];
+ const noSup=(sig.find(x=>x.code==='school_no_supervisor')||{}).items||[];
+ const noAcc=(sig.find(x=>x.code==='school_sup_no_account')||{}).items||[];
+ return V355_STAGES.map(stg=>{
+  const coords=users.filter(u=>(u.coord_stages||[]).includes(stg)&&(u.roles||[]).includes('stage_coordinator'));
+  const sups=users.map(u=>({u,arr:(u.schools||[]).filter(s=>s.stage===stg)})).filter(x=>x.arr.length).sort((a,b)=>b.arr.length-a.arr.length);
+  const total=new Set(sups.flatMap(x=>x.arr.map(s=>s.id))).size;
+  const gapA=noSup.filter(s=>s.stage===stg),gapB=noAcc.filter(s=>s.stage===stg);
+  return `<details class="v355-stage" open><summary><b>${esc(stg)}</b><span class="cell-sub">${v355N(coords.length)} منسق · ${v355N(sups.length)} موجه · ${v355N(total)} مدرسة مغطاة</span>${gapA.length||gapB.length?`<span class="badge danger">${v355N(gapA.length+gapB.length)} فجوة</span>`:'<span class="badge ok">مغطاة</span>'}</summary>
+  <div class="v355-scope-body">
+   <div class="v355-kv"><span>المنسقون</span><b>${coords.length?coords.map(u=>`<button type="button" class="v355-link" onclick="v355Open('${esc(u.id)}')">${esc(u.name)}</button>`).join('، '):'<span class="badge warn">لا يوجد منسق</span>'}</b></div>
+   ${sups.map(x=>`<details class="v355-det"><summary><button type="button" class="v355-link" onclick="event.preventDefault();v355Open('${esc(x.u.id)}')">${esc(x.u.name)}</button> — ${v355N(x.arr.length)} مدرسة${x.arr.some(s=>s.how==='subject')?' <small>(بالمادة)</small>':''}</summary><div class="v355-items">${x.arr.map(s=>`<span>${esc(s.name)}${s.subjects?` <small>(${esc((s.subjects||[]).join('، '))})</small>`:''}</span>`).join('')}</div></details>`).join('')||'<div class="cell-sub">لا موجهين بحساب لهذه المرحلة.</div>'}
+   ${gapA.length?`<div class="v355-gap"><span class="badge danger">بلا موجه</span> ${gapA.map(s=>esc(s.name)).join('، ')}</div>`:''}
+   ${gapB.length?`<div class="v355-gap"><span class="badge danger">موجهها بلا حساب</span> ${gapB.map(s=>esc(s.name)).join('، ')}</div>`:''}
+  </div></details>`}).join('')+'<div class="cell-sub">نقل المدارس بين الموجهين مع معاينة الأثر يُضاف في المرحلة 2.</div>';
+}
+/* ── التدقيق ── */
+async function v355AuditLoad(force){
+ const a=V355.audit;if(a.loaded&&!force){v355Render();return}
+ a.err='';const days=Number(a.days||7);
+ try{const r=await sb.rpc('admin_audit_search',{p_from:new Date(Date.now()-days*864e5).toISOString(),p_to:new Date(Date.now()+6e4).toISOString(),p_actor:a.actor||null,p_q:a.q||null,p_limit:300});if(r.error)throw r.error;a.rows=r.data||[];a.loaded=true}catch(e){a.err=e.message||String(e)}
+ if(V355.tab==='audit')v355Render();
+}
+function v355AuditSet(k,v){V355.audit[k]=v;V355.audit.loaded=false;v355AuditLoad(true)}
+function v355Val(v){if(v===null||v===undefined||v==='')return '—';if(typeof v==='object')v=JSON.stringify(v);v=String(v);return v.length>90?v.slice(0,90)+'…':v}
+function v355Diff(o,n){
+ o=(o&&typeof o==='object'&&!Array.isArray(o))?o:{};n=(n&&typeof n==='object'&&!Array.isArray(n))?n:{};
+ const skip=/^(updated_at|row_version|created_at)$/;
+ const keys=[...new Set([...Object.keys(o),...Object.keys(n)])].filter(k=>!skip.test(k)&&JSON.stringify(o[k])!==JSON.stringify(n[k]));
+ if(!keys.length)return '';
+ return `<div class="v355-diff">${keys.slice(0,14).map(k=>`<div><span class="k">${esc(k)}</span>${k in o?`<span class="m">− ${esc(v355Val(o[k]))}</span>`:''}${k in n?`<span class="a">+ ${esc(v355Val(n[k]))}</span>`:''}</div>`).join('')}${keys.length>14?`<div class="cell-sub">و${v355N(keys.length-14)} حقول أخرى</div>`:''}</div>`;
+}
+function v355AuditRow(r){
+ const d=v355Diff(r.old_data,r.new_data);
+ const head=`<span class="badge">${esc(r.actor_role?v294Role(r.actor_role):'النظام')}</span><span class="v355-grow"><b>${esc(v355Act(r.action))}</b> <span class="cell-sub">${esc(r.actor_name||'—')} · ${esc(r.entity_type||'')}</span></span><span class="v355-when">${esc(v294Time(r.created_at))}</span>`;
+ return d?`<details class="v355-arow"><summary>${head}</summary>${d}</details>`:`<div class="v355-arow"><div class="v355-asum">${head}</div></div>`;
+}
+function v355Audit(){
+ const a=V355.audit,users=v355Users();
+ const tools=`<div class="v355-tools"><select id="v355ADays" onchange="v355AuditSet('days',this.value)">${[['1','اليوم (24 ساعة)'],['7','آخر 7 أيام'],['30','آخر 30 يومًا'],['90','آخر 90 يومًا']].map(([k,l])=>`<option value="${k}"${a.days===k?' selected':''}>${l}</option>`).join('')}</select>
+ <select id="v355AActor" onchange="v355AuditSet('actor',this.value)"><option value="">كل المستخدمين</option>${users.map(u=>`<option value="${esc(u.id)}"${a.actor===u.id?' selected':''}>${esc(u.name)}</option>`).join('')}</select>
+ <input id="v355AQ" type="search" placeholder="نوع الإجراء (مثل teacher)" value="${esc(a.q)}" onchange="v355AuditSet('q',this.value.trim())"></div>`;
+ const body=!a.loaded&&!a.err?'<div class="cell-sub">جارٍ التحميل…</div>':a.err?`<div class="notice danger">${esc(a.err)}</div>`:a.rows.length?`<div class="cell-sub">${v355N(a.rows.length)} إجراء${a.rows.length>=300?' (أحدث 300 — ضيّق البحث لرؤية الأقدم)':''}. اضغط على السطر لرؤية القيمة قبل/بعد.</div>`+a.rows.map(v355AuditRow).join(''):'<div class="cell-sub">لا إجراءات بهذا البحث.</div>';
+ return tools+body+'<div class="cell-sub">زر «تراجع» عن التغيير يُضاف في المرحلة 4.</div>';
+}
+async function v355Page(){
+ if(profile?.role!=='admin')return '<div class="notice warn">هذه الشاشة لمدير النظام فقط.</div>';
+ try{await v355Load();V355.err=''}catch(e){V355.err=e.message||String(e)}
+ V355.sel=null;if(V355.tab==='audit')V355.audit.loaded=false;
+ const out=`<div class="page-head"><div><h2>مركز التحكم</h2><div class="cell-sub">الحسابات والصلاحيات والنطاق والتدقيق — مدير النظام فقط</div></div><div class="actions"><button class="btn secondary" type="button" onclick="v355Refresh()">تحديث</button></div></div>
+ <div class="card v355" id="v355Wrap">${v355Inner()}</div>`;
+ if(V355.tab==='audit')setTimeout(()=>v355AuditLoad(true),0);
+ return out;
+}
+NAV.admin.splice(1,0,['controlCenter','مركز التحكم','⛨']);
+if(Array.isArray(V307_ORDER.admin)&&!V307_ORDER.admin.includes('controlCenter'))V307_ORDER.admin.splice(1,0,'controlCenter');
+/* v355-end */
+/* v356-begin: مركز التحكم — المرحلة 2: أفعال الحسابات (تعطيل/تفعيل، إنهاء الجلسات، كلمة المرور، الأدوار ومراحل المنسق) ونقل المدارس بمعاينة الأثر ومفاتيح البوابة. قاعدة البيانات v356: admin_account_action، admin_move_schools، admin_set_flag (مدير النظام فقط، وكل فعل في audit_log) */
+const V356={cb:null,pw:null,move:null};
+const V356_ROLES=['stage_coordinator','supervisor','first_supervisor','teacher','school_manager'];
+function v356Err(e){const m=(e&&(e.message||e.error_description))||String(e||'');return typeof v332ErrText==='function'?v332ErrText(m):m}
+async function v356After(msg){try{await v355Load();V355.err=''}catch(e){V355.err=v356Err(e)}closeModal();v355Render();toast(msg)}
+/* نافذة تأكيد موحّدة: سبب اختياري، وكلمة تأكيد للأفعال الخطرة */
+function v356Confirm(o){
+ V356.cb=o.onOk;
+ modal(`<h3>${esc(o.title)}</h3><div class="v356-cbody">${o.body||''}</div>
+ ${o.reason===false?'':'<label class="v356-lbl" for="v356Reason">السبب (يُحفظ في التدقيق)</label><input id="v356Reason" type="text" maxlength="200" placeholder="اختياري">'}
+ ${o.word?`<label class="v356-lbl" for="v356Word">للتأكيد اكتب: <b>${esc(o.word)}</b></label><input id="v356Word" type="text" autocomplete="off" oninput="document.getElementById('v356Ok').disabled=this.value.trim()!=='${esc(o.word)}'">`:''}
+ <div id="v356Msg"></div>
+ <div class="actions"><button id="v356Ok" type="button" class="btn ${o.danger?'danger':'primary'}"${o.word?' disabled':''} onclick="v356Run(this)">${esc(o.ok||'تأكيد')}</button><button type="button" class="btn secondary" onclick="closeModal()">إلغاء</button></div>`);
+}
+async function v356Run(btn){
+ const cb=V356.cb;if(!cb)return;btn.disabled=true;const old=btn.textContent;btn.textContent='جارٍ التنفيذ…';
+ const reason=(document.getElementById('v356Reason')?.value||'').trim();
+ try{await cb(reason)}catch(e){const m=document.getElementById('v356Msg');if(m)m.innerHTML=`<div class="notice danger">${esc(v356Err(e))}</div>`;btn.disabled=false;btn.textContent=old}
+}
+async function v356Act(id,action,value,reason){const r=await sb.rpc('admin_account_action',{p_profile:id,p_action:action,p_value:value==null?null:String(value),p_reason:reason||null});if(r.error)throw r.error;return r.data}
+/* ── أفعال الحساب ── */
+function v356Disable(id){const u=v355User(id);if(!u)return;
+ v356Confirm({title:'تعطيل الحساب',danger:true,word:'تعطيل',ok:'تعطيل الحساب',body:`<div class="notice warn">سيُمنع <b>${esc(u.name)}</b> من الدخول فورًا، وتُنهى جلساته المفتوحة. بياناته وأدواره تبقى كما هي، ويمكن التفعيل لاحقًا.</div>`,
+  onOk:async r=>{await v356Act(id,'disable',null,r);await v356After('تم تعطيل الحساب')}})}
+function v356Enable(id){const u=v355User(id);if(!u)return;
+ v356Confirm({title:'تفعيل الحساب',ok:'تفعيل',body:`<p>يعود <b>${esc(u.name)}</b> للدخول بأدواره الحالية.</p>`,onOk:async r=>{await v356Act(id,'enable',null,r);await v356After('تم تفعيل الحساب')}})}
+function v356EndSessions(id){const u=v355User(id);if(!u)return;
+ v356Confirm({title:'إنهاء الجلسات',ok:'إنهاء الجلسات',body:`<p>يُطلب من <b>${esc(u.name)}</b> تسجيل الدخول من جديد على كل أجهزته. قد تبقى الصفحة المفتوحة عنده تعمل حتى ساعة على الأكثر ثم تُغلق.</p>`,
+  onOk:async r=>{const d=await v356Act(id,'end_sessions',null,r);await v356After('أُنهيت '+v355N(d?.sessions_ended||0)+' جلسة')}})}
+function v356ForcePw(id,on){const u=v355User(id);if(!u)return;
+ v356Confirm({title:on?'إلزام بتغيير كلمة المرور':'إلغاء الإلزام بتغيير كلمة المرور',ok:'تأكيد',body:`<p>${on?'عند دخوله التالي يُطلب من':'لن يُطلب من'} <b>${esc(u.name)}</b> ${on?'إنشاء كلمة مرور جديدة.':'تغيير كلمة المرور.'}</p>`,
+  onOk:async r=>{await v356Act(id,'force_password',on,r);await v356After('تم')}})}
+function v356ResetPw(id){const u=v355User(id);if(!u)return;
+ V356.cb=null;
+ modal(`<h3>إعادة تعيين كلمة المرور</h3><p>تُنشأ كلمة مرور جديدة لـ <b>${esc(u.name)}</b> وتتوقف القديمة فورًا.</p>
+ <label class="v356-chk"><input type="checkbox" id="v356Force" checked> يُطلب منه تغييرها عند أول دخول</label><div id="v356Msg"></div>
+ <div class="actions"><button type="button" class="btn primary" onclick="v356DoReset('${esc(id)}',this)">إنشاء كلمة مرور جديدة</button><button type="button" class="btn secondary" onclick="closeModal()">إلغاء</button></div>`);
+}
+async function v356DoReset(id,btn){
+ const u=v355User(id);btn.disabled=true;const force=!!document.getElementById('v356Force')?.checked;
+ const {data,error}=await sb.functions.invoke('admin-reset-user-password',{body:{profile_id:id,force_change:force}});
+ if(error||data?.error){btn.disabled=false;const m=document.getElementById('v356Msg');if(m)m.innerHTML=`<div class="notice danger">${esc(v356Err(new Error(data?.error||error?.message||'تعذّرت إعادة التعيين')))}</div>`;return}
+ V356.pw={id,password:data.temporary_password,civil:data.civil_id||u?.civil_id||''};
+ const url=typeof v233Wa==='function'?v233Wa(u?.phone):'';
+ const msg=`السلام عليكم أ/ ${u?.name||''}\nبيانات دخولك على برنامج نظام توجيه العلوم:\nالرابط: https://teachers-data-portal.vercel.app/app/\nاسم المستخدم (الرقم القومي): ${V356.pw.civil}\nكلمة المرور: ${V356.pw.password}\n${force?'سيُطلب منك تغييرها عند الدخول.':'يمكنك تغييرها بعد الدخول.'}`;
+ modal(`<h3>كلمة المرور الجديدة</h3><div class="notice ok">اسم المستخدم: <b dir="ltr">${esc(V356.pw.civil)}</b><br>كلمة المرور: <b dir="ltr" class="v356-pw">${esc(V356.pw.password)}</b></div>
+ <div class="cell-sub">لا تُحفظ كلمة المرور في أي مكان بعد إغلاق هذه النافذة.</div>
+ <div class="actions"><button type="button" class="btn secondary" onclick="v356Copy()">نسخ كلمة المرور</button>${url?`<a class="btn ok" target="v306wa" rel="noopener" href="${url}?text=${encodeURIComponent(msg)}" onclick="return v306Wa(event,this)">إرسال واتساب</a>`:'<span class="cell-sub">لا يوجد هاتف صحيح لإرسال واتساب</span>'}<button type="button" class="btn primary" onclick="V356.pw=null;v356After('تمت إعادة تعيين كلمة المرور')">تم</button></div>`);
+}
+function v356Copy(){const p=V356.pw?.password;if(!p)return;try{navigator.clipboard.writeText(p).then(()=>toast('تم النسخ'),()=>toast('انسخها يدويًا'))}catch(e){toast('انسخها يدويًا')}}
+/* ── الأدوار ومراحل المنسق ── */
+function v356Roles(id){const u=v355User(id);if(!u)return;
+ const has=r=>(u.roles||[]).includes(r),st=u.coord_stages||[];
+ V356.cb=null;
+ modal(`<h3>أدوار ${esc(u.name)}</h3>
+ <div class="cell-sub">مدير النظام ثابت لا يُغيَّر من هنا، و«حساب المدرسة» يتبع مشرف المادة أو مسؤول البيانات تلقائيًا.</div>
+ <div class="v356-grid">${V356_ROLES.map(r=>`<label class="v356-chk"><input type="checkbox" data-role="${r}"${has(r)?' checked':''}${r==='stage_coordinator'?' disabled':''}> ${esc(ROLE_LABELS[r]||r)}${r==='stage_coordinator'?' <small>(بالمراحل أدناه)</small>':''}</label>`).join('')}</div>
+ <h4 class="v355-h">مراحل منسق المرحلة</h4>
+ <div class="v356-grid">${V355_STAGES.map(s=>`<label class="v356-chk"><input type="checkbox" data-stage="${s}"${st.includes(s)?' checked':''}> ${esc(s)}</label>`).join('')}</div>
+ <label class="v356-lbl" for="v356Reason">السبب (يُحفظ في التدقيق)</label><input id="v356Reason" type="text" maxlength="200" placeholder="اختياري">
+ <div id="v356Msg"></div>
+ <div class="actions"><button type="button" class="btn primary" onclick="v356SaveRoles('${esc(id)}',this)">حفظ</button><button type="button" class="btn secondary" onclick="closeModal()">إلغاء</button></div>`);
+}
+async function v356SaveRoles(id,btn){
+ const u=v355User(id);if(!u)return;const m=document.getElementById('v356Msg');const reason=(document.getElementById('v356Reason')?.value||'').trim();
+ const steps=[];
+ document.querySelectorAll('#modal [data-stage]').forEach(c=>{const was=(u.coord_stages||[]).includes(c.dataset.stage);if(c.checked&&!was)steps.push(['coord_stage_on',c.dataset.stage]);if(!c.checked&&was)steps.push(['coord_stage_off',c.dataset.stage])});
+ document.querySelectorAll('#modal [data-role]').forEach(c=>{if(c.disabled)return;const was=(u.roles||[]).includes(c.dataset.role);if(c.checked&&!was)steps.push(['role_on',c.dataset.role]);if(!c.checked&&was)steps.push(['role_off',c.dataset.role])});
+ if(!steps.length){closeModal();return}
+ btn.disabled=true;let done=0;
+ for(const [a,v] of steps){try{await v356Act(id,a,v,reason);done++}catch(e){if(m)m.innerHTML=`<div class="notice danger">نُفّذ ${v355N(done)} من ${v355N(steps.length)}. توقّف عند «${esc(a.includes('stage')?v:(ROLE_LABELS[v]||v))}»: ${esc(v356Err(e))}</div>`;btn.disabled=false;try{await v355Load()}catch(_){}return}}
+ await v356After('تم حفظ الأدوار');
+}
+/* ── مفاتيح البوابة ── */
+function v356Flag(flag,on){
+ const l={editing_open:'تسجيل البيانات من بوابة المعلمين',timetable_open:'إدخال المعلم لجدوله من البوابة'}[flag]||flag;
+ v356Confirm({title:(on?'فتح: ':'إغلاق: ')+l,danger:!on,ok:on?'فتح':'إغلاق',body:`<p>${on?'يُفتح':'يُغلق'} «${esc(l)}» فورًا لكل المعلمين والمشرفين في البوابة.</p>`,
+  onOk:async r=>{const x=await sb.rpc('admin_set_flag',{p_flag:flag,p_value:!!on,p_reason:r||null});if(x.error)throw x.error;await v356After(on?'تم الفتح':'تم الإغلاق')}})}
+/* ── نقل المدارس بين الموجهين (الابتدائي والإعدادي) ── */
+async function v356MoveOpen(stage){
+ V356.cb=null;modal('<h3>نقل مدارس بين موجهين</h3><div class="cell-sub">جارٍ التحميل…</div>');
+ try{
+  const [s,v]=await Promise.all([sb.from('schools').select('id,name,stage,supervisor_id').in('stage',['ابتدائي','إعدادي']).order('name'),sb.from('supervisors').select('id,full_name,active,profile_id').eq('active',true).order('full_name')]);
+  if(s.error)throw s.error;if(v.error)throw v.error;
+  V356.move={stage:stage&&!/^ثانوي/.test(stage)?stage:'ابتدائي',from:'',to:'',schools:s.data||[],sups:v.data||[],sel:new Set(),preview:null};
+  v356MoveDraw();
+ }catch(e){modal(`<h3>نقل مدارس بين موجهين</h3><div class="notice danger">${esc(v356Err(e))}</div><div class="actions"><button class="btn secondary" type="button" onclick="closeModal()">إغلاق</button></div>`)}
+}
+function v356MoveDraw(){
+ const M=V356.move;if(!M)return;const supName=id=>(M.sups.find(x=>x.id===id)||{}).full_name||'بلا موجه';
+ const inStage=M.schools.filter(x=>x.stage===M.stage);
+ const fromIds=[...new Set(inStage.map(x=>x.supervisor_id||''))];
+ const list=inStage.filter(x=>!M.from||(x.supervisor_id||'')===M.from);
+ const prev=M.preview;
+ modal(`<h3>نقل مدارس بين موجهين</h3>
+ <div class="cell-sub">مدارس الثانوي تُسند بالمادة من «إدخال بيانات المدارس». النقل لا يغيّر الأنصبة ولا العجز.</div>
+ <div class="v355-tools"><select id="v356MStage" onchange="V356.move.stage=this.value;V356.move.from='';V356.move.sel.clear();V356.move.preview=null;v356MoveDraw()">${['ابتدائي','إعدادي'].map(s=>`<option${s===M.stage?' selected':''}>${s}</option>`).join('')}</select>
+ <select id="v356MFrom" onchange="V356.move.from=this.value;V356.move.sel.clear();V356.move.preview=null;v356MoveDraw()"><option value="">من: كل الموجهين</option>${fromIds.map(i=>`<option value="${esc(i)}"${i===M.from?' selected':''}>من: ${esc(supName(i))} (${v355N(inStage.filter(x=>(x.supervisor_id||'')===i).length)})</option>`).join('')}</select></div>
+ <div class="v356-schools">${list.map(x=>`<label class="v356-chk"><input type="checkbox" data-sid="${esc(x.id)}"${M.sel.has(x.id)?' checked':''} onchange="v356MoveSel(this)"> ${esc(x.name)} <small>— ${esc(supName(x.supervisor_id))}</small></label>`).join('')||'<div class="cell-sub">لا مدارس.</div>'}</div>
+ <div class="cell-sub">المختار: <b id="v356MCount">${v355N(M.sel.size)}</b> مدرسة</div>
+ <label class="v356-lbl" for="v356MTo">إلى الموجه</label>
+ <select id="v356MTo" onchange="V356.move.to=this.value;V356.move.preview=null;v356MoveDraw()"><option value="">اختر الموجه الجديد</option>${M.sups.map(x=>`<option value="${esc(x.id)}"${x.id===M.to?' selected':''}>${esc(x.full_name)}${x.profile_id?'':' (بلا حساب دخول)'}</option>`).join('')}</select>
+ ${prev?v356MovePreviewHtml(prev):''}
+ <label class="v356-lbl" for="v356Reason">السبب (يُحفظ في التدقيق)</label><input id="v356Reason" type="text" maxlength="200" placeholder="اختياري" value="${esc(M.reason||'')}" oninput="V356.move.reason=this.value">
+ <div id="v356Msg"></div>
+ <div class="actions">${prev?`<button type="button" class="btn primary" onclick="v356MoveApply(this)">تطبيق النقل</button>`:`<button type="button" class="btn primary" onclick="v356MovePreview(this)">معاينة الأثر</button>`}<button type="button" class="btn secondary" onclick="V356.move=null;closeModal()">إلغاء</button></div>`);
+}
+function v356MoveSel(c){const M=V356.move;if(c.checked)M.sel.add(c.dataset.sid);else M.sel.delete(c.dataset.sid);M.preview=null;const n=document.getElementById('v356MCount');if(n)n.textContent=v355N(M.sel.size);const a=document.querySelector('#modal .actions .btn.primary');if(a&&a.textContent.includes('تطبيق'))v356MoveDraw()}
+function v356MovePreviewHtml(p){
+ const rows=(p.schools||[]),moving=rows.filter(r=>!r.same);
+ const t=moving.reduce((a,r)=>a+Number(r.teachers||0),0),pend=moving.reduce((a,r)=>a+Number(r.pending||0),0),bad=moving.filter(r=>!r.stage_ok);
+ return `<div class="v356-impact"><b>معاينة الأثر — إلى ${esc(p.to_name||'')}</b>
+ <span>${v355N(moving.length)} مدرسة تنتقل${rows.length-moving.length?` (و${v355N(rows.length-moving.length)} عنده أصلًا)`:''}</span>
+ <span>${v355N(t)} معلمًا أساسيًا يتغير موجههم في التقارير</span>
+ <span>${v355N(pend)} طلب اعتماد معلّق ينتقل اعتماده للموجه الجديد</span>
+ ${bad.length?`<span class="v356-warn">تنبيه: مرحلة ${esc(bad[0].stage)} غير مسجّلة ضمن مراحل الموجه الجديد (يمكنه رؤية المدارس، لكن راجع بياناته)</span>`:''}
+ <span>لا تتغير الأنصبة ولا العجز ولا الإسناد</span>
+ <details><summary>التفاصيل</summary>${rows.map(r=>`<div class="cell-sub">${esc(r.name)} — من ${esc(r.from_name||'بلا موجه')} · ${v355N(r.teachers)} معلم${r.same?' · لا تغيير':''}</div>`).join('')}</details></div>`;
+}
+async function v356MovePreview(btn){
+ const M=V356.move,m=document.getElementById('v356Msg');
+ if(!M.sel.size){if(m)m.innerHTML='<div class="notice warn">اختر مدرسة واحدة على الأقل.</div>';return}
+ if(!M.to){if(m)m.innerHTML='<div class="notice warn">اختر الموجه الجديد.</div>';return}
+ btn.disabled=true;
+ const r=await sb.rpc('admin_move_schools',{p_school_ids:[...M.sel],p_to_supervisor:M.to,p_apply:false,p_reason:null});
+ if(r.error){btn.disabled=false;if(m)m.innerHTML=`<div class="notice danger">${esc(v356Err(r.error))}</div>`;return}
+ M.preview=r.data;v356MoveDraw();
+}
+async function v356MoveApply(btn){
+ const M=V356.move,m=document.getElementById('v356Msg');btn.disabled=true;btn.textContent='جارٍ النقل…';
+ const r=await sb.rpc('admin_move_schools',{p_school_ids:[...M.sel],p_to_supervisor:M.to,p_apply:true,p_reason:(M.reason||'').trim()||null});
+ if(r.error){btn.disabled=false;btn.textContent='تطبيق النقل';if(m)m.innerHTML=`<div class="notice danger">${esc(v356Err(r.error))}</div>`;return}
+ V356.move=null;try{if(typeof v162ReportsDatasetRaw==='function'&&v162ReportsDatasetRaw.cache)v162ReportsDatasetRaw.cache=null}catch(e){}
+ await v356After('نُقلت '+v355N(r.data?.moved||0)+' مدرسة');
+}
+/* ── ربط الأزرار بشاشات المرحلة 1 ── */
+const __v356BaseProfile=v355Profile;
+v355Profile=function(id){
+ let h=__v356BaseProfile.apply(this,arguments);const u=v355User(id);if(!u)return h;
+ const isSelf=u.id===profile?.id,isAdmin=(u.roles||[]).includes('admin');
+ const acc=`<div class="v356-actions">
+  <button type="button" class="btn secondary" onclick="v356ResetPw('${esc(u.id)}')">إعادة كلمة المرور</button>
+  ${u.must_change_password?`<button type="button" class="btn secondary" onclick="v356ForcePw('${esc(u.id)}',false)">إلغاء إلزام التغيير</button>`:`<button type="button" class="btn secondary" onclick="v356ForcePw('${esc(u.id)}',true)">إلزام بتغيير كلمة المرور</button>`}
+  ${isSelf?'':`<button type="button" class="btn secondary" onclick="v356EndSessions('${esc(u.id)}')">إنهاء الجلسات</button>`}
+  ${isSelf||isAdmin?'':(u.active?`<button type="button" class="btn danger" onclick="v356Disable('${esc(u.id)}')">تعطيل الحساب</button>`:`<button type="button" class="btn ok" onclick="v356Enable('${esc(u.id)}')">تفعيل الحساب</button>`)}
+ </div>`;
+ h=h.replace('<div class="cell-sub">أزرار التعطيل وإعادة كلمة المرور وإنهاء الجلسات تُضاف في المرحلة 2.</div>',acc);
+ h=h.replace('<h3 class="v355-h">الأدوار والنطاق</h3>',`<div class="v356-boxhead"><h3 class="v355-h">الأدوار والنطاق</h3><button type="button" class="btn secondary" onclick="v356Roles('${esc(u.id)}')">تعديل الأدوار</button></div>`);
+ return h;
+};
+const __v356BaseOver=v355Over;
+v355Over=function(){
+ let h=__v356BaseOver.apply(this,arguments);const f=(V355.data&&V355.data.flags)||{};
+ const sw=(k,on,l)=>`<div class="v355-flag"><button type="button" role="switch" aria-checked="${!!on}" class="v356-sw${on?' on':''}" onclick="v356Flag('${k}',${!on})" aria-label="${esc(l)}"></button><span class="v355-grow">${esc(l)}</span><span class="badge ${on?'ok':'danger'}">${on?'مفتوح':'مغلق'}</span></div>`;
+ h=h.replace(/<h3 class="v355-h">مفاتيح البوابة<\/h3>[\s\S]*?<div class="cell-sub">التحكم في المفاتيح يُضاف في المرحلة 2\.<\/div>/,`<h3 class="v355-h">مفاتيح البوابة</h3>${sw('editing_open',f.editing_open,'تسجيل البيانات من بوابة المعلمين')}${sw('timetable_open',f.timetable_open,'إدخال المعلم لجدوله من البوابة')}`);
+ return h;
+};
+const __v356BaseScope=v355Scope;
+v355Scope=function(){
+ let h=__v356BaseScope.apply(this,arguments);
+ h=h.replace('<div class="cell-sub">نقل المدارس بين الموجهين مع معاينة الأثر يُضاف في المرحلة 2.</div>','');
+ return `<div class="v356-actions"><button type="button" class="btn primary" onclick="v356MoveOpen('ابتدائي')">نقل مدارس بين موجهين</button></div>`+h;
+};
+const __v356BaseUsers=v355UsersList;
+v355UsersList=function(){return `<div class="v356-actions"><button type="button" class="btn secondary" onclick="go('users')">+ إنشاء حساب جديد (شاشة الحسابات)</button></div>`+__v356BaseUsers.apply(this,arguments)};
+/* v356-end */
+/* v357-begin: مركز التحكم — المرحلة 3: مصفوفة الصلاحيات (إيقاف إجراء لدور، مفروض في قاعدة البيانات بمشغلات v357). admin_permission_matrix / admin_set_permissions */
+const V357={m:null,pending:{},err:'',loading:false};
+const V357_ROLES=['stage_coordinator','supervisor','senior_teacher','school_manager','teacher','first_supervisor'];
+function v357Key(c,r){return c+'|'+r}
+function v357Rule(c,r){const x=(V357.m?.rules||[]).find(z=>z.cap===c&&z.role===r);return x?!!x.allowed:true}
+function v357Val(c,r){const k=v357Key(c,r);return k in V357.pending?V357.pending[k]:v357Rule(c,r)}
+async function v357Load(){V357.loading=true;V357.err='';try{const r=await sb.rpc('admin_permission_matrix');if(r.error)throw r.error;V357.m=r.data||{}}catch(e){V357.err=v356Err(e)}V357.loading=false;if(V355.tab==='perm')v355Render()}
+function v357Toggle(c,r){const k=v357Key(c,r),nv=!v357Val(c,r);if(nv===v357Rule(c,r))delete V357.pending[k];else V357.pending[k]=nv;v355Render()}
+function v357Discard(){V357.pending={};v355Render()}
+function v357ResetAll(){(V357.m?.capabilities||[]).forEach(c=>V357_ROLES.forEach(r=>{const k=v357Key(c.code,r);if(!v357Rule(c.code,r))V357.pending[k]=true;else delete V357.pending[k]}));v355Render()}
+function v357Cell(c,r){const on=v357Val(c,r),chg=v357Key(c,r) in V357.pending;
+ return `<button type="button" class="v357-cell ${on?'on':'off'}${chg?' chg':''}" aria-pressed="${on}" onclick="v357Toggle('${esc(c)}','${r}')" title="${on?'مسموح كما هو الآن — اضغط للمنع':'ممنوع — اضغط للسماح'}">${on?'مسموح':'ممنوع'}</button>`}
+function v357Perm(){
+ if(!V357.m&&!V357.err){if(!V357.loading)v357Load();return '<div class="cell-sub">جارٍ التحميل…</div>'}
+ if(V357.err)return `<div class="notice danger">${esc(V357.err)}</div><button type="button" class="btn secondary" onclick="V357.m=null;v357Load()">إعادة المحاولة</button>`;
+ const caps=V357.m.capabilities||[],acc=V357.m.accounts||{};
+ const blocked=caps.reduce((n,c)=>n+V357_ROLES.filter(r=>!v357Rule(c.code,r)).length,0);
+ const head=`<div class="v357-intro"><div><b>مصفوفة الصلاحيات</b><div class="cell-sub">«مسموح» = كما يعمل البرنامج الآن بنطاق كل دور. «ممنوع» يوقف الإجراء لهذا الدور فورًا داخل قاعدة البيانات. لا تُوسَّع صلاحية من هنا، ومدير النظام لا يُقيَّد.</div></div>${blocked?`<span class="badge warn">${v355N(blocked)} خلية ممنوعة الآن</span>`:'<span class="badge ok">كل الإجراءات كما هي</span>'}</div>`;
+ const table=`<div class="v357-tablebox"><table class="v357-table"><thead><tr><th>الإجراء</th>${V357_ROLES.map(r=>`<th>${esc(ROLE_LABELS[r]||r)}<small>${v355N(acc[r]||0)} حساب</small></th>`).join('')}<th>مدير النظام</th></tr></thead><tbody>
+ ${caps.map(c=>`<tr><td><b>${esc(c.label)}</b><small>${esc(c.description)}</small></td>${V357_ROLES.map(r=>`<td>${v357Cell(c.code,r)}</td>`).join('')}<td><span class="v357-fixed">دائمًا</span></td></tr>`).join('')}</tbody></table></div>`;
+ const cards=`<div class="v357-cards">${caps.map(c=>`<div class="v357-card"><b>${esc(c.label)}</b><small>${esc(c.description)}</small><div class="v357-roles">${V357_ROLES.map(r=>`<div class="v357-rr"><span>${esc(ROLE_LABELS[r]||r)}</span>${v357Cell(c.code,r)}</div>`).join('')}</div></div>`).join('')}</div>`;
+ const keys=Object.keys(V357.pending);
+ const lab=Object.fromEntries(caps.map(c=>[c.code,c.label]));
+ const bar=keys.length?`<div class="v357-bar"><b>${v355N(keys.length)} تغيير لم يُطبَّق</b>
+  <div class="v357-impact">${keys.map(k=>{const [c,r]=k.split('|'),on=V357.pending[k];return `<span>${on?'✓ يعود مسموحًا':'⛔ يُمنع'}: «${esc(lab[c]||c)}» لدور ${esc(ROLE_LABELS[r]||r)} <small>(${v355N(acc[r]||0)} حساب نشط)</small></span>`}).join('')}</div>
+  <div class="v356-actions"><button type="button" class="btn primary" onclick="v357Apply()">تطبيق</button><button type="button" class="btn secondary" onclick="v357Discard()">تجاهل التغييرات</button></div></div>`:'';
+ return head+table+cards+bar+`<div class="v356-actions"><button type="button" class="btn secondary" onclick="v357ResetAll()">استرجاع الافتراضي (السماح بالكل)</button></div>`;
+}
+function v357Apply(){
+ const changes=Object.entries(V357.pending).map(([k,v])=>{const [cap,role]=k.split('|');return {cap,role,allowed:!!v}});if(!changes.length)return;
+ const off=changes.filter(c=>!c.allowed).length;
+ v356Confirm({title:'تطبيق تغييرات الصلاحيات',danger:off>0,word:off?'تطبيق':'',ok:'تطبيق',body:`<p>${v355N(changes.length)} تغيير، منها ${v355N(off)} منع. يسري فورًا على كل المستخدمين بهذه الأدوار، وتظهر لهم رسالة «هذا الإجراء موقوف لدورك من مركز التحكم» عند المحاولة.</p>`,
+  onOk:async reason=>{const r=await sb.rpc('admin_set_permissions',{p_changes:changes,p_reason:reason||null});if(r.error)throw r.error;V357.pending={};V357.m=null;await v357Load();closeModal();toast('طُبّق '+v355N(r.data?.changed||0)+' تغيير')}});
+}
+/* v357-end */
+/* v358-begin: مركز التحكم — المرحلة 4: الوصول المؤقت (استثناء لشخص بمدة تنتهي وحدها)، مراجعة الصلاحيات، «ما الذي يراه ويفعله» (admin_view_as، قراءة فقط)، والتراجع عن أفعال المركز من التدقيق */
+const V358={grants:null,review:null,err:'',loading:false,reverted:new Set()};
+Object.assign(V355_ACTIONS,{cc_disable:'تعطيل حساب',cc_enable:'تفعيل حساب',cc_end_sessions:'إنهاء الجلسات',cc_force_password:'إلزام تغيير كلمة المرور',cc_role_on:'تفعيل دور',cc_role_off:'إيقاف دور',cc_coord_stage_on:'إضافة مرحلة منسق',cc_coord_stage_off:'إيقاف مرحلة منسق',cc_move_schools:'نقل مدارس بين موجهين',cc_flag:'مفتاح البوابة',cc_permissions:'تعديل مصفوفة الصلاحيات',cc_grant_add:'استثناء مؤقت',cc_grant_revoke:'إلغاء استثناء',cc_review:'مراجعة صلاحية',cc_view_as:'عرض كمستخدم',cc_revert:'تراجع',reset_password:'إعادة كلمة مرور'});
+const V358_REVERTABLE=['cc_disable','cc_enable','cc_force_password','cc_role_on','cc_role_off','cc_coord_stage_on','cc_coord_stage_off','cc_flag','cc_permissions','cc_grant_add','cc_move_schools'];
+async function v358Load(){V358.loading=true;V358.err='';try{const [g,r]=await Promise.all([sb.rpc('admin_grants_list'),sb.rpc('admin_access_review_list')]);if(g.error)throw g.error;if(r.error)throw r.error;V358.grants=g.data||[];V358.review=r.data||[]}catch(e){V358.err=v356Err(e)}V358.loading=false;if(V355.tab==='access')v355Render()}
+function v358Date(t){try{return new Date(t).toLocaleDateString('ar-EG',{weekday:'short',day:'numeric',month:'short'})}catch(e){return String(t||'').slice(0,10)}}
+function v358Access(){
+ if(!V358.grants&&!V358.err){if(!V358.loading)v358Load();return '<div class="cell-sub">جارٍ التحميل…</div>'}
+ if(V358.err)return `<div class="notice danger">${esc(V358.err)}</div><button type="button" class="btn secondary" onclick="V358.grants=null;v358Load()">إعادة المحاولة</button>`;
+ const st={active:['ok','سارٍ'],expired:['','انتهى'],revoked:['danger','أُلغي']};
+ const act=V358.grants.filter(g=>g.status==='active'),old=V358.grants.filter(g=>g.status!=='active');
+ const gRow=g=>`<div class="v355-user v358-row"><span class="badge ${g.allowed?'ok':'danger'}">${g.allowed?'سماح':'منع'}</span><span class="v355-grow"><b>${esc(g.name)}</b> — ${esc(g.label)}<span class="cell-sub">${g.status==='active'?(g.expires_at?'ينتهي '+esc(v358Date(g.expires_at)):'دائم حتى يُلغى'):(st[g.status]||st.expired)[1]}${g.reason?' · '+esc(g.reason):''}</span></span>${g.status==='active'?`<button type="button" class="btn secondary" onclick="v358Revoke('${esc(g.id)}')">إلغاء</button>`:`<span class="badge ${(st[g.status]||st.expired)[0]}">${(st[g.status]||st.expired)[1]}</span>`}</div>`;
+ const sugg=V358.review.filter(x=>x.suggest),rest=V358.review.filter(x=>!x.suggest);
+ const rRow=x=>`<div class="v355-user v358-row"><span class="v355-grow"><b>${esc(x.name)}</b> — ${esc(v294Role(x.role))}${x.account_active?'':' <span class="badge danger">معطل</span>'}<span class="cell-sub">${x.suggest?'<b class="v358-sug">'+esc(x.suggest)+'</b> · ':''}آخر دخول: ${esc(x.last_sign_in_at?v294Ago(x.last_sign_in_at):'لم يدخل')} · إجراءاته بهذا الدور (30 يومًا): ${v355N(x.actions30)}${x.last_review?` · آخر مراجعة: ${x.last_review.decision==='keep'?'أُبقي':'أُلغي'} ${esc(v358Date(x.last_review.at))}`:''}</span></span>
+  <span class="v358-btns"><button type="button" class="btn secondary" onclick="v358Decide('${esc(x.profile_id)}','${esc(x.role)}','keep')">إبقاء</button>${x.revocable?`<button type="button" class="btn danger" onclick="v358Decide('${esc(x.profile_id)}','${esc(x.role)}','revoke')">إلغاء الدور</button>`:''}</span></div>`;
+ return `<div class="v356-boxhead"><h3 class="v355-h">الوصول المؤقت</h3><button type="button" class="btn primary" onclick="v358GrantOpen()">+ استثناء مؤقت لشخص</button></div>
+ <div class="cell-sub">يُسمح لشخص بإجراء ممنوع على دوره، أو يُمنع منه وحده، لمدة تنتهي تلقائيًا (1–90 يومًا). «السماح» يرفع منع المصفوفة فقط ولا يوسّع نطاقه.</div>
+ ${act.length?act.map(gRow).join(''):'<div class="notice ok">لا توجد استثناءات سارية.</div>'}
+ ${old.length?`<details class="v355-det"><summary>السابقة (${v355N(old.length)})</summary><div class="v358-old">${old.map(gRow).join('')}</div></details>`:''}
+ <h3 class="v355-h">مراجعة الصلاحيات</h3>
+ <div class="cell-sub">كل دور نشط لكل حساب. ابدأ بالمقترح مراجعته، ثم «إبقاء» أو «إلغاء الدور». يُحفظ القرار وتاريخه.</div>
+ ${sugg.length?`<div class="v358-sec"><b>مقترح مراجعته (${v355N(sugg.length)})</b>${sugg.map(rRow).join('')}</div>`:'<div class="notice ok">لا توجد أدوار مقترح مراجعتها.</div>'}
+ ${rest.length?`<details class="v355-det"><summary>بقية الأدوار (${v355N(rest.length)})</summary><div class="v358-old">${rest.map(rRow).join('')}</div></details>`:''}`;
+}
+function v358GrantOpen(pid){
+ V356.cb=null;const users=v355Users().filter(u=>u.active&&!(u.roles||[]).includes('admin'));
+ const caps=(V357.m?.capabilities)||[];
+ const draw=()=>modal(`<h3>استثناء مؤقت لشخص</h3>
+ <label class="v356-lbl" for="v358P">الشخص</label><select id="v358P">${users.map(u=>`<option value="${esc(u.id)}"${u.id===pid?' selected':''}>${esc(u.name)} — ${esc((u.roles||[]).map(v294Role).join('، '))}</option>`).join('')}</select>
+ <label class="v356-lbl" for="v358C">الإجراء</label><select id="v358C">${caps.map(c=>`<option value="${esc(c.code)}">${esc(c.label)}</option>`).join('')}</select>
+ <label class="v356-lbl" for="v358A">النوع</label><select id="v358A"><option value="1">سماح (يرفع المنع عن هذا الشخص فقط)</option><option value="0">منع (لهذا الشخص فقط)</option></select>
+ <label class="v356-lbl" for="v358D">المدة بالأيام</label><input id="v358D" type="number" min="1" max="90" value="3" inputmode="numeric">
+ <label class="v356-lbl" for="v356Reason">السبب (يُحفظ في التدقيق)</label><input id="v356Reason" type="text" maxlength="200" placeholder="مثال: تغطية موجه في إجازة">
+ <div id="v356Msg"></div>
+ <div class="actions"><button type="button" class="btn primary" onclick="v358GrantSave(this)">حفظ الاستثناء</button><button type="button" class="btn secondary" onclick="closeModal()">إلغاء</button></div>`);
+ if(!caps.length){modal('<h3>استثناء مؤقت لشخص</h3><div class="cell-sub">جارٍ التحميل…</div>');sb.rpc('admin_permission_matrix').then(r=>{if(r.error){modal(`<h3>استثناء مؤقت</h3><div class="notice danger">${esc(v356Err(r.error))}</div>`);return}V357.m=r.data;v358GrantOpen(pid)});return}
+ draw();
+}
+async function v358GrantSave(btn){
+ const m=document.getElementById('v356Msg'),d=Number(document.getElementById('v358D').value);
+ if(!(d>=1&&d<=90)){if(m)m.innerHTML='<div class="notice warn">المدة من يوم إلى 90 يومًا.</div>';return}
+ btn.disabled=true;
+ const r=await sb.rpc('admin_grant_add',{p_profile:document.getElementById('v358P').value,p_cap:document.getElementById('v358C').value,p_allowed:document.getElementById('v358A').value==='1',p_days:d,p_reason:(document.getElementById('v356Reason').value||'').trim()||null});
+ if(r.error){btn.disabled=false;if(m)m.innerHTML=`<div class="notice danger">${esc(v356Err(r.error))}</div>`;return}
+ V358.grants=null;closeModal();V355.tab='access';V355.sel=null;await v358Load();toast('حُفظ الاستثناء حتى '+v358Date(r.data?.expires_at));
+}
+function v358Revoke(id){v356Confirm({title:'إلغاء الاستثناء',ok:'إلغاء الاستثناء',body:'<p>يعود الشخص لقاعدة دوره في المصفوفة فورًا.</p>',onOk:async reason=>{const r=await sb.rpc('admin_grant_revoke',{p_id:id,p_reason:reason||null});if(r.error)throw r.error;V358.grants=null;closeModal();await v358Load();toast('أُلغي الاستثناء')}})}
+function v358Decide(pid,role,d){
+ const x=(V358.review||[]).find(r=>r.profile_id===pid&&r.role===role);const nm=x?x.name:'';
+ v356Confirm({title:d==='keep'?'إبقاء الدور':'إلغاء الدور',danger:d==='revoke',word:d==='revoke'?'إلغاء':'',ok:d==='keep'?'إبقاء':'إلغاء الدور',
+  body:d==='keep'?`<p>يُسجَّل أنك راجعت دور «${esc(v294Role(role))}» لـ ${esc(nm)} وأبقيته.</p>`:`<div class="notice warn">يتوقف دور «${esc(v294Role(role))}» لـ <b>${esc(nm)}</b> فورًا. يمكن التراجع من التدقيق.</div>`,
+  onOk:async reason=>{const r=await sb.rpc('admin_access_review_decide',{p_profile:pid,p_role:role,p_decision:d,p_reason:reason||null});if(r.error)throw r.error;V358.grants=null;try{await v355Load()}catch(e){}closeModal();await v358Load();toast(d==='keep'?'سُجّلت المراجعة':'أُلغي الدور')}});
+}
+/* ما الذي يراه ويفعله */
+async function v358ViewAs(pid,role){
+ const u=v355User(pid);V356.cb=null;modal(`<h3>ما يراه ${esc(u?.name||'')} بدور ${esc(v294Role(role))}</h3><div class="cell-sub">جارٍ الحساب…</div>`);
+ const r=await sb.rpc('admin_view_as',{p_profile:pid,p_role:role});
+ if(r.error){modal(`<h3>عرض كمستخدم</h3><div class="notice danger">${esc(v356Err(r.error))}</div><div class="actions"><button class="btn secondary" type="button" onclick="closeModal()">إغلاق</button></div>`);return}
+ const d=r.data||{},bs=d.by_stage||{},caps=d.capabilities||[];
+ modal(`<h3>ما يراه ${esc(u?.name||'')} بدور ${esc(v294Role(role))}</h3>
+ <div class="cell-sub">محسوب بقواعد قاعدة البيانات نفسها لهذا الحساب، بلا أي تعديل.</div>
+ <div class="v355-tiles"><div class="v355-tile info"><b>${v355N(d.schools_count)}</b><span>مدرسة يراها</span></div><div class="v355-tile info"><b>${v355N(d.teachers_count)}</b><span>معلمًا يراه</span></div></div>
+ ${Object.keys(bs).length?`<div class="v355-chips">${Object.entries(bs).map(([s,n])=>`<span class="badge">${esc(s)}: ${v355N(n)}</span>`).join('')}</div>`:''}
+ <h4 class="v355-h">الإجراءات</h4>
+ <div class="v358-caps">${caps.map(c=>`<div class="v357-rr"><span>${esc(c.label)}${c.by_grant?' <small>(باستثناء مؤقت)</small>':''}</span><span class="badge ${c.allowed?'ok':'danger'}">${c.allowed?'مسموح في نطاقه':'ممنوع'}</span></div>`).join('')}</div>
+ ${(d.schools||[]).length?`<details class="v355-det"><summary>المدارس (${v355N(d.schools_count)})</summary><div class="v355-items">${d.schools.map(s=>`<span>${esc(s.name)} <small>(${esc(s.stage)})</small></span>`).join('')}</div></details>`:''}
+ <div class="actions"><button type="button" class="btn secondary" onclick="closeModal()">إغلاق</button></div>`);
+}
+/* التراجع من التدقيق */
+function v358Revert(id){
+ v356Confirm({title:'تراجع عن الفعل',ok:'تراجع',body:'<p>يُعاد الوضع كما كان قبل هذا الفعل، ويُسجَّل التراجع في التدقيق. لا يمكن التراجع عن الفعل نفسه مرتين.</p>',
+  onOk:async reason=>{const r=await sb.rpc('admin_revert_action',{p_audit_id:Number(id),p_reason:reason||null});if(r.error)throw r.error;V358.reverted.add(String(id));try{await v355Load()}catch(e){}V357.m=null;V358.grants=null;closeModal();V355.audit.loaded=false;await v355AuditLoad(true);toast('تم التراجع')}});
+}
+const __v358BaseAuditRow=v355AuditRow;
+v355AuditRow=function(r){
+ let h=__v358BaseAuditRow.apply(this,arguments);
+ const done=V358.reverted.has(String(r.id))||(V355.audit.rows||[]).some(x=>x.action==='cc_revert'&&String(x.entity_id)===String(r.id))||Object.values(V355.userAudit||{}).some(a=>Array.isArray(a)&&a.some(x=>x.action==='cc_revert'&&String(x.entity_id)===String(r.id)));
+ if(V358_REVERTABLE.includes(r.action)){
+  const b=done?'<span class="badge">تم التراجع</span>':`<button type="button" class="btn secondary v358-rv" onclick="event.preventDefault();event.stopPropagation();v358Revert('${esc(r.id)}')">تراجع</button>`;
+  h=h.replace(/(<span class="v355-when">)/,b+'$1');
+ }
+ return h;
+};
+const __v358BaseAudit=v355Audit;
+v355Audit=function(){return __v358BaseAudit.apply(this,arguments).replace('<div class="cell-sub">زر «تراجع» عن التغيير يُضاف في المرحلة 4.</div>','<div class="cell-sub">«تراجع» متاح لأفعال مركز التحكم فقط (الأدوار، التعطيل، المفاتيح، الصلاحيات، الاستثناءات، نقل المدارس). تعديلات البيانات تُراجَع من شاشاتها.</div>')};
+const __v358BaseProfile=v355Profile;
+v355Profile=function(id){
+ let h=__v358BaseProfile.apply(this,arguments);const u=v355User(id);if(!u)return h;
+ const rs=(u.roles||[]).filter(r=>r!=='admin');
+ if(rs.length||!(u.roles||[]).includes('admin')){
+  const box=`<div class="v355-box"><h3 class="v355-h">ما الذي يراه ويفعله؟</h3><div class="cell-sub">حساب فوري بقواعد قاعدة البيانات لهذا الشخص، للقراءة فقط.</div><div class="v356-actions">${rs.map(r=>`<button type="button" class="btn secondary" onclick="v358ViewAs('${esc(u.id)}','${esc(r)}')">بدور ${esc(v294Role(r))}</button>`).join('')||'<span class="cell-sub">لا أدوار نشطة.</span>'}${(u.roles||[]).includes('admin')?'':`<button type="button" class="btn secondary" onclick="v358GrantOpen('${esc(u.id)}')">+ استثناء مؤقت</button>`}</div></div>`;
+  h=h.replace(/(<div class="v355-box"><h3 class="v355-h">نشاطه آخر 30 يومًا)/,box+'$1');
+ }
+ return h;
+};
+/* v358-end */
+/* v359-begin: التحكم في إجراءات شخص بعينه من نافذة «ما الذي يراه ويفعله؟» — الضغط على الإجراء: منع/سماح لهذا الشخص فقط (دائم حتى يُلغى أو بمدة)، أو إلغاء استثنائه والعودة لقاعدة دوره */
+const V359={pid:null,role:null,d:null};
+function v359Badge(c){
+ const g=c.grant;
+ if(g){const until=g.expires_at?'حتى '+v358Date(g.expires_at):'دائم';return `<span class="badge ${c.allowed?'ok':'danger'}">${c.allowed?'مسموح له':'ممنوع عليه'} · ${esc(until)}</span>`}
+ return `<span class="badge ${c.allowed?'ok':'danger'}">${c.allowed?'مسموح في نطاقه':'ممنوع (بقاعدة الدور)'}</span>`;
+}
+function v359Draw(){
+ const pid=V359.pid,role=V359.role,d=V359.d||{},u=v355User(pid),bs=d.by_stage||{},caps=d.capabilities||[];
+ V356.cb=null;
+ modal(`<h3>ما يراه ${esc(u?.name||'')} بدور ${esc(v294Role(role))}</h3>
+ <div class="cell-sub">محسوب بقواعد قاعدة البيانات نفسها لهذا الحساب.</div>
+ <div class="v355-tiles"><div class="v355-tile info"><b>${v355N(d.schools_count)}</b><span>مدرسة يراها</span></div><div class="v355-tile info"><b>${v355N(d.teachers_count)}</b><span>معلمًا يراه</span></div></div>
+ ${Object.keys(bs).length?`<div class="v355-chips">${Object.entries(bs).map(([s,n])=>`<span class="badge">${esc(s)}: ${v355N(n)}</span>`).join('')}</div>`:''}
+ <h4 class="v355-h">الإجراءات <small class="cell-sub">— اضغط على أي إجراء للتحكم فيه لهذا الشخص فقط</small></h4>
+ <div class="v358-caps">${caps.map(c=>`<button type="button" class="v359-cap${c.grant?' has':''}" onclick="v359Pick('${esc(c.code)}')"><span>${esc(c.label)}</span>${v359Badge(c)}</button>`).join('')}</div>
+ ${(d.schools||[]).length?`<details class="v355-det"><summary>المدارس (${v355N(d.schools_count)})</summary><div class="v355-items">${d.schools.map(s=>`<span>${esc(s.name)} <small>(${esc(s.stage)})</small></span>`).join('')}</div></details>`:''}
+ <div class="actions"><button type="button" class="btn secondary" onclick="closeModal()">إغلاق</button></div>`);
+}
+async function v359Refresh(){
+ const r=await sb.rpc('admin_view_as',{p_profile:V359.pid,p_role:V359.role});if(r.error)throw r.error;V359.d=r.data||{};v359Draw();
+}
+v358ViewAs=async function(pid,role){
+ const u=v355User(pid);V359.pid=pid;V359.role=role;V359.d=null;V356.cb=null;
+ modal(`<h3>ما يراه ${esc(u?.name||'')} بدور ${esc(v294Role(role))}</h3><div class="cell-sub">جارٍ الحساب…</div>`);
+ try{await v359Refresh()}catch(e){modal(`<h3>عرض كمستخدم</h3><div class="notice danger">${esc(v356Err(e))}</div><div class="actions"><button class="btn secondary" type="button" onclick="closeModal()">إغلاق</button></div>`)}
+};
+function v359Pick(code){
+ const c=(V359.d?.capabilities||[]).find(x=>x.code===code);if(!c)return;const u=v355User(V359.pid);const nm=esc(u?.name||'');
+ const back=`<button type="button" class="btn secondary" onclick="v359Draw()">رجوع</button>`;
+ if(c.grant){
+  V356.cb=null;
+  modal(`<h3>${esc(c.label)}</h3><p>${nm} عليه الآن استثناء: <b>${c.grant.allowed?'مسموح له':'ممنوع عليه'}</b> (${c.grant.expires_at?'حتى '+esc(v358Date(c.grant.expires_at)):'دائم'}).</p>
+  <p>إلغاء الاستثناء يعيده لقاعدة دوره: <b>${c.role_allowed?'مسموح في نطاقه':'ممنوع'}</b>.</p>
+  <label class="v356-lbl" for="v356Reason">السبب (يُحفظ في التدقيق)</label><input id="v356Reason" type="text" maxlength="200" placeholder="اختياري">
+  <div id="v356Msg"></div>
+  <div class="actions"><button type="button" class="btn primary" onclick="v359Revoke('${esc(c.grant.id)}',this)">إلغاء الاستثناء</button>${back}</div>`);
+  return;
+ }
+ const toAllow=!c.allowed;
+ V356.cb=null;
+ modal(`<h3>${esc(c.label)}</h3>
+ <p>${toAllow?`السماح لـ <b>${nm}</b> وحده بهذا الإجراء داخل نطاقه، رغم أنه ممنوع على دوره.`:`منع <b>${nm}</b> وحده من هذا الإجراء. بقية من لهم دوره لا يتأثرون.`}</p>
+ <label class="v356-lbl" for="v359Dur">المدة</label>
+ <select id="v359Dur" onchange="document.getElementById('v359DaysWrap').hidden=this.value!=='n'"><option value="perm">دائم حتى ألغيه</option><option value="7">أسبوع</option><option value="30">شهر</option><option value="n">عدد أيام…</option></select>
+ <div id="v359DaysWrap" hidden><label class="v356-lbl" for="v359Days">عدد الأيام (1–90)</label><input id="v359Days" type="number" min="1" max="90" value="3" inputmode="numeric"></div>
+ <label class="v356-lbl" for="v356Reason">السبب (يُحفظ في التدقيق)</label><input id="v356Reason" type="text" maxlength="200" placeholder="اختياري">
+ <div id="v356Msg"></div>
+ <div class="actions"><button type="button" class="btn ${toAllow?'primary':'danger'}" onclick="v359Save('${esc(code)}',${toAllow},this)">${toAllow?'سماح له':'منع عليه'}</button>${back}</div>`);
+}
+async function v359Save(code,allow,btn){
+ const m=document.getElementById('v356Msg'),dur=document.getElementById('v359Dur').value;
+ let days=null;if(dur==='7'||dur==='30')days=Number(dur);else if(dur==='n'){days=Number(document.getElementById('v359Days').value);if(!(days>=1&&days<=90)){if(m)m.innerHTML='<div class="notice warn">عدد الأيام من 1 إلى 90.</div>';return}}
+ btn.disabled=true;
+ const r=await sb.rpc('admin_grant_add',{p_profile:V359.pid,p_cap:code,p_allowed:!!allow,p_days:days,p_reason:(document.getElementById('v356Reason').value||'').trim()||null});
+ if(r.error){btn.disabled=false;if(m)m.innerHTML=`<div class="notice danger">${esc(v356Err(r.error))}</div>`;return}
+ V358.grants=null;try{await v359Refresh()}catch(e){v359Draw()}toast(allow?'تم السماح له':'تم المنع عليه');
+}
+async function v359Revoke(id,btn){
+ const m=document.getElementById('v356Msg');btn.disabled=true;
+ const r=await sb.rpc('admin_grant_revoke',{p_id:id,p_reason:(document.getElementById('v356Reason').value||'').trim()||null});
+ if(r.error){btn.disabled=false;if(m)m.innerHTML=`<div class="notice danger">${esc(v356Err(r.error))}</div>`;return}
+ V358.grants=null;try{await v359Refresh()}catch(e){v359Draw()}toast('أُلغي الاستثناء');
+}
+/* v359-end */
 </script>
 
 <div id="reportPreviewOverlay" class="report-preview-overlay" role="dialog" aria-modal="true" aria-label="معاينة التقرير" aria-hidden="true">
