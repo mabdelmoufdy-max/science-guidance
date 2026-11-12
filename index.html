@@ -1,4 +1,5 @@
 <!doctype html>
+<!-- v354: «المتصلون الآن» ← «محاولات مرفوضة»: تجميع بالشخص (v354DenGroups: ما كتبه + المصدر) — الشاشة سطر لكل شخص (عدد المحاولات، الأسباب v354Why، آخر محاولة، المصدر، الجهاز) يُفتح لعرض محاولاته، والتقرير deniedAttempts صف لكل شخص (المحاولات، السبب، أول/آخر محاولة) مرتب بالأكثر محاولات؛ وإن كان البحث على شخص واحد فالتقرير صف لكل محاولة كما كان. واجهة فقط. -->
 <!-- v353: «المتصلون الآن»: تنسيق الهاتف (التبويبات الثلاثة في صف وأزرار الفترة في صف، وسطر مختصر لكل مستخدم يُفتح بالضغط لعرض جلساته، وسطر مختصر لكل محاولة مرفوضة) + تقريرا طباعة A4 بمحرك التقارير: «سجل الدخول على البرنامج» (accessLog: صف لكل مستخدم، أو صف لكل دخول عند البحث عن مستخدم واحد) و«محاولات الدخول المرفوضة» (deniedAttempts) يتبعان الفترة والبحث المختارين؛ لمدير النظام فقط، واجهة فقط. -->
 <!-- v352: «المتصلون الآن» (مدير النظام): تبويبان جديدان — «سجل الدخول» (admin_access_report: اليوم/أسبوع/شهر/فترة محددة + بحث بالاسم + ملخص لكل مستخدم وتفاصيل كل دخول) و«محاولات مرفوضة» (admin_denied_attempts: شاشة دخول البرنامج + بوابة المعلمين)؛ login() يسجّل المحاولة الفاشلة بـlog_login_failure (بلا كلمة المرور). قاعدة البيانات v352_access_reports. -->
 <!-- v351: renderReportSchema: إن لم تكن للتقرير إجماليات والاعتماد معطّل (approval.enabled===false) لا يُضاف الذيل الفارغ (report-approval-space بارتفاع 66px) فلا ينفرد بصفحة فارغة أخيرة (مثال: «الجدول الأسبوعي لمعلمي المدرسة» ابن دقيق العيد 24 صفًا). بقية التقارير بلا تغيير. -->
@@ -8,7 +9,6 @@
 <!-- v344: «تعديل بيانات المعلم» صفحة كاملة بأقسام لكل أدوار التعديل (admin/stage_coordinator/supervisor/senior_teacher) — كتلة v344 آخر السكربت: ① الأساسية (مع الرقم القومي) ② الوظيفية (الدرجة والتواريخ ومشرف المادة) ③ المدرسة والانتداب ④ مسؤول البيانات وحساب الدخول (الحساب للمدير)؛ «حفظ» في كل قسم يحفظ النموذج ويعيد الصفحة بموضع التمرير نفسه؛ تغيير المدرسة الأساسية/الانتداب/إلغاؤه فوري برسالة الفصول المسندة وإلغاء إسنادها (المدير unassign_class_atomic، والبقية الحذف بسياسات نطاقهم)؛ «🏠 الرئيسية» و«رجوع» مع تنبيه عند عدم الحفظ. v295/v339/إلغاء الانتداب صارت لهذه الأدوار (حذف المعلم وحساب الدخول للمدير فقط). قاعدة البيانات v344: الرقم القومي لكل دور في نطاقه، وسياسة teaching_sup_remove للموجه. -->
 <!-- v343: ترويسة تقارير A4: شعار التوجيه (REPORT_LOGO_SRC نسخة 144px) يمين كل صفحة وبجواره سطرا تعريف بالنظام (REPORT_BRAND_NAME/REPORT_BRAND_ABOUT) ثم عنوان التقرير — بطلب المستخدم «تعريف بسيط بالنظام» بلا رابط؛ مسافات الترويسة قُلّلت (الفاصل 14←5، الحشو والهامش 7←4) فالمساحة الرأسية 95px كما كانت ولا ينقص صف من أي صفحة؛ reportRenderSharePageBlob يرسم الشعار في صورة واتساب/PDF. الأعمدة والتذييل والحسابات بلا تغيير. -->
 <!-- v342: إصلاح: زر «تقرير المعلمين (حسب الفلاتر)» في صفحة المعلمين يفتح «أنصبة المعلمين» (teacherWorkload) فلم يكن يتبع «حالة المعلم» (v341 ربطه بتقرير المعلمين القديم فقط) — الآن غلاف currentReportFilterState يشمل teacherWorkload وصفوفه تحمل _tstates (v341ListStates من كل صفوف المعلم)، والتصفية في كتلة v342 بعد غلاف v132 (قبل طبقة v103 التي تُسقط الصفوف لأي فلتر لا تعرفه) بدل غلاف v129ReportPred. -->
-<!-- v341: صفحة المعلمين: فلتر «حالة المعلم» بعد «المرحلة» (كتلة v341 بعد v329): الكل/أساسي/أجر/إجازة/منتدب بالعدد بجانب كل حالة ويتبع المرحلة والمدرسة؛ أساسي = الثابت القائم على العمل، إجازة = الإجازة المجددة فقط، منتدب حالة إضافية متداخلة؛ اختيار حالة يعرض القائمة، ويتبعه تصدير Excel و«تقرير المعلمين (حسب الفلاتر)» (حقل _tstates). عرض فقط بلا قاعدة بيانات. -->
 <html lang="ar" dir="rtl">
 <head>
 <!-- إعداد: أ/ محمود عبدالمفدي محمد أبوالنجا | الصفة: معلم -->
@@ -16,7 +16,7 @@
 <script>/* v226: العنوان الموحد — انظر التعليق أعلى الملف */(function(){try{if(/\.github\.io$/.test(location.hostname)&&/^\/science-guidance\/?(index\.html)?$/.test(location.pathname)&&!/[?&]stay\b/.test(location.search))location.replace('https://teachers-data-portal.vercel.app/app/'+location.hash)}catch(e){}})();</script>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#152c43">
-<title>نظام توجيه العلوم — v353</title>
+<title>نظام توجيه العلوم — v354</title>
 <link rel="manifest" href="./manifest.webmanifest">
 <link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png">
 <link rel="apple-touch-icon" href="./icon-192.png">
@@ -2464,6 +2464,7 @@ window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();window.v152
 window.addEventListener('appinstalled',()=>{window.v152InstallPrompt=null;v152SyncInstallBtn()});
 if('serviceWorker' in navigator&&location.protocol!=='file:')window.addEventListener('load',()=>navigator.serviceWorker.register('./service-worker.js').catch(()=>{}));
 const V145_NEWS=[
+ ['v354','المتصلون الآن ← محاولات مرفوضة: الشخص يظهر مرة واحدة بعدد محاولاته وأسبابها وأول/آخر محاولة (في الشاشة والتقرير)؛ والتفاصيل بالضغط على اسمه أو بالبحث عنه.'],
  ['v353','المتصلون الآن: شكل مختصر مناسب للهاتف (سطر لكل مستخدم يُفتح بالضغط) وزر «📄 تقرير» لطباعة سجل الدخول والمحاولات المرفوضة A4 حسب الفترة والبحث.'],
  ['v352','المتصلون الآن (مدير النظام): تبويبان جديدان «سجل الدخول» (اليوم/أسبوع/شهر/فترة محددة مع بحث بالاسم) و«محاولات مرفوضة» لمحاولات الدخول الفاشلة على البرنامج وبوابة المعلمين.'],
  ['v351','التقارير: لا تُضاف صفحة فارغة في آخر التقارير التي ليس بها خانة اعتماد (مثل الجدول الأسبوعي لمعلمي المدرسة).'],
@@ -9043,6 +9044,15 @@ function v352Reason(x){
 function v352Src(x){return x.source==='app'?'البرنامج':'بوابة المعلمين'}
 function v352LogRows(){const q=v288Norm(V352.q);return V352.log.filter(x=>!q||v288Norm(x.full_name).includes(q))}
 function v352DenRows(){const q=v288Norm(V352.q),raw=V352.q.trim();return V352.den.filter(x=>!q||v288Norm(x.full_name).includes(q)||String(x.identifier||'').includes(raw))}
+/* v354: محاولات مرفوضة مجمّعة — صف لكل شخص (ما كتبه + المصدر) بعدد محاولاته وأسبابها وأول/آخر محاولة */
+function v354DenGroups(rows){
+ const by=new Map();
+ rows.forEach(x=>{const k=(x.source||'')+'|'+String(x.identifier||'—');const o=by.get(k)||{ident:String(x.identifier||'—'),name:'',src:v352Src(x),n:0,why:new Map(),first:'',last:'',dev:new Set(),rows:[]};
+  o.n++;if(!o.name&&x.full_name)o.name=x.full_name;const w=v352Reason(x);o.why.set(w,(o.why.get(w)||0)+1);const t=String(x.created_at||'');if(!o.first||t<o.first)o.first=t;if(t>o.last)o.last=t;if(x.source==='app'&&x.device)o.dev.add(v352Dev(x.device));o.rows.push(x);by.set(k,o)});
+ const out=[...by.values()];out.forEach(o=>o.rows.sort((a,b)=>String(b.created_at).localeCompare(String(a.created_at))));
+ return out.sort((a,b)=>b.n-a.n||b.last.localeCompare(a.last));
+}
+function v354Why(o){const m=[...o.why];return m.length===1&&o.n>1?m[0][0]:m.map(([w,c])=>c>1?w+' ×'+c:w).join('، ')}
 function v352Users(rows){
  const by=new Map();
  rows.forEach(x=>{const o=by.get(x.profile_id)||{name:x.full_name||'—',n:0,ms:0,last:'',roles:new Set(),dev:new Set(),rows:[]};o.n++;o.ms+=v352Ms(x);if(String(x.started_at)>o.last)o.last=String(x.started_at);if(x.active_role)o.roles.add(v294Role(x.active_role));if(x.device)o.dev.add(v352Dev(x.device));o.rows.push(x);by.set(x.profile_id,o)});
@@ -9070,10 +9080,9 @@ function v352DenBody(){
  if(V352.err)return `<div class="notice warn">${esc(V352.err)}</div>`;
  const rows=v352DenRows();
  if(!rows.length)return '<div class="cell-sub" style="padding:10px">لا توجد محاولات مرفوضة في هذه الفترة.</div>';
- const app=rows.filter(x=>x.source==='app').length,LIM=300;
- return `<div class="v294-head v352-head"><span>محاولات مرفوضة (${rows.length}) — البرنامج ${app} · بوابة المعلمين ${rows.length-app}</span><button type="button" class="btn small secondary" onclick="v353Report('deniedAttempts')">📄 تقرير</button></div>`+
- rows.slice(0,LIM).map(x=>`<div class="v352-d"><div><b class="v352-id">${esc(x.identifier||'—')}</b>${x.full_name?` <span>${esc(x.full_name)}</span>`:''}</div><div class="cell-sub">${esc([v352Reason(x),v294Clock(x.created_at),v352Src(x),x.source==='app'&&x.device?v352Dev(x.device):''].filter(Boolean).join(' · '))}</div></div>`).join('')+
- (rows.length>LIM?`<div class="cell-sub" style="padding:10px">يُعرض أحدث ${LIM} من ${rows.length}؛ التقرير المطبوع يعرضها كلها.</div>`:'');
+ const app=rows.filter(x=>x.source==='app').length,LIM=100,gs=v354DenGroups(rows);
+ return `<div class="v294-head v352-head"><span>محاولات مرفوضة (${rows.length}) من ${gs.length} — البرنامج ${app} · بوابة المعلمين ${rows.length-app}</span><button type="button" class="btn small secondary" onclick="v353Report('deniedAttempts')">📄 تقرير</button></div>`+
+ gs.map(o=>`<details class="v352-u"><summary><b class="v352-id">${esc(o.ident)}</b>${o.name?` <span>${esc(o.name)}</span>`:''}<span class="cell-sub">${esc([v352Times(o.n),v354Why(o),'آخر محاولة '+v294Clock(o.last),o.src,[...o.dev].join(' و')].filter(Boolean).join(' · '))}</span></summary><div class="v352-ses">${o.rows.slice(0,LIM).map(x=>`<div>${esc([v294Time(x.created_at),v352Reason(x),x.source==='app'&&x.device?v352Dev(x.device):''].filter(Boolean).join(' — '))}</div>`).join('')}${o.rows.length>LIM?`<div class="cell-sub">يُعرض أحدث ${LIM} من ${o.rows.length}؛ التقرير المطبوع يعرضها كلها عند البحث عنه.</div>`:''}</div></details>`).join('');
 }
 function v352Inner(){
  if(V352.tab==='online')return v352Tabs()+`<input type="search" id="v294Q" placeholder="🔎 ابحث عن شخص لعرض تفاصيله" autocomplete="off" oninput="v294Search(this.value)" aria-label="بحث بالاسم"><div id="v294Root">${v294Body()}</div>`;
@@ -13909,9 +13918,15 @@ ReportAdapters.deniedAttempts={async load(ctx){
  const rows=v352DenRows(),per=v353Period(),app=rows.filter(x=>x.source==='app').length;
  if(!rows.length)throw new Error('لا توجد محاولات مرفوضة في هذه الفترة.');
  return makeReportSchema({reportId:'deniedAttempts',title:'محاولات الدخول المرفوضة',subtitle:per+(V352.q.trim()?` — بحث: ${V352.q.trim()}`:''),period:ctx.period,issuer:ctx.issuer,
-  columns:[reportColumn('n','م',.4),reportColumn('at','الوقت',1.5),reportColumn('ident','المُدخل',1.4),reportColumn('name','الاسم إن عُرف',2),reportColumn('src','المصدر',1.1),reportColumn('why','السبب',2),reportColumn('dev','الجهاز',.8)],
-  rows:rows.map((x,i)=>({n:String(i+1),at:v353Stamp(x.created_at),ident:String(x.identifier||'—'),name:x.full_name||'—',src:v352Src(x),why:v352Reason(x),dev:x.source==='app'?v352Dev(x.device):'—'})),
-  summary:[reportMetric('المحاولات',rows.length),reportMetric('شاشة دخول البرنامج',app),reportMetric('بوابة المعلمين',rows.length-app)],totals:[],approval:{enabled:false}});
+  ...(()=>{const gs=v354DenGroups(rows);
+   /* v354: صف لكل شخص؛ وإن كان البحث على شخص واحد فصف لكل محاولة */
+   if(gs.length===1)return {columns:[reportColumn('n','م',.4),reportColumn('at','الوقت',1.5),reportColumn('ident','المُدخل',1.4),reportColumn('name','الاسم إن عُرف',2),reportColumn('src','المصدر',1.1),reportColumn('why','السبب',2),reportColumn('dev','الجهاز',.8)],
+    rows:rows.map((x,i)=>({n:String(i+1),at:v353Stamp(x.created_at),ident:String(x.identifier||'—'),name:x.full_name||'—',src:v352Src(x),why:v352Reason(x),dev:x.source==='app'?v352Dev(x.device):'—'})),
+    summary:[reportMetric('المحاولات',rows.length),reportMetric('شاشة دخول البرنامج',app),reportMetric('بوابة المعلمين',rows.length-app)]};
+   return {columns:[reportColumn('n','م',.4),reportColumn('ident','المُدخل',1.3),reportColumn('name','الاسم إن عُرف',1.9),reportColumn('src','المصدر',1),reportColumn('count','المحاولات',.7,{numeric:true}),reportColumn('why','السبب',2),reportColumn('first','أول محاولة',1.3),reportColumn('last','آخر محاولة',1.3),reportColumn('dev','الجهاز',.8)],
+    rows:gs.map((o,i)=>({n:String(i+1),ident:o.ident,name:o.name||'—',src:o.src,count:o.n,why:v354Why(o),first:v353Stamp(o.first),last:v353Stamp(o.last),dev:[...o.dev].join(' و')||'—'})),
+    summary:[reportMetric('الأشخاص',gs.length),reportMetric('المحاولات',rows.length),reportMetric('شاشة دخول البرنامج',app),reportMetric('بوابة المعلمين',rows.length-app)]};
+  })(),totals:[],approval:{enabled:false}});
 }};
 /* الصفوف مصفّاة مسبقًا بفلاتر الصفحة؛ لا تُطبَّق عليها فلاتر المرحلة/المدرسة العامة */
 const __v353BaseApplyFilters=applyCurrentFiltersToReportSchema;
