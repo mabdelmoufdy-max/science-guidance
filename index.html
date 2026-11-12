@@ -1,4 +1,5 @@
 <!doctype html>
+<!-- v351: renderReportSchema: إن لم تكن للتقرير إجماليات والاعتماد معطّل (approval.enabled===false) لا يُضاف الذيل الفارغ (report-approval-space بارتفاع 66px) فلا ينفرد بصفحة فارغة أخيرة (مثال: «الجدول الأسبوعي لمعلمي المدرسة» ابن دقيق العيد 24 صفًا). بقية التقارير بلا تغيير. -->
 <!-- v350: معلم الأجر: حقل «الدرجة الوظيفية» يُخفى ويظهر بدله نص ثابت «معلم بالأجر» عند اختيار نوع العمل «بالأجر» في كل نماذج المعلم (تعديل المعلم وصفحته، الإضافة السريعة، إنشاء حساب، شاشة إدخال بيانات المدارس داخل الجذر المعزول) — كتلة v350 آخر السكربت (MutationObserver + v350Watch للجذر المعزول)؛ القيمة تضبطها قاعدة البيانات (مشغّل v349 trg_v349_paid_job_title)، ولا يُطلب إدخالها. -->
 <!-- v346: صفحة تعديل بيانات المعلم — بطاقة «حساب الدخول»: زر «إرسال واتساب» بجوار «نسخ كلمة المرور» بعد إنشاء الحساب أو إعادة تعيين كلمة المرور (v346WaBtn): رسالة جاهزة برابط البرنامج واسم المستخدم (الرقم القومي) وكلمة المرور إلى هاتف المعلم، تفتح تطبيق واتساب على الهاتف (عادي أو أعمال) عبر v306Wa وإلا wa.me. واجهة فقط. -->
 <!-- v345: modal() يزيل الصنف v339-page عند فتح أي نافذة، فالنوافذ المفتوحة من داخل صفحة «تعديل بيانات المعلم» (مثل حذف المعلم) لا ترث ملء الشاشة. -->
@@ -8,7 +9,6 @@
 <!-- v341: صفحة المعلمين: فلتر «حالة المعلم» بعد «المرحلة» (كتلة v341 بعد v329): الكل/أساسي/أجر/إجازة/منتدب بالعدد بجانب كل حالة ويتبع المرحلة والمدرسة؛ أساسي = الثابت القائم على العمل، إجازة = الإجازة المجددة فقط، منتدب حالة إضافية متداخلة؛ اختيار حالة يعرض القائمة، ويتبعه تصدير Excel و«تقرير المعلمين (حسب الفلاتر)» (حقل _tstates). عرض فقط بلا قاعدة بيانات. -->
 <!-- v339: مدير النظام: «تعديل بيانات المعلم» صفحة بملء الشاشة (#modal.v339-page + شريط «← رجوع») — المراحل الثلاث: الرقم القومي قابل للتعديل (admin_change_teacher_civil_id: سجل المعلم + حسابه + الموجه المرتبط + بريد الدخول، مع تأكيد)، وتعديل تاريخ استلام العمل/الحصول على الدرجة يُعتمد مباشرة للمدير (review_data_completion_change)؛ بطاقتا «مسؤول بيانات المدرسة» (set_school_data_officer) و«حساب الدخول» (إنشاء بـcreate-system-user v12 وإعادة تعيين بـadmin-reset-user-password v5، كلمة يولّدها النظام بلا إلزام بالتغيير)؛ و«تغيير كلمة المرور» في «بياناتي» لدور المعلم. الأدوار الأخرى بلا تغيير. -->
 <!-- v338: زر «تذكير» في صفحة إنجاز الجداول (v306TeacherRows/v306Wa): يفتح تطبيق واتساب المثبّت مباشرة برابط whatsapp://send (يتجاوز واتساب ويب الذي كان يعطي «تعذر تحميل» ويسجّل الخروج عند فتح تبويب جديد لكل تذكير)، وإن لم يفتح التطبيق خلال 1.5 ثانية يرجع تلقائيًا إلى wa.me في نافذة واحدة ثابتة (v306wa) لا تبويب جديد كل مرة. واجهة فقط. -->
-<!-- v337: حقول التاريخ يوم/شهر/سنة لكل الأدوار (كتلة v337 آخر السكربت): بجانب كل input[type=date] حقل نص ظاهر dd/mm/yyyy (أرقام عادية، يقبل العربية، «/» تلقائي) + أيقونة تقويم فوقها الحقل الأصلي شفافًا (showPicker)؛ الحقل الأصلي يبقى بقيمته YYYY-MM-DD (لا تغيير في الحفظ)، ومزامنة الاتجاهين وضبط .value برمجيًا، وتاريخ غير صحيح يمنع الحفظ؛ MutationObserver للصفحة وshadowRoot شاشة إدخال المدارس (CSS في SE_CSS أيضًا)؛ تواريخ «استكمال البيانات» والحقلان للقراءة فقط بنفس الصيغة. -->
 <html lang="ar" dir="rtl">
 <head>
 <!-- إعداد: أ/ محمود عبدالمفدي محمد أبوالنجا | الصفة: معلم -->
@@ -16,7 +16,7 @@
 <script>/* v226: العنوان الموحد — انظر التعليق أعلى الملف */(function(){try{if(/\.github\.io$/.test(location.hostname)&&/^\/science-guidance\/?(index\.html)?$/.test(location.pathname)&&!/[?&]stay\b/.test(location.search))location.replace('https://teachers-data-portal.vercel.app/app/'+location.hash)}catch(e){}})();</script>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#152c43">
-<title>نظام توجيه العلوم — v350</title>
+<title>نظام توجيه العلوم — v351</title>
 <link rel="manifest" href="./manifest.webmanifest">
 <link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png">
 <link rel="apple-touch-icon" href="./icon-192.png">
@@ -2454,6 +2454,7 @@ window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();window.v152
 window.addEventListener('appinstalled',()=>{window.v152InstallPrompt=null;v152SyncInstallBtn()});
 if('serviceWorker' in navigator&&location.protocol!=='file:')window.addEventListener('load',()=>navigator.serviceWorker.register('./service-worker.js').catch(()=>{}));
 const V145_NEWS=[
+ ['v351','التقارير: لا تُضاف صفحة فارغة في آخر التقارير التي ليس بها خانة اعتماد (مثل الجدول الأسبوعي لمعلمي المدرسة).'],
  ['v350','معلم الأجر: الدرجة الوظيفية «معلم بالأجر» تلقائيًا ولا يُطلب إدخالها أو تعديلها.'],
  ['v346','حساب دخول المعلم: زر «إرسال واتساب» بجوار كلمة المرور يرسل له رابط البرنامج واسم المستخدم وكلمة المرور مباشرة.'],
  ['v345','صفحة تعديل بيانات المعلم: النوافذ المفتوحة منها (مثل حذف المعلم) تظهر بحجمها العادي.'],
@@ -6002,7 +6003,7 @@ function renderReportSchema(schema,sheet=document.getElementById('reportPreviewS
  /* v256: صف «المجموع» أخيرًا في الجدول (لا يدخل عدّ الصفوف ولا التحقق) */
  if(schema.totalRow&&schema.rows.length){const ttr=reportRowNode(schema,schema.totalRow,-1);ttr.removeAttribute('data-report-row-index');ttr.classList.add('report-total-row');[...ttr.children].forEach(td=>{td.style.fontWeight='900';td.style.borderTop='2px solid #000'});const prev=sk.tbody.lastElementChild;sk.tbody.appendChild(ttr);if(reportBodyOverflows(pg.body)){ttr.remove();const carry=prev&&!prev.classList.contains('report-group-row')&&sk.tbody.children.length>1?prev:null;if(carry)carry.remove();pg=reportCreatePage(stack,schema,signature);sk=reportTableSkeleton(schema);pg.body.appendChild(sk.table);if(carry)sk.tbody.appendChild(carry);sk.tbody.appendChild(ttr)}}
  if(!schema.rows.length){const empty=document.createElement('div');empty.className='report-empty-state';empty.textContent='لا توجد نتائج ضمن النطاق والفلاتر المحددة.';pg.body.appendChild(empty)}
- const tail=document.createElement('div');if(schema.totals.length)tail.appendChild(reportTotalsNode(schema.totals));tail.appendChild(reportApprovalNodeV32(schema));pg.body.appendChild(tail);if(reportBodyOverflows(pg.body)){tail.remove();
+ const tail=document.createElement('div');if(schema.totals.length)tail.appendChild(reportTotalsNode(schema.totals));tail.appendChild(reportApprovalNodeV32(schema));/* v351: بلا إجماليات والاعتماد معطّل ← لا ذيل فارغ (كان ينفرد بصفحة فارغة) */const v351NoTail=!schema.totals.length&&schema.approval?.enabled===false;if(!v351NoTail)pg.body.appendChild(tail);if(!v351NoTail&&reportBodyOverflows(pg.body)){tail.remove();
   /* v133: تقرير «أنصبة المعلمين» فقط — إن لم تلائم الإجماليات والاعتماد الصفحة الأخيرة، تنتقل معها آخر 3 صفوف من الجدول بدل أن تنفرد الإجماليات بصفحة فارغة. بقية التقارير على سلوكها السابق. */
   let carried=[];if(schema.reportId==='teacherWorkload'){const kids=[...sk.tbody.children],want=Math.min(3,kids.length-1);if(want>0){const cand=kids.slice(-want);if(!cand.some(n=>n.classList.contains('report-group-row')))carried=cand}}
   const prevTbody=sk.tbody;carried.forEach(n=>n.remove());
