@@ -18,7 +18,7 @@
 <!-- v179: إدارة المجموعات الثانوية بلا رجوع للمطور — لكل مجموعة غير مسندة «تغيير النوع» (يُعاد تسميتها «النوع — مجموعة N» وتُضبط موادها وحصصها حسب النوع) و«حذف» لها بعينها؛ و«تعليم مزدوج» للصف الثاني الصناعي (فيزياء حصة واحدة). للمنسق ضمن مرحلته ولمدير النظام. -->
 <!-- v178: الثانوي العام والثانوي الصناعي مرحلتان مستقلتان (قاعدة البيانات v223): قائمة المرحلة تعرضهما منفصلتين، ونوع المدرسة الثانوية ثابت على مرحلتها، وكل فحوص «ثانوي» صارت للمرحلتين. -->
 <!-- v177: الموجه الأول لا يدخل بوابة المنسق (عرض وتقارير فقط في البرنامج الرئيسي)؛ الدخول لمنسق المرحلة ومدير النظام. -->
-<title>إدخال بيانات المدارس — v192</title>
+<title>إدخال بيانات المدارس — v193</title>
 <!-- v192: حقول التاريخ يوم/شهر/سنة (نفس كتلة v337 في البرنامج) والحقلان للقراءة فقط بنفس الصيغة. -->
 <!-- v175: اسم الفصل في بطاقة المعلم وقوائم الإسناد يعرض الصف أولًا للمجموعات الثانوية («الأول — عام — مجموعة 1») لأن اسم المجموعة يتكرر في كل صف. عرض فقط. -->
 <!-- v174: تحسين الشكل — تبويبات المدرسة (البيانات | الموجهون | الفصول والمجموعات | المعلمون) بأعداد ونواقص، عدّادات +/− لكل نوع مجموعة في الثانوي (شريط المسند والأسماء مطوية)، بطاقة معلم مضغوطة (النصاب والمحتسب والمتبقي والموجه المسؤول) والبيانات الشخصية مطوية، ومنع خروج البريد الطويل عن الإطار. لا تغيير في البيانات أو الصلاحيات أو منطق الحفظ. -->
@@ -1041,6 +1041,31 @@ function v337DateText(v){const m=/^(\d{4})-(\d{2})-(\d{2})/.exec(String(v||''));
  watch(document);
 })();
 /* v337-end */
+/* v350-begin: معلم الأجر — الدرجة الوظيفية «معلم بالأجر» ثابتة (تضبطها القاعدة v349) */
+(function(){
+ var LBL='معلم بالأجر';
+ function sync(wt,jt){
+  var paid=wt.value==='paid',box=jt.parentNode,tx=box.querySelector('.v350-paid'),hint=box.querySelector('small');
+  if(paid){
+   if(!tx){tx=document.createElement('input');tx.className='v350-paid';tx.value=LBL;tx.readOnly=true;tx.tabIndex=-1;tx.title='تلقائي لمعلم الأجر';jt.parentNode.insertBefore(tx,jt.nextSibling)}
+   if(jt.dataset.v350req==null)jt.dataset.v350req=jt.required?'1':'';jt.style.display='none';jt.required=false;tx.style.display='';if(hint)hint.style.display='none';
+  }else{jt.style.display='';if(jt.dataset.v350req)jt.required=true;if(tx)tx.style.display='none';if(hint)hint.style.display=''}
+ }
+ function scan(root){
+  try{root.querySelectorAll('select[name="work_type"]').forEach(function(wt){
+   var f=wt.form||wt.closest('form');if(!f)return;var jt=f.querySelector('select[name="job_title"]');if(!jt)return;
+   if(!wt.dataset.v350){wt.dataset.v350='1';wt.addEventListener('change',function(){sync(wt,jt)})}
+   sync(wt,jt);
+  })}catch(e){}
+ }
+ function watch(root){
+  if(!root||root.__v350)return;root.__v350=1;scan(root);
+  var pend=false;new MutationObserver(function(){if(pend)return;pend=true;Promise.resolve().then(function(){pend=false;scan(root)})}).observe(root,{childList:true,subtree:true});
+ }
+ window.v350Watch=watch;
+ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',function(){watch(document)});else watch(document);
+})();
+/* v350-end */
 </script>
 </body>
 </html>

@@ -1,4 +1,5 @@
 <!doctype html>
+<!-- v350: معلم الأجر: حقل «الدرجة الوظيفية» يُخفى ويظهر بدله نص ثابت «معلم بالأجر» عند اختيار نوع العمل «بالأجر» في كل نماذج المعلم (تعديل المعلم وصفحته، الإضافة السريعة، إنشاء حساب، شاشة إدخال بيانات المدارس داخل الجذر المعزول) — كتلة v350 آخر السكربت (MutationObserver + v350Watch للجذر المعزول)؛ القيمة تضبطها قاعدة البيانات (مشغّل v349 trg_v349_paid_job_title)، ولا يُطلب إدخالها. -->
 <!-- v346: صفحة تعديل بيانات المعلم — بطاقة «حساب الدخول»: زر «إرسال واتساب» بجوار «نسخ كلمة المرور» بعد إنشاء الحساب أو إعادة تعيين كلمة المرور (v346WaBtn): رسالة جاهزة برابط البرنامج واسم المستخدم (الرقم القومي) وكلمة المرور إلى هاتف المعلم، تفتح تطبيق واتساب على الهاتف (عادي أو أعمال) عبر v306Wa وإلا wa.me. واجهة فقط. -->
 <!-- v345: modal() يزيل الصنف v339-page عند فتح أي نافذة، فالنوافذ المفتوحة من داخل صفحة «تعديل بيانات المعلم» (مثل حذف المعلم) لا ترث ملء الشاشة. -->
 <!-- v344: «تعديل بيانات المعلم» صفحة كاملة بأقسام لكل أدوار التعديل (admin/stage_coordinator/supervisor/senior_teacher) — كتلة v344 آخر السكربت: ① الأساسية (مع الرقم القومي) ② الوظيفية (الدرجة والتواريخ ومشرف المادة) ③ المدرسة والانتداب ④ مسؤول البيانات وحساب الدخول (الحساب للمدير)؛ «حفظ» في كل قسم يحفظ النموذج ويعيد الصفحة بموضع التمرير نفسه؛ تغيير المدرسة الأساسية/الانتداب/إلغاؤه فوري برسالة الفصول المسندة وإلغاء إسنادها (المدير unassign_class_atomic، والبقية الحذف بسياسات نطاقهم)؛ «🏠 الرئيسية» و«رجوع» مع تنبيه عند عدم الحفظ. v295/v339/إلغاء الانتداب صارت لهذه الأدوار (حذف المعلم وحساب الدخول للمدير فقط). قاعدة البيانات v344: الرقم القومي لكل دور في نطاقه، وسياسة teaching_sup_remove للموجه. -->
@@ -8,7 +9,6 @@
 <!-- v339: مدير النظام: «تعديل بيانات المعلم» صفحة بملء الشاشة (#modal.v339-page + شريط «← رجوع») — المراحل الثلاث: الرقم القومي قابل للتعديل (admin_change_teacher_civil_id: سجل المعلم + حسابه + الموجه المرتبط + بريد الدخول، مع تأكيد)، وتعديل تاريخ استلام العمل/الحصول على الدرجة يُعتمد مباشرة للمدير (review_data_completion_change)؛ بطاقتا «مسؤول بيانات المدرسة» (set_school_data_officer) و«حساب الدخول» (إنشاء بـcreate-system-user v12 وإعادة تعيين بـadmin-reset-user-password v5، كلمة يولّدها النظام بلا إلزام بالتغيير)؛ و«تغيير كلمة المرور» في «بياناتي» لدور المعلم. الأدوار الأخرى بلا تغيير. -->
 <!-- v338: زر «تذكير» في صفحة إنجاز الجداول (v306TeacherRows/v306Wa): يفتح تطبيق واتساب المثبّت مباشرة برابط whatsapp://send (يتجاوز واتساب ويب الذي كان يعطي «تعذر تحميل» ويسجّل الخروج عند فتح تبويب جديد لكل تذكير)، وإن لم يفتح التطبيق خلال 1.5 ثانية يرجع تلقائيًا إلى wa.me في نافذة واحدة ثابتة (v306wa) لا تبويب جديد كل مرة. واجهة فقط. -->
 <!-- v337: حقول التاريخ يوم/شهر/سنة لكل الأدوار (كتلة v337 آخر السكربت): بجانب كل input[type=date] حقل نص ظاهر dd/mm/yyyy (أرقام عادية، يقبل العربية، «/» تلقائي) + أيقونة تقويم فوقها الحقل الأصلي شفافًا (showPicker)؛ الحقل الأصلي يبقى بقيمته YYYY-MM-DD (لا تغيير في الحفظ)، ومزامنة الاتجاهين وضبط .value برمجيًا، وتاريخ غير صحيح يمنع الحفظ؛ MutationObserver للصفحة وshadowRoot شاشة إدخال المدارس (CSS في SE_CSS أيضًا)؛ تواريخ «استكمال البيانات» والحقلان للقراءة فقط بنفس الصيغة. -->
-<!-- v336: السرعة: loadContext يطلب الحساب والأدوار والعام معًا (Promise.all)؛ تقرير البيانات المشترك v162ReportsDatasetRaw دقيقتان بدل 30ث ويُستعمل بدل استدعاءين مباشرين (فحص الاعتماد، بيانات المعلم)؛ loadCompletionData تُخزّن البيانات الخام دقيقة (يمسحها حفظ completion/teachers/schools/supervisors)؛ الشعار مضغوط (174←112 ك.ب base64)؛ supabase-js مثبت 2.119.0 (نفس النسخة الحالية). مع قاعدة البيانات v336a (get_reports_dataset أسرع ~2×). -->
 <html lang="ar" dir="rtl">
 <head>
 <!-- إعداد: أ/ محمود عبدالمفدي محمد أبوالنجا | الصفة: معلم -->
@@ -16,7 +16,7 @@
 <script>/* v226: العنوان الموحد — انظر التعليق أعلى الملف */(function(){try{if(/\.github\.io$/.test(location.hostname)&&/^\/science-guidance\/?(index\.html)?$/.test(location.pathname)&&!/[?&]stay\b/.test(location.search))location.replace('https://teachers-data-portal.vercel.app/app/'+location.hash)}catch(e){}})();</script>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#152c43">
-<title>نظام توجيه العلوم — v346</title>
+<title>نظام توجيه العلوم — v350</title>
 <link rel="manifest" href="./manifest.webmanifest">
 <link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png">
 <link rel="apple-touch-icon" href="./icon-192.png">
@@ -2454,6 +2454,7 @@ window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();window.v152
 window.addEventListener('appinstalled',()=>{window.v152InstallPrompt=null;v152SyncInstallBtn()});
 if('serviceWorker' in navigator&&location.protocol!=='file:')window.addEventListener('load',()=>navigator.serviceWorker.register('./service-worker.js').catch(()=>{}));
 const V145_NEWS=[
+ ['v350','معلم الأجر: الدرجة الوظيفية «معلم بالأجر» تلقائيًا ولا يُطلب إدخالها أو تعديلها.'],
  ['v346','حساب دخول المعلم: زر «إرسال واتساب» بجوار كلمة المرور يرسل له رابط البرنامج واسم المستخدم وكلمة المرور مباشرة.'],
  ['v345','صفحة تعديل بيانات المعلم: النوافذ المفتوحة منها (مثل حذف المعلم) تظهر بحجمها العادي.'],
  ['v344','«تعديل بيانات المعلم» صفحة كاملة بأقسام (الأساسية، الوظيفية، المدرسة والانتداب) للمدير والمنسق والموجه وحساب المدرسة: الحفظ يبقيك في الصفحة، وتغيير المدرسة أو الانتداب يلغي إسناد الفصول المسندة بعد رسالة، والرقم القومي قابل للتعديل.'],
@@ -12066,7 +12067,7 @@ function seFit(){
 }
 function seMount(){
  const el=document.getElementById('seHost');if(!el)return;
- ROOT=el.shadowRoot||el.attachShadow({mode:'open'});try{window.v337Watch&&window.v337Watch(ROOT)}catch(e){}
+ ROOT=el.shadowRoot||el.attachShadow({mode:'open'});try{window.v337Watch&&window.v337Watch(ROOT)}catch(e){}try{window.v350Watch&&window.v350Watch(ROOT)}catch(e){}
  ROOT.innerHTML=`<style>${SE_CSS}</style><div class="se-box" id="seBox"><div class="loading">جارٍ تحميل المدارس…</div></div>`;
  seFit();start();
 }
@@ -13751,6 +13752,31 @@ saveTeacherEdit=async function(e,id,...rest){
  await v344Reopen(id);
 };
 /* v344-end */
+/* v350-begin: معلم الأجر — الدرجة الوظيفية «معلم بالأجر» ثابتة (تضبطها القاعدة v349) */
+(function(){
+ var LBL='معلم بالأجر';
+ function sync(wt,jt){
+  var paid=wt.value==='paid',box=jt.parentNode,tx=box.querySelector('.v350-paid'),hint=box.querySelector('small');
+  if(paid){
+   if(!tx){tx=document.createElement('input');tx.className='v350-paid';tx.value=LBL;tx.readOnly=true;tx.tabIndex=-1;tx.title='تلقائي لمعلم الأجر';jt.parentNode.insertBefore(tx,jt.nextSibling)}
+   if(jt.dataset.v350req==null)jt.dataset.v350req=jt.required?'1':'';jt.style.display='none';jt.required=false;tx.style.display='';if(hint)hint.style.display='none';
+  }else{jt.style.display='';if(jt.dataset.v350req)jt.required=true;if(tx)tx.style.display='none';if(hint)hint.style.display=''}
+ }
+ function scan(root){
+  try{root.querySelectorAll('select[name="work_type"]').forEach(function(wt){
+   var f=wt.form||wt.closest('form');if(!f)return;var jt=f.querySelector('select[name="job_title"]');if(!jt)return;
+   if(!wt.dataset.v350){wt.dataset.v350='1';wt.addEventListener('change',function(){sync(wt,jt)})}
+   sync(wt,jt);
+  })}catch(e){}
+ }
+ function watch(root){
+  if(!root||root.__v350)return;root.__v350=1;scan(root);
+  var pend=false;new MutationObserver(function(){if(pend)return;pend=true;Promise.resolve().then(function(){pend=false;scan(root)})}).observe(root,{childList:true,subtree:true});
+ }
+ window.v350Watch=watch;
+ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',function(){watch(document)});else watch(document);
+})();
+/* v350-end */
 </script>
 
 <div id="reportPreviewOverlay" class="report-preview-overlay" role="dialog" aria-modal="true" aria-label="معاينة التقرير" aria-hidden="true">
