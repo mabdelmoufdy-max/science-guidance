@@ -18,7 +18,8 @@
 <!-- v179: إدارة المجموعات الثانوية بلا رجوع للمطور — لكل مجموعة غير مسندة «تغيير النوع» (يُعاد تسميتها «النوع — مجموعة N» وتُضبط موادها وحصصها حسب النوع) و«حذف» لها بعينها؛ و«تعليم مزدوج» للصف الثاني الصناعي (فيزياء حصة واحدة). للمنسق ضمن مرحلته ولمدير النظام. -->
 <!-- v178: الثانوي العام والثانوي الصناعي مرحلتان مستقلتان (قاعدة البيانات v223): قائمة المرحلة تعرضهما منفصلتين، ونوع المدرسة الثانوية ثابت على مرحلتها، وكل فحوص «ثانوي» صارت للمرحلتين. -->
 <!-- v177: الموجه الأول لا يدخل بوابة المنسق (عرض وتقارير فقط في البرنامج الرئيسي)؛ الدخول لمنسق المرحلة ومدير النظام. -->
-<title>إدخال بيانات المدارس — v194</title>
+<title>إدخال بيانات المدارس — v195</title>
+<!-- v195: تسجيل محاولة الدخول الفاشلة (log_login_failure) لتقرير «محاولات مرفوضة» في البرنامج؛ بلا كلمة المرور. -->
 <!-- v194: نبضة «المتصلون الآن» (presence_ping كل دقيقة وعند العودة للتبويب) كي يظهر من يعمل من هذه الصفحة في قائمة المتصلين بالبرنامج. -->
 <!-- v192: حقول التاريخ يوم/شهر/سنة (نفس كتلة v337 في البرنامج) والحقلان للقراءة فقط بنفس الصيغة. -->
 <!-- v175: اسم الفصل في بطاقة المعلم وقوائم الإسناد يعرض الصف أولًا للمجموعات الثانوية («الأول — عام — مجموعة 1») لأن اسم المجموعة يتكرر في كل صف. عرض فقط. -->
@@ -281,7 +282,7 @@ function renderLogin(msg){
   if(civil.length<6){$('loginErr').textContent='أدخل الرقم القومي صحيحًا';return}
   $('loginBtn').disabled=true;$('loginErr').textContent='';
   const {error}=await sb.auth.signInWithPassword({email:`${civil}@science-guidance.local`,password:pw});
-  $('loginBtn').disabled=false;if(error){$('loginErr').textContent=errText(error);return}
+  $('loginBtn').disabled=false;if(error){$('loginErr').textContent=errText(error);if(error.status===400||/invalid/i.test(String(error.message||'')))sb.rpc('log_login_failure',{p_identifier:civil,p_reason:'bad_credentials'}).then(()=>{},()=>{});return}
   boot()};
 }
 function renderChangePassword(){
@@ -306,7 +307,7 @@ async function boot(){
   const {data:{session}}=await sb.auth.getSession();if(!session)return renderLogin();
   const uid=session.user.id;
   const prof=await q(sb.from('profiles').select('id,full_name,civil_id,must_change_password,is_active').eq('id',uid).single());
-  if(!prof.is_active){await sb.auth.signOut();return renderLogin('الحساب غير مفعل')}
+  if(!prof.is_active){try{await sb.rpc('log_login_failure',{p_identifier:prof.civil_id||'',p_reason:'inactive'})}catch(e){}await sb.auth.signOut();return renderLogin('الحساب غير مفعل')}
   const roles=(await q(sb.from('user_roles').select('role').eq('profile_id',uid).eq('is_active',true))).map(r=>r.role);
   activeRole=['admin','stage_coordinator'].find(r=>roles.includes(r))||'';
   if(!activeRole){await sb.auth.signOut();return renderLogin('هذا الرابط لمنسقي المراحل فقط')}
