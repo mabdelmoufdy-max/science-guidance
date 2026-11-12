@@ -94,11 +94,7 @@ begin
      where l.id = v_log and (l.last_seen_at < now() - interval '20 seconds' or l.active_role is distinct from v_role);
   end if;
 
-  -- الاحتفاظ 6 أشهر
-  if random() < 0.002 then
-    delete from public.user_access_log where started_at < now() - interval '6 months';
-    delete from public.login_failures where created_at < now() - interval '6 months';
-  end if;
+  -- لا تنظيف تلقائي (بقرار المستخدم «ب» 2026-11-12): السجل صغير، والتنظيف يُضاف لاحقًا إن لزم.
 end
 $function$;
 revoke all on function public.presence_ping() from public, anon;
