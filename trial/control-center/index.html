@@ -1,4 +1,5 @@
 <!doctype html>
+<!-- v356: مركز التحكم — المرحلة 2 (أفعال): ملف المستخدم (إعادة كلمة المرور + واتساب، إلزام/إلغاء إلزام التغيير، إنهاء الجلسات، تعطيل/تفعيل بكلمة تأكيد، تعديل الأدوار ومراحل المنسق)، نقل مدارس الابتدائي/الإعدادي بين الموجهين بمعاينة الأثر، ومفاتيح البوابة. قاعدة البيانات v356_control_center_actions: admin_account_action وadmin_move_schools وadmin_set_flag (مدير النظام فقط، كل فعل في audit_log بالأفعال cc_*). -->
 <!-- v355: مركز التحكم لمدير النظام — المرحلة 1 (عرض فقط): تبويب controlCenter بعد «لوحة النظام» فيه نظرة عامة وإشارات الخطر، المستخدمون وملف كل مستخدم (الأدوار والنطاق والحساب ونشاط 30 يومًا)، خريطة النطاق لكل مرحلة، والتدقيق بالفلاتر والقيمة قبل/بعد. قاعدة البيانات v355_control_center_read: admin_control_center() وadmin_audit_search() للدور النشط admin فقط. -->
 <!-- v354: «المتصلون الآن» ← «محاولات مرفوضة»: تجميع بالشخص (v354DenGroups: ما كتبه + المصدر) — الشاشة سطر لكل شخص (عدد المحاولات، الأسباب v354Why، آخر محاولة، المصدر، الجهاز) يُفتح لعرض محاولاته، والتقرير deniedAttempts صف لكل شخص (المحاولات، السبب، أول/آخر محاولة) مرتب بالأكثر محاولات؛ وإن كان البحث على شخص واحد فالتقرير صف لكل محاولة كما كان. واجهة فقط. -->
 <!-- v353: «المتصلون الآن»: تنسيق الهاتف (التبويبات الثلاثة في صف وأزرار الفترة في صف، وسطر مختصر لكل مستخدم يُفتح بالضغط لعرض جلساته، وسطر مختصر لكل محاولة مرفوضة) + تقريرا طباعة A4 بمحرك التقارير: «سجل الدخول على البرنامج» (accessLog: صف لكل مستخدم، أو صف لكل دخول عند البحث عن مستخدم واحد) و«محاولات الدخول المرفوضة» (deniedAttempts) يتبعان الفترة والبحث المختارين؛ لمدير النظام فقط، واجهة فقط. -->
@@ -8,7 +9,6 @@
 <!-- v346: صفحة تعديل بيانات المعلم — بطاقة «حساب الدخول»: زر «إرسال واتساب» بجوار «نسخ كلمة المرور» بعد إنشاء الحساب أو إعادة تعيين كلمة المرور (v346WaBtn): رسالة جاهزة برابط البرنامج واسم المستخدم (الرقم القومي) وكلمة المرور إلى هاتف المعلم، تفتح تطبيق واتساب على الهاتف (عادي أو أعمال) عبر v306Wa وإلا wa.me. واجهة فقط. -->
 <!-- v345: modal() يزيل الصنف v339-page عند فتح أي نافذة، فالنوافذ المفتوحة من داخل صفحة «تعديل بيانات المعلم» (مثل حذف المعلم) لا ترث ملء الشاشة. -->
 <!-- v344: «تعديل بيانات المعلم» صفحة كاملة بأقسام لكل أدوار التعديل (admin/stage_coordinator/supervisor/senior_teacher) — كتلة v344 آخر السكربت: ① الأساسية (مع الرقم القومي) ② الوظيفية (الدرجة والتواريخ ومشرف المادة) ③ المدرسة والانتداب ④ مسؤول البيانات وحساب الدخول (الحساب للمدير)؛ «حفظ» في كل قسم يحفظ النموذج ويعيد الصفحة بموضع التمرير نفسه؛ تغيير المدرسة الأساسية/الانتداب/إلغاؤه فوري برسالة الفصول المسندة وإلغاء إسنادها (المدير unassign_class_atomic، والبقية الحذف بسياسات نطاقهم)؛ «🏠 الرئيسية» و«رجوع» مع تنبيه عند عدم الحفظ. v295/v339/إلغاء الانتداب صارت لهذه الأدوار (حذف المعلم وحساب الدخول للمدير فقط). قاعدة البيانات v344: الرقم القومي لكل دور في نطاقه، وسياسة teaching_sup_remove للموجه. -->
-<!-- v343: ترويسة تقارير A4: شعار التوجيه (REPORT_LOGO_SRC نسخة 144px) يمين كل صفحة وبجواره سطرا تعريف بالنظام (REPORT_BRAND_NAME/REPORT_BRAND_ABOUT) ثم عنوان التقرير — بطلب المستخدم «تعريف بسيط بالنظام» بلا رابط؛ مسافات الترويسة قُلّلت (الفاصل 14←5، الحشو والهامش 7←4) فالمساحة الرأسية 95px كما كانت ولا ينقص صف من أي صفحة؛ reportRenderSharePageBlob يرسم الشعار في صورة واتساب/PDF. الأعمدة والتذييل والحسابات بلا تغيير. -->
 <html lang="ar" dir="rtl">
 <head>
 <!-- إعداد: أ/ محمود عبدالمفدي محمد أبوالنجا | الصفة: معلم -->
@@ -16,7 +16,7 @@
 <script>/* v226: العنوان الموحد — انظر التعليق أعلى الملف */(function(){try{if(/\.github\.io$/.test(location.hostname)&&/^\/science-guidance\/?(index\.html)?$/.test(location.pathname)&&!/[?&]stay\b/.test(location.search))location.replace('https://teachers-data-portal.vercel.app/app/'+location.hash)}catch(e){}})();</script>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#152c43">
-<title>نظام توجيه العلوم — v355</title>
+<title>نظام توجيه العلوم — v356</title>
 <link rel="manifest" href="../../manifest.webmanifest">
 <link rel="icon" type="image/png" sizes="192x192" href="../../icon-192.png">
 <link rel="apple-touch-icon" href="../../icon-192.png">
@@ -2156,6 +2156,24 @@ body.v293-ro select[onchange*="v101ChangeSlot"]{pointer-events:none;opacity:.65}
  .v355-user{flex-wrap:wrap}
  .v355-bar{grid-template-columns:minmax(80px,40%) 1fr auto}
 }
+/* v356: مركز التحكم — أفعال المرحلة 2 (تخطيط فقط) */
+.v356-actions{display:flex;gap:8px;flex-wrap:wrap}
+.v356-boxhead{display:flex;gap:8px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+.v356-cbody{display:grid;gap:8px;margin-bottom:8px}
+.v356-lbl{display:block;font-size:13px;margin:10px 0 4px}
+#modal .modal-card input#v356Reason,#modal .modal-card input#v356Word,#modal .modal-card select#v356MTo{width:100%}
+.v356-chk{display:flex;gap:8px;align-items:center;font-size:14px;padding:5px 0;cursor:pointer;min-width:0;overflow-wrap:anywhere}
+.v356-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,170px),1fr));gap:2px 12px}
+.v356-schools{max-height:min(40vh,320px);overflow:auto;border:1px solid var(--line);border-radius:10px;padding:6px 10px;margin:8px 0}
+.v356-impact{display:grid;gap:4px;border:1px solid var(--line);border-inline-start:4px solid var(--warn);border-radius:10px;padding:10px 12px;margin-top:10px;font-size:13.5px}
+.v356-warn{color:var(--warn);font-weight:600}
+.v356-pw{font-size:20px;letter-spacing:.04em}
+.v356-sw{flex:0 0 auto;width:42px;height:24px;border-radius:99px;border:0;background:var(--line);position:relative;cursor:pointer;padding:0}
+.v356-sw::after{content:"";position:absolute;top:3px;inset-inline-start:3px;width:18px;height:18px;border-radius:50%;background:#fff;transition:inset-inline-start .15s}
+.v356-sw.on{background:var(--ok)}
+.v356-sw.on::after{inset-inline-start:21px}
+.v356-sw:focus-visible{outline:2px solid var(--primary);outline-offset:2px}
+@media (max-width:760px){.v356-actions>.btn{flex:1 1 calc(50% - 8px)}}
 </style>
 </head>
 <body>
@@ -2523,6 +2541,7 @@ window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();window.v152
 window.addEventListener('appinstalled',()=>{window.v152InstallPrompt=null;v152SyncInstallBtn()});
 if('serviceWorker' in navigator&&location.protocol!=='file:')window.addEventListener('load',()=>navigator.serviceWorker.register('../../service-worker.js').catch(()=>{}));
 const V145_NEWS=[
+ ['v356','مركز التحكم — المرحلة 2: من ملف المستخدم: إعادة كلمة المرور مع إرسالها بالواتساب، إلزام أو إلغاء إلزام تغييرها، إنهاء الجلسات، تعطيل الحساب وتفعيله، وتعديل الأدوار ومراحل المنسق؛ ونقل مدارس بين الموجهين بمعاينة الأثر قبل التطبيق؛ ومفاتيح البوابة تُفتح وتُغلق من النظرة العامة. كل فعل يُسجَّل في التدقيق.'],
  ['v355','مركز التحكم (مدير النظام): شاشة جديدة فيها نظرة عامة وإشارات الخطر، وقائمة المستخدمين وملف كامل لكل مستخدم (أدواره ونطاقه وحسابه ونشاطه)، وخريطة النطاق لكل مرحلة، وسجل التدقيق بالقيمة قبل/بعد. المرحلة 1: عرض فقط.'],
  ['v354','المتصلون الآن ← محاولات مرفوضة: الشخص يظهر مرة واحدة بعدد محاولاته وأسبابها وأول/آخر محاولة (في الشاشة والتقرير)؛ والتفاصيل بالضغط على اسمه أو بالبحث عنه.'],
  ['v353','المتصلون الآن: شكل مختصر مناسب للهاتف (سطر لكل مستخدم يُفتح بالضغط) وزر «📄 تقرير» لطباعة سجل الدخول والمحاولات المرفوضة A4 حسب الفترة والبحث.'],
@@ -14154,6 +14173,172 @@ async function v355Page(){
 NAV.admin.splice(1,0,['controlCenter','مركز التحكم','⛨']);
 if(Array.isArray(V307_ORDER.admin)&&!V307_ORDER.admin.includes('controlCenter'))V307_ORDER.admin.splice(1,0,'controlCenter');
 /* v355-end */
+/* v356-begin: مركز التحكم — المرحلة 2: أفعال الحسابات (تعطيل/تفعيل، إنهاء الجلسات، كلمة المرور، الأدوار ومراحل المنسق) ونقل المدارس بمعاينة الأثر ومفاتيح البوابة. قاعدة البيانات v356: admin_account_action، admin_move_schools، admin_set_flag (مدير النظام فقط، وكل فعل في audit_log) */
+const V356={cb:null,pw:null,move:null};
+const V356_ROLES=['stage_coordinator','supervisor','first_supervisor','teacher','school_manager'];
+function v356Err(e){const m=(e&&(e.message||e.error_description))||String(e||'');return typeof v332ErrText==='function'?v332ErrText(m):m}
+async function v356After(msg){try{await v355Load();V355.err=''}catch(e){V355.err=v356Err(e)}closeModal();v355Render();toast(msg)}
+/* نافذة تأكيد موحّدة: سبب اختياري، وكلمة تأكيد للأفعال الخطرة */
+function v356Confirm(o){
+ V356.cb=o.onOk;
+ modal(`<h3>${esc(o.title)}</h3><div class="v356-cbody">${o.body||''}</div>
+ ${o.reason===false?'':'<label class="v356-lbl" for="v356Reason">السبب (يُحفظ في التدقيق)</label><input id="v356Reason" type="text" maxlength="200" placeholder="اختياري">'}
+ ${o.word?`<label class="v356-lbl" for="v356Word">للتأكيد اكتب: <b>${esc(o.word)}</b></label><input id="v356Word" type="text" autocomplete="off" oninput="document.getElementById('v356Ok').disabled=this.value.trim()!=='${esc(o.word)}'">`:''}
+ <div id="v356Msg"></div>
+ <div class="actions"><button id="v356Ok" type="button" class="btn ${o.danger?'danger':'primary'}"${o.word?' disabled':''} onclick="v356Run(this)">${esc(o.ok||'تأكيد')}</button><button type="button" class="btn secondary" onclick="closeModal()">إلغاء</button></div>`);
+}
+async function v356Run(btn){
+ const cb=V356.cb;if(!cb)return;btn.disabled=true;const old=btn.textContent;btn.textContent='جارٍ التنفيذ…';
+ const reason=(document.getElementById('v356Reason')?.value||'').trim();
+ try{await cb(reason)}catch(e){const m=document.getElementById('v356Msg');if(m)m.innerHTML=`<div class="notice danger">${esc(v356Err(e))}</div>`;btn.disabled=false;btn.textContent=old}
+}
+async function v356Act(id,action,value,reason){const r=await sb.rpc('admin_account_action',{p_profile:id,p_action:action,p_value:value==null?null:String(value),p_reason:reason||null});if(r.error)throw r.error;return r.data}
+/* ── أفعال الحساب ── */
+function v356Disable(id){const u=v355User(id);if(!u)return;
+ v356Confirm({title:'تعطيل الحساب',danger:true,word:'تعطيل',ok:'تعطيل الحساب',body:`<div class="notice warn">سيُمنع <b>${esc(u.name)}</b> من الدخول فورًا، وتُنهى جلساته المفتوحة. بياناته وأدواره تبقى كما هي، ويمكن التفعيل لاحقًا.</div>`,
+  onOk:async r=>{await v356Act(id,'disable',null,r);await v356After('تم تعطيل الحساب')}})}
+function v356Enable(id){const u=v355User(id);if(!u)return;
+ v356Confirm({title:'تفعيل الحساب',ok:'تفعيل',body:`<p>يعود <b>${esc(u.name)}</b> للدخول بأدواره الحالية.</p>`,onOk:async r=>{await v356Act(id,'enable',null,r);await v356After('تم تفعيل الحساب')}})}
+function v356EndSessions(id){const u=v355User(id);if(!u)return;
+ v356Confirm({title:'إنهاء الجلسات',ok:'إنهاء الجلسات',body:`<p>يُطلب من <b>${esc(u.name)}</b> تسجيل الدخول من جديد على كل أجهزته. قد تبقى الصفحة المفتوحة عنده تعمل حتى ساعة على الأكثر ثم تُغلق.</p>`,
+  onOk:async r=>{const d=await v356Act(id,'end_sessions',null,r);await v356After('أُنهيت '+v355N(d?.sessions_ended||0)+' جلسة')}})}
+function v356ForcePw(id,on){const u=v355User(id);if(!u)return;
+ v356Confirm({title:on?'إلزام بتغيير كلمة المرور':'إلغاء الإلزام بتغيير كلمة المرور',ok:'تأكيد',body:`<p>${on?'عند دخوله التالي يُطلب من':'لن يُطلب من'} <b>${esc(u.name)}</b> ${on?'إنشاء كلمة مرور جديدة.':'تغيير كلمة المرور.'}</p>`,
+  onOk:async r=>{await v356Act(id,'force_password',on,r);await v356After('تم')}})}
+function v356ResetPw(id){const u=v355User(id);if(!u)return;
+ V356.cb=null;
+ modal(`<h3>إعادة تعيين كلمة المرور</h3><p>تُنشأ كلمة مرور جديدة لـ <b>${esc(u.name)}</b> وتتوقف القديمة فورًا.</p>
+ <label class="v356-chk"><input type="checkbox" id="v356Force" checked> يُطلب منه تغييرها عند أول دخول</label><div id="v356Msg"></div>
+ <div class="actions"><button type="button" class="btn primary" onclick="v356DoReset('${esc(id)}',this)">إنشاء كلمة مرور جديدة</button><button type="button" class="btn secondary" onclick="closeModal()">إلغاء</button></div>`);
+}
+async function v356DoReset(id,btn){
+ const u=v355User(id);btn.disabled=true;const force=!!document.getElementById('v356Force')?.checked;
+ const {data,error}=await sb.functions.invoke('admin-reset-user-password',{body:{profile_id:id,force_change:force}});
+ if(error||data?.error){btn.disabled=false;const m=document.getElementById('v356Msg');if(m)m.innerHTML=`<div class="notice danger">${esc(v356Err(new Error(data?.error||error?.message||'تعذّرت إعادة التعيين')))}</div>`;return}
+ V356.pw={id,password:data.temporary_password,civil:data.civil_id||u?.civil_id||''};
+ const url=typeof v233Wa==='function'?v233Wa(u?.phone):'';
+ const msg=`السلام عليكم أ/ ${u?.name||''}\nبيانات دخولك على برنامج نظام توجيه العلوم:\nالرابط: https://teachers-data-portal.vercel.app/app/\nاسم المستخدم (الرقم القومي): ${V356.pw.civil}\nكلمة المرور: ${V356.pw.password}\n${force?'سيُطلب منك تغييرها عند الدخول.':'يمكنك تغييرها بعد الدخول.'}`;
+ modal(`<h3>كلمة المرور الجديدة</h3><div class="notice ok">اسم المستخدم: <b dir="ltr">${esc(V356.pw.civil)}</b><br>كلمة المرور: <b dir="ltr" class="v356-pw">${esc(V356.pw.password)}</b></div>
+ <div class="cell-sub">لا تُحفظ كلمة المرور في أي مكان بعد إغلاق هذه النافذة.</div>
+ <div class="actions"><button type="button" class="btn secondary" onclick="v356Copy()">نسخ كلمة المرور</button>${url?`<a class="btn ok" target="v306wa" rel="noopener" href="${url}?text=${encodeURIComponent(msg)}" onclick="return v306Wa(event,this)">إرسال واتساب</a>`:'<span class="cell-sub">لا يوجد هاتف صحيح لإرسال واتساب</span>'}<button type="button" class="btn primary" onclick="V356.pw=null;v356After('تمت إعادة تعيين كلمة المرور')">تم</button></div>`);
+}
+function v356Copy(){const p=V356.pw?.password;if(!p)return;try{navigator.clipboard.writeText(p).then(()=>toast('تم النسخ'),()=>toast('انسخها يدويًا'))}catch(e){toast('انسخها يدويًا')}}
+/* ── الأدوار ومراحل المنسق ── */
+function v356Roles(id){const u=v355User(id);if(!u)return;
+ const has=r=>(u.roles||[]).includes(r),st=u.coord_stages||[];
+ V356.cb=null;
+ modal(`<h3>أدوار ${esc(u.name)}</h3>
+ <div class="cell-sub">مدير النظام ثابت لا يُغيَّر من هنا، و«حساب المدرسة» يتبع مشرف المادة أو مسؤول البيانات تلقائيًا.</div>
+ <div class="v356-grid">${V356_ROLES.map(r=>`<label class="v356-chk"><input type="checkbox" data-role="${r}"${has(r)?' checked':''}${r==='stage_coordinator'?' disabled':''}> ${esc(ROLE_LABELS[r]||r)}${r==='stage_coordinator'?' <small>(بالمراحل أدناه)</small>':''}</label>`).join('')}</div>
+ <h4 class="v355-h">مراحل منسق المرحلة</h4>
+ <div class="v356-grid">${V355_STAGES.map(s=>`<label class="v356-chk"><input type="checkbox" data-stage="${s}"${st.includes(s)?' checked':''}> ${esc(s)}</label>`).join('')}</div>
+ <label class="v356-lbl" for="v356Reason">السبب (يُحفظ في التدقيق)</label><input id="v356Reason" type="text" maxlength="200" placeholder="اختياري">
+ <div id="v356Msg"></div>
+ <div class="actions"><button type="button" class="btn primary" onclick="v356SaveRoles('${esc(id)}',this)">حفظ</button><button type="button" class="btn secondary" onclick="closeModal()">إلغاء</button></div>`);
+}
+async function v356SaveRoles(id,btn){
+ const u=v355User(id);if(!u)return;const m=document.getElementById('v356Msg');const reason=(document.getElementById('v356Reason')?.value||'').trim();
+ const steps=[];
+ document.querySelectorAll('#modal [data-stage]').forEach(c=>{const was=(u.coord_stages||[]).includes(c.dataset.stage);if(c.checked&&!was)steps.push(['coord_stage_on',c.dataset.stage]);if(!c.checked&&was)steps.push(['coord_stage_off',c.dataset.stage])});
+ document.querySelectorAll('#modal [data-role]').forEach(c=>{if(c.disabled)return;const was=(u.roles||[]).includes(c.dataset.role);if(c.checked&&!was)steps.push(['role_on',c.dataset.role]);if(!c.checked&&was)steps.push(['role_off',c.dataset.role])});
+ if(!steps.length){closeModal();return}
+ btn.disabled=true;let done=0;
+ for(const [a,v] of steps){try{await v356Act(id,a,v,reason);done++}catch(e){if(m)m.innerHTML=`<div class="notice danger">نُفّذ ${v355N(done)} من ${v355N(steps.length)}. توقّف عند «${esc(a.includes('stage')?v:(ROLE_LABELS[v]||v))}»: ${esc(v356Err(e))}</div>`;btn.disabled=false;try{await v355Load()}catch(_){}return}}
+ await v356After('تم حفظ الأدوار');
+}
+/* ── مفاتيح البوابة ── */
+function v356Flag(flag,on){
+ const l={editing_open:'تسجيل البيانات من بوابة المعلمين',timetable_open:'إدخال المعلم لجدوله من البوابة'}[flag]||flag;
+ v356Confirm({title:(on?'فتح: ':'إغلاق: ')+l,danger:!on,ok:on?'فتح':'إغلاق',body:`<p>${on?'يُفتح':'يُغلق'} «${esc(l)}» فورًا لكل المعلمين والمشرفين في البوابة.</p>`,
+  onOk:async r=>{const x=await sb.rpc('admin_set_flag',{p_flag:flag,p_value:!!on,p_reason:r||null});if(x.error)throw x.error;await v356After(on?'تم الفتح':'تم الإغلاق')}})}
+/* ── نقل المدارس بين الموجهين (الابتدائي والإعدادي) ── */
+async function v356MoveOpen(stage){
+ V356.cb=null;modal('<h3>نقل مدارس بين موجهين</h3><div class="cell-sub">جارٍ التحميل…</div>');
+ try{
+  const [s,v]=await Promise.all([sb.from('schools').select('id,name,stage,supervisor_id').in('stage',['ابتدائي','إعدادي']).order('name'),sb.from('supervisors').select('id,full_name,active,profile_id').eq('active',true).order('full_name')]);
+  if(s.error)throw s.error;if(v.error)throw v.error;
+  V356.move={stage:stage&&!/^ثانوي/.test(stage)?stage:'ابتدائي',from:'',to:'',schools:s.data||[],sups:v.data||[],sel:new Set(),preview:null};
+  v356MoveDraw();
+ }catch(e){modal(`<h3>نقل مدارس بين موجهين</h3><div class="notice danger">${esc(v356Err(e))}</div><div class="actions"><button class="btn secondary" type="button" onclick="closeModal()">إغلاق</button></div>`)}
+}
+function v356MoveDraw(){
+ const M=V356.move;if(!M)return;const supName=id=>(M.sups.find(x=>x.id===id)||{}).full_name||'بلا موجه';
+ const inStage=M.schools.filter(x=>x.stage===M.stage);
+ const fromIds=[...new Set(inStage.map(x=>x.supervisor_id||''))];
+ const list=inStage.filter(x=>!M.from||(x.supervisor_id||'')===M.from);
+ const prev=M.preview;
+ modal(`<h3>نقل مدارس بين موجهين</h3>
+ <div class="cell-sub">مدارس الثانوي تُسند بالمادة من «إدخال بيانات المدارس». النقل لا يغيّر الأنصبة ولا العجز.</div>
+ <div class="v355-tools"><select id="v356MStage" onchange="V356.move.stage=this.value;V356.move.from='';V356.move.sel.clear();V356.move.preview=null;v356MoveDraw()">${['ابتدائي','إعدادي'].map(s=>`<option${s===M.stage?' selected':''}>${s}</option>`).join('')}</select>
+ <select id="v356MFrom" onchange="V356.move.from=this.value;V356.move.sel.clear();V356.move.preview=null;v356MoveDraw()"><option value="">من: كل الموجهين</option>${fromIds.map(i=>`<option value="${esc(i)}"${i===M.from?' selected':''}>من: ${esc(supName(i))} (${v355N(inStage.filter(x=>(x.supervisor_id||'')===i).length)})</option>`).join('')}</select></div>
+ <div class="v356-schools">${list.map(x=>`<label class="v356-chk"><input type="checkbox" data-sid="${esc(x.id)}"${M.sel.has(x.id)?' checked':''} onchange="v356MoveSel(this)"> ${esc(x.name)} <small>— ${esc(supName(x.supervisor_id))}</small></label>`).join('')||'<div class="cell-sub">لا مدارس.</div>'}</div>
+ <div class="cell-sub">المختار: <b id="v356MCount">${v355N(M.sel.size)}</b> مدرسة</div>
+ <label class="v356-lbl" for="v356MTo">إلى الموجه</label>
+ <select id="v356MTo" onchange="V356.move.to=this.value;V356.move.preview=null;v356MoveDraw()"><option value="">اختر الموجه الجديد</option>${M.sups.map(x=>`<option value="${esc(x.id)}"${x.id===M.to?' selected':''}>${esc(x.full_name)}${x.profile_id?'':' (بلا حساب دخول)'}</option>`).join('')}</select>
+ ${prev?v356MovePreviewHtml(prev):''}
+ <label class="v356-lbl" for="v356Reason">السبب (يُحفظ في التدقيق)</label><input id="v356Reason" type="text" maxlength="200" placeholder="اختياري" value="${esc(M.reason||'')}" oninput="V356.move.reason=this.value">
+ <div id="v356Msg"></div>
+ <div class="actions">${prev?`<button type="button" class="btn primary" onclick="v356MoveApply(this)">تطبيق النقل</button>`:`<button type="button" class="btn primary" onclick="v356MovePreview(this)">معاينة الأثر</button>`}<button type="button" class="btn secondary" onclick="V356.move=null;closeModal()">إلغاء</button></div>`);
+}
+function v356MoveSel(c){const M=V356.move;if(c.checked)M.sel.add(c.dataset.sid);else M.sel.delete(c.dataset.sid);M.preview=null;const n=document.getElementById('v356MCount');if(n)n.textContent=v355N(M.sel.size);const a=document.querySelector('#modal .actions .btn.primary');if(a&&a.textContent.includes('تطبيق'))v356MoveDraw()}
+function v356MovePreviewHtml(p){
+ const rows=(p.schools||[]),moving=rows.filter(r=>!r.same);
+ const t=moving.reduce((a,r)=>a+Number(r.teachers||0),0),pend=moving.reduce((a,r)=>a+Number(r.pending||0),0),bad=moving.filter(r=>!r.stage_ok);
+ return `<div class="v356-impact"><b>معاينة الأثر — إلى ${esc(p.to_name||'')}</b>
+ <span>${v355N(moving.length)} مدرسة تنتقل${rows.length-moving.length?` (و${v355N(rows.length-moving.length)} عنده أصلًا)`:''}</span>
+ <span>${v355N(t)} معلمًا أساسيًا يتغير موجههم في التقارير</span>
+ <span>${v355N(pend)} طلب اعتماد معلّق ينتقل اعتماده للموجه الجديد</span>
+ ${bad.length?`<span class="v356-warn">تنبيه: مرحلة ${esc(bad[0].stage)} غير مسجّلة ضمن مراحل الموجه الجديد (يمكنه رؤية المدارس، لكن راجع بياناته)</span>`:''}
+ <span>لا تتغير الأنصبة ولا العجز ولا الإسناد</span>
+ <details><summary>التفاصيل</summary>${rows.map(r=>`<div class="cell-sub">${esc(r.name)} — من ${esc(r.from_name||'بلا موجه')} · ${v355N(r.teachers)} معلم${r.same?' · لا تغيير':''}</div>`).join('')}</details></div>`;
+}
+async function v356MovePreview(btn){
+ const M=V356.move,m=document.getElementById('v356Msg');
+ if(!M.sel.size){if(m)m.innerHTML='<div class="notice warn">اختر مدرسة واحدة على الأقل.</div>';return}
+ if(!M.to){if(m)m.innerHTML='<div class="notice warn">اختر الموجه الجديد.</div>';return}
+ btn.disabled=true;
+ const r=await sb.rpc('admin_move_schools',{p_school_ids:[...M.sel],p_to_supervisor:M.to,p_apply:false,p_reason:null});
+ if(r.error){btn.disabled=false;if(m)m.innerHTML=`<div class="notice danger">${esc(v356Err(r.error))}</div>`;return}
+ M.preview=r.data;v356MoveDraw();
+}
+async function v356MoveApply(btn){
+ const M=V356.move,m=document.getElementById('v356Msg');btn.disabled=true;btn.textContent='جارٍ النقل…';
+ const r=await sb.rpc('admin_move_schools',{p_school_ids:[...M.sel],p_to_supervisor:M.to,p_apply:true,p_reason:(M.reason||'').trim()||null});
+ if(r.error){btn.disabled=false;btn.textContent='تطبيق النقل';if(m)m.innerHTML=`<div class="notice danger">${esc(v356Err(r.error))}</div>`;return}
+ V356.move=null;try{if(typeof v162ReportsDatasetRaw==='function'&&v162ReportsDatasetRaw.cache)v162ReportsDatasetRaw.cache=null}catch(e){}
+ await v356After('نُقلت '+v355N(r.data?.moved||0)+' مدرسة');
+}
+/* ── ربط الأزرار بشاشات المرحلة 1 ── */
+const __v356BaseProfile=v355Profile;
+v355Profile=function(id){
+ let h=__v356BaseProfile.apply(this,arguments);const u=v355User(id);if(!u)return h;
+ const isSelf=u.id===profile?.id,isAdmin=(u.roles||[]).includes('admin');
+ const acc=`<div class="v356-actions">
+  <button type="button" class="btn secondary" onclick="v356ResetPw('${esc(u.id)}')">إعادة كلمة المرور</button>
+  ${u.must_change_password?`<button type="button" class="btn secondary" onclick="v356ForcePw('${esc(u.id)}',false)">إلغاء إلزام التغيير</button>`:`<button type="button" class="btn secondary" onclick="v356ForcePw('${esc(u.id)}',true)">إلزام بتغيير كلمة المرور</button>`}
+  ${isSelf?'':`<button type="button" class="btn secondary" onclick="v356EndSessions('${esc(u.id)}')">إنهاء الجلسات</button>`}
+  ${isSelf||isAdmin?'':(u.active?`<button type="button" class="btn danger" onclick="v356Disable('${esc(u.id)}')">تعطيل الحساب</button>`:`<button type="button" class="btn ok" onclick="v356Enable('${esc(u.id)}')">تفعيل الحساب</button>`)}
+ </div>`;
+ h=h.replace('<div class="cell-sub">أزرار التعطيل وإعادة كلمة المرور وإنهاء الجلسات تُضاف في المرحلة 2.</div>',acc);
+ h=h.replace('<h3 class="v355-h">الأدوار والنطاق</h3>',`<div class="v356-boxhead"><h3 class="v355-h">الأدوار والنطاق</h3><button type="button" class="btn secondary" onclick="v356Roles('${esc(u.id)}')">تعديل الأدوار</button></div>`);
+ return h;
+};
+const __v356BaseOver=v355Over;
+v355Over=function(){
+ let h=__v356BaseOver.apply(this,arguments);const f=(V355.data&&V355.data.flags)||{};
+ const sw=(k,on,l)=>`<div class="v355-flag"><button type="button" role="switch" aria-checked="${!!on}" class="v356-sw${on?' on':''}" onclick="v356Flag('${k}',${!on})" aria-label="${esc(l)}"></button><span class="v355-grow">${esc(l)}</span><span class="badge ${on?'ok':'danger'}">${on?'مفتوح':'مغلق'}</span></div>`;
+ h=h.replace(/<h3 class="v355-h">مفاتيح البوابة<\/h3>[\s\S]*?<div class="cell-sub">التحكم في المفاتيح يُضاف في المرحلة 2\.<\/div>/,`<h3 class="v355-h">مفاتيح البوابة</h3>${sw('editing_open',f.editing_open,'تسجيل البيانات من بوابة المعلمين')}${sw('timetable_open',f.timetable_open,'إدخال المعلم لجدوله من البوابة')}`);
+ return h;
+};
+const __v356BaseScope=v355Scope;
+v355Scope=function(){
+ let h=__v356BaseScope.apply(this,arguments);
+ h=h.replace('<div class="cell-sub">نقل المدارس بين الموجهين مع معاينة الأثر يُضاف في المرحلة 2.</div>','');
+ return `<div class="v356-actions"><button type="button" class="btn primary" onclick="v356MoveOpen('ابتدائي')">نقل مدارس بين موجهين</button></div>`+h;
+};
+const __v356BaseUsers=v355UsersList;
+v355UsersList=function(){return `<div class="v356-actions"><button type="button" class="btn secondary" onclick="go('users')">+ إنشاء حساب جديد (شاشة الحسابات)</button></div>`+__v356BaseUsers.apply(this,arguments)};
+/* v356-end */
 </script>
 
 <div id="reportPreviewOverlay" class="report-preview-overlay" role="dialog" aria-modal="true" aria-label="معاينة التقرير" aria-hidden="true">
