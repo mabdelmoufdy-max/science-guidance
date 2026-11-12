@@ -1,4 +1,5 @@
 <!doctype html>
+<!-- v358: مركز التحكم — المرحلة 4: تبويب «الوصول المؤقت والمراجعة» (admin_grants_list/admin_grant_add/admin_grant_revoke، admin_access_review_list/admin_access_review_decide)، «ما الذي يراه ويفعله؟» في ملف المستخدم (admin_view_as قراءة فقط)، و«تراجع» في التدقيق لأفعال cc_* (admin_revert_action مرة واحدة لكل فعل). قاعدة البيانات v358_control_center_governance. -->
 <!-- v357: مركز التحكم — المرحلة 3: تبويب «الصلاحيات» (مصفوفة 12 إجراء × 6 أدوار، جدول على الكمبيوتر وبطاقات على الهاتف، تغييرات معلّقة بمعاينة الأثر ثم تطبيق بكلمة تأكيد). قاعدة البيانات v357_permission_matrix: permission_capabilities/permission_rules + private.cap_allowed + مشغلات trg_v357_* على 15 جدولًا (مدير النظام والمشغلات المتداخلة لا تُفحص)، admin_permission_matrix/admin_set_permissions. -->
 <!-- v356: مركز التحكم — المرحلة 2 (أفعال): ملف المستخدم (إعادة كلمة المرور + واتساب، إلزام/إلغاء إلزام التغيير، إنهاء الجلسات، تعطيل/تفعيل بكلمة تأكيد، تعديل الأدوار ومراحل المنسق)، نقل مدارس الابتدائي/الإعدادي بين الموجهين بمعاينة الأثر، ومفاتيح البوابة. قاعدة البيانات v356_control_center_actions: admin_account_action وadmin_move_schools وadmin_set_flag (مدير النظام فقط، كل فعل في audit_log بالأفعال cc_*). -->
 <!-- v355: مركز التحكم لمدير النظام — المرحلة 1 (عرض فقط): تبويب controlCenter بعد «لوحة النظام» فيه نظرة عامة وإشارات الخطر، المستخدمون وملف كل مستخدم (الأدوار والنطاق والحساب ونشاط 30 يومًا)، خريطة النطاق لكل مرحلة، والتدقيق بالفلاتر والقيمة قبل/بعد. قاعدة البيانات v355_control_center_read: admin_control_center() وadmin_audit_search() للدور النشط admin فقط. -->
@@ -8,7 +9,6 @@
 <!-- v351: renderReportSchema: إن لم تكن للتقرير إجماليات والاعتماد معطّل (approval.enabled===false) لا يُضاف الذيل الفارغ (report-approval-space بارتفاع 66px) فلا ينفرد بصفحة فارغة أخيرة (مثال: «الجدول الأسبوعي لمعلمي المدرسة» ابن دقيق العيد 24 صفًا). بقية التقارير بلا تغيير. -->
 <!-- v350: معلم الأجر: حقل «الدرجة الوظيفية» يُخفى ويظهر بدله نص ثابت «معلم بالأجر» عند اختيار نوع العمل «بالأجر» في كل نماذج المعلم (تعديل المعلم وصفحته، الإضافة السريعة، إنشاء حساب، شاشة إدخال بيانات المدارس داخل الجذر المعزول) — كتلة v350 آخر السكربت (MutationObserver + v350Watch للجذر المعزول)؛ القيمة تضبطها قاعدة البيانات (مشغّل v349 trg_v349_paid_job_title)، ولا يُطلب إدخالها. -->
 <!-- v346: صفحة تعديل بيانات المعلم — بطاقة «حساب الدخول»: زر «إرسال واتساب» بجوار «نسخ كلمة المرور» بعد إنشاء الحساب أو إعادة تعيين كلمة المرور (v346WaBtn): رسالة جاهزة برابط البرنامج واسم المستخدم (الرقم القومي) وكلمة المرور إلى هاتف المعلم، تفتح تطبيق واتساب على الهاتف (عادي أو أعمال) عبر v306Wa وإلا wa.me. واجهة فقط. -->
-<!-- v345: modal() يزيل الصنف v339-page عند فتح أي نافذة، فالنوافذ المفتوحة من داخل صفحة «تعديل بيانات المعلم» (مثل حذف المعلم) لا ترث ملء الشاشة. -->
 <html lang="ar" dir="rtl">
 <head>
 <!-- إعداد: أ/ محمود عبدالمفدي محمد أبوالنجا | الصفة: معلم -->
@@ -16,7 +16,7 @@
 <script>/* v226: العنوان الموحد — انظر التعليق أعلى الملف */(function(){try{if(/\.github\.io$/.test(location.hostname)&&/^\/science-guidance\/?(index\.html)?$/.test(location.pathname)&&!/[?&]stay\b/.test(location.search))location.replace('https://teachers-data-portal.vercel.app/app/'+location.hash)}catch(e){}})();</script>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#152c43">
-<title>نظام توجيه العلوم — v357</title>
+<title>نظام توجيه العلوم — v358</title>
 <link rel="manifest" href="../../manifest.webmanifest">
 <link rel="icon" type="image/png" sizes="192x192" href="../../icon-192.png">
 <link rel="apple-touch-icon" href="../../icon-192.png">
@@ -2198,6 +2198,16 @@ body.v293-ro select[onchange*="v101ChangeSlot"]{pointer-events:none;opacity:.65}
 .v357-impact{display:grid;gap:3px;font-size:13px}
 @media (max-width:900px){.v357-tablebox{display:none}.v357-cards{display:grid}}
 @media (max-width:760px){.v357-bar{bottom:calc(64px + env(safe-area-inset-bottom,0px))}}
+/* v358: الوصول المؤقت والمراجعة (تخطيط فقط) */
+.v358-row{cursor:default;flex-wrap:wrap}
+.v358-btns{display:flex;gap:6px;flex-wrap:wrap}
+.v358-sug{color:var(--warn)}
+.v358-sec{display:grid;gap:2px}
+.v358-old{display:grid;gap:2px;padding:0 11px 10px}
+.v358-caps{display:grid;gap:6px}
+.v358-rv{padding:3px 10px;font-size:12.5px}
+#modal .modal-card select#v358P,#modal .modal-card select#v358C,#modal .modal-card select#v358A,#modal .modal-card input#v358D{width:100%}
+@media (max-width:760px){.v358-btns{flex-basis:100%}.v358-btns>.btn{flex:1 1 0}}
 </style>
 </head>
 <body>
@@ -2565,6 +2575,7 @@ window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();window.v152
 window.addEventListener('appinstalled',()=>{window.v152InstallPrompt=null;v152SyncInstallBtn()});
 if('serviceWorker' in navigator&&location.protocol!=='file:')window.addEventListener('load',()=>navigator.serviceWorker.register('../../service-worker.js').catch(()=>{}));
 const V145_NEWS=[
+ ['v358','مركز التحكم — المرحلة 4: تبويب «الوصول المؤقت والمراجعة» (استثناء لشخص بمدة تنتهي وحدها، ومراجعة كل الأدوار النشطة بإبقاء أو إلغاء)، وفي ملف المستخدم «ما الذي يراه ويفعله؟» لكل دور، وزر «تراجع» في التدقيق لأفعال مركز التحكم.'],
  ['v357','مركز التحكم — المرحلة 3: تبويب «الصلاحيات»: مصفوفة لكل إجراء حساس (إضافة معلم، تعديل بياناته، الرقم القومي، الانتداب، الفصول، الإسناد، الجداول، الاعتماد، الاستكمال، حصص الأجر، إعدادات المدرسة) ولكل دور؛ «ممنوع» يوقف الإجراء للدور فورًا داخل قاعدة البيانات، مع معاينة الأثر قبل التطبيق.'],
  ['v356','مركز التحكم — المرحلة 2: من ملف المستخدم: إعادة كلمة المرور مع إرسالها بالواتساب، إلزام أو إلغاء إلزام تغييرها، إنهاء الجلسات، تعطيل الحساب وتفعيله، وتعديل الأدوار ومراحل المنسق؛ ونقل مدارس بين الموجهين بمعاينة الأثر قبل التطبيق؛ ومفاتيح البوابة تُفتح وتُغلق من النظرة العامة. كل فعل يُسجَّل في التدقيق.'],
  ['v355','مركز التحكم (مدير النظام): شاشة جديدة فيها نظرة عامة وإشارات الخطر، وقائمة المستخدمين وملف كامل لكل مستخدم (أدواره ونطاقه وحسابه ونشاطه)، وخريطة النطاق لكل مرحلة، وسجل التدقيق بالقيمة قبل/بعد. المرحلة 1: عرض فقط.'],
@@ -14053,7 +14064,7 @@ function v355Render(){const w=document.getElementById('v355Wrap');if(w)w.innerHT
 function v355Tab(t){V355.tab=t;V355.sel=null;v355Render();if(t==='audit'&&!V355.audit.loaded)v355AuditLoad()}
 async function v355Refresh(){const w=document.getElementById('v355Wrap');try{await v355Load();V355.err=''}catch(e){V355.err=e.message||String(e)}if(V355.tab==='audit')await v355AuditLoad(true);else v355Render();if(w)toast('تم التحديث')}
 function v355Inner(){
- const tabs=[['over','نظرة عامة ومخاطر'],['users','المستخدمون'],['scope','خريطة النطاق'],['perm','الصلاحيات'],['audit','التدقيق']];
+ const tabs=[['over','نظرة عامة ومخاطر'],['users','المستخدمون'],['scope','خريطة النطاق'],['perm','الصلاحيات'],['access','الوصول المؤقت والمراجعة'],['audit','التدقيق']];
  const head=`<div class="v355-tabs" role="tablist">${tabs.map(([k,l])=>`<button type="button" role="tab" class="v355-tab${V355.tab===k?' on':''}" aria-selected="${V355.tab===k}" onclick="v355Tab('${k}')">${l}</button>`).join('')}</div>`;
  const err=V355.err?`<div class="notice danger">تعذّر التحميل: ${esc(V355.err)}</div>`:'';
  let body='';
@@ -14061,6 +14072,7 @@ function v355Inner(){
  else if(V355.tab==='users')body=V355.sel?v355Profile(V355.sel):v355UsersList();
  else if(V355.tab==='scope')body=v355Scope();
  else if(V355.tab==='perm')body=v357Perm();
+ else if(V355.tab==='access')body=v358Access();
  else body=v355Audit();
  return head+err+`<div class="v355-body">${body}</div>`;
 }
@@ -14400,6 +14412,102 @@ function v357Apply(){
   onOk:async reason=>{const r=await sb.rpc('admin_set_permissions',{p_changes:changes,p_reason:reason||null});if(r.error)throw r.error;V357.pending={};V357.m=null;await v357Load();closeModal();toast('طُبّق '+v355N(r.data?.changed||0)+' تغيير')}});
 }
 /* v357-end */
+/* v358-begin: مركز التحكم — المرحلة 4: الوصول المؤقت (استثناء لشخص بمدة تنتهي وحدها)، مراجعة الصلاحيات، «ما الذي يراه ويفعله» (admin_view_as، قراءة فقط)، والتراجع عن أفعال المركز من التدقيق */
+const V358={grants:null,review:null,err:'',loading:false,reverted:new Set()};
+Object.assign(V355_ACTIONS,{cc_disable:'تعطيل حساب',cc_enable:'تفعيل حساب',cc_end_sessions:'إنهاء الجلسات',cc_force_password:'إلزام تغيير كلمة المرور',cc_role_on:'تفعيل دور',cc_role_off:'إيقاف دور',cc_coord_stage_on:'إضافة مرحلة منسق',cc_coord_stage_off:'إيقاف مرحلة منسق',cc_move_schools:'نقل مدارس بين موجهين',cc_flag:'مفتاح البوابة',cc_permissions:'تعديل مصفوفة الصلاحيات',cc_grant_add:'استثناء مؤقت',cc_grant_revoke:'إلغاء استثناء',cc_review:'مراجعة صلاحية',cc_view_as:'عرض كمستخدم',cc_revert:'تراجع',reset_password:'إعادة كلمة مرور'});
+const V358_REVERTABLE=['cc_disable','cc_enable','cc_force_password','cc_role_on','cc_role_off','cc_coord_stage_on','cc_coord_stage_off','cc_flag','cc_permissions','cc_grant_add','cc_move_schools'];
+async function v358Load(){V358.loading=true;V358.err='';try{const [g,r]=await Promise.all([sb.rpc('admin_grants_list'),sb.rpc('admin_access_review_list')]);if(g.error)throw g.error;if(r.error)throw r.error;V358.grants=g.data||[];V358.review=r.data||[]}catch(e){V358.err=v356Err(e)}V358.loading=false;if(V355.tab==='access')v355Render()}
+function v358Date(t){try{return new Date(t).toLocaleDateString('ar-EG',{weekday:'short',day:'numeric',month:'short'})}catch(e){return String(t||'').slice(0,10)}}
+function v358Access(){
+ if(!V358.grants&&!V358.err){if(!V358.loading)v358Load();return '<div class="cell-sub">جارٍ التحميل…</div>'}
+ if(V358.err)return `<div class="notice danger">${esc(V358.err)}</div><button type="button" class="btn secondary" onclick="V358.grants=null;v358Load()">إعادة المحاولة</button>`;
+ const st={active:['ok','سارٍ'],expired:['','انتهى'],revoked:['danger','أُلغي']};
+ const act=V358.grants.filter(g=>g.status==='active'),old=V358.grants.filter(g=>g.status!=='active');
+ const gRow=g=>`<div class="v355-user v358-row"><span class="badge ${g.allowed?'ok':'danger'}">${g.allowed?'سماح':'منع'}</span><span class="v355-grow"><b>${esc(g.name)}</b> — ${esc(g.label)}<span class="cell-sub">${g.status==='active'?'ينتهي '+esc(v358Date(g.expires_at)):(st[g.status]||st.expired)[1]}${g.reason?' · '+esc(g.reason):''}</span></span>${g.status==='active'?`<button type="button" class="btn secondary" onclick="v358Revoke('${esc(g.id)}')">إلغاء</button>`:`<span class="badge ${(st[g.status]||st.expired)[0]}">${(st[g.status]||st.expired)[1]}</span>`}</div>`;
+ const sugg=V358.review.filter(x=>x.suggest),rest=V358.review.filter(x=>!x.suggest);
+ const rRow=x=>`<div class="v355-user v358-row"><span class="v355-grow"><b>${esc(x.name)}</b> — ${esc(v294Role(x.role))}${x.account_active?'':' <span class="badge danger">معطل</span>'}<span class="cell-sub">${x.suggest?'<b class="v358-sug">'+esc(x.suggest)+'</b> · ':''}آخر دخول: ${esc(x.last_sign_in_at?v294Ago(x.last_sign_in_at):'لم يدخل')} · إجراءاته بهذا الدور (30 يومًا): ${v355N(x.actions30)}${x.last_review?` · آخر مراجعة: ${x.last_review.decision==='keep'?'أُبقي':'أُلغي'} ${esc(v358Date(x.last_review.at))}`:''}</span></span>
+  <span class="v358-btns"><button type="button" class="btn secondary" onclick="v358Decide('${esc(x.profile_id)}','${esc(x.role)}','keep')">إبقاء</button>${x.revocable?`<button type="button" class="btn danger" onclick="v358Decide('${esc(x.profile_id)}','${esc(x.role)}','revoke')">إلغاء الدور</button>`:''}</span></div>`;
+ return `<div class="v356-boxhead"><h3 class="v355-h">الوصول المؤقت</h3><button type="button" class="btn primary" onclick="v358GrantOpen()">+ استثناء مؤقت لشخص</button></div>
+ <div class="cell-sub">يُسمح لشخص بإجراء ممنوع على دوره، أو يُمنع منه وحده، لمدة تنتهي تلقائيًا (1–90 يومًا). «السماح» يرفع منع المصفوفة فقط ولا يوسّع نطاقه.</div>
+ ${act.length?act.map(gRow).join(''):'<div class="notice ok">لا توجد استثناءات سارية.</div>'}
+ ${old.length?`<details class="v355-det"><summary>السابقة (${v355N(old.length)})</summary><div class="v358-old">${old.map(gRow).join('')}</div></details>`:''}
+ <h3 class="v355-h">مراجعة الصلاحيات</h3>
+ <div class="cell-sub">كل دور نشط لكل حساب. ابدأ بالمقترح مراجعته، ثم «إبقاء» أو «إلغاء الدور». يُحفظ القرار وتاريخه.</div>
+ ${sugg.length?`<div class="v358-sec"><b>مقترح مراجعته (${v355N(sugg.length)})</b>${sugg.map(rRow).join('')}</div>`:'<div class="notice ok">لا توجد أدوار مقترح مراجعتها.</div>'}
+ ${rest.length?`<details class="v355-det"><summary>بقية الأدوار (${v355N(rest.length)})</summary><div class="v358-old">${rest.map(rRow).join('')}</div></details>`:''}`;
+}
+function v358GrantOpen(pid){
+ V356.cb=null;const users=v355Users().filter(u=>u.active&&!(u.roles||[]).includes('admin'));
+ const caps=(V357.m?.capabilities)||[];
+ const draw=()=>modal(`<h3>استثناء مؤقت لشخص</h3>
+ <label class="v356-lbl" for="v358P">الشخص</label><select id="v358P">${users.map(u=>`<option value="${esc(u.id)}"${u.id===pid?' selected':''}>${esc(u.name)} — ${esc((u.roles||[]).map(v294Role).join('، '))}</option>`).join('')}</select>
+ <label class="v356-lbl" for="v358C">الإجراء</label><select id="v358C">${caps.map(c=>`<option value="${esc(c.code)}">${esc(c.label)}</option>`).join('')}</select>
+ <label class="v356-lbl" for="v358A">النوع</label><select id="v358A"><option value="1">سماح (يرفع المنع عن هذا الشخص فقط)</option><option value="0">منع (لهذا الشخص فقط)</option></select>
+ <label class="v356-lbl" for="v358D">المدة بالأيام</label><input id="v358D" type="number" min="1" max="90" value="3" inputmode="numeric">
+ <label class="v356-lbl" for="v356Reason">السبب (يُحفظ في التدقيق)</label><input id="v356Reason" type="text" maxlength="200" placeholder="مثال: تغطية موجه في إجازة">
+ <div id="v356Msg"></div>
+ <div class="actions"><button type="button" class="btn primary" onclick="v358GrantSave(this)">حفظ الاستثناء</button><button type="button" class="btn secondary" onclick="closeModal()">إلغاء</button></div>`);
+ if(!caps.length){modal('<h3>استثناء مؤقت لشخص</h3><div class="cell-sub">جارٍ التحميل…</div>');sb.rpc('admin_permission_matrix').then(r=>{if(r.error){modal(`<h3>استثناء مؤقت</h3><div class="notice danger">${esc(v356Err(r.error))}</div>`);return}V357.m=r.data;v358GrantOpen(pid)});return}
+ draw();
+}
+async function v358GrantSave(btn){
+ const m=document.getElementById('v356Msg'),d=Number(document.getElementById('v358D').value);
+ if(!(d>=1&&d<=90)){if(m)m.innerHTML='<div class="notice warn">المدة من يوم إلى 90 يومًا.</div>';return}
+ btn.disabled=true;
+ const r=await sb.rpc('admin_grant_add',{p_profile:document.getElementById('v358P').value,p_cap:document.getElementById('v358C').value,p_allowed:document.getElementById('v358A').value==='1',p_days:d,p_reason:(document.getElementById('v356Reason').value||'').trim()||null});
+ if(r.error){btn.disabled=false;if(m)m.innerHTML=`<div class="notice danger">${esc(v356Err(r.error))}</div>`;return}
+ V358.grants=null;closeModal();V355.tab='access';V355.sel=null;await v358Load();toast('حُفظ الاستثناء حتى '+v358Date(r.data?.expires_at));
+}
+function v358Revoke(id){v356Confirm({title:'إلغاء الاستثناء',ok:'إلغاء الاستثناء',body:'<p>يعود الشخص لقاعدة دوره في المصفوفة فورًا.</p>',onOk:async reason=>{const r=await sb.rpc('admin_grant_revoke',{p_id:id,p_reason:reason||null});if(r.error)throw r.error;V358.grants=null;closeModal();await v358Load();toast('أُلغي الاستثناء')}})}
+function v358Decide(pid,role,d){
+ const x=(V358.review||[]).find(r=>r.profile_id===pid&&r.role===role);const nm=x?x.name:'';
+ v356Confirm({title:d==='keep'?'إبقاء الدور':'إلغاء الدور',danger:d==='revoke',word:d==='revoke'?'إلغاء':'',ok:d==='keep'?'إبقاء':'إلغاء الدور',
+  body:d==='keep'?`<p>يُسجَّل أنك راجعت دور «${esc(v294Role(role))}» لـ ${esc(nm)} وأبقيته.</p>`:`<div class="notice warn">يتوقف دور «${esc(v294Role(role))}» لـ <b>${esc(nm)}</b> فورًا. يمكن التراجع من التدقيق.</div>`,
+  onOk:async reason=>{const r=await sb.rpc('admin_access_review_decide',{p_profile:pid,p_role:role,p_decision:d,p_reason:reason||null});if(r.error)throw r.error;V358.grants=null;try{await v355Load()}catch(e){}closeModal();await v358Load();toast(d==='keep'?'سُجّلت المراجعة':'أُلغي الدور')}});
+}
+/* ما الذي يراه ويفعله */
+async function v358ViewAs(pid,role){
+ const u=v355User(pid);V356.cb=null;modal(`<h3>ما يراه ${esc(u?.name||'')} بدور ${esc(v294Role(role))}</h3><div class="cell-sub">جارٍ الحساب…</div>`);
+ const r=await sb.rpc('admin_view_as',{p_profile:pid,p_role:role});
+ if(r.error){modal(`<h3>عرض كمستخدم</h3><div class="notice danger">${esc(v356Err(r.error))}</div><div class="actions"><button class="btn secondary" type="button" onclick="closeModal()">إغلاق</button></div>`);return}
+ const d=r.data||{},bs=d.by_stage||{},caps=d.capabilities||[];
+ modal(`<h3>ما يراه ${esc(u?.name||'')} بدور ${esc(v294Role(role))}</h3>
+ <div class="cell-sub">محسوب بقواعد قاعدة البيانات نفسها لهذا الحساب، بلا أي تعديل.</div>
+ <div class="v355-tiles"><div class="v355-tile info"><b>${v355N(d.schools_count)}</b><span>مدرسة يراها</span></div><div class="v355-tile info"><b>${v355N(d.teachers_count)}</b><span>معلمًا يراه</span></div></div>
+ ${Object.keys(bs).length?`<div class="v355-chips">${Object.entries(bs).map(([s,n])=>`<span class="badge">${esc(s)}: ${v355N(n)}</span>`).join('')}</div>`:''}
+ <h4 class="v355-h">الإجراءات</h4>
+ <div class="v358-caps">${caps.map(c=>`<div class="v357-rr"><span>${esc(c.label)}${c.by_grant?' <small>(باستثناء مؤقت)</small>':''}</span><span class="badge ${c.allowed?'ok':'danger'}">${c.allowed?'مسموح في نطاقه':'ممنوع'}</span></div>`).join('')}</div>
+ ${(d.schools||[]).length?`<details class="v355-det"><summary>المدارس (${v355N(d.schools_count)})</summary><div class="v355-items">${d.schools.map(s=>`<span>${esc(s.name)} <small>(${esc(s.stage)})</small></span>`).join('')}</div></details>`:''}
+ <div class="actions"><button type="button" class="btn secondary" onclick="closeModal()">إغلاق</button></div>`);
+}
+/* التراجع من التدقيق */
+function v358Revert(id){
+ v356Confirm({title:'تراجع عن الفعل',ok:'تراجع',body:'<p>يُعاد الوضع كما كان قبل هذا الفعل، ويُسجَّل التراجع في التدقيق. لا يمكن التراجع عن الفعل نفسه مرتين.</p>',
+  onOk:async reason=>{const r=await sb.rpc('admin_revert_action',{p_audit_id:Number(id),p_reason:reason||null});if(r.error)throw r.error;V358.reverted.add(String(id));try{await v355Load()}catch(e){}V357.m=null;V358.grants=null;closeModal();V355.audit.loaded=false;await v355AuditLoad(true);toast('تم التراجع')}});
+}
+const __v358BaseAuditRow=v355AuditRow;
+v355AuditRow=function(r){
+ let h=__v358BaseAuditRow.apply(this,arguments);
+ const done=V358.reverted.has(String(r.id))||(V355.audit.rows||[]).some(x=>x.action==='cc_revert'&&String(x.entity_id)===String(r.id))||Object.values(V355.userAudit||{}).some(a=>Array.isArray(a)&&a.some(x=>x.action==='cc_revert'&&String(x.entity_id)===String(r.id)));
+ if(V358_REVERTABLE.includes(r.action)){
+  const b=done?'<span class="badge">تم التراجع</span>':`<button type="button" class="btn secondary v358-rv" onclick="event.preventDefault();event.stopPropagation();v358Revert('${esc(r.id)}')">تراجع</button>`;
+  h=h.replace(/(<span class="v355-when">)/,b+'$1');
+ }
+ return h;
+};
+const __v358BaseAudit=v355Audit;
+v355Audit=function(){return __v358BaseAudit.apply(this,arguments).replace('<div class="cell-sub">زر «تراجع» عن التغيير يُضاف في المرحلة 4.</div>','<div class="cell-sub">«تراجع» متاح لأفعال مركز التحكم فقط (الأدوار، التعطيل، المفاتيح، الصلاحيات، الاستثناءات، نقل المدارس). تعديلات البيانات تُراجَع من شاشاتها.</div>')};
+const __v358BaseProfile=v355Profile;
+v355Profile=function(id){
+ let h=__v358BaseProfile.apply(this,arguments);const u=v355User(id);if(!u)return h;
+ const rs=(u.roles||[]).filter(r=>r!=='admin');
+ if(rs.length||!(u.roles||[]).includes('admin')){
+  const box=`<div class="v355-box"><h3 class="v355-h">ما الذي يراه ويفعله؟</h3><div class="cell-sub">حساب فوري بقواعد قاعدة البيانات لهذا الشخص، للقراءة فقط.</div><div class="v356-actions">${rs.map(r=>`<button type="button" class="btn secondary" onclick="v358ViewAs('${esc(u.id)}','${esc(r)}')">بدور ${esc(v294Role(r))}</button>`).join('')||'<span class="cell-sub">لا أدوار نشطة.</span>'}${(u.roles||[]).includes('admin')?'':`<button type="button" class="btn secondary" onclick="v358GrantOpen('${esc(u.id)}')">+ استثناء مؤقت</button>`}</div></div>`;
+  h=h.replace(/(<div class="v355-box"><h3 class="v355-h">نشاطه آخر 30 يومًا)/,box+'$1');
+ }
+ return h;
+};
+/* v358-end */
 </script>
 
 <div id="reportPreviewOverlay" class="report-preview-overlay" role="dialog" aria-modal="true" aria-label="معاينة التقرير" aria-hidden="true">
