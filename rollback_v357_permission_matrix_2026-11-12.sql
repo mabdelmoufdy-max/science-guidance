@@ -1,0 +1,25 @@
+-- استرجاع v357: يزيل مشغلات مصفوفة الصلاحيات ودوالها وجدوليها (يعود السلوك كما قبل v357)
+drop trigger if exists trg_v357_cap_ins on public.teacher_records;
+drop trigger if exists trg_v357_cap_upd on public.teacher_records;
+drop trigger if exists trg_v357_civil on public.teacher_records;
+drop trigger if exists trg_v357_cap on public.teacher_school_assignments;
+drop trigger if exists trg_v357_cap on public.delegations;
+drop trigger if exists trg_v357_cap on public.school_classes;
+drop trigger if exists trg_v357_cap on public.class_subject_requirements;
+drop trigger if exists trg_v357_cap on public.teaching_assignments;
+drop trigger if exists trg_v357_cap on public.school_timetable_config;
+drop trigger if exists trg_v357_cap on public.teacher_timetable_slots;
+drop trigger if exists trg_v357_cap on public.school_submissions;
+drop trigger if exists trg_v357_cap on public.data_completion_changes;
+drop trigger if exists trg_v357_cap on public.teacher_paid_shortage_allocations;
+drop trigger if exists trg_v357_cap on public.school_data_officer;
+drop trigger if exists trg_v357_cap on public.school_manager_contact;
+drop trigger if exists trg_v357_cap on public.school_supervisor_choice;
+drop function if exists public.admin_set_permissions(jsonb,text);
+drop function if exists public.admin_permission_matrix();
+drop function if exists private.v357_civil_gate();
+drop function if exists private.v357_cap_gate();
+drop function if exists private.cap_allowed(text);
+drop table if exists public.permission_rules;
+drop table if exists public.permission_capabilities;
+-- إيقاف سريع بلا حذف (بديل): update public.permission_rules set allowed = true;
