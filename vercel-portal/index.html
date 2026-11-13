@@ -6,7 +6,7 @@
 <meta name="robots" content="noindex,nofollow">
 <meta name="referrer" content="no-referrer">
 <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; connect-src https://xehjwzszhsaqdqmcatum.supabase.co; img-src data: 'self'; manifest-src 'self'; worker-src 'self'; base-uri 'none'; form-action 'none'">
-<title>بوابة المعلمين — v366</title>
+<title>بوابة المعلمين — v367</title>
 <link rel="manifest" href="/portal.webmanifest">
 <meta name="theme-color" content="#0f214d">
 <meta name="mobile-web-app-capable" content="yes">
@@ -456,7 +456,7 @@ body.is-login .wrap{max-width:none;padding:0}
       try {
         var r = await rpc('teacher_portal_login', { p_civil: c, p_phone: p });
         if (!r || r.ok !== true) { showErr(box, reasonMsg(r || {})); btnBusy(btn, false); return; }
-        WHO = { civil: c, phone: p, is_sup: !!r.is_sup, role: null };
+        WHO = { civil: c, phone: p, is_sup: !!r.is_sup, supLabel: r.sup_kind === 'officer' ? 'مسؤول البيانات' : 'مشرف مدرسة', role: null };
         if (WHO.is_sup) { go('rolepick'); return; }
         await enterAs('teacher', btn, box);
       } catch (e) { showErr(box, errMsg(e)); btnBusy(btn, false); }
@@ -475,7 +475,7 @@ body.is-login .wrap{max-width:none;padding:0}
           h('p', { class: 'sub' }, st && st.year ? 'العام الدراسي ' + st.year + (st.term ? ' — ' + st.term : '') : 'للمعلم ومشرف المدرسة'),
           S.statusErr ? h('div', { class: 'warn' }, 'تعذّر الاتصال بالخادم. ', h('button', { type: 'button', class: 'link', onclick: boot }, 'إعادة المحاولة')) : null,
           form,
-          h('div', { class: 'lg-rule' }, 'ادخل بالرقم القومي ورقم الهاتف المسجّل لك في سجل المعلمين. إن كنت مشرف مدرسة ستختار الدور بعد الدخول.')),
+          h('div', { class: 'lg-rule' }, 'ادخل بالرقم القومي ورقم الهاتف المسجّل لك في سجل المعلمين. إن كنت مشرف مدرسة أو مسؤول بيانات ستختار الدور بعد الدخول.')),
         h('div', { class: 'lg-extra' },
           extra('📝', 'تقديم طلب معلم بالأجر (لمعلمي العلوم فقط)', paidConfirm, 'paid-open'),
           isStandalone() ? null : extra('📲', 'تثبيت البوابة على هاتفك', installApp, 'install-open'),
@@ -494,10 +494,10 @@ body.is-login .wrap{max-width:none;padding:0}
     }
     return h('div', { class: 'card' },
       h('h2', null, 'اختر الدور'),
-      h('p', { class: 'sub', style: 'text-align:right' }, 'أنت مسجّل معلمًا ومشرف مدرسة. اختر كيف تريد الدخول، ويمكنك التبديل في أي وقت من الشريط العلوي.'),
+      h('p', { class: 'sub', style: 'text-align:right' }, 'أنت مسجّل معلمًا و' + WHO.supLabel + '. اختر كيف تريد الدخول، ويمكنك التبديل في أي وقت من الشريط العلوي.'),
       h('div', { class: 'roles', id: 'role-pick' },
         role('👨‍🏫', 'معلم', 'بياناتي ثم جدولي الأسبوعي', 'teacher'),
-        role('🏫', 'مشرف مدرسة', 'معلمو مدرستك وبياناتهم وجدول كل معلم', 'sup')),
+        role('🏫', WHO.supLabel, 'معلمو مدرستك وبياناتهم وجدول كل معلم', 'sup')),
       box);
   };
   async function enterAs(role, btn, box) {
@@ -532,14 +532,14 @@ body.is-login .wrap{max-width:none;padding:0}
   function userBar() {
     if (!WHO || S.view === 'login') return null;
     var nm = WHO.role === 'sup' ? (S.sup && S.sup.name) : (S.person && S.person.full_name);
-    var rl = WHO.role === 'sup' ? 'مشرف مدرسة' : WHO.role === 'teacher' ? 'معلم' : 'اختر الدور';
+    var rl = WHO.role === 'sup' ? WHO.supLabel : WHO.role === 'teacher' ? 'معلم' : 'اختر الدور';
     var bar = h('div', { class: 'ubar', id: 'ubar' }, h('div', { class: 'nm' }, clean(nm || '') || 'مرحبًا', h('small', null, rl)));
     if (WHO.is_sup && WHO.role) {
       var other = WHO.role === 'sup' ? 'teacher' : 'sup';
       bar.appendChild(h('button', { type: 'button', id: 'ubar-switch', onclick: async function (ev) {
         var b = ev.currentTarget; b.disabled = true;
         try { await enterAs(other); } catch (e) { b.disabled = false; window.alert(e && e.reason !== undefined ? reasonMsg(e) : errMsg(e)); }
-      } }, other === 'sup' ? '🏫 دور المشرف' : '👨‍🏫 دور المعلم'));
+      } }, other === 'sup' ? '🏫 ' + WHO.supLabel : '👨‍🏫 دور المعلم'));
     }
     bar.appendChild(h('button', { type: 'button', class: 'out', id: 'ubar-out', onclick: logout }, 'خروج'));
     return bar;
