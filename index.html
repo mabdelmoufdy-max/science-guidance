@@ -1,4 +1,5 @@
 <!doctype html>
+<!-- v375: بحث المدرسة في «تعديل بيانات المعلم» (المدرسة الأصلية والمنتدب إليها): قائمة منسدلة تحت الحقل بكل المدارس المطابقة (حتى 15) مع المرحلة بدل شريط اقتراح المتصفح الذي يعرض مدرسة واحدة على الهاتف — بقرار المستخدم «أ» 2026-11-13. -->
 <!-- v374: المعلم في إجازة مجددة لا يظهر في التقارير (عدا تقريري الإجازات والتوجيه المالي وتقرير المعلم نفسه) ولا في قائمة «المعلمون» عند «حالة المعلم: الكل» — يبقى ظاهرًا باختيار «إجازة»؛ يعود تلقائيًا عند تسجيل عودته. «إنجاز الجداول» يستبعده من قاعدة البيانات (migration v374). بقرار المستخدم «ب» 2026-11-13. -->
 <!-- v371: زر التثبيت ⬇ في الشريط العلوي: يظهر دائمًا خارج التطبيق المثبّت (v369Standalone)، وإن لم تتوفر نافذة التثبيت من المتصفح أو فشلت تُعرض خطوات التثبيت اليدوي حسب الجهاز (v369InstallHelp) بدل ألا يحدث شيء. -->
 <!-- v370: القائمة الجانبية: زر «إدخال بيانات المدارس» بعرض خانة واحدة (حُذفت قاعدة grid-column:1/-1) فيقع بجوار «استكمال البيانات» بدل سطر كامل — بطلب المستخدم. واجهة فقط. -->
@@ -8,7 +9,6 @@
 <!-- v360: فرض مصفوفة الصلاحيات في كل الطرق: my_capabilities() بعد الدخول وتبديل الدور ← شريط «إجراءات موقوفة» + أزرار باهتة بقفل + لفّ دوال الإجراءات (V360_FUNCS) فتشرح بدل فتح النموذج؛ دوال الحافة execute-teacher-delegation v5 وsupervisor-save-and-approve v5 وsupervisor-create-class-and-approve v3 وcreate-system-user v13 تفحص service_cap_allowed (قاعدة البيانات v360_cap_enforcement + إجراء account.create). إصلاحات مركز التحكم: منع تطبيق نقل مدارس لموجه غير مسجّل في مرحلتها، تحديث نشاط الملف بعد الأفعال، ونافذة الأدوار تخفي ما لا ينطبق (has_sup/has_teacher). -->
 <!-- v359: نافذة «ما الذي يراه ويفعله؟»: كل إجراء زر — منع/سماح لهذا الشخص فقط (دائم حتى يُلغى أو أسبوع/شهر/أيام) عبر admin_grant_add، أو إلغاء استثنائه عبر admin_grant_revoke، ثم يُعاد الحساب. قاعدة البيانات v359_person_permission_toggle (expires_at فارغ = دائم؛ الإضافة تلغي الاستثناء السابق على الإجراء نفسه). -->
 <!-- v358: مركز التحكم — المرحلة 4: تبويب «الوصول المؤقت والمراجعة» (admin_grants_list/admin_grant_add/admin_grant_revoke، admin_access_review_list/admin_access_review_decide)، «ما الذي يراه ويفعله؟» في ملف المستخدم (admin_view_as قراءة فقط)، و«تراجع» في التدقيق لأفعال cc_* (admin_revert_action مرة واحدة لكل فعل). قاعدة البيانات v358_control_center_governance. -->
-<!-- v357: مركز التحكم — المرحلة 3: تبويب «الصلاحيات» (مصفوفة 12 إجراء × 6 أدوار، جدول على الكمبيوتر وبطاقات على الهاتف، تغييرات معلّقة بمعاينة الأثر ثم تطبيق بكلمة تأكيد). قاعدة البيانات v357_permission_matrix: permission_capabilities/permission_rules + private.cap_allowed + مشغلات trg_v357_* على 15 جدولًا (مدير النظام والمشغلات المتداخلة لا تُفحص)، admin_permission_matrix/admin_set_permissions. -->
 <html lang="ar" dir="rtl">
 <head>
 <!-- إعداد: أ/ محمود عبدالمفدي محمد أبوالنجا | الصفة: معلم -->
@@ -16,7 +16,7 @@
 <script>/* v226: العنوان الموحد — انظر التعليق أعلى الملف */(function(){try{if(/\.github\.io$/.test(location.hostname)&&/^\/science-guidance\/?(index\.html)?$/.test(location.pathname)&&!/[?&]stay\b/.test(location.search))location.replace('https://teachers-data-portal.vercel.app/app/'+location.hash)}catch(e){}})();</script>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#152c43">
-<title>نظام توجيه العلوم — v374</title>
+<title>نظام توجيه العلوم — v375</title>
 <link rel="manifest" href="./manifest.webmanifest">
 <link rel="icon" type="image/png" sizes="192x192" href="./app-icon-192.png">
 <link rel="apple-touch-icon" href="./app-icon-192.png">
@@ -2232,6 +2232,14 @@ body.v293-ro select[onchange*="v101ChangeSlot"]{pointer-events:none;opacity:.65}
 .v362-all{display:flex;gap:6px;align-items:center;font-weight:600;margin:2px 0}
 .v362-fz{margin-top:4px;font-weight:600}
 .v362-form input[type=datetime-local],.v362-form select{width:100%;max-width:100%;box-sizing:border-box}
+/* v375: قائمة بحث المدرسة المنسدلة */
+.v375-wrap{position:relative}
+.v375-list{margin-top:4px;border:1px solid var(--line,#d6dde8);border-radius:var(--radius,10px);background:#fff;max-height:280px;overflow-y:auto;box-shadow:0 6px 18px rgba(15,33,77,.12)}
+.v375-opt{display:flex;justify-content:space-between;align-items:center;gap:8px;width:100%;min-height:44px;padding:8px 12px;border:0;border-bottom:1px solid #eef2f7;background:#fff;color:var(--primary,#0f214d);font:inherit;text-align:right;cursor:pointer}
+.v375-opt:last-child{border-bottom:0}
+.v375-opt:hover,.v375-opt:focus{background:#f2f6fb;outline:none}
+.v375-opt .v375-st{color:#6b7a90;font-size:.85em;white-space:nowrap;flex:0 0 auto}
+.v375-empty,.v375-more{padding:10px 12px;color:#6b7a90;font-size:.9em}
 </style>
 </head>
 <body>
@@ -2601,6 +2609,7 @@ window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();window.v152
 window.addEventListener('appinstalled',()=>{window.v152InstallPrompt=null;v152SyncInstallBtn()});
 if('serviceWorker' in navigator&&location.protocol!=='file:')window.addEventListener('load',()=>navigator.serviceWorker.register('./service-worker.js').catch(()=>{}));
 const V145_NEWS=[
+ ['v375','البحث عن المدرسة في «تعديل بيانات المعلم»: تظهر الآن قائمة بكل المدارس المطابقة تحت الحقل أثناء الكتابة، وتختار المدرسة بلمسة (على الهاتف والكمبيوتر).'],
  ['v374','المعلم في إجازة لم يعد يظهر في التقارير ولا في «إنجاز الجداول» ولا في قائمة المعلمين حتى تُسجَّل عودته. للوصول إليه: «حالة المعلم: إجازة» في صفحة المعلمين، أو تقرير الإجازات.'],
  ['v371','زر التثبيت ⬇ أعلى الصفحة: إن لم تظهر نافذة التثبيت تظهر لك خطوات التثبيت اليدوي حسب جهازك.'],
  ['v370','القائمة: زر «إدخال بيانات المدارس» صار بجوار «استكمال البيانات» بدل سطر كامل.'],
@@ -15039,6 +15048,37 @@ function v374Wrap(){
 }
 v374Wrap();
 /* v374-end */
+/* v375-begin: بحث المدرسة بقائمة منسدلة تحت الحقل (بدل datalist الذي يعرض على الهاتف اقتراحًا واحدًا فوق لوحة المفاتيح).
+   يُطبَّق على حقول قوائم V375_LISTS فقط؛ القيمة المختارة تُكتب في الحقل نفسه ويُطلق input/change فتعمل معالجات الحفظ كما هي. */
+const V375_LISTS=['v295SchoolList','delegSchoolList'];
+function v375Opts(id){const dl=document.getElementById(id);return dl?[...dl.querySelectorAll('option')].map(o=>o.value).filter(Boolean):[]}
+function v375Attach(inp){
+ const id=inp&&inp.getAttribute&&inp.getAttribute('list');if(!id||!V375_LISTS.includes(id)||inp.dataset.v375)return;
+ inp.dataset.v375=id;inp.removeAttribute('list');
+ const wrap=document.createElement('div');wrap.className='v375-wrap';inp.parentNode.insertBefore(wrap,inp);wrap.appendChild(inp);
+ const box=document.createElement('div');box.className='v375-list';box.hidden=true;box.setAttribute('role','listbox');wrap.appendChild(box);
+ const pick=v=>{inp.value=v;box.hidden=true;inp.dispatchEvent(new Event('input',{bubbles:true}));inp.dispatchEvent(new Event('change',{bubbles:true}))};
+ const show=()=>{
+  const words=v288Norm(inp.value).split(' ').filter(Boolean),all=v375Opts(id);
+  const m=all.filter(v=>{const n=v288Norm(v);return words.every(w=>n.includes(w))});
+  box.replaceChildren();
+  if(!m.length){box.innerHTML='<div class="v375-empty">لا توجد مدرسة بهذا الاسم</div>';box.hidden=false;return}
+  m.slice(0,15).forEach(v=>{const i=v.lastIndexOf(' — '),name=i>0?v.slice(0,i):v,stage=i>0?v.slice(i+3):'';
+   const b=document.createElement('button');b.type='button';b.className='v375-opt';b.setAttribute('role','option');
+   b.innerHTML=`<span>${esc(name)}</span>${stage?`<span class="v375-st">${esc(stage)}</span>`:''}`;
+   b.addEventListener('pointerdown',e=>e.preventDefault());b.addEventListener('mousedown',e=>e.preventDefault());
+   b.onclick=()=>pick(v);box.appendChild(b)});
+  if(m.length>15){const d=document.createElement('div');d.className='v375-more';d.textContent=`و${m.length-15} مدرسة أخرى — اكتب جزءًا أكبر من الاسم`;box.appendChild(d)}
+  box.hidden=false;
+ };
+ inp.addEventListener('input',e=>{if(e.isTrusted)show()});
+ inp.addEventListener('focus',show);
+ inp.addEventListener('blur',()=>setTimeout(()=>{box.hidden=true},180));
+ inp.addEventListener('keydown',e=>{if(e.key==='Escape')box.hidden=true});
+}
+function v375Scan(root){(root&&root.querySelectorAll?root:document).querySelectorAll('input[list]').forEach(v375Attach)}
+try{new MutationObserver(ms=>{for(const m of ms)for(const n of m.addedNodes)if(n.nodeType===1){if(n.matches&&n.matches('input[list]'))v375Attach(n);else v375Scan(n)}}).observe(document.documentElement,{childList:true,subtree:true});v375Scan(document)}catch(e){console.warn('v375',e)}
+/* v375-end */
 </script>
 
 <div id="reportPreviewOverlay" class="report-preview-overlay" role="dialog" aria-modal="true" aria-label="معاينة التقرير" aria-hidden="true">
