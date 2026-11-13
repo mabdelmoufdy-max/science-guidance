@@ -6,9 +6,9 @@
 <meta name="robots" content="noindex,nofollow">
 <meta name="referrer" content="no-referrer">
 <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; connect-src https://xehjwzszhsaqdqmcatum.supabase.co; img-src data:; base-uri 'none'; form-action 'none'">
-<title>بوابة بيانات المعلمين</title>
+<title>بوابة المعلمين — v363</title>
 <style>
-:root{--primary:#2563eb;--primary-d:#1d4ed8;--bg:#f1f5f9;--card:#fff;--text:#1e293b;--muted:#64748b;--border:#e2e8f0;--err:#dc2626;--ok:#16a34a;--warn-bg:#fffbeb;--warn-bd:#fcd34d;--warn-tx:#92400e;--soft:#eff6ff;--soft-bd:#bfdbfe}
+:root{--primary:#1f4274;--primary-d:#0f214d;--bg:#f1f5f9;--card:#fff;--text:#1e293b;--muted:#64748b;--border:#e2e8f0;--err:#dc2626;--ok:#16a34a;--warn-bg:#fffbeb;--warn-bd:#fcd34d;--warn-tx:#92400e;--soft:#eff6ff;--soft-bd:#bfdbfe}
 *{box-sizing:border-box;font-family:system-ui,-apple-system,"Segoe UI",Tahoma,sans-serif}
 html{-webkit-text-size-adjust:100%}
 body{margin:0;background:var(--bg);color:var(--text);line-height:1.6;font-size:16px}
@@ -120,6 +120,43 @@ summary{cursor:pointer;font-weight:600;padding:4px 0}
 .tt-foot #tt-actions{display:flex;gap:6px}
 .tt-foot #tt-actions .btn,.tt-foot #tt-actions .btn2{width:auto;min-height:42px;padding:8px 14px;margin:0!important}
 .tt-foot #tt-actions .warn{margin:0;font-size:.8rem;padding:6px 8px}
+
+/* v363: شاشة دخول موحدة بنفس شكل البرنامج الرئيسي + شريط المستخدم + نافذة تأكيد الأجر */
+body.is-login .wrap{max-width:none;padding:0}
+.lg{min-height:100vh;min-height:100svh;display:grid;grid-template-columns:1fr 1fr;direction:ltr}
+.lg>*{direction:rtl}
+.lg-brand{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:40px;text-align:center;color:#f6edcf;background:radial-gradient(ellipse 72% 52% at 50% 36%,rgba(206,158,72,.20),rgba(206,158,72,0) 72%),radial-gradient(circle at 50% 38%,#1f4274 0%,#0f214d 52%,#081c49 100%);box-shadow:inset -3px 0 0 rgba(206,158,72,.6)}
+.lg-brand img{width:150px;height:150px;border-radius:50%;background:#fff;padding:6px;box-shadow:0 0 0 6px rgba(206,158,72,.35)}
+.lg-brand h1{color:#fff;font-size:1.5rem;margin:0}
+.lg-brand p{margin:0;max-width:360px;opacity:.9;font-size:.95rem}
+.lg-panel{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:32px 16px;background:radial-gradient(circle at 1px 1px,rgba(15,33,77,.09) 1px,transparent 1.5px) 0 0/22px 22px,linear-gradient(160deg,#fcf8ec 0%,#f1f2f7 50%,#dde5f1 100%)}
+.lg-card{width:min(430px,100%);background:linear-gradient(90deg,#0f214d,#1f4274 55%,#ce9e48) top/100% 5px no-repeat,#fff;border-radius:20px;padding:30px 26px 22px;box-shadow:0 30px 70px -28px rgba(8,28,73,.5),0 3px 8px rgba(8,28,73,.06)}
+.lg-card h2{text-align:center;color:#0f214d;font-size:1.3rem;margin:0 0 4px}
+.lg-card .sub{margin-bottom:18px}
+.lg-btn{background:linear-gradient(135deg,#0f214d,#1f4274);color:#fff;width:100%;box-shadow:inset 0 -3px 0 #ce9e48}
+.lg-extra{width:min(430px,100%);margin-top:14px;display:grid;gap:8px}
+.lg-rule{font-size:.8rem;color:#5b6580;margin-top:12px;text-align:center}
+@media(max-width:800px){
+.lg{grid-template-columns:1fr;direction:rtl}
+.lg-brand{flex-direction:row;justify-content:flex-start;gap:12px;padding:14px 16px;text-align:right;box-shadow:inset 0 -3px 0 rgba(206,158,72,.6)}
+.lg-brand img{width:60px;height:60px;padding:3px;box-shadow:0 0 0 3px rgba(206,158,72,.35)}
+.lg-brand h1{font-size:1.1rem}
+.lg-brand p{font-size:.8rem}
+.lg-panel{justify-content:flex-start;padding:18px 16px 24px}
+.lg-card{padding:24px 18px 18px;border-radius:16px}}
+.ubar{display:flex;align-items:center;gap:8px;flex-wrap:wrap;background:#0f214d;color:#fff;border-radius:12px;padding:8px 12px;margin-bottom:10px;box-shadow:inset 0 -3px 0 #ce9e48}
+.ubar .nm{flex:1;min-width:140px;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ubar .nm small{display:block;font-weight:400;opacity:.85;font-size:.8rem}
+.ubar button{min-height:40px;padding:6px 12px;font-size:.88rem;background:rgba(255,255,255,.16);color:#fff}
+.ubar button.out{background:#ce9e48;color:#0f214d}
+.tabs{flex-wrap:wrap}
+.tabs .err{flex-basis:100%;margin:0}
+.mdl{position:fixed;inset:0;background:rgba(8,28,73,.55);display:flex;align-items:center;justify-content:center;padding:16px;z-index:50}
+.mdl-c{background:#fff;border-radius:16px;padding:22px;width:min(420px,100%);box-shadow:0 20px 50px -20px rgba(0,0,0,.5)}
+.mdl-c h2{color:#0f214d}
+.chk{display:flex;gap:10px;align-items:flex-start;font-weight:600;margin:14px 0;cursor:pointer}
+.chk input{width:22px;height:22px;flex:none;margin-top:2px;accent-color:#1f4274}
+@media(min-width:900px){.wrap{max-width:780px;padding:20px}}
 </style>
 </head>
 <body>
@@ -244,8 +281,9 @@ summary{cursor:pointer;font-weight:600;padding:4px 0}
 
   /* ---------- الحالة ---------- */
   var S = {};
+  var WHO = null; /* v363: من سجّل الدخول {civil, phone, is_sup, role} */
   function reset() {
-    S = { view: 'launcher', status: S.status || null, schools: S.schools || null, cache: S.cache || {}, auth: null, lookup: null,
+    S = { view: 'login', status: S.status || null, schools: S.schools || null, cache: S.cache || {}, auth: null, lookup: null,
       mode: 'registered', person: {}, base: {}, baseSel: new Map(), sel: new Map(), school: null, stageKey: null, q: '', step: 1,
       busy: false, limited: false, closed: false, sup: null, supVisitor: false, subj: new Map(), sstep: 0, sstepKeys: [], dsel: {}, dbase: {} };
   }
@@ -254,7 +292,9 @@ summary{cursor:pointer;font-weight:600;padding:4px 0}
   var root = document.getElementById('app');
   function render() {
     var v = VIEWS[S.view]();
-    root.replaceChildren(v);
+    document.body.classList.toggle('is-login', S.view === 'login');
+    var bar = userBar();
+    if (bar) root.replaceChildren(bar, v); else root.replaceChildren(v);
     window.scrollTo(0, 0);
   }
   function go(v) { S.view = v; render(); }
@@ -350,27 +390,125 @@ summary{cursor:pointer;font-weight:600;padding:4px 0}
     } catch (e) { return false; }
   }
 
-  VIEWS.launcher = function () {
+  /* ---------- v363: دخول موحد (المعلم/المشرف) ---------- */
+  var LOGO_SRC = 'data:image/webp;base64,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';
+  function paidConfirm() {
+    var chk = h('input', { type: 'checkbox', id: 'paid-chk' });
+    var goBtn = mkBtn('btn', 'متابعة إلى نموذج الطلب', function () { if (chk.checked) window.location.href = CFG.paid; }, { id: 'paid-go', disabled: true });
+    chk.addEventListener('change', function () { goBtn.disabled = !chk.checked; });
+    var ov = h('div', { class: 'mdl', id: 'paid-modal', role: 'dialog', 'aria-modal': 'true' },
+      h('div', { class: 'mdl-c' },
+        h('h2', null, '📝 طلب معلم بالأجر'),
+        h('div', { class: 'warn' }, 'هذا الطلب خاص بمعلمي العلوم فقط (علوم، فيزياء، كيمياء، أحياء). لا تُقبل طلبات المواد الأخرى.'),
+        h('label', { class: 'chk', for: 'paid-chk' }, chk, h('span', null, 'أؤكد أنني معلم علوم وأتقدم للتدريس في مادة العلوم')),
+        goBtn,
+        h('div', { style: 'height:8px' }),
+        mkBtn('btn2', 'إلغاء', function () { ov.remove(); }, { id: 'paid-cancel' })));
+    ov.addEventListener('click', function (e) { if (e.target === ov) ov.remove(); });
+    document.body.appendChild(ov);
+  }
+  VIEWS.login = function () {
     var st = S.status;
-    function role(ic, t, s, fn, soon) {
-      return h('button', { type: 'button', class: 'role' + (soon ? ' soon' : ''), disabled: !!soon, onclick: fn },
-        h('span', { class: 'ic' }, ic), h('span', null, t, h('small', null, s)));
+    var civil = h('input', { type: 'tel', id: 'l_civil', inputmode: 'numeric', maxlength: '20', autocomplete: 'off', dir: 'ltr', placeholder: 'أدخل الرقم القومي (14 رقمًا)' });
+    var phone = h('input', { type: 'tel', id: 'l_phone', inputmode: 'numeric', maxlength: '20', autocomplete: 'off', dir: 'ltr', placeholder: 'رقم هاتفك المسجّل' });
+    var hintC = h('div', { class: 'hint' }), hintP = h('div', { class: 'hint' }), box = errbox();
+    bindDigits(civil, 14, hintC); bindPhone(phone, hintP);
+    var btn = mkBtn('btn lg-btn', 'دخول', null, { type: 'submit', id: 'l_go' });
+    var form = h('form', { novalidate: true, onsubmit: async function (ev) {
+      ev.preventDefault(); hideErr(box);
+      var c = digits(civil.value), p = normPhone(phone.value);
+      if (c.length !== 14) { showErr(box, reasonMsg({ reason: 'bad_civil' })); civil.focus(); return; }
+      if (p.length < 10) { showErr(box, reasonMsg({ reason: 'bad_phone' })); phone.focus(); return; }
+      btnBusy(btn, true, 'جارٍ التحقق...');
+      try {
+        var r = await rpc('teacher_portal_login', { p_civil: c, p_phone: p });
+        if (!r || r.ok !== true) { showErr(box, reasonMsg(r || {})); btnBusy(btn, false); return; }
+        WHO = { civil: c, phone: p, is_sup: !!r.is_sup, role: null };
+        if (WHO.is_sup) { go('rolepick'); return; }
+        await enterAs('teacher', btn, box);
+      } catch (e) { showErr(box, errMsg(e)); btnBusy(btn, false); }
+    } },
+      h('div', { class: 'fg' }, h('label', { for: 'l_civil' }, 'الرقم القومي'), civil, hintC),
+      h('div', { class: 'fg' }, h('label', { for: 'l_phone' }, 'رقم الهاتف'), phone, hintP),
+      box, btn);
+    function extra(ic, t, fn, id) { return h('button', { type: 'button', class: 'role', id: id, onclick: fn }, h('span', { class: 'ic' }, ic), h('span', null, t)); }
+    return h('div', { class: 'lg' },
+      h('section', { class: 'lg-brand' },
+        h('img', { src: LOGO_SRC, alt: 'شعار توجيه العلوم — إدارة قوص التعليمية', width: '150', height: '150' }),
+        h('div', { class: 'txt' }, h('h1', null, 'بوابة المعلمين'), h('p', null, 'توجيه العلوم — إدارة قوص التعليمية: بياناتك وجدولك الأسبوعي في مكان واحد.'))),
+      h('section', { class: 'lg-panel' },
+        h('div', { class: 'lg-card' },
+          h('h2', null, 'تسجيل الدخول'),
+          h('p', { class: 'sub' }, st && st.year ? 'العام الدراسي ' + st.year + (st.term ? ' — ' + st.term : '') : 'للمعلم ومشرف المدرسة'),
+          S.statusErr ? h('div', { class: 'warn' }, 'تعذّر الاتصال بالخادم. ', h('button', { type: 'button', class: 'link', onclick: boot }, 'إعادة المحاولة')) : null,
+          form,
+          h('div', { class: 'lg-rule' }, 'ادخل بالرقم القومي ورقم الهاتف المسجّل لك في سجل المعلمين. إن كنت مشرف مدرسة ستختار الدور بعد الدخول.')),
+        h('div', { class: 'lg-extra' },
+          extra('📝', 'تقديم طلب معلم بالأجر (لمعلمي العلوم فقط)', paidConfirm, 'paid-open'),
+          ownerMode() ? extra('📋', 'طلبات معلمي الأجر', function () { window.location.href = '/app/#/paidRequests'; }, 'owner-paid') : null,
+          ownerMode() ? extra('✅', 'الاعتماد', function () { window.location.href = 'https://teacher-portal-admin.vercel.app/'; }, 'owner-approve') : null)));
+  };
+  VIEWS.rolepick = function () {
+    var box = errbox();
+    function role(ic, t, sub, key) {
+      return h('button', { type: 'button', class: 'role', 'data-role': key, onclick: async function (ev) {
+        hideErr(box); var b = ev.currentTarget; b.disabled = true;
+        try { await enterAs(key, b, box); } catch (e) { showErr(box, errMsg(e)); }
+        if (document.body.contains(b)) b.disabled = false;
+      } }, h('span', { class: 'ic' }, ic), h('span', null, t, h('small', null, sub)));
     }
     return h('div', { class: 'card' },
-      h('h1', null, 'بوابة بيانات المعلمين'),
-      h('p', { class: 'sub' }, st && st.year ? 'العام الدراسي ' + st.year + (st.term ? ' — ' + st.term : '') : 'اختر صفتك للمتابعة'),
-      st && st.editing_open === false ? h('div', { class: 'warn', id: 'closed-banner' }, 'فترة تعديل البيانات مغلقة حاليًا.' + (st.note ? ' ' + st.note : '')) : null,
-      S.statusErr ? h('div', { class: 'warn' }, 'تعذّر الاتصال بالخادم. ', h('button', { type: 'button', class: 'link', onclick: boot }, 'إعادة المحاولة')) : null,
-      h('div', { class: 'roles' },
-        role('👨‍🏫', 'معلم', 'راجع بياناتك المسجّلة (عرض فقط)', function () { S.mode = 'registered'; go('gate'); }),
-        role('🏫', 'مشرف مدرسة', 'اعرض معلمي مدرستك وبياناتهم وفصولهم، وأدخل جدول كل معلم', function () { go('supgate'); }),
-        role('📝', 'معلم بالأجر — تقديم طلب', 'نموذج التقدم للتعاقد', function () { window.location.href = CFG.paid; }),
-        ownerMode() ? role('📋', 'طلبات معلمي الأجر', 'عرض الطلبات وإضافة المعلم إلى البرنامج الرئيسي', function () { window.location.href = '/app/#/paidRequests'; }) : null,
-        role('🧭', 'إدخال بيانات المدارس', 'لمنسق المرحلة: بيانات مدارس مرحلتك وفصولها ومعلميها، وإسناد الفصول واعتماد البيانات', function () { window.location.href = '/coordinator/'; }),
-        role('🖥', 'البرنامج الرئيسي', 'نظام توجيه العلوم — دخول واحد مع «إدخال بيانات المدارس»', function () { window.location.href = '/app/'; }),
-        ownerMode() ? role('✅', 'الاعتماد', 'افتح بوابة الاعتماد', function () { window.location.href = 'https://teacher-portal-admin.vercel.app/'; }) : null
-      ));
+      h('h2', null, 'اختر الدور'),
+      h('p', { class: 'sub', style: 'text-align:right' }, 'أنت مسجّل معلمًا ومشرف مدرسة. اختر كيف تريد الدخول، ويمكنك التبديل في أي وقت من الشريط العلوي.'),
+      h('div', { class: 'roles', id: 'role-pick' },
+        role('👨‍🏫', 'معلم', 'بياناتي ثم جدولي الأسبوعي', 'teacher'),
+        role('🏫', 'مشرف مدرسة', 'معلمو مدرستك وبياناتهم وجدول كل معلم', 'sup')),
+      box);
   };
+  async function enterAs(role, btn, box) {
+    var c = WHO.civil, p = WHO.phone;
+    if (btn && btn.getAttribute('data-label')) btnBusy(btn, true, 'لحظة...');
+    try {
+      if (role === 'sup') {
+        var r = await rpc('teacher_portal_sup_login', { p_civil: c, p_phone: p, p_code: '' });
+        if (!r || r.ok !== true) { r = r || {}; r.sup = true; throw r; }
+        WHO.role = 'sup';
+        S.sup = { auth: { civil: c, phone: p, code: '' }, name: r.name || '', schools: r.schools || [], school: null, classes: [], teachers: [], t: null, q: '' };
+        S.closed = r.editing_open === false; S.closedNote = r.closed_note || '';
+        if (S.sup.schools.length === 1) await openSchool(S.sup.schools[0].id); else go('supschools');
+      } else {
+        var t = await rpc('teacher_portal_lookup', { p_civil: c, p_phone: p });
+        if (!t || t.ok !== true) throw (t || {});
+        WHO.role = 'teacher';
+        await enterRegistered(t, c, p);
+      }
+    } catch (e) {
+      if (btn && btn.getAttribute('data-label') && document.body.contains(btn)) btnBusy(btn, false);
+      if (box) { showErr(box, e && e.reason !== undefined ? reasonMsg(e) : errMsg(e)); return; }
+      throw e;
+    }
+  }
+  function logout() { WHO = null; var s = S.status, sc = S.schools, ca = S.cache; reset(); S.status = s; S.schools = sc; S.cache = ca; go('login'); }
+  function roleHome() {
+    if (WHO && WHO.role === 'sup' && S.sup) { if (S.sup.school) go('supschool'); else go('supschools'); return; }
+    if (WHO && WHO.role === 'teacher' && S.lookup) { go('confirm'); return; }
+    go('rolepick');
+  }
+  function userBar() {
+    if (!WHO || S.view === 'login') return null;
+    var nm = WHO.role === 'sup' ? (S.sup && S.sup.name) : (S.person && S.person.full_name);
+    var rl = WHO.role === 'sup' ? 'مشرف مدرسة' : WHO.role === 'teacher' ? 'معلم' : 'اختر الدور';
+    var bar = h('div', { class: 'ubar', id: 'ubar' }, h('div', { class: 'nm' }, clean(nm || '') || 'مرحبًا', h('small', null, rl)));
+    if (WHO.is_sup && WHO.role) {
+      var other = WHO.role === 'sup' ? 'teacher' : 'sup';
+      bar.appendChild(h('button', { type: 'button', id: 'ubar-switch', onclick: async function (ev) {
+        var b = ev.currentTarget; b.disabled = true;
+        try { await enterAs(other); } catch (e) { b.disabled = false; window.alert(e && e.reason !== undefined ? reasonMsg(e) : errMsg(e)); }
+      } }, other === 'sup' ? '🏫 دور المشرف' : '👨‍🏫 دور المعلم'));
+    }
+    bar.appendChild(h('button', { type: 'button', class: 'out', id: 'ubar-out', onclick: logout }, 'خروج'));
+    return bar;
+  }
 
   VIEWS.gate = function () {
     var isNew = false; /* v303: لا تسجيل جديد */
@@ -430,7 +568,7 @@ summary{cursor:pointer;font-weight:600;padding:4px 0}
   }
   function topbar(title) {
     return h('div', { class: 'top' },
-      h('button', { type: 'button', class: 'link', id: 'back-home', onclick: function () { var s = S.status, sc = S.schools, ca = S.cache; reset(); S.status = s; S.schools = sc; S.cache = ca; go('launcher'); } }, '‹ الرئيسية'),
+      (WHO && S.view === 'confirm') ? h('span') : h('button', { type: 'button', class: 'link', id: 'back-home', onclick: goHome }, WHO ? '‹ بياناتي' : '‹ الرئيسية'),
       h('strong', null, title || ''));
   }
 
@@ -559,10 +697,12 @@ summary{cursor:pointer;font-weight:600;padding:4px 0}
       h('h2', null, 'أهلًا ' + (pv('full_name').split(' ')[0] || '')),
       h('p', { class: 'sub', style: 'text-align:right' }, 'هذه بياناتك المسجّلة للمراجعة فقط. إن وجدت خطأ أو نقصًا فتواصل مع المنسق.'),
       coordBar(),
-      h('div', { id: 'tt-entry-wrap' }, mkBtn('btn', '📅 جدولي الأسبوعي', function (ev) { openTimetable(ev.currentTarget); }, { id: 'tt-open' })),
-      h('div', { style: 'height:10px' }),
+      h('div', { class: 'tabs', id: 'tt-entry-wrap' }, h('button', { type: 'button', class: 'tab on', id: 'tab-data' }, '① بياناتي'),
+        mkBtn('tab', '② جدولي الأسبوعي', function (ev) { openTimetable(ev.currentTarget); }, { id: 'tt-open' })),
       otherN > 0 ? h('div', { class: 'note' }, 'لديك ' + otherN + ' فصل في مدرسة أخرى (انتداب/إعارة)؛ تُدار من المشرف ولا تتغير من هنا.') : null,
-      h('div', { class: 'kv' }, rows));
+      h('div', { class: 'kv' }, rows),
+      h('div', { style: 'height:14px' }),
+      h('div', null, mkBtn('btn', 'التالي: جدولي الأسبوعي ←', function (ev) { openTimetable(ev.currentTarget); }, { id: 'tt-next' })));
   };
 
 
@@ -687,7 +827,8 @@ summary{cursor:pointer;font-weight:600;padding:4px 0}
     pickNext(); drawChips(); drawGrid();
     if (T.err) { showErr(box, T.err); T.err = null; } // v339: تبقى رسالة التعارض بعد تحديث الجدول
     var head = h('div', { class: 'top' }, h('button', { type: 'button', class: 'link', id: 'tt-back', onclick: back }, T.sup ? '‹ بيانات المعلم' : '‹ بياناتي'), h('strong', null, T.sup ? 'جدول المعلم' : 'جدولي الأسبوعي'));
-    var who = T.sup ? h('p', { class: 'sub', id: 'tt-who', style: 'text-align:right;margin:4px 2px' }, (d.name || '') + ' · ' + (d.school_name || '')) : null;
+    var who = T.sup ? h('p', { class: 'sub', id: 'tt-who', style: 'text-align:right;margin:4px 2px' }, (d.name || '') + ' · ' + (d.school_name || ''))
+      : h('div', { class: 'tabs', id: 'tt-tabs' }, h('button', { type: 'button', class: 'tab', id: 'tab-data2', onclick: back }, '① بياناتي'), h('button', { type: 'button', class: 'tab on' }, '② جدولي الأسبوعي'));
     if (!assigns.length) {
       return h('div', { class: 'card tt' }, head, who, T.sup ? h('div', { class: 'note', id: 'tt-empty' }, 'لا توجد فصول مسندة لهذا المعلم في مدرستك، فلا يمكن إدخال جدوله.')
         : [h('div', { class: 'note', id: 'tt-empty' }, 'لا توجد فصول مسندة لك حتى الآن، فلا يمكن إدخال جدول. تواصل مع المنسق.'), coordBar()]);
@@ -747,7 +888,7 @@ summary{cursor:pointer;font-weight:600;padding:4px 0}
       h('p', null, r.unchanged ? 'شكرًا لك، سُجّل تأكيدك على صحة بياناتك.' : 'ستراجعها إدارة التوجيه وتظهر في البرنامج بعد اعتمادها.'),
       h('div', { class: 'refno', id: 'refno' }, r.ref || ''),
       h('p', { class: 'sub' }, 'احتفظ برقم الطلب. يمكنك الدخول مرة أخرى وإرسال تعديل جديد قبل الاعتماد.'),
-      mkBtn('btn2', 'العودة للرئيسية', function () { var s = S.status, sc = S.schools, ca = S.cache; reset(); S.status = s; S.schools = sc; S.cache = ca; go('launcher'); }, { id: 'btn-home' })));
+      mkBtn('btn2', 'العودة للرئيسية', goHome, { id: 'btn-home' })));
   };
 
   /* ---------- شاشة التعبئة (4 خطوات) ---------- */
@@ -1154,8 +1295,9 @@ summary{cursor:pointer;font-weight:600;padding:4px 0}
 
   /* ---------- مشرف المدرسة (المرحلة 2) ---------- */
   var SUP_T = { person: 'بيانات المعلم', classes: 'الفصول', review: 'المراجعة' };
-  function goHome() { var s = S.status, sc = S.schools, ca = S.cache; reset(); S.status = s; S.schools = sc; S.cache = ca; go('launcher'); }
+  function goHome() { if (WHO) { roleHome(); return; } logout(); }
   function suptop(title, backLabel, backFn) {
+    if (WHO && backFn === goHome) return h('div', { class: 'top' }, h('span'), h('strong', null, title || ''));
     return h('div', { class: 'top' }, h('button', { type: 'button', class: 'link', id: 'sup-back', onclick: backFn }, backLabel), h('strong', null, title || ''));
   }
   function closedBanner() { return S.closed ? h('div', { class: 'warn', id: 'closed-banner' }, S.closedNote || 'فترة تعديل البيانات مغلقة حاليًا، يمكنك المراجعة فقط.') : null; }
@@ -1355,11 +1497,11 @@ summary{cursor:pointer;font-weight:600;padding:4px 0}
   async function boot() {
     S.statusErr = false;
     try { S.status = await rpc('teacher_portal_status'); } catch (e) { S.statusErr = true; }
-    if (S.view === 'launcher') render();
+    if (S.view === 'login') render();
   }
   if (CFG.trial) document.getElementById('ribbon').appendChild(h('div', { class: 'ribbon' }, 'نسخة تجريبية — لا تُعتمد البيانات إلا بعد مراجعة الإدارة'));
   /* رابط مباشر لشاشة المعلم: …/#teacher (2026-11-01) */
-  if (location.hash === '#teacher') { S.mode = 'registered'; S.view = 'gate'; }
+  /* v363: الرابط القديم …/#teacher يفتح شاشة الدخول الموحدة */
   render();
   boot();
 })();
