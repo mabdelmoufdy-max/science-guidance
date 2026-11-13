@@ -6,7 +6,7 @@
 <meta name="robots" content="noindex,nofollow">
 <meta name="referrer" content="no-referrer">
 <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; connect-src https://xehjwzszhsaqdqmcatum.supabase.co; img-src data: 'self'; manifest-src 'self'; worker-src 'self'; base-uri 'none'; form-action 'none'">
-<title>بوابة المعلمين — v367</title>
+<title>بوابة المعلمين — v368</title>
 <link rel="manifest" href="/portal.webmanifest">
 <meta name="theme-color" content="#0f214d">
 <meta name="mobile-web-app-capable" content="yes">
@@ -403,7 +403,16 @@ body.is-login .wrap{max-width:none;padding:0}
   var INSTALL = { evt: null };
   window.addEventListener('beforeinstallprompt', function (e) { e.preventDefault(); INSTALL.evt = e; });
   window.addEventListener('appinstalled', function () { INSTALL.evt = null; INSTALL.done = true; if (S.view === 'login') render(); });
-  if ('serviceWorker' in navigator) { window.addEventListener('load', function () { navigator.serviceWorker.register('/portal-sw.js').catch(function () {}); }); }
+  /* v368: صفحة البوابة على /index.html (نطاق التثبيت)؛ يبقى الرابط والعلامة # كما هما */
+  try { if (location.pathname === '/') history.replaceState(null, '', '/index.html' + location.search + location.hash); } catch (e) {}
+  /* v368: نطاق البوابة /index.html وحده (كان «/» مثل البرنامج فاعتبرهما أندرويد تطبيقًا واحدًا)؛ ويُلغى عامل الخدمة القديم بنطاق «/» */
+  if ('serviceWorker' in navigator) { window.addEventListener('load', function () {
+    navigator.serviceWorker.getRegistrations().then(function (rs) { rs.forEach(function (r) {
+      var w = r.active || r.waiting || r.installing;
+      if (r.scope === location.origin + '/' && w && /\/portal-sw\.js$/.test(w.scriptURL)) r.unregister();
+    }); }).catch(function () {});
+    navigator.serviceWorker.register('/portal-sw.js', { scope: '/index.html' }).catch(function () {});
+  }); }
   function isStandalone() {
     try { return window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true; } catch (e) { return false; }
   }
