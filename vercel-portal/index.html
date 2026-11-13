@@ -6,7 +6,7 @@
 <meta name="robots" content="noindex,nofollow">
 <meta name="referrer" content="no-referrer">
 <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; connect-src https://xehjwzszhsaqdqmcatum.supabase.co; img-src data: 'self'; manifest-src 'self'; worker-src 'self'; base-uri 'none'; form-action 'none'">
-<title>بوابة المعلمين — v368</title>
+<title>بوابة المعلمين — v369</title>
 <link rel="manifest" href="/portal.webmanifest">
 <meta name="theme-color" content="#0f214d">
 <meta name="mobile-web-app-capable" content="yes">
@@ -1436,7 +1436,7 @@ body.is-login .wrap{max-width:none;padding:0}
     if (t.work_type) rows.push(kvRow('نوع العمل', wtLabel(t.work_type) || String(t.work_type)));
     if (t.job_title) rows.push(kvRow('الدرجة الوظيفية', t.job_title));
     if (t.is_home) {
-      rows.push(kvRow('التليفون', t.phone, !t.phone));
+      rows.push(kvRow('التليفون', t.phone ? h('span', { class: 'ltr' }, t.phone) : t.phone, !t.phone)); // v369: الهاتف يصل مخفيًا من الخادم (آخر 4)
       rows.push(kvRow('البريد الإلكتروني', t.email));
       rows.push(kvRow('المؤهل', t.qualification));
       rows.push(kvRow('التخصص', t.specialty));
