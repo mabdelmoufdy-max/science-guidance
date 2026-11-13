@@ -1,7 +1,7 @@
 {
   "id": "/?portal",
   "name": "بوابة المعلمين — توجيه العلوم",
-  "short_name": "بوابة المعلمين",
+  "short_name": "المعلمين",
   "description": "بوابة معلمي العلوم ومشرفي المدارس: البيانات والجدول الأسبوعي",
   "lang": "ar",
   "dir": "rtl",
@@ -12,9 +12,29 @@
   "background_color": "#0f214d",
   "theme_color": "#0f214d",
   "icons": [
-    { "src": "/icon-maskable-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
-    { "src": "/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
-    { "src": "/icon-maskable-192.png", "sizes": "192x192", "type": "image/png", "purpose": "maskable" },
-    { "src": "/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+    {
+      "src": "/portal-icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/portal-icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/portal-icon-maskable-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/portal-icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
   ]
 }
