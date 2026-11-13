@@ -6,7 +6,7 @@
 <meta name="robots" content="noindex,nofollow">
 <meta name="referrer" content="no-referrer">
 <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; connect-src https://xehjwzszhsaqdqmcatum.supabase.co; img-src data: 'self'; manifest-src 'self'; worker-src 'self'; base-uri 'none'; form-action 'none'">
-<title>بوابة المعلمين — v369</title>
+<title>بوابة المعلمين — v372</title>
 <link rel="manifest" href="/portal.webmanifest">
 <meta name="theme-color" content="#0f214d">
 <meta name="mobile-web-app-capable" content="yes">
@@ -164,6 +164,19 @@ body.is-login .wrap{max-width:none;padding:0}
 .chk{display:flex;gap:10px;align-items:flex-start;font-weight:600;margin:14px 0;cursor:pointer}
 .chk input{width:22px;height:22px;flex:none;margin-top:2px;accent-color:#1f4274}
 @media(min-width:900px){.wrap{max-width:780px;padding:20px}}
+/* v372 */
+.wa-bar{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:8px;margin:0 0 14px}
+.wa-btn{display:flex;align-items:center;gap:8px;text-decoration:none;background:#e9f9ef;border:1px solid #86d7a5;color:#14532d;border-radius:12px;padding:8px 10px;font-weight:700;font-size:.92rem;min-height:48px}
+.wa-btn small{display:block;font-weight:400;color:#166534;font-size:.78rem}
+.wa-btn.coord{background:#eef4ff;border-color:#a9c3f5;color:#1e3a8a}.wa-btn.coord small{color:#1e40af}
+.wa-ic{font-size:1.3rem}
+.kv{grid-template-columns:minmax(0,1fr)}
+.kv .fill .k{white-space:normal;max-width:42%}
+.kv .fill .v{display:flex;gap:6px;align-items:center;justify-content:flex-end;flex:1;min-width:0}
+.kv .fill-in{flex:1;min-width:0;width:100%;max-width:260px;padding:8px 10px;font-size:15px}
+.kv .fill .v>span:not(.tag){flex:1;min-width:0;display:flex;justify-content:flex-end}
+.tag.lk{background:none;padding:0 2px;font-size:.8rem;opacity:.7}
+.fill-save{margin-top:12px}.ok-note{background:#ecfdf5;border-color:#a7f3d0;color:#065f46}
 </style>
 </head>
 <body>
@@ -276,6 +289,7 @@ body.is-login .wrap{max-width:none;padding:0}
       case 'no_change': return 'لا توجد تعديلات لإرسالها. غيّر بيانًا أو فصلًا أولًا.';
       case 'no_term': return 'لا يوجد فصل دراسي نشط حاليًا.';
       case 'invalid': return 'راجع الحقل: ' + (f || 'غير معروف') + '.';
+      case 'no_phone': return 'هاتفك غير مسجّل في البرنامج؛ تواصل مع موجهك لتسجيله ثم تستطيع إكمال بياناتك.';
       default: return 'تعذّر تنفيذ الطلب. حاول مرة أخرى.';
     }
   }
@@ -610,6 +624,25 @@ body.is-login .wrap{max-width:none;padding:0}
     });
     return bar;
   }
+  /* v372: رابطا واتساب لموجه المعلم ولمنسق المرحلة من بيانات البرنامج */
+  function waLink(phone, msg) { var d = digits(phone).replace(/^0/, ''); return 'https://wa.me/20' + d + '?text=' + encodeURIComponent(msg); }
+  function contactBar() {
+    var ct = S.contacts;
+    if (!ct) return coordBar();
+    var nm = (S.person && S.person.full_name) || '', sch = (S.school && S.school.name) || ct.school || '';
+    var msg = 'السلام عليكم، أنا ' + nm + (sch ? ' — ' + sch : '') + ' — بخصوص تعديل بياناتي في بوابة المعلمين.';
+    var box = h('div', { class: 'wa-bar', id: 'contact-bar' });
+    (ct.supervisors || []).forEach(function (x) {
+      if (!x.phone) return;
+      box.appendChild(h('a', { class: 'wa-btn', href: waLink(x.phone, msg), target: '_blank', rel: 'noopener', 'data-kind': 'sup' },
+        h('span', { class: 'wa-ic' }, '💬'), h('span', null, h('small', null, 'موجهك' + (x.subject ? ' (' + x.subject + ')' : '')), clean(x.name))));
+    });
+    (ct.coordinators || []).forEach(function (x) {
+      box.appendChild(h('a', { class: 'wa-btn coord', href: waLink(x.phone, msg), target: '_blank', rel: 'noopener', 'data-kind': 'coord' },
+        h('span', { class: 'wa-ic' }, '💬'), h('span', null, h('small', null, 'منسق المرحلة'), clean(x.name))));
+    });
+    return box.childNodes.length ? box : coordBar();
+  }
   function topbar(title) {
     return h('div', { class: 'top' },
       (WHO && S.view === 'confirm') ? h('span') : h('button', { type: 'button', class: 'link', id: 'back-home', onclick: goHome }, WHO ? '‹ بياناتي' : '‹ الرئيسية'),
@@ -650,6 +683,7 @@ body.is-login .wrap{max-width:none;padding:0}
     });
     S.step = 1; S.draft = loadDraft(dkey());
     try { await loadSchools(); if (S.school) await loadClasses(S.school.id); } catch (e) { /* تُعاد المحاولة عند الحاجة */ }
+    try { var ct = await rpc('teacher_portal_contacts', { p_civil: c, p_phone: p }); S.contacts = ct && ct.ok ? ct : null; } catch (e) { S.contacts = null; } /* v372 */
     go('confirm'); /* v303: مراجعة فقط */
   }
   async function startNew() {
@@ -684,25 +718,62 @@ body.is-login .wrap{max-width:none;padding:0}
     return out;
   }
 
+  /* v372: حفظ البيانات الناقصة مباشرة (لا يكتب فوق المسجّل — الخادم يتحقق) */
+  function fillSave(FI, box) {
+    var keys = Object.keys(FI);
+    if (S.limited) return h('div', { class: 'warn', id: 'fill-nophone' }, 'هاتفك غير مسجّل في البرنامج، فلا يمكن إكمال البيانات من هنا. تواصل مع موجهك لتسجيل هاتفك.');
+    if (!keys.length) return S.fillMsg ? h('div', { class: 'note ok-note', id: 'fill-msg' }, S.fillMsg) : null;
+    var btn = mkBtn('btn-ok', '💾 حفظ البيانات الناقصة', async function () {
+      hideErr(box); var f = {}, n = 0;
+      keys.forEach(function (k) { var v = clean(FI[k].value); if (v) { f[k] = (k === 'teacher_code' || k === 'qualification_year') ? digits(v) : v; n++; } });
+      if (!n) { showErr(box, 'اكتب بيانًا واحدًا على الأقل ثم اضغط «حفظ».'); return; }
+      btnBusy(btn, true, 'جارٍ الحفظ...');
+      try {
+        var r = await rpc('teacher_portal_fill_missing', { p_civil: S.auth.civil, p_phone: S.auth.phone, p_fields: f });
+        if (!r || r.ok !== true) { btnBusy(btn, false); showErr(box, r && r.reason === 'closed' ? 'إكمال البيانات متوقف حاليًا.' : r && r.reason === 'no_change' ? 'لا توجد بيانات جديدة للحفظ (ربما سُجّلت من قبل).' : reasonMsg(r || {})); return; }
+        var t = await rpc('teacher_portal_lookup', { p_civil: S.auth.civil, p_phone: S.auth.phone });
+        S.fillMsg = '✓ تم حفظ ' + plural((r.saved || []).length, 'بيان واحد', 'بيانين', 'بيانات') + ' في البرنامج.';
+        if (t && t.ok) await enterRegistered(t, S.auth.civil, S.auth.phone); else go('confirm');
+      } catch (e) { btnBusy(btn, false); showErr(box, errMsg(e)); }
+    }, { id: 'fill-save' });
+    return h('div', { class: 'fill-save' }, S.fillMsg ? h('div', { class: 'note ok-note', id: 'fill-msg' }, S.fillMsg) : null, box, btn);
+  }
   VIEWS.confirm = function () {
     var miss = missingList(), box = errbox();
     var rows = [kvRow('الاسم', pv('full_name')), kvRow('الرقم المدني', null)];
     rows[1] = h('div', null, h('span', { class: 'k' }, 'الرقم المدني'), h('span', { class: 'v' }, h('span', { class: 'ltr' }, '••••••••••' + S.auth.civil.slice(-4))));
+    /* v372: البيان الناقص حقل إدخال، والمسجّل للعرض فقط 🔒 */
+    var FI = {}, canFill = !S.limited;
+    var lock = h('span', { class: 'tag lk', title: 'مسجّل — للتعديل تواصل مع موجهك أو منسق المرحلة' }, '🔒');
+    function lk() { return lock.cloneNode(true); }
+    function fin(k, el) { FI[k] = el; el.id = 'fill-' + k; el.classList.add('fill-in'); return el; }
+    function txt(k, attrs) { return fin(k, h('input', Object.assign({ type: 'text', autocomplete: 'off' }, attrs || {}))); }
+    function fillRow(label, k, value, el) {
+      if (value) return kvRow(label, value, false, lk());
+      if (!canFill) return kvRow(label, '', true);
+      return h('div', { class: 'miss fill' }, h('span', { class: 'k' }, label), h('span', { class: 'v' }, el, h('span', { class: 'tag m' }, 'أضِفه')));
+    }
     var tcode = S.lookup && S.lookup.teacher ? clean(S.lookup.teacher.teacher_code) : '';
-    rows.push(kvRow('كود المعلم', tcode ? h('span', { class: 'ltr', id: 'v-code' }, tcode) : 'غير مسجّل'));
+    rows.push(fillRow('كود المعلم', 'teacher_code', tcode ? h('span', { class: 'ltr', id: 'v-code' }, tcode) : '', tcode ? null : txt('teacher_code', { type: 'tel', inputmode: 'numeric', maxlength: '8', dir: 'ltr', placeholder: '6 إلى 8 أرقام' })));
     var wtk = S.lookup && S.lookup.teacher ? S.lookup.teacher.work_type : '';
     if (wtk) rows.push(kvRow('نوع العمل', wtk === 'permanent' ? 'معيّن (دائم)' : wtk === 'paid' ? 'بالأجر (عقد)' : String(wtk)));
     rows.push(kvRow('المدرسة', S.school ? S.school.name : '', miss.indexOf('school') >= 0));
     rows.push(kvRow('التليفون', pv('phone') ? pv('phone') : '', miss.indexOf('phone') >= 0));
-    rows.push(kvRow('البريد الإلكتروني', pv('email'), !pv('email')));
-    rows.push(kvRow('المؤهل', pv('qualification'), miss.indexOf('qualification') >= 0));
-    rows.push(kvRow('التخصص', pv('specialty'), miss.indexOf('specialty') >= 0));
-    if (pv('qualification_year')) rows.push(kvRow('سنة المؤهل', pv('qualification_year')));
-    if (pv('residence')) rows.push(kvRow('محل الإقامة', pv('residence')));
+    rows.push(fillRow('البريد الإلكتروني', 'email', pv('email') ? h('span', { class: 'ltr' }, pv('email')) : '', pv('email') ? null : txt('email', { type: 'email', inputmode: 'email', dir: 'ltr', placeholder: 'name@example.com' })));
+    var qdl = h('datalist', { id: 'fill-qual-list' }, QUALS.map(function (q) { return h('option', { value: q }); }));
+    rows.push(fillRow('المؤهل', 'qualification', pv('qualification'), pv('qualification') ? null : h('span', null, txt('qualification', { list: 'fill-qual-list', placeholder: 'اختر أو اكتب المؤهل' }), qdl)));
+    var secStage = /^sec/.test(S.stageKey || '');
+    var specSel = pv('specialty') ? null : fin('specialty', h('select', null, h('option', { value: '' }, '— اختر —'),
+      (secStage ? ['فيزياء', 'كيمياء', 'أحياء'] : ['علوم']).map(function (x) { return h('option', { value: x }, x); })));
+    rows.push(fillRow('التخصص', 'specialty', pv('specialty'), pv('specialty') ? null : specSel));
+    rows.push(fillRow('سنة المؤهل', 'qualification_year', pv('qualification_year'), pv('qualification_year') ? null : txt('qualification_year', { type: 'tel', inputmode: 'numeric', maxlength: '4', dir: 'ltr', placeholder: 'مثال 2010' })));
+    rows.push(fillRow('محل الإقامة', 'residence', pv('residence'), pv('residence') ? null : txt('residence', { placeholder: 'القرية / المدينة' })));
     var perm = isPermanent();
     if (perm || pv('job_title')) rows.push(kvRow('الدرجة الوظيفية', pv('job_title') || 'غير مسجّل'));
     ['appointment_date', 'grade_acquired_date', 'work_start_date'].forEach(function (k) {
-      if (perm || pv(k)) rows.push(kvRow(LBL[k], pv(k) ? h('span', { class: 'ltr', id: 'v-' + k }, fmtDate(pv(k))) : 'غير مسجّل'));
+      if (!(perm || pv(k) || k === 'work_start_date')) return;
+      rows.push(fillRow(LBL[k], k, pv(k) ? h('span', { class: 'ltr', id: 'v-' + k }, fmtDate(pv(k))) : '',
+        pv(k) ? null : fin(k, h('input', { type: 'date', max: new Date().toISOString().slice(0, 10), min: '1970-01-01' }))));
     });
     var cn = classLines();
     rows.push(h('div', { class: miss.indexOf('classes') >= 0 ? 'miss' : null }, h('span', { class: 'k' }, 'الفصول'),
@@ -739,12 +810,13 @@ body.is-login .wrap{max-width:none;padding:0}
     var d = S.draft;
     return h('div', { class: 'card' }, topbar('بياناتك'),
       h('h2', null, 'أهلًا ' + (pv('full_name').split(' ')[0] || '')),
-      h('p', { class: 'sub', style: 'text-align:right' }, 'هذه بياناتك المسجّلة للمراجعة فقط. إن وجدت خطأ أو نقصًا فتواصل مع المنسق.'),
-      coordBar(),
+      h('p', { class: 'sub', style: 'text-align:right' }, 'البيانات المسجّلة 🔒 لا تُعدَّل من هنا؛ لتعديلها تواصل مع موجهك أو منسق المرحلة. أما البيانات الناقصة فأضفها واضغط «حفظ».'),
+      contactBar(),
       h('div', { class: 'tabs', id: 'tt-entry-wrap' }, h('button', { type: 'button', class: 'tab on', id: 'tab-data' }, '① بياناتي'),
         mkBtn('tab', '② جدولي الأسبوعي', function (ev) { openTimetable(ev.currentTarget); }, { id: 'tt-open' })),
       otherN > 0 ? h('div', { class: 'note' }, 'لديك ' + otherN + ' فصل في مدرسة أخرى (انتداب/إعارة)؛ تُدار من المشرف ولا تتغير من هنا.') : null,
       h('div', { class: 'kv' }, rows),
+      fillSave(FI, box),
       h('div', { style: 'height:14px' }),
       h('div', null, mkBtn('btn', 'التالي: جدولي الأسبوعي ←', function (ev) { openTimetable(ev.currentTarget); }, { id: 'tt-next' })));
   };
