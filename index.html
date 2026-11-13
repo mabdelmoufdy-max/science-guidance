@@ -1,4 +1,6 @@
 <!doctype html>
+<!-- v362: مركز التحكم — الاقتراح ٣: «توسيع محكوم» مغلق افتراضيًا في تبويب الصلاحيات (منسق المرحلة ينشئ حسابات دخول معلمي مراحله ويعيد كلمات مرورهم — create-system-user v14 وadmin-reset-user-password v6، والمعلم يُلزم بالتغيير)، تبويب «الجدولة والتجميد» (تجميد إجراءات/أدوار لفترة تنتهي وحدها + مواعيد فتح/إغلاق مفتاحي بوابة المعلمين عبر pg_cron كل 5 دقائق)، والملخص الأسبوعي لمدير النظام في «نظرة عامة» والرئيسية حتى «تم الاطلاع»؛ شريط التجميد للمستخدم مع موعد انتهائه. قاعدة البيانات v362. -->
+<!-- v361: مركز التحكم — الاقتراح ٢: التدقيق بـadmin_audit_search2 (نوع الإجراء من admin_audit_actions بأسماء عربية، بحث في المحتوى، target_name، «تحميل المزيد» بـp_before)، تقرير A4 auditLog وExcel (v169Xlsx)، «سجل الحساب» في ملف المستخدم (p_target، 90 يومًا)، وتقرير permState «حالة الصلاحيات الحالية» من تبويب الصلاحيات؛ و«ما يراه» يُسجَّل مرة كل 10 دقائق. قاعدة البيانات v361_audit_readable. -->
 <!-- v360: فرض مصفوفة الصلاحيات في كل الطرق: my_capabilities() بعد الدخول وتبديل الدور ← شريط «إجراءات موقوفة» + أزرار باهتة بقفل + لفّ دوال الإجراءات (V360_FUNCS) فتشرح بدل فتح النموذج؛ دوال الحافة execute-teacher-delegation v5 وsupervisor-save-and-approve v5 وsupervisor-create-class-and-approve v3 وcreate-system-user v13 تفحص service_cap_allowed (قاعدة البيانات v360_cap_enforcement + إجراء account.create). إصلاحات مركز التحكم: منع تطبيق نقل مدارس لموجه غير مسجّل في مرحلتها، تحديث نشاط الملف بعد الأفعال، ونافذة الأدوار تخفي ما لا ينطبق (has_sup/has_teacher). -->
 <!-- v359: نافذة «ما الذي يراه ويفعله؟»: كل إجراء زر — منع/سماح لهذا الشخص فقط (دائم حتى يُلغى أو أسبوع/شهر/أيام) عبر admin_grant_add، أو إلغاء استثنائه عبر admin_grant_revoke، ثم يُعاد الحساب. قاعدة البيانات v359_person_permission_toggle (expires_at فارغ = دائم؛ الإضافة تلغي الاستثناء السابق على الإجراء نفسه). -->
 <!-- v358: مركز التحكم — المرحلة 4: تبويب «الوصول المؤقت والمراجعة» (admin_grants_list/admin_grant_add/admin_grant_revoke، admin_access_review_list/admin_access_review_decide)، «ما الذي يراه ويفعله؟» في ملف المستخدم (admin_view_as قراءة فقط)، و«تراجع» في التدقيق لأفعال cc_* (admin_revert_action مرة واحدة لكل فعل). قاعدة البيانات v358_control_center_governance. -->
@@ -7,8 +9,6 @@
 <!-- v355: مركز التحكم لمدير النظام — المرحلة 1 (عرض فقط): تبويب controlCenter بعد «لوحة النظام» فيه نظرة عامة وإشارات الخطر، المستخدمون وملف كل مستخدم (الأدوار والنطاق والحساب ونشاط 30 يومًا)، خريطة النطاق لكل مرحلة، والتدقيق بالفلاتر والقيمة قبل/بعد. قاعدة البيانات v355_control_center_read: admin_control_center() وadmin_audit_search() للدور النشط admin فقط. -->
 <!-- v354: «المتصلون الآن» ← «محاولات مرفوضة»: تجميع بالشخص (v354DenGroups: ما كتبه + المصدر) — الشاشة سطر لكل شخص (عدد المحاولات، الأسباب v354Why، آخر محاولة، المصدر، الجهاز) يُفتح لعرض محاولاته، والتقرير deniedAttempts صف لكل شخص (المحاولات، السبب، أول/آخر محاولة) مرتب بالأكثر محاولات؛ وإن كان البحث على شخص واحد فالتقرير صف لكل محاولة كما كان. واجهة فقط. -->
 <!-- v353: «المتصلون الآن»: تنسيق الهاتف (التبويبات الثلاثة في صف وأزرار الفترة في صف، وسطر مختصر لكل مستخدم يُفتح بالضغط لعرض جلساته، وسطر مختصر لكل محاولة مرفوضة) + تقريرا طباعة A4 بمحرك التقارير: «سجل الدخول على البرنامج» (accessLog: صف لكل مستخدم، أو صف لكل دخول عند البحث عن مستخدم واحد) و«محاولات الدخول المرفوضة» (deniedAttempts) يتبعان الفترة والبحث المختارين؛ لمدير النظام فقط، واجهة فقط. -->
-<!-- v352: «المتصلون الآن» (مدير النظام): تبويبان جديدان — «سجل الدخول» (admin_access_report: اليوم/أسبوع/شهر/فترة محددة + بحث بالاسم + ملخص لكل مستخدم وتفاصيل كل دخول) و«محاولات مرفوضة» (admin_denied_attempts: شاشة دخول البرنامج + بوابة المعلمين)؛ login() يسجّل المحاولة الفاشلة بـlog_login_failure (بلا كلمة المرور). قاعدة البيانات v352_access_reports. -->
-<!-- v351: renderReportSchema: إن لم تكن للتقرير إجماليات والاعتماد معطّل (approval.enabled===false) لا يُضاف الذيل الفارغ (report-approval-space بارتفاع 66px) فلا ينفرد بصفحة فارغة أخيرة (مثال: «الجدول الأسبوعي لمعلمي المدرسة» ابن دقيق العيد 24 صفًا). بقية التقارير بلا تغيير. -->
 <html lang="ar" dir="rtl">
 <head>
 <!-- إعداد: أ/ محمود عبدالمفدي محمد أبوالنجا | الصفة: معلم -->
@@ -16,7 +16,7 @@
 <script>/* v226: العنوان الموحد — انظر التعليق أعلى الملف */(function(){try{if(/\.github\.io$/.test(location.hostname)&&/^\/science-guidance\/?(index\.html)?$/.test(location.pathname)&&!/[?&]stay\b/.test(location.search))location.replace('https://teachers-data-portal.vercel.app/app/'+location.hash)}catch(e){}})();</script>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#152c43">
-<title>نظام توجيه العلوم — v360</title>
+<title>نظام توجيه العلوم — v362</title>
 <link rel="manifest" href="./manifest.webmanifest">
 <link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png">
 <link rel="apple-touch-icon" href="./icon-192.png">
@@ -2218,6 +2218,21 @@ body.v293-ro select[onchange*="v101ChangeSlot"]{pointer-events:none;opacity:.65}
 .v360-off{opacity:.45;filter:grayscale(1);cursor:not-allowed!important}
 .v360-off::after{content:" 🔒";filter:none}
 .v360-banner{margin-bottom:10px}
+/* v361: تدقيق مفهوم */
+.v361-more{margin-top:8px;width:100%}
+/* v362: مركز التحكم — التوسيع المحكوم والجدولة والملخص الأسبوعي */
+.v362-widen{margin-top:14px}
+.v362-wrow{display:flex;gap:10px;align-items:center;flex-wrap:wrap;padding:8px 0;border-top:1px solid var(--line)}
+.v362-wrow .v355-grow{min-width:min(100%,220px)}
+.v362-dig .v356-actions{margin-top:6px}
+.v362-dig-l{margin:4px 0}
+.v362-dash{margin-bottom:12px}
+.v362-kvs{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,210px),1fr));gap:2px 16px}
+.v362-kv{display:flex;justify-content:space-between;gap:8px;border-bottom:1px dashed var(--line);padding:4px 0}
+.v362-now,.v362-cron{margin:6px 0}
+.v362-all{display:flex;gap:6px;align-items:center;font-weight:600;margin:2px 0}
+.v362-fz{margin-top:4px;font-weight:600}
+.v362-form input[type=datetime-local],.v362-form select{width:100%;max-width:100%;box-sizing:border-box}
 </style>
 </head>
 <body>
@@ -2585,6 +2600,8 @@ window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();window.v152
 window.addEventListener('appinstalled',()=>{window.v152InstallPrompt=null;v152SyncInstallBtn()});
 if('serviceWorker' in navigator&&location.protocol!=='file:')window.addEventListener('load',()=>navigator.serviceWorker.register('./service-worker.js').catch(()=>{}));
 const V145_NEWS=[
+ ['v362','مركز التحكم: تبويب «الجدولة والتجميد» (تجميد التعديل لفترة تنتهي وحدها، ومواعيد فتح/إغلاق مفتاحي بوابة المعلمين)، والملخص الأسبوعي لمدير النظام في «نظرة عامة» والرئيسية، و«توسيع محكوم» مغلق افتراضيًا يفتحه المدير ليُنشئ منسق المرحلة حسابات دخول معلمي مرحلته ويعيد كلمات مرورهم.'],
+ ['v361','مركز التحكم — التدقيق: قائمة بأنواع الإجراءات بالعربية، وبحث باسم المعلم أو المدرسة أو الرقم، واسم السجل المتأثر في كل سطر، و«تحميل المزيد»، وتقرير A4 وExcel؛ وفي ملف كل مستخدم «سجل الحساب» (ما فُعل بحسابه ومن فعله)؛ وتقرير «حالة الصلاحيات الحالية».'],
  ['v360','مركز التحكم: «ممنوع» في مصفوفة الصلاحيات صار نافذًا في كل الطرق (الانتداب، «حفظ واعتماد» و«إنشاء فصل واعتماد» للموجه، وإنشاء حسابات الدخول — إجراء جديد في المصفوفة)، وتظهر الأزرار الموقوفة باهتة بقفل مع شريط يوضح ما أُوقف للدور؛ وإصلاح نقل المدارس ونافذة الأدوار وتحديث نشاط المستخدم.'],
  ['v359','مركز التحكم: في نافذة «ما الذي يراه ويفعله؟» اضغط على أي إجراء لتمنعه على هذا الشخص وحده أو تسمح له به (دائمًا حتى تلغيه أو لمدة محددة)، أو لتلغي استثناءه.'],
  ['v358','مركز التحكم — المرحلة 4: تبويب «الوصول المؤقت والمراجعة» (استثناء لشخص بمدة تنتهي وحدها، ومراجعة كل الأدوار النشطة بإبقاء أو إلغاء)، وفي ملف المستخدم «ما الذي يراه ويفعله؟» لكل دور، وزر «تراجع» في التدقيق لأفعال مركز التحكم.'],
@@ -14076,7 +14093,7 @@ function v355Render(){const w=document.getElementById('v355Wrap');if(w)w.innerHT
 function v355Tab(t){V355.tab=t;V355.sel=null;v355Render();if(t==='audit'&&!V355.audit.loaded)v355AuditLoad()}
 async function v355Refresh(){const w=document.getElementById('v355Wrap');try{await v355Load();V355.err=''}catch(e){V355.err=e.message||String(e)}if(V355.tab==='audit')await v355AuditLoad(true);else v355Render();if(w)toast('تم التحديث')}
 function v355Inner(){
- const tabs=[['over','نظرة عامة ومخاطر'],['users','المستخدمون'],['scope','خريطة النطاق'],['perm','الصلاحيات'],['access','الوصول المؤقت والمراجعة'],['audit','التدقيق']];
+ const tabs=[['over','نظرة عامة ومخاطر'],['users','المستخدمون'],['scope','خريطة النطاق'],['perm','الصلاحيات'],['access','الوصول المؤقت والمراجعة'],['sched','الجدولة والتجميد'],['audit','التدقيق']];
  const head=`<div class="v355-tabs" role="tablist">${tabs.map(([k,l])=>`<button type="button" role="tab" class="v355-tab${V355.tab===k?' on':''}" aria-selected="${V355.tab===k}" onclick="v355Tab('${k}')">${l}</button>`).join('')}</div>`;
  const err=V355.err?`<div class="notice danger">تعذّر التحميل: ${esc(V355.err)}</div>`:'';
  let body='';
@@ -14085,6 +14102,7 @@ function v355Inner(){
  else if(V355.tab==='scope')body=v355Scope();
  else if(V355.tab==='perm')body=v357Perm();
  else if(V355.tab==='access')body=v358Access();
+ else if(V355.tab==='sched')body=v362Sched();
  else body=v355Audit();
  return head+err+`<div class="v355-body">${body}</div>`;
 }
@@ -14673,6 +14691,300 @@ v356Roles=(function(base){return function(id){
  if(u.has_teacher===false){const c=m.querySelector('[data-role="teacher"]');if(c&&!c.checked){c.disabled=true;c.closest('label')?.appendChild(note(' (يحتاج سجل معلم)'))}}
 }})(v356Roles);
 /* v360-end */
+/* v361-begin: مركز التحكم — سجل الحساب وتدقيق مفهوم: قائمة أنواع الإجراءات بالعربية، بحث في المحتوى، اسم السجل المتأثر، «تحميل المزيد»، تقرير A4 وExcel للتدقيق، «سجل الحساب» في ملف كل مستخدم، وتقرير «حالة الصلاحيات». admin_audit_search2 / admin_audit_actions */
+const V361={actions:{},acct:{}};
+Object.assign(V355.audit,{action:'',more:false,busy:false});
+Object.assign(V355_ACTIONS,{supervision_released_on_move:'فك الإشراف عند النقل',admin_delete_school:'حذف مدرسة',execute_teacher_delegation:'انتداب',teacher_portal_approved:'اعتماد طلب بوابة',set_school_supervisor:'تعيين مشرف المادة',supervisor_create_class_and_direct_approve:'إنشاء فصل واعتماد',admin_change_teacher_civil_id:'تغيير رقم قومي',v347_primary_teachers_pdf_update:'تحديث من ملف الموجه',v349_paid_job_title:'مسمى معلم الأجر',teacher_portal_editing_toggle:'فتح/إغلاق البوابة'});
+function v361Range(){const d=Number(V355.audit.days||7);return {from:new Date(Date.now()-d*864e5).toISOString(),to:new Date(Date.now()+6e4).toISOString()}}
+async function v361LoadActions(){
+ const k=String(V355.audit.days||7);if(V361.actions[k])return V361.actions[k];
+ const r=v361Range();const x=await sb.rpc('admin_audit_actions',{p_from:r.from,p_to:r.to});
+ V361.actions[k]=x.error?[]:(x.data||[]);return V361.actions[k];
+}
+v355AuditLoad=async function(force,append){
+ const a=V355.audit;if(a.loaded&&!force&&!append){v355Render();return}
+ if(a.busy)return;a.busy=true;a.err='';
+ try{
+  await v361LoadActions();
+  const r=v361Range(),before=append&&a.rows.length?a.rows[a.rows.length-1].id:null;
+  const x=await sb.rpc('admin_audit_search2',{p_from:r.from,p_to:r.to,p_actor:a.actor||null,p_action:a.action||null,p_q:(a.q||'').trim()||null,p_target:null,p_before:before,p_limit:200});
+  if(x.error)throw x.error;
+  const got=x.data||[];a.rows=append?a.rows.concat(got):got;a.more=got.length===200;a.loaded=true;
+ }catch(e){a.err=v356Err(e)}
+ a.busy=false;if(V355.tab==='audit')v355Render();
+};
+v355AuditSet=function(k,v){V355.audit[k]=v;if(k==='days')V355.audit.action='';V355.audit.loaded=false;V355.audit.rows=[];v355AuditLoad(true)};
+/* اسم السجل المتأثر في السطر بدل نوعه البرمجي */
+v355AuditRow=(function(base){return function(r){
+ let h=base.apply(this,arguments);
+ const tgt=r.target_name?' · 🎯 '+esc(r.target_name):'';
+ return h.replace(' · '+esc(r.entity_type||'')+'</span>',tgt+'</span>');
+}})(v355AuditRow);
+v355Audit=function(){
+ const a=V355.audit,users=v355Users(),acts=V361.actions[String(a.days||7)]||[];
+ const tools=`<div class="v355-tools v361-tools">
+ <select id="v355ADays" onchange="v355AuditSet('days',this.value)">${[['1','اليوم (24 ساعة)'],['7','آخر 7 أيام'],['30','آخر 30 يومًا'],['90','آخر 90 يومًا']].map(([k,l])=>`<option value="${k}"${String(a.days)===k?' selected':''}>${l}</option>`).join('')}</select>
+ <select id="v355AActor" onchange="v355AuditSet('actor',this.value)"><option value="">كل المستخدمين</option>${users.map(u=>`<option value="${esc(u.id)}"${a.actor===u.id?' selected':''}>${esc(u.name)}</option>`).join('')}</select>
+ <select id="v361AAction" onchange="v355AuditSet('action',this.value)"><option value="">كل أنواع الإجراءات</option>${acts.map(x=>`<option value="${esc(x.action)}"${a.action===x.action?' selected':''}>${esc(v355Act(x.action))} (${v355N(x.n)})</option>`).join('')}</select>
+ <input id="v355AQ" type="search" placeholder="بحث: اسم معلم أو مدرسة أو رقم…" value="${esc(a.q)}" onchange="v355AuditSet('q',this.value.trim())">
+ </div>
+ <div class="v356-actions"><button type="button" class="btn secondary" onclick="v361AuditReport()">📄 تقرير A4</button><button type="button" class="btn secondary" onclick="v361AuditExcel()">⬇ Excel</button></div>`;
+ const body=!a.loaded&&!a.err?'<div class="cell-sub">جارٍ التحميل…</div>':a.err?`<div class="notice danger">${esc(a.err)}</div>`:a.rows.length?`<div class="cell-sub">${v355N(a.rows.length)} إجراء${a.more?' (والمزيد أقدم)':''}. اضغط على السطر لرؤية القيمة قبل/بعد.</div>`+a.rows.map(v355AuditRow).join('')+(a.more?`<button type="button" class="btn secondary v361-more" onclick="v355AuditLoad(false,true)"${a.busy?' disabled':''}>تحميل المزيد</button>`:''):'<div class="cell-sub">لا إجراءات بهذا البحث.</div>';
+ return tools+body+'<div class="cell-sub">«تراجع» متاح لأفعال مركز التحكم فقط (الأدوار، التعطيل، المفاتيح، الصلاحيات، الاستثناءات، نقل المدارس). تعديلات البيانات تُراجَع من شاشاتها.</div>';
+};
+/* ملخص التغيير لسطر التقرير/Excel */
+function v361Changes(r){
+ const o=(r.old_data&&typeof r.old_data==='object'&&!Array.isArray(r.old_data))?r.old_data:{},n=(r.new_data&&typeof r.new_data==='object'&&!Array.isArray(r.new_data))?r.new_data:{};
+ const skip=/^(updated_at|row_version|created_at|reason)$/;
+ const ks=[...new Set([...Object.keys(o),...Object.keys(n)])].filter(k=>!skip.test(k)&&JSON.stringify(o[k])!==JSON.stringify(n[k]));
+ const v=x=>{if(x==null||x==='')return '—';if(typeof x==='object')x=JSON.stringify(x);x=String(x);return x.length>40?x.slice(0,40)+'…':x};
+ const out=ks.slice(0,3).map(k=>(k in o&&k in n)?`${k}: ${v(o[k])} ← ${v(n[k])}`:`${k}: ${v(k in n?n[k]:o[k])}`);
+ const reason=n.reason?` | السبب: ${v(n.reason)}`:'';
+ return (out.join('؛ ')+(ks.length>3?` (+${ks.length-3})`:'')||'—')+reason;
+}
+function v361AuditDesc(){const a=V355.audit,u=a.actor?v355User(a.actor):null;return [`آخر ${a.days==='1'?'24 ساعة':a.days+' يومًا'}`,u?'المستخدم: '+u.name:'',a.action?'الإجراء: '+v355Act(a.action):'',a.q?'بحث: '+a.q:''].filter(Boolean).join(' — ')}
+function v361Stamp(t){return typeof v353Stamp==='function'?v353Stamp(t):v294Time(t)}
+ReportAdapters.auditLog={async load(ctx){
+ if(profile?.role!=='admin')throw new Error('هذا التقرير لمدير النظام فقط.');
+ const rows=V355.audit.rows||[];if(!rows.length)throw new Error('لا توجد إجراءات محمّلة بهذا البحث.');
+ const by={};rows.forEach(r=>{const k=r.actor_name||'النظام';by[k]=(by[k]||0)+1});
+ return makeReportSchema({reportId:'auditLog',title:'سجل التدقيق',subtitle:v361AuditDesc()+(V355.audit.more?' — أحدث '+rows.length+' إجراء':''),period:ctx.period,issuer:ctx.issuer,
+  columns:[reportColumn('n','م',.4),reportColumn('at','الوقت',1.3),reportColumn('who','المستخدم',1.5),reportColumn('role','الدور',1),reportColumn('act','الإجراء',1.4),reportColumn('tgt','السجل المتأثر',1.5),reportColumn('chg','التغيير',3)],
+  rows:rows.map((r,i)=>({n:String(i+1),at:v361Stamp(r.created_at),who:r.actor_name||'النظام',role:r.actor_role?v294Role(r.actor_role):'—',act:v355Act(r.action),tgt:r.target_name||'—',chg:v361Changes(r)})),
+  summary:[reportMetric('الإجراءات',rows.length),reportMetric('المستخدمون',Object.keys(by).length)],totals:[],approval:{enabled:false}});
+}};
+function v361AuditReport(){if(!(V355.audit.rows||[]).length)return toast('لا توجد إجراءات محمّلة.');return openReportById('auditLog')}
+function v361AuditExcel(){
+ const rows=V355.audit.rows||[];if(!rows.length)return toast('لا توجد إجراءات محمّلة.');
+ const out=[['سجل التدقيق — '+v361AuditDesc()],['م','الوقت','المستخدم','الدور','الإجراء','السجل المتأثر','التغيير']];
+ rows.forEach((r,i)=>out.push([i+1,v361Stamp(r.created_at),r.actor_name||'النظام',r.actor_role?v294Role(r.actor_role):'—',v355Act(r.action),r.target_name||'—',v361Changes(r)]));
+ out.push([]);try{out.push([reportIssuerText()])}catch(e){}
+ v169SaveFile(new File([v169Xlsx(out)],'سجل التدقيق.xlsx',{type:V169_XLSX_TYPE}),`تم تصدير ${rows.length} إجراء.`);
+}
+/* تقرير «حالة الصلاحيات الحالية» */
+ReportAdapters.permState={async load(ctx){
+ if(profile?.role!=='admin')throw new Error('هذا التقرير لمدير النظام فقط.');
+ if(!V357.m){const r=await sb.rpc('admin_permission_matrix');if(r.error)throw r.error;V357.m=r.data}
+ const g=await sb.rpc('admin_grants_list');if(g.error)throw g.error;
+ const act=(g.data||[]).filter(x=>x.status==='active');
+ const caps=V357.m.capabilities||[];
+ const rows=caps.map((c,i)=>{const off=V357_ROLES.filter(r=>!v357Rule(c.code,r)).map(r=>ROLE_LABELS[r]||r);const gs=act.filter(x=>x.cap===c.code);
+  return {n:String(i+1),cap:c.label,off:off.join('، ')||'—',grants:gs.map(x=>`${x.name}: ${x.allowed?'سماح':'منع'} (${x.expires_at?'حتى '+v358Date(x.expires_at):'دائم'})`).join('؛ ')||'—'}});
+ const blocked=caps.reduce((n,c)=>n+V357_ROLES.filter(r=>!v357Rule(c.code,r)).length,0);
+ return makeReportSchema({reportId:'permState',title:'حالة الصلاحيات الحالية',subtitle:'مصفوفة الصلاحيات والاستثناءات السارية — مدير النظام غير مقيَّد',period:ctx.period,issuer:ctx.issuer,
+  columns:[reportColumn('n','م',.4),reportColumn('cap','الإجراء',1.6),reportColumn('off','ممنوع على الأدوار',2),reportColumn('grants','استثناءات لأشخاص',3)],
+  rows,summary:[reportMetric('الإجراءات',caps.length),reportMetric('خلايا ممنوعة',blocked),reportMetric('استثناءات سارية',act.length)],totals:[],approval:{enabled:false}});
+}};
+function v361PermReport(){return openReportById('permState')}
+v357Perm=(function(base){return function(){
+ const h=base.apply(this,arguments);if(!V357.m)return h;
+ return h.replace('<div class="v357-intro">','<div class="v356-actions"><button type="button" class="btn secondary" onclick="v361PermReport()">📄 تقرير حالة الصلاحيات</button></div><div class="v357-intro">');
+}})(v357Perm);
+/* الصفوف مصفّاة من الصفحة؛ لا تُطبَّق عليها فلاتر المرحلة/المدرسة العامة */
+const __v361BaseApplyFilters=applyCurrentFiltersToReportSchema;
+applyCurrentFiltersToReportSchema=function(schema,state){
+ if(schema&&(schema.reportId==='auditLog'||schema.reportId==='permState'))return __v361BaseApplyFilters.call(this,schema,{active:false});
+ return __v361BaseApplyFilters.apply(this,arguments);
+};
+/* «سجل الحساب» في ملف كل مستخدم: ما فُعل بحسابه ومن فعله */
+async function v361LoadAcct(id){
+ try{const x=await sb.rpc('admin_audit_search2',{p_from:new Date(Date.now()-90*864e5).toISOString(),p_to:new Date(Date.now()+6e4).toISOString(),p_actor:null,p_action:null,p_q:null,p_target:id,p_before:null,p_limit:50});
+  if(x.error)throw x.error;V361.acct[id]=(x.data||[]).filter(r=>r.actor_profile_id!==id||String(r.action).startsWith('cc_'))}
+ catch(e){V361.acct[id]={err:v356Err(e)}}
+ const box=document.getElementById('v361Acct');if(box&&V355.sel===id)box.innerHTML=v361AcctInner(id);
+}
+function v361AcctInner(id){
+ const a=V361.acct[id];
+ if(!a)return '<div class="cell-sub">جارٍ التحميل…</div>';
+ if(a.err)return `<div class="notice danger">${esc(a.err)}</div>`;
+ return a.length?a.map(v355AuditRow).join(''):'<div class="cell-sub">لا تغييرات على هذا الحساب خلال 90 يومًا.</div>';
+}
+v355Profile=(function(base){return function(id){
+ let h=base.apply(this,arguments);const u=v355User(id);if(!u)return h;
+ if(!V361.acct[id])setTimeout(()=>v361LoadAcct(id),0);
+ return h+`<div class="v355-box"><h3 class="v355-h">سجل الحساب — ما فُعل بحسابه ومن فعله (90 يومًا)</h3><div id="v361Acct">${v361AcctInner(id)}</div></div>`;
+}})(v355Profile);
+v356After=(function(base){return async function(msg){const id=V355.sel;if(id)delete V361.acct[id];return base.apply(this,arguments)}})(v356After);
+/* v361-end */
+/* v362-begin: مركز التحكم — الاقتراح ٣: (1) «توسيع محكوم» مغلق افتراضيًا: منسق المرحلة ينشئ حسابات دخول معلمي مراحله ويعيد كلمات مرورهم (widen.coord_accounts) (2) تبويب «الجدولة والتجميد»: تجميد التعديل لفترة + مواعيد فتح/إغلاق مفتاحي البوابة (pg_cron) (3) الملخص الأسبوعي للمدير في «نظرة عامة» والرئيسية */
+const V362={sched:null,err:'',loading:false,dig:null,digErr:'',digLoading:false};
+Object.assign(V355_ACTIONS,{cc_freeze_add:'تجميد التعديل',cc_freeze_cancel:'إلغاء تجميد',cc_flag_schedule_add:'جدولة مفتاح البوابة',cc_flag_schedule_cancel:'إلغاء موعد مفتاح',cc_flag_scheduled_run:'تنفيذ موعد مفتاح البوابة'});
+const V362_FLAGS={editing_open:'تسجيل البيانات من بوابة المعلمين',timetable_open:'إدخال المعلم لجدوله من البوابة'};
+function v362DT(t){if(!t)return '—';try{return new Date(t).toLocaleString('ar-EG',{weekday:'short',day:'numeric',month:'short',hour:'numeric',minute:'2-digit'})}catch(e){return String(t)}}
+function v362Local(d){const z=new Date(d.getTime()-d.getTimezoneOffset()*60000);return z.toISOString().slice(0,16)}
+function v362Iso(v){if(!v)return null;const d=new Date(v);return isNaN(d)?null:d.toISOString()}
+function v362IsWiden(code){const c=(V357.m?.capabilities||[]).find(x=>x.code===code);return c?c.kind==='widen':/^widen\./.test(String(code||''))}
+function v362CapLabel(code){const c=(V357.m?.capabilities||[]).find(x=>x.code===code);return c?c.label:code}
+async function v362EnsureMatrix(){if(!V357.m){const r=await sb.rpc('admin_permission_matrix');if(r.error)throw r.error;V357.m=r.data||{}}return V357.m}
+function v362WidenOn(m,code){return ((m||V357.m)?.rules||[]).some(r=>r.cap===code&&r.role==='stage_coordinator'&&r.allowed)}
+
+/* ── (1) التوسيع المحكوم في تبويب «الصلاحيات»: خارج المصفوفة (المصفوفة منع فقط) ── */
+v357Perm=(function(base){return function(){
+ if(!V357.m)return base.apply(this,arguments);
+ const full=V357.m,widen=(full.capabilities||[]).filter(c=>c.kind==='widen');
+ V357.m=Object.assign({},full,{capabilities:(full.capabilities||[]).filter(c=>c.kind!=='widen')});
+ let h;try{h=base.apply(this,arguments)}finally{V357.m=full}
+ if(!widen.length)return h;
+ const rows=widen.map(c=>{const on=v362WidenOn(full,c.code);
+  return `<div class="v362-wrow"><div class="v355-grow"><b>${esc(c.label)}</b> <span class="badge ${on?'ok':''}">${on?'مفتوح لكل منسقي المراحل':'مغلق'}</span><div class="cell-sub">${esc(c.description||'')}</div></div><button type="button" class="btn ${on?'danger':'primary'}" onclick="v362Widen('${esc(c.code)}',${!on})">${on?'إغلاق':'فتح لكل المنسقين'}</button></div>`}).join('');
+ return h+`<div class="v355-box v362-widen"><h3 class="v355-h">توسيع محكوم <small class="cell-sub">— صلاحيات إضافية مغلقة افتراضيًا</small></h3>${rows}<div class="cell-sub">لفتحها لمنسق واحد فقط: «المستخدمون» ← ملفه ← «ما الذي يراه ويفعله؟» ← «سماح له» (دائم أو بمدة).</div></div>`;
+}})(v357Perm);
+v357ResetAll=(function(base){return function(){base.apply(this,arguments);Object.keys(V357.pending).forEach(k=>{if(v362IsWiden(k.split('|')[0]))delete V357.pending[k]});v355Render()}})(v357ResetAll);
+function v362Widen(code,on){
+ v356Confirm({title:on?'فتح صلاحية موسَّعة':'إغلاق صلاحية موسَّعة',danger:!!on,word:on?'فتح':'',ok:on?'فتح':'إغلاق',
+  body:`<p>«${esc(v362CapLabel(code))}» ${on?'تُفتح لكل منسقي المراحل، كلٌّ في مراحله فقط.':'تُغلق عن كل المنسقين (عدا من له استثناء «سماح» شخصي).'}</p>${on?'<p class="cell-sub">المنسق يرى كلمة المرور المولَّدة ليسلّمها للمعلم، والمعلم يُلزم بتغييرها عند أول دخول. لا يمس حسابًا له دور غير المعلم. كل إنشاء وإعادة يُسجَّل في التدقيق.</p>':''}`,
+  onOk:async reason=>{const r=await sb.rpc('admin_set_permissions',{p_changes:[{cap:code,role:'stage_coordinator',allowed:!!on}],p_reason:reason||null});if(r.error)throw r.error;V357.m=null;closeModal();await v357Load();toast(on?'فُتحت الصلاحية':'أُغلقت الصلاحية')}});
+}
+/* تقرير حالة الصلاحيات: التوسيع سطر مستقل بحالته */
+(function(){const base=ReportAdapters.permState.load;ReportAdapters.permState.load=async function(ctx){
+ await v362EnsureMatrix();const full=V357.m,widen=(full.capabilities||[]).filter(c=>c.kind==='widen');
+ V357.m=Object.assign({},full,{capabilities:(full.capabilities||[]).filter(c=>c.kind!=='widen')});
+ let s;try{s=await base.call(this,ctx)}finally{V357.m=full}
+ if(widen.length&&Array.isArray(s.rows)){let act=[];try{const g=await sb.rpc('admin_grants_list');act=(g.data||[]).filter(x=>x.status==='active')}catch(e){}
+  widen.forEach(c=>{const gs=act.filter(x=>x.cap===c.code);s.rows.push({n:String(s.rows.length+1),cap:c.label+' (توسيع)',off:v362WidenOn(full,c.code)?'مفتوح لمنسقي المراحل':'مغلق (الافتراضي)',grants:gs.map(x=>`${x.name}: ${x.allowed?'سماح':'منع'} (${x.expires_at?'حتى '+v358Date(x.expires_at):'دائم'})`).join('؛ ')||'—'})})}
+ return s}})();
+/* «ما الذي يراه ويفعله؟»: إجراء التوسيع يظهر لدور المنسق فقط */
+v359Draw=(function(base){return function(){const d=V359.d;if(d&&V359.role!=='stage_coordinator'&&Array.isArray(d.capabilities)){const full=d.capabilities;d.capabilities=full.filter(c=>!v362IsWiden(c.code));try{return base.apply(this,arguments)}finally{d.capabilities=full}}return base.apply(this,arguments)}})(v359Draw);
+
+/* ── المنسق: my_capabilities تعيد الموسَّع والتجميد ── */
+v360Load=async function(){
+ V360.blocked=[];V360.widened=[];V360.freeze=null;V360.loaded=false;
+ if(!profile||profile.role==='admin'){V360.loaded=true;v360Mark(document);return}
+ try{const r=await sb.rpc('my_capabilities');if(!r.error&&r.data){V360.blocked=r.data.blocked||[];V360.widened=r.data.widened||[];V360.freeze=r.data.freeze||null;V360.role=r.data.role}}catch(e){}
+ V360.loaded=true;v360Mark(document);v360Banner();if(V360.blocked.length)v360Watch();
+};
+v360Banner=(function(base){return function(){
+ base.apply(this,arguments);const fz=V360.freeze;if(!fz||profile?.role==='admin')return;
+ const b=document.querySelector('#content .v360-banner');if(!b||b.querySelector('.v362-fz'))return;
+ const s=document.createElement('div');s.className='v362-fz';s.textContent=`⏸ تجميد مؤقت من مدير النظام حتى ${v362DT(fz.ends_at)}${fz.reason?' — '+fz.reason:''}`;b.appendChild(s);
+}})(v360Banner);
+function v362CoordWiden(){return profile?.role==='stage_coordinator'&&(V360.widened||[]).some(w=>w.code==='widen.coord_accounts')}
+v339RenderExtras=(function(base){return function(){
+ base.apply(this,arguments);
+ if(!v362CoordWiden()||!V339X)return;
+ const host=document.querySelector('#modal.v339-page .v339-extra');if(!host||host.querySelector('.v362-acct'))return;
+ host.insertAdjacentHTML('beforeend',v339AccountCard().replace('<div class="card v339-box">','<div class="card v339-box v362-acct">').replace('يدخل بها ويستطيع تغييرها من «بياناتي».','يُطلب منه تغييرها عند أول دخول.'));
+ const h=host.closest('.v344-sec')?.querySelector('.v344-sec-head h3');if(h)h.textContent='④ مسؤول البيانات وحساب الدخول';
+}})(v339RenderExtras);
+v339CreateAccount=(function(base){const w=async function(){
+ if(profile?.role!=='stage_coordinator')return base.apply(this,arguments);
+ const c=window.confirm;window.confirm=m=>c.call(window,String(m).replace('ويستطيع تغييرها من «بياناتي».','ويُلزم بتغييرها عند أول دخول.'));
+ try{return await base.apply(this,arguments)}finally{window.confirm=c}};w.__v360=base.__v360;w.__orig=base.__orig;return w})(v339CreateAccount);
+
+/* ── (2) تبويب «الجدولة والتجميد» ── */
+async function v362SchedLoad(){V362.loading=true;V362.err='';try{await v362EnsureMatrix();const r=await sb.rpc('admin_schedule_list');if(r.error)throw r.error;V362.sched=r.data||{}}catch(e){V362.err=v356Err(e)}V362.loading=false;if(V355.tab==='sched')v355Render()}
+function v362Scope(f){return `${f.capabilities?f.capabilities.map(v362CapLabel).join('، '):'كل الإجراءات'} — ${f.roles?f.roles.map(r=>ROLE_LABELS[r]||r).join('، '):'كل الأدوار عدا مدير النظام'}`}
+function v362Sched(){
+ if(!V362.sched&&!V362.err){if(!V362.loading)v362SchedLoad();return '<div class="cell-sub">جارٍ التحميل…</div>'}
+ if(V362.err)return `<div class="notice danger">${esc(V362.err)}</div><button type="button" class="btn secondary" onclick="V362.sched=null;v362SchedLoad()">إعادة المحاولة</button>`;
+ const d=V362.sched,cr=d.cron||{},st=d.settings||{};
+ const fzSt={active:['danger','ساري الآن'],upcoming:['warn','قادم'],ended:['','انتهى'],cancelled:['','أُلغي']};
+ const flSt={pending:['warn','منتظر'],done:['ok','نُفّذ'],cancelled:['','أُلغي']};
+ const fzRow=f=>{const [c,l]=fzSt[f.status]||fzSt.ended;return `<div class="v355-user v358-row"><span class="badge ${c}">${l}</span><span class="v355-grow"><b>${esc(v362Scope(f))}</b><span class="cell-sub">من ${esc(v362DT(f.starts_at))} إلى ${esc(v362DT(f.ends_at))}${f.reason?' · '+esc(f.reason):''}</span></span>${f.status==='active'||f.status==='upcoming'?`<button type="button" class="btn secondary" onclick="v362FreezeCancel('${esc(f.id)}')">إلغاء التجميد</button>`:''}</div>`};
+ const flRow=s=>{const [c,l]=flSt[s.status]||flSt.done;return `<div class="v355-user v358-row"><span class="badge ${c}">${l}</span><span class="v355-grow"><b>${s.value?'فتح':'إغلاق'}: ${esc(V362_FLAGS[s.flag]||s.flag)}</b><span class="cell-sub">الموعد ${esc(v362DT(s.run_at))}${s.status==='done'?' · نُفّذ '+esc(v362DT(s.done_at)):''}${s.reason?' · '+esc(s.reason):''}</span></span>${s.status==='pending'?`<button type="button" class="btn secondary" onclick="v362FlagCancel('${esc(s.id)}')">إلغاء الموعد</button>`:''}</div>`};
+ const open=f=>f.status==='active'||f.status==='upcoming';
+ const fzOpen=(d.freezes||[]).filter(open),fzOld=(d.freezes||[]).filter(f=>!open(f));
+ const flOpen=(d.flags||[]).filter(s=>s.status==='pending'),flOld=(d.flags||[]).filter(s=>s.status!=='pending');
+ const cronLine=cr.flags_job?`<span class="badge ok">التنفيذ التلقائي يعمل</span> <span class="cell-sub">يتحقق كل 5 دقائق${cr.last_flags_run?' · آخر تحقق '+esc(v294Ago(cr.last_flags_run)):''}</span>`:'<span class="badge danger">التنفيذ التلقائي متوقف</span> <span class="cell-sub">المواعيد تُنفَّذ فقط عند فتح هذا التبويب.</span>';
+ return `<div class="v356-boxhead"><h3 class="v355-h">تجميد التعديل</h3><button type="button" class="btn primary" onclick="v362FreezeOpen()">+ تجميد لفترة</button></div>
+ <div class="cell-sub">يوقف إجراءات محددة (أو كلها) لأدوار محددة (أو كلها) من وقت إلى وقت، ثم يعود كل شيء وحده. مفروض في قاعدة البيانات مثل «ممنوع» ويتقدم على الاستثناءات، ولا يمس مدير النظام ولا بوابة المعلمين.</div>
+ ${fzOpen.length?fzOpen.map(fzRow).join(''):'<div class="notice ok">لا يوجد تجميد ساري أو قادم.</div>'}
+ ${fzOld.length?`<details class="v355-det"><summary>السابقة (${v355N(fzOld.length)})</summary><div class="v358-old">${fzOld.map(fzRow).join('')}</div></details>`:''}
+ <div class="v356-boxhead"><h3 class="v355-h">مواعيد مفاتيح بوابة المعلمين</h3><button type="button" class="btn primary" onclick="v362FlagOpen()">+ موعد فتح/إغلاق</button></div>
+ <div class="v362-now">${Object.keys(V362_FLAGS).map(k=>`<div class="v355-flag"><span class="badge ${st[k]?'ok':'danger'}">${st[k]?'مفتوح':'مغلق'}</span><span>${esc(V362_FLAGS[k])} — الآن</span></div>`).join('')}</div>
+ <div class="v362-cron">${cronLine}</div>
+ ${flOpen.length?flOpen.map(flRow).join(''):'<div class="notice ok">لا توجد مواعيد منتظرة.</div>'}
+ ${flOld.length?`<details class="v355-det"><summary>السابقة (${v355N(flOld.length)})</summary><div class="v358-old">${flOld.map(flRow).join('')}</div></details>`:''}`;
+}
+async function v362SchedAfter(msg){V362.sched=null;closeModal();await v362SchedLoad();toast(msg)}
+function v362FreezeOpen(){
+ const caps=(V357.m?.capabilities||[]),now=new Date(),end=new Date(now.getTime()+864e5);
+ v356Confirm({title:'تجميد التعديل لفترة',ok:'تجميد',danger:true,
+  body:`<div class="v362-form"><label class="v356-lbl" for="v362From">من</label><input id="v362From" type="datetime-local" value="${v362Local(now)}">
+  <label class="v356-lbl" for="v362To">إلى</label><input id="v362To" type="datetime-local" value="${v362Local(end)}">
+  <label class="v356-lbl">الإجراءات</label><label class="v362-all"><input type="checkbox" id="v362AllCaps" checked onchange="document.getElementById('v362Caps').hidden=this.checked"> كل الإجراءات</label>
+  <div id="v362Caps" class="v356-grid" hidden>${caps.map(c=>`<label><input type="checkbox" data-cap="${esc(c.code)}"> ${esc(c.label)}</label>`).join('')}</div>
+  <label class="v356-lbl">الأدوار</label><label class="v362-all"><input type="checkbox" id="v362AllRoles" checked onchange="document.getElementById('v362Roles').hidden=this.checked"> كل الأدوار (عدا مدير النظام)</label>
+  <div id="v362Roles" class="v356-grid" hidden>${V357_ROLES.map(r=>`<label><input type="checkbox" data-role="${r}"> ${esc(ROLE_LABELS[r]||r)}</label>`).join('')}</div>
+  <p class="cell-sub">أقصى مدة 60 يومًا. أثناء التجميد يرى المستخدم شريطًا بموعد انتهائه، ويُرفض الإجراء برسالة «موقوف لدورك من مركز التحكم».</p></div>`,
+  onOk:async reason=>{
+   const f=v362Iso(document.getElementById('v362From').value),t=v362Iso(document.getElementById('v362To').value);
+   if(!f||!t)throw new Error('حدّد البداية والنهاية');
+   const cs=document.getElementById('v362AllCaps').checked?null:[...document.querySelectorAll('#v362Caps [data-cap]:checked')].map(x=>x.dataset.cap);
+   const rs=document.getElementById('v362AllRoles').checked?null:[...document.querySelectorAll('#v362Roles [data-role]:checked')].map(x=>x.dataset.role);
+   if(cs&&!cs.length)throw new Error('اختر إجراءً واحدًا على الأقل أو «كل الإجراءات»');
+   if(rs&&!rs.length)throw new Error('اختر دورًا واحدًا على الأقل أو «كل الأدوار»');
+   const r=await sb.rpc('admin_freeze_add',{p_starts:f,p_ends:t,p_caps:cs,p_roles:rs,p_reason:reason||null});if(r.error)throw r.error;
+   await v362SchedAfter('حُفظ التجميد')}});
+}
+function v362FreezeCancel(id){
+ const f=(V362.sched?.freezes||[]).find(x=>x.id===id);
+ v356Confirm({title:'إلغاء التجميد',ok:'إلغاء التجميد',body:`<p>${esc(f?v362Scope(f):'')}</p><p class="cell-sub">يعود كل شيء كما في مصفوفة الصلاحيات فورًا.</p>`,
+  onOk:async reason=>{const r=await sb.rpc('admin_freeze_cancel',{p_id:id,p_reason:reason||null});if(r.error)throw r.error;await v362SchedAfter('أُلغي التجميد')}});
+}
+function v362FlagOpen(){
+ const st=V362.sched?.settings||{},at=new Date(Math.ceil((Date.now()+36e5)/3e5)*3e5);
+ v356Confirm({title:'موعد فتح/إغلاق مفتاح البوابة',ok:'حفظ الموعد',
+  body:`<div class="v362-form"><label class="v356-lbl" for="v362Flag">المفتاح</label><select id="v362Flag">${Object.entries(V362_FLAGS).map(([k,l])=>`<option value="${k}">${esc(l)} (الآن: ${st[k]?'مفتوح':'مغلق'})</option>`).join('')}</select>
+  <label class="v356-lbl" for="v362Val">الإجراء</label><select id="v362Val"><option value="0">إغلاق</option><option value="1">فتح</option></select>
+  <label class="v356-lbl" for="v362At">الموعد</label><input id="v362At" type="datetime-local" value="${v362Local(at)}">
+  <p class="cell-sub">يُنفَّذ خلال 5 دقائق من الموعد ويُسجَّل في التدقيق. للفتح ثم الإغلاق أضف موعدين.</p></div>`,
+  onOk:async reason=>{
+   const t=v362Iso(document.getElementById('v362At').value);if(!t)throw new Error('حدّد الموعد');
+   const r=await sb.rpc('admin_flag_schedule_add',{p_flag:document.getElementById('v362Flag').value,p_value:document.getElementById('v362Val').value==='1',p_run_at:t,p_reason:reason||null});if(r.error)throw r.error;
+   await v362SchedAfter('حُفظ الموعد')}});
+}
+function v362FlagCancel(id){
+ const s=(V362.sched?.flags||[]).find(x=>x.id===id);
+ v356Confirm({title:'إلغاء الموعد',ok:'إلغاء الموعد',body:s?`<p>${s.value?'فتح':'إغلاق'}: ${esc(V362_FLAGS[s.flag]||s.flag)} — ${esc(v362DT(s.run_at))}</p>`:'',
+  onOk:async reason=>{const r=await sb.rpc('admin_flag_schedule_cancel',{p_id:id,p_reason:reason||null});if(r.error)throw r.error;await v362SchedAfter('أُلغي الموعد')}});
+}
+v355Refresh=(function(base){return async function(){V362.sched=null;V362.dig=null;return base.apply(this,arguments)}})(v355Refresh);
+
+/* ── (3) الملخص الأسبوعي ── */
+async function v362DigLoad(){V362.digLoading=true;V362.digErr='';try{const r=await sb.rpc('admin_digest_latest');if(r.error)throw r.error;V362.dig=r.data||{}}catch(e){V362.digErr=v356Err(e)}V362.digLoading=false}
+function v362DigCard(){
+ const g=V362.dig;if(!g||!g.id)return '';
+ const d=g.data||{},w=d.week||{},sig=(d.signals||[]).filter(x=>Number(x.count)>0);
+ const bad=sig.filter(x=>x.level==='bad').length,warn=sig.filter(x=>x.level==='warn').length,unseen=!g.seen_at;
+ return `<div class="notice ${bad?'danger':warn?'warn':'ok'} v362-dig"><div><b>📬 الملخص الأسبوعي</b> <span class="cell-sub">${esc(v362DT(g.created_at))}${unseen?' · جديد':' · اطّلعت عليه'}</span></div>
+ <div class="v362-dig-l">${sig.length?`<b>${v355N(sig.length)} إشارة تحتاج انتباهك</b> (${v355N(bad)} خطر، ${v355N(warn)} تنبيه)`:'لا إشارات خطر'} · ${v355N(w.sessions)} دخول من ${v355N(w.users)} مستخدم · ${v355N(w.actions)} إجراء مسجّل</div>
+ <div class="v356-actions"><button type="button" class="btn secondary" onclick="v362DigShow()">عرض التفاصيل</button>${unseen?`<button type="button" class="btn ok" onclick="v362DigSeen(this)">تم الاطلاع</button>`:''}</div></div>`;
+}
+function v362DigShow(){
+ const g=V362.dig;if(!g||!g.id)return;const d=g.data||{},w=d.week||{},c=d.controls||{};
+ const lv={bad:['danger','خطر'],warn:['warn','تنبيه'],info:['info','معلومة']};
+ const rows=(d.signals||[]).filter(x=>Number(x.count)>0).map(x=>{const [cl,l]=lv[x.level]||lv.info,it=x.items||[];
+  return `<details class="v355-sig ${cl}"><summary><span class="badge ${cl}">${l}</span><span class="v355-grow">${esc(x.title)}</span><b class="v355-count">${v355N(x.count)}</b></summary><div class="v355-items">${it.map(i=>`<span>${esc(i.name||'—')}${i.stage?` <small>(${esc(i.stage)})</small>`:''}${i.count?` <small>— ${v355N(i.count)}</small>`:''}</span>`).join('')}${Number(x.count)>it.length?`<span class="cell-sub">و${v355N(x.count-it.length)} أخرى في «نظرة عامة»</span>`:''}</div></details>`}).join('');
+ const kv=(l,v)=>`<div class="v362-kv"><span>${l}</span><b>${v}</b></div>`;
+ modal(`<h3>📬 الملخص الأسبوعي</h3><div class="cell-sub">من ${esc(v362DT(g.period_from))} إلى ${esc(v362DT(g.period_to))}</div>
+ <h4 class="v355-h">إشارات الخطر</h4>${rows||'<div class="notice ok">لا إشارات خطر.</div>'}
+ <h4 class="v355-h">الأسبوع</h4><div class="v362-kvs">${kv('مرات الدخول',v355N(w.sessions))}${kv('مستخدمون دخلوا',v355N(w.users))}${kv('إجراءات مسجّلة',v355N(w.actions))}${kv('أفعال مركز التحكم',v355N(w.cc_actions))}${kv('محاولات دخول مرفوضة',v355N(w.login_failures))}${kv('محاولات بوابة مرفوضة',v355N(w.portal_failures))}</div>
+ ${(w.top_actors||[]).length?`<h4 class="v355-h">الأكثر عملًا</h4><div class="v355-chips">${w.top_actors.map(a=>`<span class="badge">${esc(a.name)}: ${v355N(a.n)}</span>`).join('')}</div>`:''}
+ <h4 class="v355-h">الضوابط</h4><div class="v362-kvs">${kv('خلايا ممنوعة في المصفوفة',v355N(c.blocked_rules))}${kv('صلاحيات موسَّعة مفتوحة',v355N(c.widened_rules))}${kv('استثناءات سارية',v355N(c.grants_active))}${kv('استثناءات تنتهي خلال أسبوع',v355N(c.grants_expiring_7d))}${kv('تجميد ساري أو قادم',v355N(c.freezes_open))}${kv('مواعيد مفاتيح منتظرة',v355N(c.flags_pending))}${kv('تسجيل البيانات من البوابة',c.editing_open?'مفتوح':'مغلق')}${kv('إدخال الجداول من البوابة',c.timetable_open?'مفتوح':'مغلق')}</div>
+ <div class="actions">${!g.seen_at?`<button type="button" class="btn ok" onclick="v362DigSeen(this)">تم الاطلاع</button>`:''}<button type="button" class="btn secondary" onclick="v362DigRun(this)">تحديث الملخص الآن</button><button type="button" class="btn secondary" onclick="closeModal()">إغلاق</button></div>`);
+}
+async function v362DigSeen(btn){
+ const g=V362.dig;if(!g||!g.id)return;if(btn)btn.disabled=true;
+ const r=await sb.rpc('admin_digest_seen',{p_id:g.id});if(r.error){if(btn)btn.disabled=false;return moneySafeError(r.error)}
+ const inModal=!!(btn&&btn.closest('#modal'));await v362DigLoad();if(inModal)closeModal();
+ document.querySelectorAll('.v362-dash').forEach(e=>e.remove());if(document.getElementById('v355Wrap'))v355Render();toast('تم تسجيل الاطلاع');
+}
+async function v362DigRun(btn){if(btn)btn.disabled=true;const r=await sb.rpc('admin_digest_run');if(r.error){if(btn)btn.disabled=false;return moneySafeError(r.error)}await v362DigLoad();v362DigShow();if(document.getElementById('v355Wrap'))v355Render();toast('حُدّث الملخص')}
+v355Over=(function(base){return function(){
+ if(!V362.dig&&!V362.digLoading&&!V362.digErr)v362DigLoad().then(()=>{if(V355.tab==='over'&&document.getElementById('v355Wrap'))v355Render()});
+ return v362DigCard()+base.apply(this,arguments);
+}})(v355Over);
+/* الرئيسية لمدير النظام: الملخص يظهر حتى «تم الاطلاع» */
+const __v362BaseDashboard=dashboardPage;
+dashboardPage=async function(options={}){
+ const base=await __v362BaseDashboard.apply(this,arguments);
+ if(profile?.role!=='admin')return base;
+ try{await v362DigLoad()}catch(e){}
+ const g=V362.dig;if(!g||!g.id||g.seen_at)return base;
+ return `<div class="v362-dash">${v362DigCard().replace('عرض التفاصيل</button>','عرض التفاصيل</button><button type="button" class="btn secondary" onclick="go(\'controlCenter\')">مركز التحكم</button>')}</div>`+base;
+};
+/* v362-end */
 </script>
 
 <div id="reportPreviewOverlay" class="report-preview-overlay" role="dialog" aria-modal="true" aria-label="معاينة التقرير" aria-hidden="true">
