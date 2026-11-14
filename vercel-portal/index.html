@@ -6,7 +6,7 @@
 <meta name="robots" content="noindex,nofollow">
 <meta name="referrer" content="no-referrer">
 <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; connect-src https://xehjwzszhsaqdqmcatum.supabase.co; img-src data: 'self'; manifest-src 'self'; worker-src 'self'; base-uri 'none'; form-action 'none'">
-<title>بوابة المعلمين — v376</title>
+<title>بوابة المعلمين — v377</title>
 <link rel="manifest" href="/portal.webmanifest">
 <meta name="theme-color" content="#0f214d">
 <meta name="mobile-web-app-capable" content="yes">
@@ -507,7 +507,7 @@ body.is-login .wrap{max-width:none;padding:0}
       try {
         var r = await rpc('teacher_portal_login', { p_civil: c, p_phone: p });
         if (!r || r.ok !== true) { showErr(box, reasonMsg(r || {})); btnBusy(btn, false); return; }
-        WHO = { civil: c, phone: p, is_sup: !!r.is_sup, supLabel: r.sup_kind === 'officer' ? 'مسؤول البيانات' : 'مشرف مدرسة', role: null };
+        WHO = { civil: c, phone: p, is_sup: !!r.is_sup, supLabel: r.sup_kind === 'officer' ? 'مسؤول البيانات' : r.sup_kind === 'solo' ? 'المعلم الأساسي بالمدرسة' : 'مشرف مدرسة', role: null };
         if (WHO.is_sup) { go('rolepick'); return; }
         await enterAs('teacher', btn, box);
       } catch (e) { showErr(box, errMsg(e)); btnBusy(btn, false); }
