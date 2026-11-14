@@ -6,7 +6,7 @@
 <meta name="robots" content="noindex,nofollow">
 <meta name="referrer" content="no-referrer">
 <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; connect-src https://xehjwzszhsaqdqmcatum.supabase.co; img-src data: 'self'; manifest-src 'self'; worker-src 'self'; base-uri 'none'; form-action 'none'">
-<title>بوابة المعلمين — v373</title>
+<title>بوابة المعلمين — v376</title>
 <link rel="manifest" href="/portal.webmanifest">
 <meta name="theme-color" content="#0f214d">
 <meta name="mobile-web-app-capable" content="yes">
@@ -99,6 +99,24 @@ summary{cursor:pointer;font-weight:600;padding:4px 0}
 .ltr{direction:ltr;unicode-bidi:embed;display:inline-block}
 .spin{display:inline-block;width:16px;height:16px;border:3px solid #fff5;border-top-color:#fff;border-radius:50%;animation:sp .8s linear infinite;vertical-align:middle;margin-inline-end:6px}
 @keyframes sp{to{transform:rotate(360deg)}}
+
+/* v376: إسناد وإلغاء إسناد الفصول (مشرف المدرسة) */
+.asg-card{border:1px solid var(--border);border-radius:12px;margin:0 0 14px;overflow:hidden}
+.asg-gh{background:#f4f6fb;padding:10px 14px;display:flex;justify-content:space-between;gap:8px;align-items:center}
+.asg-gh span{color:var(--muted);font-size:.85rem}
+.asg-body{padding:12px 14px}
+.asg-stat{font-size:.88rem;color:var(--muted);margin:0 0 10px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.asg-stat b{color:var(--ok)}.asg-stat b.w{color:#92400e}
+.asg-bar{display:inline-block;width:90px;height:8px;background:#e6eaf3;border-radius:6px;overflow:hidden}.asg-bar i{display:block;height:100%;background:var(--ok)}.asg-bar.part i{background:#d99a2b}
+.asg-chips{display:grid;grid-template-columns:repeat(auto-fill,minmax(88px,1fr));gap:8px}
+.asg-chip{min-height:56px;min-width:0;width:auto;padding:5px 6px;border-radius:10px;border:1px solid #bfe0cd;background:#e5f4ec;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;font-weight:700;color:#1f7a4d}
+.asg-chip b{font-size:1.1rem;line-height:1.2}
+.asg-chip small{font-size:.72rem;max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-weight:600}
+.asg-chip.free{border:2px dashed #d99a2b;background:var(--warn-bg);color:#92400e}
+.asg-ov{position:fixed;inset:0;background:rgba(15,33,77,.45);z-index:50}
+.asg-sheet{position:fixed;inset-inline:0;bottom:0;z-index:51;background:#fff;border-radius:16px 16px 0 0;max-height:82vh;overflow:auto;padding:16px;max-width:640px;margin:0 auto;box-shadow:0 -4px 20px rgba(0,0,0,.2)}
+.asg-sheet h3{margin:0 0 6px;font-size:1.05rem}
+.asg-danger{background:var(--err);color:#fff;width:100%}
 
 /* v305: جدول المعلم — شبكة واحدة بلا تمرير */
 .card.tt{padding:12px 8px}
@@ -296,6 +314,9 @@ body.is-login .wrap{max-width:none;padding:0}
       case 'no_change': return 'لا توجد تعديلات لإرسالها. غيّر بيانًا أو فصلًا أولًا.';
       case 'no_term': return 'لا يوجد فصل دراسي نشط حاليًا.';
       case 'invalid': return 'راجع الحقل: ' + (f || 'غير معروف') + '.';
+      case 'teacher_not_allowed': return 'هذا المعلم غير متاح للتدريس بهذه المدرسة حاليًا.';
+      case 'gone': return 'هذا الإسناد لم يعد موجودًا.';
+      case 'no_requirement': return 'هذه المادة غير مقررة لهذا الفصل.';
       case 'no_phone': return 'هاتفك غير مسجّل في البرنامج؛ تواصل مع موجهك لتسجيله ثم تستطيع إكمال بياناتك.';
       default: return 'تعذّر تنفيذ الطلب. حاول مرة أخرى.';
     }
@@ -1521,10 +1542,16 @@ body.is-login .wrap{max-width:none;padding:0}
     }
     q.addEventListener('input', function () { sup.q = q.value; draw(); });
     draw();
+    var abox = errbox();
+    var abtn = mkBtn('btn', '🧩 الفصول والمجموعات — إسناد وإلغاء إسناد', async function (ev) {
+      hideErr(abox); var b = ev.currentTarget; btnBusy(b, true, 'جارٍ التحميل...');
+      try { S.asg = { data: await asgLoad() }; go('supassign'); } catch (e) { showErr(abox, asgMsg(e)); btnBusy(b, false); }
+    }, { id: 'sup-assign-open' });
     return h('div', { class: 'card' },
       suptop(sch.name, sup.schools.length > 1 ? '‹ المدارس' : '‹ الرئيسية', sup.schools.length > 1 ? function () { go('supschools'); } : goHome),
       h('p', { class: 'sub', style: 'text-align:right' }, stageTitle(sch.stage_key) + ' · ' + sup.teachers.length + ' معلم'),
-      h('div', { class: 'note' }, 'البوابة الآن لعرض البيانات والاستعلام، ويمكنك إدخال جدول المعلم من بطاقته.'),
+      h('div', { class: 'note' }, 'البوابة الآن لعرض البيانات والاستعلام، ويمكنك إدخال جدول المعلم من بطاقته، وإسناد الفصول للمعلمين وإلغاء إسنادها.'),
+      abtn, abox, h('div', { style: 'height:10px' }),
       q, listEl);
   };
 
@@ -1635,6 +1662,110 @@ body.is-login .wrap{max-width:none;padding:0}
       }, { id: 'btn-back-school' }),
       h('div', { style: 'height:10px' }),
       mkBtn('btn2', 'الرئيسية', goHome, { id: 'btn-home' })));
+  };
+
+  /* ---------- v376: الفصول والمجموعات — إسناد وإلغاء إسناد (مشرف المدرسة / مسؤول البيانات) ---------- */
+  function asgAuth() { var a = S.sup.auth; return { p_civil: a.civil, p_phone: a.phone, p_school_id: S.sup.school.id }; }
+  async function asgLoad() {
+    var r = await rpc('teacher_portal_assign_board', asgAuth());
+    if (!r || r.ok !== true) throw (r || { reason: 'x' });
+    return r;
+  }
+  function asgMsg(r) {
+    if (r && r.reason === 'closed') return 'إسناد الفصول مغلق حاليًا.';
+    if (r && r.reason === 'taken') return 'هذا الفصل أُسند بالفعل لمعلم آخر. تم تحديث القائمة.';
+    if (r && typeof r.reason === 'string' && /[؀-ۿ]/.test(r.reason)) return r.reason;
+    return errMsg(r);
+  }
+  function asgTileNo(t, multi) { var m = /(\d+)\s*$/.exec(t.class_label || ''); return (!multi && m) ? m[1] : (t.class_label || ''); }
+
+  VIEWS.supassign = function () {
+    var A = S.asg, box = errbox(), host = h('div', { id: 'asg-host' }), sheet = h('div', { id: 'asg-sheet' });
+    function find(t) { var r = null; A.data.classes.forEach(function (x) { if (x.class_id === t.class_id && x.subject_id === t.subject_id) r = x; }); return r; }
+    function closeSheet() { sheet.replaceChildren(); }
+    async function reload() { A.data = await asgLoad(); paint(); }
+    function multiOf(t) { return A.data.classes.filter(function (x) { return x.class_id === t.class_id; }).length > 1; }
+    function tileTitle(t) { return (t.grade_label || '').replace(/\s+(الابتدائي|الإعدادي|الثانوي).*$/, '') + ' — ' + (t.class_label || '') + (t.subject_name && multiOf(t) ? ' — ' + t.subject_name : ''); }
+
+    function showAssigned(t) {
+      var sb = errbox();
+      var cancel = mkBtn('asg-danger', 'إلغاء الإسناد', async function (ev) {
+        hideErr(sb); var b = ev.currentTarget; btnBusy(b, true, 'جارٍ الإلغاء...');
+        try {
+          var r = await rpc('teacher_portal_sup_unassign', Object.assign(asgAuth(), { p_assignment_id: t.assignment_id }));
+          if (!r || r.ok !== true) { r = r || {}; showErr(sb, asgMsg(r)); if (r.reason === 'gone') await reload(); btnBusy(b, false); return; }
+          await reload();
+          var nt = find(t); if (nt && !nt.assignment_id) showPicker(nt, true); else closeSheet();
+        } catch (e) { showErr(sb, asgMsg(e)); btnBusy(b, false); }
+      }, { id: 'asg-cancel' });
+      sheet.replaceChildren(h('div', { class: 'asg-ov', onclick: closeSheet }),
+        h('div', { class: 'asg-sheet', id: 'asg-panel' },
+          h('h3', null, tileTitle(t)),
+          h('p', { class: 'sub', style: 'text-align:right' }, 'المعلم المسند: ' + (t.teacher_name || '')),
+          t.slots > 0 ? h('div', { class: 'warn' }, 'إلغاء الإسناد سيزيل ' + perLabel(t.slots) + ' من جدول هذا المعلم لهذا الفصل.') : null,
+          sb, cancel, h('div', { style: 'height:8px' }), mkBtn('btn2', 'إغلاق', closeSheet, { id: 'asg-close' })));
+    }
+
+    function showPicker(t, afterCancel) {
+      var sb = errbox(), q = h('input', { type: 'text', id: 'asg-q', placeholder: 'ابحث باسم المعلم', autocomplete: 'off' }), list = h('div', { class: 'list', id: 'asg-teachers' });
+      function draw() {
+        list.replaceChildren();
+        var toks = arNorm(q.value).split(' ').filter(Boolean);
+        var res = A.data.teachers.filter(function (x) { var n = arNorm(x.full_name); return toks.every(function (tk) { return n.indexOf(tk) >= 0; }); });
+        if (!res.length) { list.appendChild(h('div', { class: 'empty' }, 'لا يوجد معلم بهذا الاسم')); return; }
+        res.forEach(function (x) {
+          list.appendChild(h('button', { type: 'button', 'data-teacher': x.id, onclick: async function () {
+            hideErr(sb); list.querySelectorAll('button').forEach(function (z) { z.disabled = true; });
+            try {
+              var r = await rpc('teacher_portal_sup_assign', Object.assign(asgAuth(), { p_class_id: t.class_id, p_subject_id: t.subject_id, p_teacher_id: x.id }));
+              if (!r || r.ok !== true) {
+                r = r || {}; showErr(sb, asgMsg(r));
+                if (r.reason === 'taken') { await reload(); closeSheet(); } else list.querySelectorAll('button').forEach(function (z) { z.disabled = false; });
+                return;
+              }
+              closeSheet(); await reload();
+            } catch (e) { showErr(sb, asgMsg(e)); list.querySelectorAll('button').forEach(function (z) { z.disabled = false; }); }
+          } },
+            h('span', null, x.full_name), x.is_home ? null : h('span', { class: 'tag c' }, 'منتدب'),
+            h('small', { style: 'display:block;color:var(--muted);font-weight:400' }, [x.specialty, x.load ? perLabel(x.load) + ' هنا' : 'بدون حصص هنا'].filter(Boolean).join(' · '))));
+        });
+      }
+      q.addEventListener('input', draw); draw();
+      sheet.replaceChildren(h('div', { class: 'asg-ov', onclick: closeSheet }),
+        h('div', { class: 'asg-sheet', id: 'asg-panel' },
+          h('h3', null, 'إسناد: ' + tileTitle(t)),
+          afterCancel ? h('div', { class: 'note' }, 'أُلغي الإسناد. اختر معلمًا آخر لهذا الفصل، أو أغلق وسيبقى غير مسند.') : null,
+          q, list, sb, mkBtn('btn2', 'إغلاق', closeSheet, { id: 'asg-close' })));
+    }
+
+    function paint() {
+      host.replaceChildren();
+      var items = A.data.classes, groups = [], gi = {};
+      items.forEach(function (c) { var k = c.grade_label || ''; if (!(k in gi)) { gi[k] = groups.length; groups.push({ label: k, items: [] }); } groups[gi[k]].items.push(c); });
+      if (!groups.length) host.appendChild(h('div', { class: 'empty' }, 'لا توجد فصول مقررة لهذه المدرسة.'));
+      groups.forEach(function (g) {
+        var a = g.items.filter(function (x) { return x.assignment_id; }).length, f = g.items.length - a;
+        host.appendChild(h('div', { class: 'asg-card' },
+          h('div', { class: 'asg-gh' }, h('b', null, g.label.replace(/\s+(الابتدائي|الإعدادي|الثانوي).*$/, '')), h('span', null, g.items.length + ' فصل • ' + a + ' مسند')),
+          h('div', { class: 'asg-body' },
+            h('div', { class: 'asg-stat' }, h('span', null, h('b', null, String(a)), ' مسند', f ? [' · ', h('b', { class: 'w' }, String(f)), ' ينتظر الإسناد'] : ' ✔'),
+              h('span', { class: 'asg-bar' + (f ? ' part' : '') }, h('i', { style: 'width:' + Math.round(a * 100 / g.items.length) + '%' }))),
+            h('div', { class: 'asg-chips' }, g.items.map(function (t) {
+              var multi = multiOf(t);
+              return h('button', { type: 'button', class: 'asg-chip' + (t.assignment_id ? '' : ' free'), 'data-class': t.class_id, 'data-subject': t.subject_id,
+                onclick: function () { hideErr(box); if (t.assignment_id) showAssigned(t); else showPicker(t, false); } },
+                h('b', null, asgTileNo(t, multi)),
+                h('small', null, (multi && t.subject_name ? t.subject_name + ' · ' : '') + (t.teacher_name || 'غير مسند')));
+            })))));
+      });
+    }
+    paint();
+    return h('div', { class: 'card' },
+      suptop('الفصول والمجموعات', '‹ المعلمون', async function () { try { await openSchool(S.sup.school.id); } catch (e) { go('supschool'); } }),
+      h('h2', null, S.sup.school.name),
+      A.data.assign_open === false ? h('div', { class: 'warn', id: 'asg-closed' }, 'إسناد الفصول مغلق حاليًا، يمكنك المراجعة فقط.') : null,
+      h('p', { class: 'sub', style: 'text-align:right' }, 'اضغط فصلًا مسندًا لإلغاء إسناده، أو فصلًا غير مسند لإسناده لمعلم.'),
+      box, host, sheet);
   };
 
   /* ---------- التشغيل ---------- */
