@@ -14430,8 +14430,8 @@ const V357_ROLES=['stage_coordinator','supervisor','senior_teacher','school_mana
 /* v376: خلايا غير متاحة أصلًا (لا مسار للدور في القاعدة)، من سياسات القاعدة ودوالها؛ ما لم يُتأكد منه يبقى قابلًا للتحكم */
 const V357_NA={
  first_supervisor:{all:'الموجه الأول للعرض والتقارير فقط — الكتابة مسحوبة منه'},
- teacher:{all:'المعلم يرى بياناته فقط ولا يكتب في بيانات المدرسة',except:['completion.submit']},
- school_manager:{all:'مدير المدرسة بلا مسار لهذا الإجراء',except:['timetable.manage']},
+ teacher:{all:'المعلم يرى بياناته فقط ولا يكتب في بيانات المدرسة'},
+ school_manager:{all:'مدير المدرسة بلا مسار لهذا الإجراء',except:['timetable.manage','completion.submit']},
  senior_teacher:{caps:{'school.settings':'حساب المدرسة لا يملك هذا الإجراء','account.create':'حساب المدرسة لا ينشئ حسابات'}},
  stage_coordinator:{caps:{'account.create':'مغلق افتراضيًا — يُفتح من «توسيع محكوم» أسفل الصفحة'}}
 };
