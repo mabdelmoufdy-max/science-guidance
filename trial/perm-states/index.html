@@ -14426,7 +14426,7 @@ v355UsersList=function(){return `<div class="v356-actions"><button type="button"
 /* v356-end */
 /* v357-begin: مركز التحكم — المرحلة 3: مصفوفة الصلاحيات (إيقاف إجراء لدور، مفروض في قاعدة البيانات بمشغلات v357). admin_permission_matrix / admin_set_permissions */
 const V357={m:null,pending:{},err:'',loading:false};
-const V357_ROLES=['stage_coordinator','supervisor','senior_teacher','school_manager','teacher','first_supervisor'];
+const V357_ROLES=['stage_coordinator','supervisor','school_manager','teacher','first_supervisor'];/* v376: عمود «حساب المدرسة» (senior_teacher) مخفي مؤقتًا بطلب المالك — قواعده في القاعدة بلا تغيير */
 /* v376: خلايا غير متاحة أصلًا (لا مسار للدور في القاعدة)، من سياسات القاعدة ودوالها؛ ما لم يُتأكد منه يبقى قابلًا للتحكم */
 const V357_NA={
  first_supervisor:{all:'الموجه الأول للعرض والتقارير فقط — الكتابة مسحوبة منه'},
