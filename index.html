@@ -1,4 +1,5 @@
 <!doctype html>
+<!-- v376: مصفوفة الصلاحيات (مركز التحكم): ثلاث حالات بدل اثنتين — «مسموح» و«ممنوع» و«غير متاح أصلًا لهذا الدور» (خلية رمادية بلا ضغط وسببها في التلميح)؛ التعيين ثابت في الواجهة V357_NA من سياسات القاعدة ودوالها (الموجه الأول: قراءة فقط، المعلم: لا كتابة، مدير المدرسة: الجداول فقط…)؛ خلية «إنشاء حساب دخول» للمنسق عليها «فتح ↓» يقود لصندوق «توسيع محكوم». واجهة فقط، بلا قاعدة بيانات ولا تغيير في أي صلاحية فعلية. -->
 <!-- v375: بحث المدرسة في «تعديل بيانات المعلم» (المدرسة الأصلية والمنتدب إليها): قائمة منسدلة تحت الحقل بكل المدارس المطابقة (حتى 15) مع المرحلة بدل شريط اقتراح المتصفح الذي يعرض مدرسة واحدة على الهاتف — بقرار المستخدم «أ» 2026-11-13. -->
 <!-- v374: المعلم في إجازة مجددة لا يظهر في التقارير (عدا تقريري الإجازات والتوجيه المالي وتقرير المعلم نفسه) ولا في قائمة «المعلمون» عند «حالة المعلم: الكل» — يبقى ظاهرًا باختيار «إجازة»؛ يعود تلقائيًا عند تسجيل عودته. «إنجاز الجداول» يستبعده من قاعدة البيانات (migration v374). بقرار المستخدم «ب» 2026-11-13. -->
 <!-- v371: زر التثبيت ⬇ في الشريط العلوي: يظهر دائمًا خارج التطبيق المثبّت (v369Standalone)، وإن لم تتوفر نافذة التثبيت من المتصفح أو فشلت تُعرض خطوات التثبيت اليدوي حسب الجهاز (v369InstallHelp) بدل ألا يحدث شيء. -->
@@ -8,7 +9,6 @@
 <!-- v361: مركز التحكم — الاقتراح ٢: التدقيق بـadmin_audit_search2 (نوع الإجراء من admin_audit_actions بأسماء عربية، بحث في المحتوى، target_name، «تحميل المزيد» بـp_before)، تقرير A4 auditLog وExcel (v169Xlsx)، «سجل الحساب» في ملف المستخدم (p_target، 90 يومًا)، وتقرير permState «حالة الصلاحيات الحالية» من تبويب الصلاحيات؛ و«ما يراه» يُسجَّل مرة كل 10 دقائق. قاعدة البيانات v361_audit_readable. -->
 <!-- v360: فرض مصفوفة الصلاحيات في كل الطرق: my_capabilities() بعد الدخول وتبديل الدور ← شريط «إجراءات موقوفة» + أزرار باهتة بقفل + لفّ دوال الإجراءات (V360_FUNCS) فتشرح بدل فتح النموذج؛ دوال الحافة execute-teacher-delegation v5 وsupervisor-save-and-approve v5 وsupervisor-create-class-and-approve v3 وcreate-system-user v13 تفحص service_cap_allowed (قاعدة البيانات v360_cap_enforcement + إجراء account.create). إصلاحات مركز التحكم: منع تطبيق نقل مدارس لموجه غير مسجّل في مرحلتها، تحديث نشاط الملف بعد الأفعال، ونافذة الأدوار تخفي ما لا ينطبق (has_sup/has_teacher). -->
 <!-- v359: نافذة «ما الذي يراه ويفعله؟»: كل إجراء زر — منع/سماح لهذا الشخص فقط (دائم حتى يُلغى أو أسبوع/شهر/أيام) عبر admin_grant_add، أو إلغاء استثنائه عبر admin_grant_revoke، ثم يُعاد الحساب. قاعدة البيانات v359_person_permission_toggle (expires_at فارغ = دائم؛ الإضافة تلغي الاستثناء السابق على الإجراء نفسه). -->
-<!-- v358: مركز التحكم — المرحلة 4: تبويب «الوصول المؤقت والمراجعة» (admin_grants_list/admin_grant_add/admin_grant_revoke، admin_access_review_list/admin_access_review_decide)، «ما الذي يراه ويفعله؟» في ملف المستخدم (admin_view_as قراءة فقط)، و«تراجع» في التدقيق لأفعال cc_* (admin_revert_action مرة واحدة لكل فعل). قاعدة البيانات v358_control_center_governance. -->
 <html lang="ar" dir="rtl">
 <head>
 <!-- إعداد: أ/ محمود عبدالمفدي محمد أبوالنجا | الصفة: معلم -->
@@ -16,7 +16,7 @@
 <script>/* v226: العنوان الموحد — انظر التعليق أعلى الملف */(function(){try{if(/\.github\.io$/.test(location.hostname)&&/^\/science-guidance\/?(index\.html)?$/.test(location.pathname)&&!/[?&]stay\b/.test(location.search))location.replace('https://teachers-data-portal.vercel.app/app/'+location.hash)}catch(e){}})();</script>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#152c43">
-<title>نظام توجيه العلوم — v375</title>
+<title>نظام توجيه العلوم — v376</title>
 <link rel="manifest" href="./manifest.webmanifest">
 <link rel="icon" type="image/png" sizes="192x192" href="./app-icon-192.png">
 <link rel="apple-touch-icon" href="./app-icon-192.png">
@@ -2185,6 +2185,8 @@ body.v293-ro select[onchange*="v101ChangeSlot"]{pointer-events:none;opacity:.65}
 .v357-cell{border:1px solid var(--line);border-radius:7px;padding:4px 10px;font:inherit;font-size:12.5px;font-weight:600;cursor:pointer;min-width:66px;background:transparent}
 .v357-cell.on{color:var(--ok);background:var(--ok-bg,transparent);border-color:var(--ok)}
 .v357-cell.off{color:var(--danger);border-color:var(--danger)}
+.v357-cell.na{color:var(--muted,#6b778c);border-style:dashed;background:transparent;cursor:default;display:inline-block;text-align:center}
+.v376-open{display:block;font-size:11px;margin-top:3px;color:var(--primary)}
 .v357-cell.chg{outline:3px solid var(--gold,#c79a2d);outline-offset:1px}
 .v357-cell:focus-visible{outline:2px solid var(--primary);outline-offset:2px}
 .v357-fixed{font-size:12px;color:var(--muted)}
@@ -2609,6 +2611,7 @@ window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();window.v152
 window.addEventListener('appinstalled',()=>{window.v152InstallPrompt=null;v152SyncInstallBtn()});
 if('serviceWorker' in navigator&&location.protocol!=='file:')window.addEventListener('load',()=>navigator.serviceWorker.register('./service-worker.js').catch(()=>{}));
 const V145_NEWS=[
+ ['v376','مركز التحكم ← الصلاحيات: صارت الشاشة تفرّق بين «مسموح» و«ممنوع» و«غير متاح أصلًا» لهذا الدور (رمادي)، فلا تظهر «مسموح» لدور لا يملك الإجراء أساسًا.'],
  ['v375','البحث عن المدرسة في «تعديل بيانات المعلم»: تظهر الآن قائمة بكل المدارس المطابقة تحت الحقل أثناء الكتابة، وتختار المدرسة بلمسة (على الهاتف والكمبيوتر).'],
  ['v374','المعلم في إجازة لم يعد يظهر في التقارير ولا في «إنجاز الجداول» ولا في قائمة المعلمين حتى تُسجَّل عودته. للوصول إليه: «حالة المعلم: إجازة» في صفحة المعلمين، أو تقرير الإجازات.'],
  ['v371','زر التثبيت ⬇ أعلى الصفحة: إن لم تظهر نافذة التثبيت تظهر لك خطوات التثبيت اليدوي حسب جهازك.'],
@@ -14423,7 +14426,16 @@ v355UsersList=function(){return `<div class="v356-actions"><button type="button"
 /* v356-end */
 /* v357-begin: مركز التحكم — المرحلة 3: مصفوفة الصلاحيات (إيقاف إجراء لدور، مفروض في قاعدة البيانات بمشغلات v357). admin_permission_matrix / admin_set_permissions */
 const V357={m:null,pending:{},err:'',loading:false};
-const V357_ROLES=['stage_coordinator','supervisor','senior_teacher','school_manager','teacher','first_supervisor'];
+const V357_ROLES=['stage_coordinator','supervisor','school_manager','teacher','first_supervisor'];/* v376: عمود «حساب المدرسة» (senior_teacher) مخفي مؤقتًا بطلب المالك — قواعده في القاعدة بلا تغيير */
+/* v376: خلايا غير متاحة أصلًا (لا مسار للدور في القاعدة)، من سياسات القاعدة ودوالها؛ ما لم يُتأكد منه يبقى قابلًا للتحكم */
+const V357_NA={
+ first_supervisor:{all:'الموجه الأول للعرض والتقارير فقط — الكتابة مسحوبة منه'},
+ teacher:{all:'المعلم يرى بياناته فقط ولا يكتب في بيانات المدرسة'},
+ school_manager:{all:'مدير المدرسة بلا مسار لهذا الإجراء',except:['timetable.manage','completion.submit']},
+ senior_teacher:{caps:{'school.settings':'حساب المدرسة لا يملك هذا الإجراء','account.create':'حساب المدرسة لا ينشئ حسابات'}},
+ stage_coordinator:{caps:{'account.create':'مغلق افتراضيًا — يُفتح من «توسيع محكوم» أسفل الصفحة'}}
+};
+function v357Na(c,r){const x=V357_NA[r];if(!x)return '';if(x.caps&&x.caps[c])return x.caps[c];if(x.all&&!(x.except||[]).includes(c))return x.all;return ''}
 function v357Key(c,r){return c+'|'+r}
 function v357Rule(c,r){const x=(V357.m?.rules||[]).find(z=>z.cap===c&&z.role===r);return x?!!x.allowed:true}
 function v357Val(c,r){const k=v357Key(c,r);return k in V357.pending?V357.pending[k]:v357Rule(c,r)}
@@ -14431,14 +14443,17 @@ async function v357Load(){V357.loading=true;V357.err='';try{const r=await sb.rpc
 function v357Toggle(c,r){const k=v357Key(c,r),nv=!v357Val(c,r);if(nv===v357Rule(c,r))delete V357.pending[k];else V357.pending[k]=nv;v355Render()}
 function v357Discard(){V357.pending={};v355Render()}
 function v357ResetAll(){(V357.m?.capabilities||[]).forEach(c=>V357_ROLES.forEach(r=>{const k=v357Key(c.code,r);if(!v357Rule(c.code,r))V357.pending[k]=true;else delete V357.pending[k]}));v355Render()}
-function v357Cell(c,r){const on=v357Val(c,r),chg=v357Key(c,r) in V357.pending;
+function v357Cell(c,r){const why=v357Na(c,r);
+ if(why&&v357Rule(c,r)&&!(v357Key(c,r) in V357.pending)){const open=(c==='account.create'&&r==='stage_coordinator')?`<a href="#" class="v376-open" onclick="event.preventDefault();document.querySelector('.v362-widen')?.scrollIntoView({behavior:'smooth'})">فتح ↓</a>`:'';
+  return `<span class="v357-cell na" title="${esc(why)}">غير متاح</span>${open}`}
+ const on=v357Val(c,r),chg=v357Key(c,r) in V357.pending;
  return `<button type="button" class="v357-cell ${on?'on':'off'}${chg?' chg':''}" aria-pressed="${on}" onclick="v357Toggle('${esc(c)}','${r}')" title="${on?'مسموح كما هو الآن — اضغط للمنع':'ممنوع — اضغط للسماح'}">${on?'مسموح':'ممنوع'}</button>`}
 function v357Perm(){
  if(!V357.m&&!V357.err){if(!V357.loading)v357Load();return '<div class="cell-sub">جارٍ التحميل…</div>'}
  if(V357.err)return `<div class="notice danger">${esc(V357.err)}</div><button type="button" class="btn secondary" onclick="V357.m=null;v357Load()">إعادة المحاولة</button>`;
  const caps=V357.m.capabilities||[],acc=V357.m.accounts||{};
  const blocked=caps.reduce((n,c)=>n+V357_ROLES.filter(r=>!v357Rule(c.code,r)).length,0);
- const head=`<div class="v357-intro"><div><b>مصفوفة الصلاحيات</b><div class="cell-sub">«مسموح» = كما يعمل البرنامج الآن بنطاق كل دور. «ممنوع» يوقف الإجراء لهذا الدور فورًا داخل قاعدة البيانات. لا تُوسَّع صلاحية من هنا، ومدير النظام لا يُقيَّد.</div></div>${blocked?`<span class="badge warn">${v355N(blocked)} خلية ممنوعة الآن</span>`:'<span class="badge ok">كل الإجراءات كما هي</span>'}</div>`;
+ const head=`<div class="v357-intro"><div><b>مصفوفة الصلاحيات</b><div class="cell-sub">«مسموح» = غير موقوف من هنا، والدور يملكه بنطاقه. «ممنوع» يوقفه لهذا الدور فورًا داخل قاعدة البيانات. «غير متاح» = الدور لا يملك الإجراء أصلًا (لا يُغيَّر من هنا إلا حيث يظهر «فتح»). مدير النظام لا يُقيَّد.</div></div>${blocked?`<span class="badge warn">${v355N(blocked)} خلية ممنوعة الآن</span>`:'<span class="badge ok">كل الإجراءات كما هي</span>'}</div>`;
  const table=`<div class="v357-tablebox"><table class="v357-table"><thead><tr><th>الإجراء</th>${V357_ROLES.map(r=>`<th>${esc(ROLE_LABELS[r]||r)}<small>${v355N(acc[r]||0)} حساب</small></th>`).join('')}<th>مدير النظام</th></tr></thead><tbody>
  ${caps.map(c=>`<tr><td><b>${esc(c.label)}</b><small>${esc(c.description)}</small></td>${V357_ROLES.map(r=>`<td>${v357Cell(c.code,r)}</td>`).join('')}<td><span class="v357-fixed">دائمًا</span></td></tr>`).join('')}</tbody></table></div>`;
  const cards=`<div class="v357-cards">${caps.map(c=>`<div class="v357-card"><b>${esc(c.label)}</b><small>${esc(c.description)}</small><div class="v357-roles">${V357_ROLES.map(r=>`<div class="v357-rr"><span>${esc(ROLE_LABELS[r]||r)}</span>${v357Cell(c.code,r)}</div>`).join('')}</div></div>`).join('')}</div>`;
