@@ -1,0 +1,3 @@
+-- v385: حفظ «تجاهل المكررين» لكل الأجهزة والمستخدمين (مدير/منسق/موجه). طُبّق عبر migrations v385 وv385b وv385c.
+-- الجدول public.teacher_dup_ignored (pair_key, active, ignored_by, ignored_role, updated_at) — RLS مفعّل بلا صلاحيات مباشرة.
+-- الدوال (SECURITY DEFINER، authenticated فقط وللأدوار الثلاثة بالدور النشط): dup_ignore_list() text[] / dup_ignore_add(key) / dup_ignore_clear() (يعطّل ولا يحذف؛ audit: dup_ignore_add / dup_ignore_clear).
