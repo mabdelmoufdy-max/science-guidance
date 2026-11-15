@@ -1,4 +1,6 @@
 <!doctype html>
+<!-- v382: شاشة «المعلمون» (مدير النظام): زر «المكررون (N)» (مدير النظام: بجوار «المعلمون الموقوفون»؛ المنسق والموجه في نطاقهما) — قائمة أسماء متطابقة (نفس المدرسة/مدرستان) وأرقام قومية تختلف برقم واحد، ولكل حالة زر دمج أو فتح السجل. -->
+<!-- v381: «تعديل بيانات المعلم» (مدير النظام): زر «🔀 دمج مع سجل مكرر» — يختار السجل المكرر في المدرسة الأصلية نفسها وأي السجلين يبقى والرقم القومي الصحيح (اختياري)، ثم admin_merge_teachers (ينقل الإسنادات والجدول والانتدابات ويحفظ لقطة في سجل التدقيق). -->
 <!-- v380: خيارات حالة الإجازة في نموذج الإجازات: «إجازة جديدة» / «إجازة مجددة» / «عودة إلى العمل» بلا عبارة «ماليًا» (النصوص فقط؛ القيم والحسابات بلا تغيير). -->
 <!-- v379: شاشة «اختر طريقة الدخول»: رابط «بوابة المعلمين» أسفل الأدوار (بطلب المستخدم). واجهة فقط. -->
 <!-- v376: مصفوفة الصلاحيات (مركز التحكم): ثلاث حالات بدل اثنتين — «مسموح» و«ممنوع» و«غير متاح أصلًا لهذا الدور» (خلية رمادية بلا ضغط وسببها في التلميح)؛ التعيين ثابت في الواجهة V357_NA من سياسات القاعدة ودوالها (الموجه الأول: قراءة فقط، المعلم: لا كتابة، مدير المدرسة: الجداول فقط…)؛ خلية «إنشاء حساب دخول» للمنسق عليها «فتح ↓» يقود لصندوق «توسيع محكوم». واجهة فقط، بلا قاعدة بيانات ولا تغيير في أي صلاحية فعلية. -->
@@ -7,8 +9,6 @@
 <!-- v371: زر التثبيت ⬇ في الشريط العلوي: يظهر دائمًا خارج التطبيق المثبّت (v369Standalone)، وإن لم تتوفر نافذة التثبيت من المتصفح أو فشلت تُعرض خطوات التثبيت اليدوي حسب الجهاز (v369InstallHelp) بدل ألا يحدث شيء. -->
 <!-- v370: القائمة الجانبية: زر «إدخال بيانات المدارس» بعرض خانة واحدة (حُذفت قاعدة grid-column:1/-1) فيقع بجوار «استكمال البيانات» بدل سطر كامل — بطلب المستخدم. واجهة فقط. -->
 <!-- v366: أيقونة جديدة للبرنامج عند التثبيت على الهاتف (شارة سداسية كحلي بإطار ذهبي: ذرة وكتاب) واسمها تحت الأيقونة «التوجيه» بدل «توجيه العلوم» المقطوع؛ الملفات app-icon-*.png (منها maskable) في manifest.webmanifest وfavicon/apple-touch-icon. الشعار الرسمي داخل البرنامج بلا تغيير. -->
-<!-- v362: مركز التحكم — الاقتراح ٣: «توسيع محكوم» مغلق افتراضيًا في تبويب الصلاحيات (منسق المرحلة ينشئ حسابات دخول معلمي مراحله ويعيد كلمات مرورهم — create-system-user v14 وadmin-reset-user-password v6، والمعلم يُلزم بالتغيير)، تبويب «الجدولة والتجميد» (تجميد إجراءات/أدوار لفترة تنتهي وحدها + مواعيد فتح/إغلاق مفتاحي بوابة المعلمين عبر pg_cron كل 5 دقائق)، والملخص الأسبوعي لمدير النظام في «نظرة عامة» والرئيسية حتى «تم الاطلاع»؛ شريط التجميد للمستخدم مع موعد انتهائه. قاعدة البيانات v362. -->
-<!-- v361: مركز التحكم — الاقتراح ٢: التدقيق بـadmin_audit_search2 (نوع الإجراء من admin_audit_actions بأسماء عربية، بحث في المحتوى، target_name، «تحميل المزيد» بـp_before)، تقرير A4 auditLog وExcel (v169Xlsx)، «سجل الحساب» في ملف المستخدم (p_target، 90 يومًا)، وتقرير permState «حالة الصلاحيات الحالية» من تبويب الصلاحيات؛ و«ما يراه» يُسجَّل مرة كل 10 دقائق. قاعدة البيانات v361_audit_readable. -->
 <html lang="ar" dir="rtl">
 <head>
 <!-- إعداد: أ/ محمود عبدالمفدي محمد أبوالنجا | الصفة: معلم -->
@@ -16,7 +16,7 @@
 <script>/* v226: العنوان الموحد — انظر التعليق أعلى الملف */(function(){try{if(/\.github\.io$/.test(location.hostname)&&/^\/science-guidance\/?(index\.html)?$/.test(location.pathname)&&!/[?&]stay\b/.test(location.search))location.replace('https://teachers-data-portal.vercel.app/app/'+location.hash)}catch(e){}})();</script>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#152c43">
-<title>نظام توجيه العلوم — v380</title>
+<title>نظام توجيه العلوم — v382</title>
 <link rel="manifest" href="./manifest.webmanifest">
 <link rel="icon" type="image/png" sizes="192x192" href="./app-icon-192.png">
 <link rel="apple-touch-icon" href="./app-icon-192.png">
@@ -2242,6 +2242,7 @@ body.v293-ro select[onchange*="v101ChangeSlot"]{pointer-events:none;opacity:.65}
 .v375-opt:hover,.v375-opt:focus{background:#f2f6fb;outline:none}
 .v375-opt .v375-st{color:#6b7a90;font-size:.85em;white-space:nowrap;flex:0 0 auto}
 .v375-empty,.v375-more{padding:10px 12px;color:#6b7a90;font-size:.9em}
+.v381-r{display:flex;align-items:center;gap:8px;font-weight:600;margin:5px 0}.v381-r input{width:auto!important;flex:none;margin:0}
 </style>
 </head>
 <body>
@@ -2611,6 +2612,8 @@ window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();window.v152
 window.addEventListener('appinstalled',()=>{window.v152InstallPrompt=null;v152SyncInstallBtn()});
 if('serviceWorker' in navigator&&location.protocol!=='file:')window.addEventListener('load',()=>navigator.serviceWorker.register('./service-worker.js').catch(()=>{}));
 const V145_NEWS=[
+ ['v382','في «المعلمون» زر «المكررون (N)» لمدير النظام والمنسق والموجه (في نطاقهم) يعرض الأسماء المتطابقة والأرقام القومية المتقاربة؛ الدمج لمدير النظام فقط.'],
+ ['v381','مدير النظام: في «تعديل بيانات المعلم» زر «دمج مع سجل مكرر» — ينقل إسنادات وجدول وانتدابات السجل المكرر للسجل الصحيح ثم يحذفه، مع تصحيح الرقم القومي اختياريًا.'],
  ['v380','نموذج الإجازات: خيارات الحالة صارت «إجازة جديدة» و«إجازة مجددة» و«عودة إلى العمل» بلا عبارة «ماليًا».'],
  ['v379','شاشة «اختر طريقة الدخول»: أُضيف رابط «بوابة المعلمين» أسفل الأدوار.'],
  ['v376','مركز التحكم ← الصلاحيات: صارت الشاشة تفرّق بين «مسموح» و«ممنوع» و«غير متاح أصلًا» لهذا الدور (رمادي)، فلا تظهر «مسموح» لدور لا يملك الإجراء أساسًا.'],
@@ -15096,6 +15099,161 @@ function v375Attach(inp){
 function v375Scan(root){(root&&root.querySelectorAll?root:document).querySelectorAll('input[list]').forEach(v375Attach)}
 try{new MutationObserver(ms=>{for(const m of ms)for(const n of m.addedNodes)if(n.nodeType===1){if(n.matches&&n.matches('input[list]'))v375Attach(n);else v375Scan(n)}}).observe(document.documentElement,{childList:true,subtree:true});v375Scan(document)}catch(e){console.warn('v375',e)}
 /* v375-end */
+/* v381-begin: زر «دمج مع سجل مكرر» في «تعديل بيانات المعلم» لمدير النظام (يستدعي admin_merge_teachers) */
+const V381={cur:null,other:null,cands:[]};
+function v381Digits(s){return String(s||'').replace(/[٠-٩]/g,d=>'٠١٢٣٤٥٦٧٨٩'.indexOf(d)).replace(/[۰-۹]/g,d=>'۰۱۲۳۴۵۶۷۸۹'.indexOf(d)).trim()}
+function v381L4(t){return '<bdi dir="ltr">••'+String(t?.civil_id||'').slice(-4)+'</bdi>'}
+async function v381Counts(id){
+ const q=(tb,f)=>sb.from(tb).select('id',{count:'exact',head:true}).eq('teacher_id',id).match(f||{});
+ const [a,s,d]=await Promise.all([q('teaching_assignments'),q('teacher_timetable_slots'),q('delegations',{active:true})]);
+ for(const x of [a,s,d])if(x.error)throw x.error;
+ return {assigns:a.count||0,slots:s.count||0,deleg:d.count||0};
+}
+async function v381MergeForm(id,preId){
+ if(profile?.role!=='admin')return toast('دمج السجلات متاح لمدير النظام فقط');
+ try{
+  const {data:t,error}=await sb.from('teacher_records').select('id,full_name,civil_id,phone,profile_id,home_school_id,active').eq('id',id).maybeSingle();
+  if(error)throw error;if(!t)return toast('سجل المعلم غير موجود');
+  if(!t.home_school_id)return toast('لا يمكن الدمج: السجل بلا مدرسة أصلية. اختر المدرسة الأصلية أولًا');
+  const {data:c,error:e2}=await sb.from('teacher_records').select('id,full_name,civil_id,phone,profile_id,active').eq('home_school_id',t.home_school_id).neq('id',id).order('full_name');
+  if(e2)throw e2;
+  const key=x=>v288Norm(x.full_name||''),me=key(t),w0=me.split(' ').slice(0,2).join(' ');
+  const cands=(c||[]).map(x=>({...x,_s:key(x)===me?2:(w0&&key(x).startsWith(w0)?1:0)})).sort((a,b)=>b._s-a._s||String(a.full_name).localeCompare(String(b.full_name),'ar'));
+  V381.cur=t;V381.other=null;V381.cands=cands;
+  if(!cands.length)return modal(`<h3>دمج مع سجل مكرر</h3><div class="notice warn">لا يوجد معلم آخر في المدرسة الأصلية نفسها. الدمج متاح بين سجلين في مدرسة أصلية واحدة؛ إن كان السجل الآخر في مدرسة مختلفة فانقل مدرسته الأصلية أولًا.</div><div class="actions"><button type="button" class="btn secondary" onclick="v381Back('${id}')">رجوع</button></div>`);
+  const opts=cands.map(x=>`<option value="${x.id}">${x._s===2?'⭐ ':x._s===1?'• ':''}${esc(x.full_name)} — ${String(x.civil_id||'').slice(-4)}${x.phone?' — '+esc(x.phone):''}${x.profile_id?' (له حساب دخول)':''}</option>`).join('');
+  modal(`<h3>دمج مع سجل مكرر</h3>
+  <div class="notice warn">يُنقل كل ما في السجل المحذوف (الإسنادات وحصص الجدول والانتدابات…) إلى السجل الباقي، ثم يُحذف المكرر. تُحفظ لقطة كاملة منه في سجل التدقيق. لا يمكن التراجع من الشاشة.</div>
+  <div class="field"><label for="v381Other">السجل الآخر (في نفس المدرسة الأصلية) — ⭐ نفس الاسم، • اسم قريب</label><select id="v381Other" onchange="v381Pick(this.value)"><option value="">— اختر السجل المكرر —</option>${opts}</select></div>
+  <div id="v381Cmp"></div>
+  <div id="v381Rest" hidden>
+   <div class="field"><label>أي السجلين يبقى؟</label>
+    <label class="v381-r"><input type="radio" name="v381Keep" value="cur" checked> هذا السجل (${esc(t.full_name)} ${v381L4(t)})</label>
+    <label class="v381-r"><input type="radio" name="v381Keep" value="other"> السجل الآخر</label></div>
+   <div class="field"><label for="v381Civil">الرقم القومي الصحيح (اختياري — إن أردت تصحيحه مع الدمج، 14 رقمًا)</label><input id="v381Civil" inputmode="numeric" autocomplete="off" dir="ltr" placeholder="مثال: 29705172702361"></div>
+   <div class="field"><label for="v381Word">للتأكيد اكتب كلمة: دمج</label><input id="v381Word" autocomplete="off"></div>
+  </div>
+  <div id="v381Err" class="notice danger" hidden></div>
+  <div class="actions"><button type="button" class="btn primary" id="v381Go" disabled onclick="v381Do()">تنفيذ الدمج</button><button type="button" class="btn secondary" onclick="v381Back('${id}')">رجوع</button></div>`);
+  if(preId){const so=document.getElementById('v381Other');if(so&&[...so.options].some(o=>o.value===String(preId))){so.value=String(preId);v381Pick(String(preId))}}
+ }catch(error){moneySafeError(error)}
+}
+function v381Back(id){if(typeof V382!=='undefined'&&V382.fromList){V382.fromList=false;v382Dups()}else v344Reopen(id)}
+async function v381Pick(oid){
+ const box=document.getElementById('v381Cmp'),rest=document.getElementById('v381Rest'),go=document.getElementById('v381Go');
+ V381.other=null;if(rest)rest.hidden=true;if(go)go.disabled=true;if(!box)return;
+ if(!oid){box.innerHTML='';return}
+ const o=V381.cands.find(x=>String(x.id)===String(oid)),t=V381.cur;if(!o)return;
+ box.innerHTML='<div class="muted">جارٍ تحميل التفاصيل…</div>';
+ try{
+  const [ct,co]=await Promise.all([v381Counts(t.id),v381Counts(o.id)]);
+  if(document.getElementById('v381Other')?.value!==oid)return;
+  V381.other={...o,c:co};V381.cur.c=ct;
+  const card=(x,c,l)=>`<div class="card" style="flex:1;min-width:210px"><div class="muted">${l}</div><b>${esc(x.full_name)}</b><div dir="ltr" style="text-align:right">${esc(x.civil_id)}</div><div>هاتف: ${x.phone?esc(x.phone):'—'}</div><div>إسنادات: ${c.assigns} • حصص جدول: ${c.slots} • انتداب ساري: ${c.deleg}</div>${x.profile_id?'<div class="badge ok">له حساب دخول</div>':''}</div>`;
+  box.innerHTML=`<div style="display:flex;gap:8px;flex-wrap:wrap">${card(t,ct,'هذا السجل')}${card(o,co,'السجل الآخر')}</div>`;
+  const radios=[...document.querySelectorAll('input[name=v381Keep]')];
+  const lock=(t.profile_id&&o.profile_id)?'both':t.profile_id?'cur':o.profile_id?'other':'';
+  radios.forEach(r=>{r.disabled=false});
+  if(lock==='both'){const e=document.getElementById('v381Err');e.hidden=false;e.textContent='للسجلين حساب دخول؛ لا يمكن دمجهما من هنا. عطّل أحد الحسابين أولًا.';return}
+  if(lock){radios.forEach(r=>{r.checked=r.value===lock;r.disabled=r.value!==lock})}
+  const e=document.getElementById('v381Err');if(e)e.hidden=true;
+  rest.hidden=false;if(go)go.disabled=false;
+ }catch(error){box.innerHTML='';moneySafeError(error)}
+}
+async function v381Do(){
+ const t=V381.cur,o=V381.other,go=document.getElementById('v381Go'),err=document.getElementById('v381Err');
+ if(!t||!o)return;
+ const show=m=>{err.hidden=false;err.textContent=m};err.hidden=true;
+ if((document.getElementById('v381Word').value||'').trim()!=='دمج')return show('اكتب كلمة «دمج» للتأكيد');
+ const civil=v381Digits(document.getElementById('v381Civil').value);
+ if(civil&&!/^\d{14}$/.test(civil))return show('الرقم القومي يجب أن يكون 14 رقمًا');
+ const keepOther=document.querySelector('input[name=v381Keep]:checked')?.value==='other';
+ const keep=keepOther?o:t,rem=keepOther?t:o;
+ go.disabled=true;go.textContent='جارٍ الدمج…';
+ try{
+  const {data,error}=await sb.rpc('admin_merge_teachers',{p_keep:keep.id,p_remove:rem.id,p_correct_civil:civil||null});
+  if(error)throw error;
+  try{refreshCurrentPage({invalidate:['page:teachers']})}catch(_){}try{V382.cache=null;V382.fromList=false;v382Count()}catch(_){}
+  modal(`<h3>تم الدمج ✅</h3><div class="notice ok">بقي سجل <b>${esc(keep.full_name)}</b> وحُذف السجل المكرر <b>${esc(rem.full_name)}</b> ${v381L4(rem)}.<br>نُقل: ${data?.moved_assignments||0} إسناد • ${data?.moved_delegations||0} انتداب${data?.civil?.changed?'<br>الرقم القومي بعد الدمج: <b dir="ltr">'+esc(data.civil.civil_id)+'</b>':''}</div><div class="actions"><button type="button" class="btn primary" onclick="v344Reopen('${keep.id}')">فتح سجل المعلم</button><button type="button" class="btn secondary" onclick="closeModal()">إغلاق</button></div>`);
+ }catch(error){go.disabled=false;go.textContent='تنفيذ الدمج';show('لم يتم الدمج: '+(typeof v332ErrText==='function'?v332ErrText(error):(error?.message||'خطأ غير متوقع')))}
+}
+const __v381BaseEditTeacherForm=editTeacherForm;
+editTeacherForm=async function(id){
+ await __v381BaseEditTeacherForm(id);
+ if(profile?.role!=='admin')return;
+ const m=document.getElementById('modal'),box=m?.querySelector('.v295-box');
+ if(!box||box.querySelector('.v381-row'))return;
+ const row=document.createElement('div');row.className='card v295-line v381-row';
+ row.innerHTML='<div><div class="muted">سجل مكرر؟</div><b>انقل بيانات السجل المكرر لهذا السجل ثم احذفه</b></div>';
+ const b=document.createElement('button');b.type='button';b.className='btn secondary';b.textContent='🔀 دمج مع سجل مكرر';b.onclick=()=>v381MergeForm(id);row.appendChild(b);
+ const del=box.querySelector('.v295-del')?.closest('.v295-line');if(del)del.insertAdjacentElement('beforebegin',row);else box.appendChild(row);
+};
+/* v381-end */
+/* v382-begin: زر «المكررون (N)» بجوار «المعلمون الموقوفون» لمدير النظام — قائمة الأسماء المكررة والأرقام القومية المتقاربة */
+const V382={cache:null,at:0,fromList:false};
+const V382_ROLES=['admin','stage_coordinator','supervisor'];
+function v382Can(){return V382_ROLES.includes(profile?.role)}
+const V382_TAG={same:['نفس الاسم — نفس المدرسة','warn'],other:['نفس الاسم — مدرستان مختلفتان','info'],typo:['رقمان قوميان متقاربان (رقم واحد مختلف)','danger']};
+async function v382Load(force){
+ if(!force&&V382.cache&&Date.now()-V382.at<60000)return V382.cache;
+ const [tr,sr,ar]=await Promise.all([
+  sb.from('teacher_records').select('id,full_name,civil_id,phone,home_school_id,profile_id').eq('active',true),
+  sb.from('schools').select('id,name,stage'),
+  sb.from('teaching_assignments').select('teacher_id')]);
+ for(const x of [tr,sr,ar])if(x.error)throw x.error;
+ const sch=new Map((sr.data||[]).map(x=>[String(x.id),x])),cnt=new Map();
+ (ar.data||[]).forEach(a=>cnt.set(a.teacher_id,(cnt.get(a.teacher_id)||0)+1));
+ const T=tr.data||[],pairs=new Map(),byName=new Map();
+ const add=(a,b,tag)=>{const k=[a.id,b.id].sort().join('|');let p=pairs.get(k);if(!p){p={a,b,tags:new Set()};pairs.set(k,p)}p.tags.add(tag)};
+ T.forEach(t=>{const k=v288Norm(t.full_name||'');if(!k)return;if(!byName.has(k))byName.set(k,[]);byName.get(k).push(t)});
+ byName.forEach(l=>{for(let i=0;i<l.length;i++)for(let j=i+1;j<l.length;j++)add(l[i],l[j],l[i].home_school_id&&String(l[i].home_school_id)===String(l[j].home_school_id)?'same':'other')});
+ for(let i=0;i<T.length;i++){const x=String(T[i].civil_id||'');if(!x)continue;for(let j=i+1;j<T.length;j++){const y=String(T[j].civil_id||'');if(x.length!==y.length)continue;let d=0;for(let k=0;k<x.length&&d<2;k++)if(x[k]!==y[k])d++;if(d===1)add(T[i],T[j],'typo')}}
+ const ord=p=>p.tags.has('same')?0:p.tags.has('typo')?1:2;
+ const list=[...pairs.values()].sort((x,y)=>ord(x)-ord(y)||String(x.a.full_name).localeCompare(String(y.a.full_name),'ar'));
+ V382.cache={list,sch,cnt};V382.at=Date.now();return V382.cache;
+}
+async function v382Count(){
+ for(let i=0;i<30&&!document.getElementById('v382DupN');i++)await new Promise(r=>setTimeout(r,100));
+ const el=document.getElementById('v382DupN');if(!el||!v382Can())return;
+ try{const d=await v382Load();const n=document.getElementById('v382DupN');if(n)n.textContent='('+d.list.length+')'}catch(e){console.warn('v382 count',e)}
+}
+function v382Rec(t,d){
+ const sc=d.sch.get(String(t.home_school_id||''));
+ return `<div style="flex:1;min-width:200px"><b>${esc(t.full_name||'')}</b><div dir="ltr" style="text-align:right">${esc(t.civil_id||'')}</div><div>هاتف: ${t.phone?esc(t.phone):'—'}</div><div>${sc?esc(sc.name):'بلا مدرسة أصلية'}</div><div class="muted">إسنادات: ${d.cnt.get(t.id)||0}</div>${t.profile_id?'<span class="badge ok">له حساب دخول</span>':''}</div>`;
+}
+async function v382Dups(){
+ if(!v382Can())return toast('هذه القائمة لمدير النظام والمنسق والموجه فقط',true);
+ try{
+  const d=await v382Load(true),rows=d.list.slice(0,200);
+  const card=p=>{const same=p.tags.has('same'),canMerge=same&&profile?.role==='admin';
+   return `<div class="card" style="margin-bottom:8px"><div style="margin-bottom:6px">${[...p.tags].map(t=>`<span class="badge ${V382_TAG[t][1]}">${V382_TAG[t][0]}</span>`).join(' ')}</div>
+   <div style="display:flex;gap:10px;flex-wrap:wrap">${v382Rec(p.a,d)}${v382Rec(p.b,d)}</div>
+   <div class="actions" style="margin-top:8px">${canMerge?`<button type="button" class="btn primary" onclick="v382Merge('${p.a.id}','${p.b.id}')">دمج السجلين</button>`:''}<button type="button" class="btn secondary" onclick="v382Open('${p.a.id}')">فتح الأول</button><button type="button" class="btn secondary" onclick="v382Open('${p.b.id}')">فتح الثاني</button></div>${canMerge?'':`<div class="muted" style="margin-top:4px">${same?'الدمج لمدير النظام فقط — بلّغه بهذه الحالة، أو صحّح بيانات أحد السجلين من «فتح».':'الدمج متاح بين سجلين في مدرسة أصلية واحدة؛ افتح أحدهما وعدّل مدرسته الأصلية أو رقمه إن لزم.'}</div>`}</div>`};
+  modal(`<div class="modal-head"><div><h3>المعلمون المكررون (${d.list.length})</h3><div class="muted">أسماء متطابقة (بعد توحيد الهمزات والتاء والياء) أو أرقام قومية تختلف في رقم واحد فقط. قد تكون بعض الحالات أشخاصًا مختلفين فعلًا — تحقق قبل الدمج.</div></div><button class="close" type="button" onclick="closeModal()">×</button></div>
+  <div style="max-height:65vh;overflow:auto">${rows.length?rows.map(card).join(''):'<div class="notice ok">لا توجد سجلات مكررة 👌</div>'}${d.list.length>200?'<div class="muted">عُرض أول 200 فقط.</div>':''}</div>`);
+ }catch(error){moneySafeError(error)}
+}
+function v382Merge(a,b){V382.fromList=true;v381MergeForm(a,b)}
+function v382Open(id){V382.fromList=false;editTeacherForm(id)}
+const __v382BaseTeachersPage=teachersPage;
+teachersPage=async function(opts={}){
+ const h=await __v382BaseTeachersPage(opts);
+ if(!v382Can()||typeof h!=='string')return h;
+ const btn=`<button class="btn secondary" type="button" onclick="v382Dups()">المكررون <span id="v382DupN"></span></button>`;
+ let out=h;
+ const a=`onclick="v224InactiveTeachers()">المعلمون الموقوفون</button>`;
+ if(profile.role==='admin'&&h.includes(a))out=h.replace(a,a+btn);
+ else{
+  const b='+ إضافة معلم</button>';
+  if(h.includes(b))out=h.replace(b,b+btn);
+  else if(h.includes('</p></div>'))out=h.replace('</p></div>','</p></div><div class="actions">'+btn+'</div>');
+  else return h;
+ }
+ setTimeout(v382Count,0);
+ return out;
+};
+/* v382-end */
+
 </script>
 
 <div id="reportPreviewOverlay" class="report-preview-overlay" role="dialog" aria-modal="true" aria-label="معاينة التقرير" aria-hidden="true">
