@@ -14045,7 +14045,7 @@ async function v384Fill(id){
   const box=document.querySelector('#modal .v295-box');if(!box)return;
   const hl=document.getElementById('v295HomeName')?.closest('.v295-line');put(hl,box.dataset.home);
   document.querySelectorAll('#v344Deleg .v295-line[data-sid]').forEach(l=>put(l,l.dataset.sid));
- }catch(e){console.warn('v384',e)}
+ }catch(e){console.warn('v384',e);try{const hl=document.getElementById('v295HomeName')?.closest('.v295-line>div');if(hl&&!hl.querySelector('.v384')){const d=document.createElement('div');d.className='muted v384';d.textContent='تعذر تحميل الحصص: '+(e?.message||e);hl.appendChild(d)}}catch(_){}}
 }
 const __v384BaseRenderDeleg=v344RenderDeleg;
 v344RenderDeleg=async function(id){await __v384BaseRenderDeleg(id);v384Fill(id)};
