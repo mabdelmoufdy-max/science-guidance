@@ -1,4 +1,5 @@
 <!doctype html>
+<!-- v384: «تعديل بيانات المعلم» ← ③ المدرسة والانتداب: تحت كل مدرسة (الأصلية والمنتدب إليها) سطر «حصصه المسندة هنا: N حصة في M فصل» من إسناداته في الفصل الدراسي الحالي. عرض فقط. -->
 <!-- v383: قائمة «المكررون»: زر «تجاهل» بجوار «فتح الثاني» يخفي الحالة (أشخاص مختلفون فعلًا) ويحفظ الإخفاء على هذا الجهاز؛ يعود الظهور إن تغيّر الاسم أو الرقم القومي لأحد السجلين، وزر «إظهار المتجاهَلة». -->
 <!-- v382: شاشة «المعلمون» (مدير النظام): زر «المكررون (N)» (مدير النظام: بجوار «المعلمون الموقوفون»؛ المنسق والموجه في نطاقهما) — قائمة أسماء متطابقة (نفس المدرسة/مدرستان) وأرقام قومية تختلف برقم واحد، ولكل حالة زر دمج أو فتح السجل. -->
 <!-- v381: «تعديل بيانات المعلم» (مدير النظام): زر «🔀 دمج مع سجل مكرر» — يختار السجل المكرر في المدرسة الأصلية نفسها وأي السجلين يبقى والرقم القومي الصحيح (اختياري)، ثم admin_merge_teachers (ينقل الإسنادات والجدول والانتدابات ويحفظ لقطة في سجل التدقيق). -->
@@ -8,7 +9,6 @@
 <!-- v375: بحث المدرسة في «تعديل بيانات المعلم» (المدرسة الأصلية والمنتدب إليها): قائمة منسدلة تحت الحقل بكل المدارس المطابقة (حتى 15) مع المرحلة بدل شريط اقتراح المتصفح الذي يعرض مدرسة واحدة على الهاتف — بقرار المستخدم «أ» 2026-11-13. -->
 <!-- v374: المعلم في إجازة مجددة لا يظهر في التقارير (عدا تقريري الإجازات والتوجيه المالي وتقرير المعلم نفسه) ولا في قائمة «المعلمون» عند «حالة المعلم: الكل» — يبقى ظاهرًا باختيار «إجازة»؛ يعود تلقائيًا عند تسجيل عودته. «إنجاز الجداول» يستبعده من قاعدة البيانات (migration v374). بقرار المستخدم «ب» 2026-11-13. -->
 <!-- v371: زر التثبيت ⬇ في الشريط العلوي: يظهر دائمًا خارج التطبيق المثبّت (v369Standalone)، وإن لم تتوفر نافذة التثبيت من المتصفح أو فشلت تُعرض خطوات التثبيت اليدوي حسب الجهاز (v369InstallHelp) بدل ألا يحدث شيء. -->
-<!-- v370: القائمة الجانبية: زر «إدخال بيانات المدارس» بعرض خانة واحدة (حُذفت قاعدة grid-column:1/-1) فيقع بجوار «استكمال البيانات» بدل سطر كامل — بطلب المستخدم. واجهة فقط. -->
 <html lang="ar" dir="rtl">
 <head>
 <!-- إعداد: أ/ محمود عبدالمفدي محمد أبوالنجا | الصفة: معلم -->
@@ -16,7 +16,7 @@
 <script>/* v226: العنوان الموحد — انظر التعليق أعلى الملف */(function(){try{if(/\.github\.io$/.test(location.hostname)&&/^\/science-guidance\/?(index\.html)?$/.test(location.pathname)&&!/[?&]stay\b/.test(location.search))location.replace('https://teachers-data-portal.vercel.app/app/'+location.hash)}catch(e){}})();</script>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#152c43">
-<title>نظام توجيه العلوم — v383</title>
+<title>نظام توجيه العلوم — v384</title>
 <link rel="manifest" href="./manifest.webmanifest">
 <link rel="icon" type="image/png" sizes="192x192" href="./app-icon-192.png">
 <link rel="apple-touch-icon" href="./app-icon-192.png">
@@ -2612,6 +2612,7 @@ window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();window.v152
 window.addEventListener('appinstalled',()=>{window.v152InstallPrompt=null;v152SyncInstallBtn()});
 if('serviceWorker' in navigator&&location.protocol!=='file:')window.addEventListener('load',()=>navigator.serviceWorker.register('./service-worker.js').catch(()=>{}));
 const V145_NEWS=[
+ ['v384','«تعديل بيانات المعلم» ← المدرسة والانتداب: تحت كل مدرسة حصصه المسندة فيها (عدد الحصص والفصول).'],
  ['v383','في «المكررون» زر «تجاهل (ليسا مكررين)» يخفي الحالة على هذا الجهاز.'],
  ['v382','في «المعلمون» زر «المكررون (N)» لمدير النظام والمنسق والموجه (في نطاقهم) يعرض الأسماء المتطابقة والأرقام القومية المتقاربة؛ الدمج لمدير النظام فقط.'],
  ['v381','مدير النظام: في «تعديل بيانات المعلم» زر «دمج مع سجل مكرر» — ينقل إسنادات وجدول وانتدابات السجل المكرر للسجل الصحيح ثم يحذفه، مع تصحيح الرقم القومي اختياريًا.'],
@@ -13910,7 +13911,7 @@ async function v344RenderDeleg(id){
   const miss=ds.map(d=>d.to_school_id).filter(x=>x&&!V295.schools.some(s=>String(s.id)===String(x)));
   if(miss.length){const {data:sc}=await sb.from('schools').select('id,name,stage').in('id',miss);(sc||[]).forEach(s=>V295.schools.push(s))}
   if(!document.body.contains(host))return;
-  host.innerHTML=ds.length?ds.map(d=>`<div class="card v295-line"><div><div class="muted">المدرسة المنتدب إليها</div><b>${v295SchoolName(d.to_school_id)} <span class="badge">${d.delegation_type==='full'?'انتداب كلي':'انتداب جزئي'}</span></b>${d.start_date?`<div class="muted">من ${esc(typeof v337DateText==='function'?v337DateText(d.start_date):d.start_date)}${d.end_date?` إلى ${esc(typeof v337DateText==='function'?v337DateText(d.end_date):d.end_date)}`:''}</div>`:''}</div><div class="v344-acts"><button type="button" class="btn secondary" onclick="v344DelegChange('${id}','${ds.length===1?d.id:''}',${ds.length})">تغيير المدرسة المنتدب إليها</button><button type="button" class="btn danger" onclick="v344CancelDeleg('${d.id}','${id}')">إلغاء الانتداب</button></div></div>`).join('')
+  host.innerHTML=ds.length?ds.map(d=>`<div class="card v295-line" data-sid="${d.to_school_id}"><div><div class="muted">المدرسة المنتدب إليها</div><b>${v295SchoolName(d.to_school_id)} <span class="badge">${d.delegation_type==='full'?'انتداب كلي':'انتداب جزئي'}</span></b>${d.start_date?`<div class="muted">من ${esc(typeof v337DateText==='function'?v337DateText(d.start_date):d.start_date)}${d.end_date?` إلى ${esc(typeof v337DateText==='function'?v337DateText(d.end_date):d.end_date)}`:''}</div>`:''}</div><div class="v344-acts"><button type="button" class="btn secondary" onclick="v344DelegChange('${id}','${ds.length===1?d.id:''}',${ds.length})">تغيير المدرسة المنتدب إليها</button><button type="button" class="btn danger" onclick="v344CancelDeleg('${d.id}','${id}')">إلغاء الانتداب</button></div></div>`).join('')
    :`<div class="card v295-line"><div><div class="muted">المدرسة المنتدب إليها</div><b>لا يوجد انتداب</b></div><button type="button" class="btn secondary" onclick="v344DelegChange('${id}','',0)">+ انتداب</button></div>`;
  }catch(e){host.innerHTML=`<div class="notice danger">${esc(e?.message||'تعذر تحميل الانتداب')}</div>`}
 }
@@ -14031,6 +14032,23 @@ saveTeacherEdit=async function(e,id,...rest){
  await v344Reopen(id);
 };
 /* v344-end */
+/* v384-begin: حصص المعلم المسندة في كل مدرسة داخل ③ المدرسة والانتداب (عرض فقط) */
+async function v384Fill(id){
+ try{
+  if(!activeTerm?.id)return;
+  const {data,error}=await sb.from('teaching_assignments').select('weekly_periods,school_classes(school_id,term_id)').eq('teacher_id',id);if(error)throw error;
+  const by=new Map();
+  (data||[]).forEach(a=>{const c=a.school_classes;if(!c||String(c.term_id)!==String(activeTerm.id))return;const k=String(c.school_id),o=by.get(k)||{p:0,n:0};o.p+=Number(a.weekly_periods||0);o.n++;by.set(k,o)});
+  const txt=sid=>{const o=by.get(String(sid))||{p:0,n:0};return o.n?`حصصه المسندة هنا: <b>${o.p}</b> حصة في ${o.n} ${o.n===1?'فصل':'فصول'}`:'حصصه المسندة هنا: لا توجد'};
+  const put=(line,sid)=>{if(!line||!sid)return;const b=line.querySelector('b');if(!b)return;line.querySelectorAll('.v384').forEach(x=>x.remove());const d=document.createElement('div');d.className='muted v384';d.innerHTML=txt(sid);b.closest('div').appendChild(d)};
+  const box=document.querySelector('#modal .v295-box');if(!box)return;
+  const hl=document.getElementById('v295HomeName')?.closest('.v295-line');put(hl,box.dataset.home);
+  document.querySelectorAll('#v344Deleg .v295-line[data-sid]').forEach(l=>put(l,l.dataset.sid));
+ }catch(e){console.warn('v384',e)}
+}
+const __v384BaseRenderDeleg=v344RenderDeleg;
+v344RenderDeleg=async function(id){await __v384BaseRenderDeleg(id);v384Fill(id)};
+/* v384-end */
 /* v350-begin: معلم الأجر — الدرجة الوظيفية «معلم بالأجر» ثابتة (تضبطها القاعدة v349) */
 (function(){
  var LBL='معلم بالأجر';
