@@ -1,0 +1,4 @@
+-- v386 (طُبّق 2026-11-15 بقرار المستخدم «نفذه»): الفصل الجديد في الابتدائي يُنشأ بـ3 حصص علوم (الثابت) بدل 0.
+-- الدالتان seed_class_curriculum_subjects وsync_class_curriculum_requirements (مشغلا INSERT/UPDATE OF stage,grade على school_classes):
+-- استُبدل فيهما `else 0 end` بـ `when new.stage='ابتدائي' then 3 else 0 end` (الإعدادي 4 والمهني 2 والثانوي 0 بلا تغيير).
+-- لا يمس الفصول القائمة. تجربة: إدراج فصل ابتدائي ← requirements=3 وscience_periods=3 (تراجع).
