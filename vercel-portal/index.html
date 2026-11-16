@@ -893,6 +893,7 @@ body.is-login .wrap{max-width:none;padding:0}
   function stmtReasonMsg(r) {
     switch (r.reason) {
       case 'closed': return 'الرفع متوقف حاليًا لمرحلتك.';
+      case 'not_applicable': return 'هذه الصحيفة لا تخص معلمي الأجر.';
       case 'too_many': return 'وصلت للحد الأقصى لعدد مرات الرفع. تواصل مع موجهك.';
       case 'bad_type': return 'الملف غير صالح. ارفع صورة أو ملف PDF.';
       case 'too_big': return 'حجم الملف كبير. التقط صورة أوضح بحجم أصغر، أو استخدم ملف PDF أقل من 1.5 ميجا.';
@@ -902,7 +903,7 @@ body.is-login .wrap{max-width:none;padding:0}
   }
   function stmtCard() {
     var s0 = S.stmt;
-    if (S.limited || !s0) return null;
+    if (S.limited || !s0 || s0.applies === false) return null; /* معلم الأجر لا صحيفة له */
     if (!s0.open && s0.status !== 'uploaded' && s0.status !== 'archived') return null; /* المرحلة مغلقة ولم يرفع: لا تظهر البطاقة */
     var box = errbox(), line = h('div', { id: 'stmt-line' }), info = h('div', { class: 'st-file', id: 'stmt-info' }), picked = null, chooseBtn, upBtn;
     var fileIn = h('input', { type: 'file', accept: 'image/*,application/pdf', id: 'stmt-file', style: 'display:none' });
