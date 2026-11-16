@@ -1,4 +1,5 @@
 <!doctype html>
+<!-- v394: «تعديل بيانات المعلم»: تعيين المدرسة الأصلية لمعلم بلا مدرسة أصلية كان يفشل برسالة «قيمة غير معلومة» لأن الواجهة تسأل عن انتداب إلى مدرسة فارغة؛ صار يتخطى هذا الفحص حين لا توجد مدرسة أصلية حالية. -->
 <!-- v393: «طلبات معلمي الأجر» (مدير النظام): لوحة «ملفات الشهادات» — تنزيل كل الملفات في ZIP على جهازك مع ملف إكسل ببيانات المتقدمين وروابط لملفاتهم، ثم «تفريغ» = نقل إلى سلة مؤقتة (قابل للاسترجاع) ثم إزالة نهائية (بطلب المستخدم 2026-11-16؛ تجربة أولى على ملفات الأجر قبل تعميمها على صحائف الأحوال). قاعدة البيانات v393 (file_archive_log) ودالة الحافة admin-files-purge. -->
 <!-- v392: شاشة «صحائف الأحوال» لمدير النظام (بطلب المستخدم 2026-11-16، المرحلة 1): مفتاح رفع «صحيفة الأحوال الإلكترونية للمعلم» لكل مرحلة (إعدادي/ثانوي عام/ثانوي صناعي مفتوحة، الابتدائي مغلق) + قائمة من رفع ومن لم يرفع (المعلمون الثابتون فقط — معلم الأجر لا صحيفة له) بفلاتر المرحلة والمدرسة والحالة + «عرض» الملف برابط مؤقت. قاعدة البيانات v392 (حاوية teacher-statements الخاصة، admin_statements_overview، admin_set_statement_stage) ودالة الحافة teacher-statement-upload وبطاقة الرفع في بوابة المعلمين. -->
 <!-- v391: تنبيه «مدرسة بلا موجه» لا يظهر لمدارس الثانوي التي لها موجه مادة نشط (supervisor_school_subjects)؛ حقل الموجه المباشر فيها فارغ عمدًا (قرار v208) فكانت الـ12 مدرسة ثانوية تظهر بالخطأ. عرض فقط. -->
@@ -8,7 +9,6 @@
 <!-- v383: قائمة «المكررون»: زر «تجاهل» بجوار «فتح الثاني» يخفي الحالة (أشخاص مختلفون فعلًا) ويحفظ الإخفاء على هذا الجهاز؛ يعود الظهور إن تغيّر الاسم أو الرقم القومي لأحد السجلين، وزر «إظهار المتجاهَلة». -->
 <!-- v382: شاشة «المعلمون» (مدير النظام): زر «المكررون (N)» (مدير النظام: بجوار «المعلمون الموقوفون»؛ المنسق والموجه في نطاقهما) — قائمة أسماء متطابقة (نفس المدرسة/مدرستان) وأرقام قومية تختلف برقم واحد، ولكل حالة زر دمج أو فتح السجل. -->
 <!-- v381: «تعديل بيانات المعلم» (مدير النظام): زر «🔀 دمج مع سجل مكرر» — يختار السجل المكرر في المدرسة الأصلية نفسها وأي السجلين يبقى والرقم القومي الصحيح (اختياري)، ثم admin_merge_teachers (ينقل الإسنادات والجدول والانتدابات ويحفظ لقطة في سجل التدقيق). -->
-<!-- v380: خيارات حالة الإجازة في نموذج الإجازات: «إجازة جديدة» / «إجازة مجددة» / «عودة إلى العمل» بلا عبارة «ماليًا» (النصوص فقط؛ القيم والحسابات بلا تغيير). -->
 <html lang="ar" dir="rtl">
 <head>
 <!-- إعداد: أ/ محمود عبدالمفدي محمد أبوالنجا | الصفة: معلم -->
@@ -16,7 +16,7 @@
 <script>/* v226: العنوان الموحد — انظر التعليق أعلى الملف */(function(){try{if(/\.github\.io$/.test(location.hostname)&&/^\/science-guidance\/?(index\.html)?$/.test(location.pathname)&&!/[?&]stay\b/.test(location.search))location.replace('https://teachers-data-portal.vercel.app/app/'+location.hash)}catch(e){}})();</script>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#152c43">
-<title>نظام توجيه العلوم — v393</title>
+<title>نظام توجيه العلوم — v394</title>
 <link rel="manifest" href="./manifest.webmanifest">
 <link rel="icon" type="image/png" sizes="192x192" href="./app-icon-192.png">
 <link rel="apple-touch-icon" href="./app-icon-192.png">
@@ -2633,6 +2633,7 @@ window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();window.v152
 window.addEventListener('appinstalled',()=>{window.v152InstallPrompt=null;v152SyncInstallBtn()});
 if('serviceWorker' in navigator&&location.protocol!=='file:')window.addEventListener('load',()=>navigator.serviceWorker.register('./service-worker.js').catch(()=>{}));
 const V145_NEWS=[
+ ['v394','تعيين المدرسة الأصلية لمعلم بلا مدرسة أصلية في «تعديل بيانات المعلم» لم يعد يُرفض.'],
  ['v393','طلبات معلمي الأجر: لوحة «ملفات الشهادات» — تنزيل ZIP (مجلد لكل متقدم + إكسل ببياناتهم وروابط ملفاتهم)، ثم تفريغ إلى سلة قابلة للاسترجاع.'],
  ['v392','مدير النظام: شاشة «صحائف الأحوال» — مفتاح رفع الصحيفة لكل مرحلة وقائمة من رفع ومن لم يرفع (والمعلم يرفعها من بوابة المعلمين).'],
  ['v390','الموجه: «إدخال بيانات المدارس» في قائمتك — تعدّل مدارسك (ابتدائي/إعدادي) كاملة: البيانات والفصول والمعلمون والإسناد، ثم «اعتماد البيانات». مدارس الثانوي عرض واعتماد فقط.'],
@@ -14004,8 +14005,8 @@ v295ConfirmHome=async function(){
  if(!(await v344InScope([sid])))return alert(`«${nm}» خارج نطاق صلاحيتك، فلا يمكنك نقل المعلم إليها.\nالنقل إليها من منسق مرحلتها أو مدير النظام.`);
  let list=[];
  try{
-  const {data:dl,error:de}=await sb.from('delegations').select('id').eq('teacher_id',id).eq('to_school_id',old).eq('active',true);if(de)throw de;
-  if(!(dl||[]).length)list=await v344ClassesIn(id,old);
+  if(old){const {data:dl,error:de}=await sb.from('delegations').select('id').eq('teacher_id',id).eq('to_school_id',old).eq('active',true);if(de)throw de;
+  if(!(dl||[]).length)list=await v344ClassesIn(id,old)}
  }catch(e){return moneySafeError(e)}
  const total=list.reduce((n,a)=>n+a.periods,0);
  const msg=list.length?`⚠️ للمعلم ${list.length} فصل/فصول مسندة في مدرسته الأساسية الحالية (${total} حصة):\n${v344ListText(list)}\n\nتغيير المدرسة الأساسية إلى «${nm}» يلغي إسناد هذه الفصول فتعود غير مسندة.\nهل تريد إلغاء الإسناد وتغيير المدرسة؟`:`تغيير المدرسة الأساسية إلى «${nm}»؟\n(تُحفظ معها أي تعديلات أخرى في الصفحة.)`;
