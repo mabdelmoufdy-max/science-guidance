@@ -1,4 +1,5 @@
 <!doctype html>
+<!-- v390: «إدخال بيانات المدارس» للموجه (بطلب المستخدم 2026-11-16): الشاشة نفسها (v263) تظهر في قائمة الموجه ويعدّل بها مدارسه المباشرة (ابتدائي/إعدادي) كالمنسق: بيانات المدرسة الأساسية، الفصول، المعلمون، الإسناد. مدارس الثانوي (موجه المادة): عرض واعتماد فقط. زر «اعتماد البيانات» = الاعتماد الفعلي (supervisor-save-and-approve) بدل علامة المنسق. تبويب «الموجهون» والموجه المسؤول عن المعلم عرض فقط. قاعدة البيانات: v390 (سياسات الموجه على school_classes/teaching_assignments/schools بنطاق مدرسته المباشرة + مشغّل يمنع تغيير الموجه/المرحلة/الاسم/المدير/الاعتماد). -->
 <!-- v385: «تجاهل» في قائمة المكررين محفوظ في قاعدة البيانات لكل الأجهزة والمستخدمين (مدير/منسق/موجه) عبر dup_ignore_list/add/clear؛ وما حُفظ سابقًا على جهازك ينتقل تلقائيًا مرة واحدة. -->
 <!-- v384: «تعديل بيانات المعلم» ← ③ المدرسة والانتداب: تحت كل مدرسة (الأصلية والمنتدب إليها) سطر «حصصه المسندة هنا: N حصة في M فصل» من إسناداته في الفصل الدراسي الحالي. عرض فقط. -->
 <!-- v383: قائمة «المكررون»: زر «تجاهل» بجوار «فتح الثاني» يخفي الحالة (أشخاص مختلفون فعلًا) ويحفظ الإخفاء على هذا الجهاز؛ يعود الظهور إن تغيّر الاسم أو الرقم القومي لأحد السجلين، وزر «إظهار المتجاهَلة». -->
@@ -8,7 +9,6 @@
 <!-- v379: شاشة «اختر طريقة الدخول»: رابط «بوابة المعلمين» أسفل الأدوار (بطلب المستخدم). واجهة فقط. -->
 <!-- v375: بحث المدرسة في «تعديل بيانات المعلم» (المدرسة الأصلية والمنتدب إليها): قائمة منسدلة تحت الحقل بكل المدارس المطابقة (حتى 15) مع المرحلة بدل شريط اقتراح المتصفح الذي يعرض مدرسة واحدة على الهاتف — بقرار المستخدم «أ» 2026-11-13. -->
 <!-- v374: المعلم في إجازة مجددة لا يظهر في التقارير (عدا تقريري الإجازات والتوجيه المالي وتقرير المعلم نفسه) ولا في قائمة «المعلمون» عند «حالة المعلم: الكل» — يبقى ظاهرًا باختيار «إجازة»؛ يعود تلقائيًا عند تسجيل عودته. «إنجاز الجداول» يستبعده من قاعدة البيانات (migration v374). بقرار المستخدم «ب» 2026-11-13. -->
-<!-- v371: زر التثبيت ⬇ في الشريط العلوي: يظهر دائمًا خارج التطبيق المثبّت (v369Standalone)، وإن لم تتوفر نافذة التثبيت من المتصفح أو فشلت تُعرض خطوات التثبيت اليدوي حسب الجهاز (v369InstallHelp) بدل ألا يحدث شيء. -->
 <html lang="ar" dir="rtl">
 <head>
 <!-- إعداد: أ/ محمود عبدالمفدي محمد أبوالنجا | الصفة: معلم -->
@@ -16,7 +16,7 @@
 <script>/* v226: العنوان الموحد — انظر التعليق أعلى الملف */(function(){try{if(/\.github\.io$/.test(location.hostname)&&/^\/science-guidance\/?(index\.html)?$/.test(location.pathname)&&!/[?&]stay\b/.test(location.search))location.replace('https://teachers-data-portal.vercel.app/app/'+location.hash)}catch(e){}})();</script>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#152c43">
-<title>نظام توجيه العلوم — v385</title>
+<title>نظام توجيه العلوم — v390</title>
 <link rel="manifest" href="./manifest.webmanifest">
 <link rel="icon" type="image/png" sizes="192x192" href="./app-icon-192.png">
 <link rel="apple-touch-icon" href="./app-icon-192.png">
@@ -2612,6 +2612,7 @@ window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();window.v152
 window.addEventListener('appinstalled',()=>{window.v152InstallPrompt=null;v152SyncInstallBtn()});
 if('serviceWorker' in navigator&&location.protocol!=='file:')window.addEventListener('load',()=>navigator.serviceWorker.register('./service-worker.js').catch(()=>{}));
 const V145_NEWS=[
+ ['v390','الموجه: «إدخال بيانات المدارس» في قائمتك — تعدّل مدارسك (ابتدائي/إعدادي) كاملة: البيانات والفصول والمعلمون والإسناد، ثم «اعتماد البيانات». مدارس الثانوي عرض واعتماد فقط.'],
  ['v384','«تعديل بيانات المعلم» ← المدرسة والانتداب: تحت كل مدرسة حصصه المسندة فيها (عدد الحصص والفصول).'],
  ['v383','في «المكررون» زر «تجاهل (ليسا مكررين)» يخفي الحالة على هذا الجهاز.'],
  ['v382','في «المعلمون» زر «المكررون (N)» لمدير النظام والمنسق والموجه (في نطاقهم) يعرض الأسماء المتطابقة والأرقام القومية المتقاربة؛ الدمج لمدير النظام فقط.'],
@@ -11494,7 +11495,7 @@ function v234InitDelegPicker(){
 }
 
 /* v236: «إدخال بيانات المدارس» داخل البرنامج — انظر التعليق أعلى الملف */
-const V236_ROLES=['admin','stage_coordinator'];
+const V236_ROLES=['admin','stage_coordinator','supervisor'];
 for(const role of V236_ROLES){
  const items=NAV[role];if(!items||items.some(n=>n[0]==='schoolEntry'))continue;
  items.push(['schoolEntry','إدخال بيانات المدارس','✎']); // v237: آخر القائمة
@@ -11510,6 +11511,9 @@ const TYPES={'إعدادي':[['','عام'],['مهني','مهني'],['تربية 
 const S={me:null,year:null,term:null,schools:[],classes:[],approvals:{},sups:{},supStages:null,managers:{},assigned:new Set(),teachers:[],roster:null,trec:{},tassign:{},tEdit:null,tAssign:null,trs:{},reqs:[],classTa:[],tMissOnly:false,sel:null,edit:false,q:'',filter:'all',stage:'',grp:'',busy:false};
 
 const $=id=>ROOT?ROOT.getElementById(id):null;
+/* v390: الموجه — يعدّل مدارسه المباشرة (schools.supervisor_id = سجله)؛ مدارس الثانوي (موجه المادة) عرض واعتماد فقط */
+const isSup=()=>profile?.role==='supervisor';
+const isRO=s=>isSup()&&!(S.mySup&&s&&s.supervisor_id===S.mySup);
 const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const digits=v=>String(v||'').replace(/[٠-٩]/g,d=>'٠١٢٣٤٥٦٧٨٩'.indexOf(d)).replace(/[۰-۹]/g,d=>'۰۱۲۳۴۵۶۷۸۹'.indexOf(d)).replace(/\D/g,'');
 const norm=v=>String(v||'').replace(/[أإآ]/g,'ا').replace(/ى/g,'ي').replace(/ة/g,'ه').replace(/\s+/g,' ').trim();
@@ -11535,6 +11539,11 @@ async function loadAll(){
   all(()=>sb.from('coordinator_school_approvals').select('school_id,approved_at').eq('academic_year_id',S.year.id))]);
  try{S.teachers=await all(()=>sb.from('teacher_records').select(T_SLIM).eq('active',true))}catch(e){S.teachers=[]}
  S.schools=schools;S.classes=classes;S.approvals=Object.fromEntries(apps.map(a=>[a.school_id,a.approved_at]));
+ /* v390: الموجه — هويته، واعتماد المدرسة = اعتماد الطلب (school_submissions) لا علامة المنسق */
+ if(isSup()){
+  S.mySup=null;try{const me=await q(sb.from('supervisors').select('id,full_name').eq('profile_id',S.me.id).eq('active',true).maybeSingle());S.mySup=me?.id||null;if(me)S.sups[me.id]={id:me.id,full_name:me.full_name||S.me.full_name,active:true}}catch(e){}
+  try{const subs=await all(()=>sb.from('school_submissions').select('school_id,status,approved_at,updated_at').eq('term_id',S.term.id).eq('status','approved'));S.approvals=Object.fromEntries(subs.map(a=>[a.school_id,a.approved_at||a.updated_at]))}catch(e){S.approvals={}}
+ }
  const stages=[...new Set(schools.map(s=>s.stage))];if(!stages.includes(S.stage))S.stage=stages.length===1?stages[0]:'';
  try{(await q(sb.from('supervisors').select('id,full_name,active'))).forEach(s=>S.sups[s.id]=s)}catch(e){}
  try{S.subjRows=await all(()=>sb.from('supervisor_school_subjects').select('id,supervisor_id,school_id,subject_name,active'))}catch(e){S.subjRows=[]}
@@ -11587,7 +11596,7 @@ function missingOf(s){const m=[];if(!s.gender_type)m.push('بنين/بنات');i
  const ts=homeTeachers(s.id),bad=ts.filter(t=>teacherMissing(t).length).length;if(!ts.length)m.push('المعلمون');else if(bad)m.push(`بيانات ${bad} معلم`);return m}
 function lastChange(s){return Math.max(new Date(s.updated_at).getTime()||0,...homeTeachers(s.id).map(t=>new Date(t.updated_at).getTime()||0))}
 function statusOf(s){const ap=S.approvals[s.id];
- if(ap)return lastChange(s)>new Date(ap).getTime()?{k:'changed',t:'عُدّل بعد الاعتماد',c:'b-warn'}:{k:'ok',t:'معتمد',c:'b-ok'};
+ if(ap)return lastChange(s)>new Date(ap).getTime()+(isSup()?10000:0)?{k:'changed',t:'عُدّل بعد الاعتماد',c:'b-warn'}:{k:'ok',t:'معتمد',c:'b-ok'};
  return missingOf(s).length?{k:'miss',t:'ناقص',c:'b-bad'}:{k:'ready',t:'جاهز للاعتماد',c:'b-info'}}
 const stageSchools=()=>S.schools.filter(s=>!S.stage||s.stage===S.stage);
 /* ---------- الواجهة ---------- */
@@ -11688,7 +11697,7 @@ function renderMain(){
     <div class="field"><label>المرحلة</label><input value="${esc(s.stage)}" readonly title="يعدّلها مدير النظام فقط"></div>
     ${types.length>1?`<div class="field"><label for="f_type">النوع</label><select id="f_type">${types.map(([val,t])=>`<option value="${esc(val)}" ${(s.school_type||'')===val?'selected':''}>${esc(t)}</option>`).join('')}</select></div>`:''}
     <div class="field"><label for="f_gender">بنين / بنات</label><select id="f_gender"><option value="">— اختر —</option>${['بنين','بنات','مشترك'].map(g=>`<option ${s.gender_type===g?'selected':''}>${g}</option>`).join('')}</select></div>
-    ${sec?'':`<div class="field"><label for="f_sup">الموجه</label><select id="f_sup"><option value="">— بدون —</option>${supOpts.map(x=>`<option value="${x.id}" ${x.id===s.supervisor_id?'selected':''}>${esc(x.full_name)}</option>`).join('')}</select></div>`}
+    ${sec||isSup()?'':`<div class="field"><label for="f_sup">الموجه</label><select id="f_sup"><option value="">— بدون —</option>${supOpts.map(x=>`<option value="${x.id}" ${x.id===s.supervisor_id?'selected':''}>${esc(x.full_name)}</option>`).join('')}</select></div>`}
     <div class="field"><label for="f_phone">هاتف المدرسة</label><input id="f_phone" inputmode="tel" value="${esc(s.phone||'')}"></div>
     <div class="field" style="grid-column:1/-1"><label for="f_addr">العنوان</label><input id="f_addr" value="${esc(s.address||'')}"></div>
     <div class="field"><label for="f_mgr_name">اسم مدير المدرسة</label><input id="f_mgr_name" maxlength="150" value="${esc(S.mgr?.[s.id]?.manager_name||'')}"></div>
@@ -11705,7 +11714,8 @@ function renderMain(){
  }else{
   pane=teachersCard(s);
  }
- m.innerHTML=`  <section class="card school"><div class="sh"><h2>${esc(s.name)}</h2><span class="badge ${st.c}">${st.t}</span><button class="btn gold sm" id="approveBtn">${ap?'إعادة اعتماد البيانات':'اعتماد البيانات'}</button></div>
+ m.innerHTML=`  <section class="card school${isRO(s)?' ro':''}"><div class="sh"><h2>${esc(s.name)}</h2><span class="badge ${st.c}">${st.t}</span><button class="btn gold sm" id="approveBtn">${ap?'إعادة اعتماد البيانات':'اعتماد البيانات'}</button></div>
+  ${isRO(s)?'<div class="notice n-info" style="margin:10px 18px 0;font-size:13px">عرض فقط: هذه مدرسة ثانوية يديرها منسق المرحلة وموجهو المواد. يمكنك مراجعة بياناتها واعتمادها.</div>':''}
   ${miss.length?`<div class="notice n-bad" style="margin:10px 18px 0;font-size:13px">ناقص: ${miss.map(esc).join('، ')}</div>`:''}
   ${ap?`<div class="notice ${st.k==='ok'?'n-info':'n-warn'}" style="margin:10px 18px 0;font-size:13px">اعتُمدت في ${esc(fmtDate(ap))}${st.k==='changed'?' — وعُدّلت بعد ذلك؛ أعد الاعتماد بعد المراجعة.':'.'}</div>`:''}
   <div class="tabbar" role="tablist">${tabs.map(([k,l])=>`<button type="button" role="tab" data-tab="${k}" class="${S.tab===k?'on':''}">${l}${cnt[k]||''}</button>`).join('')}</div>
@@ -12059,7 +12069,7 @@ function saveTeacher(s,form){
 }
 
 /* ---------- الحفظ ---------- */
-async function guard(fn,keepFormOnError){if(S.busy)return;S.busy=true;ROOT.querySelectorAll('.main .btn').forEach(b=>b.disabled=true);let ok=false;try{await fn();ok=true}catch(e){toast(errText(e),true)}finally{S.busy=false;if(ok||!keepFormOnError){renderMain();renderList()}else ROOT.querySelectorAll('.main .btn').forEach(b=>b.disabled=false)}}
+async function guard(fn,keepFormOnError,allowRO){if(S.busy)return;{const s0=S.schools.find(x=>x.id===S.sel);if(!allowRO&&s0&&isRO(s0)){toast('عرض فقط: لا تملك صلاحية تعديل هذه المدرسة',true);return}}S.busy=true;ROOT.querySelectorAll('.main .btn').forEach(b=>b.disabled=true);let ok=false;try{await fn();ok=true}catch(e){toast(errText(e),true)}finally{S.busy=false;if(ok||!keepFormOnError){renderMain();renderList()}else ROOT.querySelectorAll('.main .btn').forEach(b=>b.disabled=false)}}
 function saveSchool(s){guard(async()=>{
  const patch={gender_type:$('f_gender').value||null,phone:digits($('f_phone').value)||null,address:$('f_addr').value.trim()||null};
  if($('f_sup'))patch.supervisor_id=$('f_sup').value||null;
@@ -12111,7 +12121,19 @@ function assignSheet(s,aid){
   bg.querySelectorAll('[data-un]').forEach(b=>b.onclick=()=>{closeSheet();unassignClass(s,aid,label)});
  });
 }
+function approveSup(s){
+ const miss=missingOf(s);
+ if(miss.length&&!confirm(`البيانات ناقصة (${miss.join('، ')}). اعتماد رغم ذلك؟`))return;
+ guard(async()=>{
+  if(typeof supervisorInvokeV75!=='function')throw new Error('تعذّر تحميل خدمة الاعتماد');
+  await supervisorInvokeV75('save_and_approve',s.id);
+  const r=await q(sb.from('school_submissions').select('approved_at,updated_at').eq('school_id',s.id).eq('term_id',S.term.id).eq('status','approved').maybeSingle());
+  S.approvals[s.id]=(r&&(r.approved_at||r.updated_at))||new Date().toISOString();
+  toast('تم اعتماد بيانات المدرسة');
+ },false,true);
+}
 function approve(s){
+ if(isSup())return approveSup(s);
  const miss=missingOf(s);
  if(miss.length&&!confirm(`البيانات ناقصة (${miss.join('، ')}). اعتماد رغم ذلك؟`))return;
  guard(async()=>{
@@ -12126,6 +12148,10 @@ function approve(s){
 
 /* ---------- v263: التركيب داخل صفحة البرنامج (Shadow DOM: تنسيق معزول عن البرنامج) ---------- */
 const SE_CSS=`
+/* v390: مدرسة بعرض فقط (موجه المادة في الثانوي): إخفاء أزرار التعديل */
+.ro [data-add],.ro [data-sec],.ro [data-selg],.ro #editBtn,.ro #tNew,.ro [data-tassign],.ro [data-tedit],.ro #supSave{display:none!important}
+.ro .chip,.ro [data-tcls]{pointer-events:none}
+.ro #supForm select{pointer-events:none;opacity:.8}
 /* v337: حقول التاريخ يوم/شهر/سنة (الحقل الأصلي شفاف فوق أيقونة التقويم) */
 .v337-wrap{position:relative;display:block;width:100%}
 .v337-wrap>.v337-text{width:100%;box-sizing:border-box;text-align:right;padding-left:38px}
@@ -12356,7 +12382,7 @@ window.seMountSchoolEntry=seMount;
 })();
 /* v263-end */
 async function v236SchoolEntryPage(){
- if(!V236_ROLES.includes(profile?.role))return '<div class="error">هذه الشاشة لمدير النظام ومنسق المرحلة فقط.</div>';
+ if(!V236_ROLES.includes(profile?.role))return '<div class="error">هذه الشاشة لمدير النظام ومنسق المرحلة والموجه فقط.</div>';
  setTimeout(()=>window.seMountSchoolEntry&&window.seMountSchoolEntry(),0);
  return '<div id="seHost"></div>';
 }
@@ -13524,7 +13550,7 @@ const V307_ORDER={
  /* منسق المرحلة: الاستخدام الفعلي = إدخال بيانات المدارس والمعلمون ثم الاعتماد ثم الاستكمال */
  stage_coordinator:['dashboard','alerts','schoolEntry','teachers','approval','completion','timetableProgress','reports','schools','supervisors','teacherTimetable','statistics'],
  /* الموجه: مسار العمل = الاستكمال ثم توزيع الفصول وتعديلها ثم الحفظ والاعتماد */
- supervisor:['dashboard','alerts','completion','assignments','classes','approval','timetableProgress','teachers','schools','reports','teacherTimetable','statistics','supervisors'],
+ supervisor:['dashboard','alerts','schoolEntry','completion','assignments','classes','approval','timetableProgress','teachers','schools','reports','teacherTimetable','statistics','supervisors'],
  /* مدير النظام: البيانات الواردة (اعتماد طلبات البوابة) ثم الاعتماد والمعلمون وإدخال بيانات المدارس */
  admin:['dashboard','alerts','incoming','approval','teachers','completion','schoolEntry','timetableProgress','schools','supervisors','reports','statistics','paidRequests','workload','teacherTimetable','users','onlineUsers','supervisorHealth'],
  first_supervisor:['dashboard','alerts','reports','timetableProgress','statistics','schools','teachers','supervisors','announcements','teacherTimetable'],
