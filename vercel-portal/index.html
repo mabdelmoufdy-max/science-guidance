@@ -6,7 +6,7 @@
 <meta name="robots" content="noindex,nofollow">
 <meta name="referrer" content="no-referrer">
 <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; connect-src https://xehjwzszhsaqdqmcatum.supabase.co; img-src data: 'self'; manifest-src 'self'; worker-src 'self'; base-uri 'none'; form-action 'none'">
-<title>بوابة المعلمين — v388</title>
+<title>بوابة المعلمين — v389</title>
 <link rel="manifest" href="/portal.webmanifest">
 <meta name="theme-color" content="#0f214d">
 <meta name="mobile-web-app-capable" content="yes">
@@ -373,8 +373,51 @@ body.is-login .wrap{max-width:none;padding:0}
     var bar = userBar();
     if (bar) root.replaceChildren(bar, v); else root.replaceChildren(v);
     window.scrollTo(0, 0);
+    syncNav();
   }
   function go(v) { S.view = v; render(); }
+
+  /* v389: زر الرجوع في الهاتف/المتصفح يرجع خطوة داخل البوابة بدل الخروج منها.
+     نُبقي مدخلًا واحدًا زائدًا في سجل المتصفح («علامة») طالما الشاشة داخلية أو توجد نافذة/ورقة مفتوحة؛ الرجوع يُنفّذ «الرجوع المنطقي»
+     (يغلق النافذة أو الورقة أولًا، ويؤكد التعديلات غير المحفوظة في الجدول)، وفي الشاشة الرئيسية يخرج من البوابة كالمعتاد. */
+  var NAV = { marker: false, cur: 0, seq: 0, skip: 0, at: 0 };
+  function navIsRoot() {
+    switch (S.view) {
+      case 'timetable': case 'supteacher': case 'supassign': return false;
+      case 'supschool': return !(S.sup && S.sup.schools && S.sup.schools.length > 1);
+      default: return true;
+    }
+  }
+  function navSheet() { var sh = document.getElementById('asg-sheet'); return sh && sh.firstChild ? sh : null; }
+  function syncNav() {
+    var need = !navIsRoot() || !!document.querySelector('.mdl') || !!navSheet();
+    if (NAV.skip > 0 && Date.now() - NAV.at > 1500) NAV.skip = 0; /* لم يصل حدث الرجوع المتوقع */
+    if (need && !NAV.marker && !NAV.skip) {
+      try { NAV.seq++; history.pushState({ tp: 'm', id: NAV.seq }, '', location.href); NAV.marker = true; NAV.cur = NAV.seq; } catch (e) { }
+    } else if (!need && NAV.marker) {
+      NAV.marker = false; NAV.cur = 0; NAV.skip++; NAV.at = Date.now();
+      try { history.back(); } catch (e) { NAV.skip--; }
+    }
+  }
+  function navBack() {
+    var ov = document.querySelector('.mdl'); if (ov) { ov.remove(); return; }
+    var sh = navSheet(); if (sh) { sh.replaceChildren(); return; }
+    switch (S.view) {
+      case 'timetable': if (S.ttBack) S.ttBack(); return;
+      case 'supteacher': go('supschool'); return;
+      case 'supassign': if (S.sup && S.sup.school) openSchool(S.sup.school.id).catch(function () { go('supschool'); }); return;
+      case 'supschool': if (S.sup && S.sup.schools && S.sup.schools.length > 1) go('supschools'); return;
+    }
+  }
+  try { if (history.state && history.state.tp === 'm') history.replaceState(null, '', location.href); } catch (e) { }
+  window.addEventListener('popstate', function (ev) {
+    var st = ev.state, onM = !!(st && st.tp === 'm');
+    if (NAV.skip > 0) { NAV.skip--; NAV.marker = onM; NAV.cur = onM ? st.id : 0; syncNav(); return; }
+    if (onM && st.id > NAV.cur) { NAV.marker = true; NAV.cur = st.id; syncNav(); return; } /* تقدّم للأمام (متصفح الكمبيوتر) */
+    NAV.marker = onM; NAV.cur = onM ? st.id : 0;
+    navBack(); syncNav();
+  });
+  try { new MutationObserver(function () { syncNav(); }).observe(document.body, { childList: true, subtree: true }); } catch (e) { }
   function errbox() { return h('div', { class: 'err', role: 'alert', 'aria-live': 'assertive' }); }
   function showErr(box, msg) { box.textContent = msg; box.classList.add('on'); }
   function hideErr(box) { box.textContent = ''; box.classList.remove('on'); }
@@ -1036,6 +1079,7 @@ body.is-login .wrap{max-width:none;padding:0}
       if (T.base.size) actions.appendChild(mkBtn('btn2', 'إلغاء التعديل', function () { T.grid = new Map(T.base); T.mode = 'view'; T.sel = null; drawChips(); drawGrid(); }, { id: 'tt-cancel', style: 'margin-top:8px' }));
     }
     var back = function () { if (edit() && !same() && !window.confirm('لديك تعديلات غير محفوظة. هل تريد الخروج؟')) return; go(T.sup ? 'supteacher' : 'confirm'); };
+    S.ttBack = back; /* v389: زر الرجوع في الهاتف يمر بنفس تأكيد التعديلات غير المحفوظة */
     pickNext(); drawChips(); drawGrid();
     if (T.err) { showErr(box, T.err); T.err = null; } // v339: تبقى رسالة التعارض بعد تحديث الجدول
     var head = h('div', { class: 'top' }, h('button', { type: 'button', class: 'link', id: 'tt-back', onclick: back }, T.sup ? '‹ بيانات المعلم' : '‹ بياناتي'), h('strong', null, T.sup ? 'جدول المعلم' : 'جدولي الأسبوعي'));
