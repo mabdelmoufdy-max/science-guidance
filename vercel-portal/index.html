@@ -6,7 +6,7 @@
 <meta name="robots" content="noindex,nofollow">
 <meta name="referrer" content="no-referrer">
 <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; connect-src https://xehjwzszhsaqdqmcatum.supabase.co; img-src data: 'self'; manifest-src 'self'; worker-src 'self'; base-uri 'none'; form-action 'none'">
-<title>بوابة المعلمين — v387</title>
+<title>بوابة المعلمين — v388</title>
 <link rel="manifest" href="/portal.webmanifest">
 <meta name="theme-color" content="#0f214d">
 <meta name="mobile-web-app-capable" content="yes">
@@ -202,6 +202,26 @@ body.is-login .wrap{max-width:none;padding:0}
 .kv .fill .v>span:not(.tag){flex:1;min-width:0;display:flex;justify-content:flex-end}
 .tag.lk{background:none;padding:0 2px;font-size:.8rem;opacity:.7}
 .fill-save{margin-top:12px}.ok-note{background:#ecfdf5;border-color:#a7f3d0;color:#065f46}
+/* v388: إصلاحات التنسيق على الهاتف وتمييز المجموعات */
+.coord-link{display:inline-block;padding:6px 2px}
+.kv .nw{white-space:nowrap}
+.asg-chip small.kd{font-size:.68rem;font-weight:700;opacity:.85}
+.tt-kd{display:block;font-size:.56rem;font-weight:700;color:var(--muted);line-height:1.1}
+@media(max-width:480px){
+.kv .fill{flex-wrap:wrap}
+.kv .fill .k{flex:0 0 100%;max-width:100%}
+.kv .fill .v{flex:1 1 100%}
+.kv .fill .fill-in{max-width:none}
+}
+@media(max-width:400px){
+.kv .k{white-space:normal}
+.tt-foot{flex-wrap:wrap}
+.tt-foot .tt-count{flex:1 1 100%}
+.tt-foot #tt-actions{flex:1 1 100%}
+.tt-foot #tt-actions .btn,.tt-foot #tt-actions .btn2{flex:1}
+.tt-cell{font-size:.82rem}
+.tt-sno{font-size:.62rem}
+}
 </style>
 </head>
 <body>
@@ -227,7 +247,7 @@ body.is-login .wrap{max-width:none;padding:0}
   var JOBS = ['معلم مساعد', 'معلم', 'معلم أول', 'معلم أول (أ)', 'كبير معلمين', 'معلم خبير'];
   var QUALS = ['بكالوريوس علوم وتربية', 'بكالوريوس تربية', 'بكالوريوس علوم', 'بكالوريوس علوم + دبلومة تربوية', 'بكالوريوس تربية + دبلومة'];
   var LBL = {
-    full_name: 'الاسم', civil_id: 'الرقم المدني', phone: 'التليفون', email: 'البريد الإلكتروني', residence: 'محل الإقامة',
+    full_name: 'الاسم', civil_id: 'الرقم القومي', phone: 'التليفون', email: 'البريد الإلكتروني', residence: 'محل الإقامة',
     job_title: 'الدرجة الوظيفية', specialty: 'التخصص', qualification: 'المؤهل', qualification_year: 'سنة المؤهل',
     appointment_date: 'تاريخ التعيين', grade_acquired_date: 'تاريخ الحصول على الدرجة', work_start_date: 'تاريخ استلام العمل', work_type: 'نوع العمل', teacher_code: 'كود المعلم'
   };
@@ -250,6 +270,14 @@ body.is-login .wrap{max-width:none;padding:0}
   function clean(s) { return String(s == null ? '' : s).replace(/\s+/g, ' ').trim(); }
   function arNorm(s) {
     return toLatin(s).replace(DIAC, '').replace(/[أإآٱ]/g, 'ا').replace(/ى/g, 'ي').replace(/ة/g, 'ه').replace(/\s+/g, ' ').trim().toLowerCase();
+  }
+  /* v388: كتابة التاريخ يوم/شهر/سنة (حقل التاريخ الأصلي يعرض شهر/يوم/سنة على الأجهزة الإنجليزية ويُقصّ على الهاتف) */
+  function dateIso(v) {
+    var m = /^(\d{2})\/(\d{2})\/(\d{4})$/.exec(v || ''); if (!m) return null;
+    var y = +m[3], mo = +m[2], d = +m[1], t = new Date(Date.UTC(y, mo - 1, d));
+    if (t.getUTCFullYear() !== y || t.getUTCMonth() !== mo - 1 || t.getUTCDate() !== d) return null;
+    var n = new Date(), today = n.getFullYear() + '-' + ('0' + (n.getMonth() + 1)).slice(-2) + '-' + ('0' + n.getDate()).slice(-2), iso = m[3] + '-' + m[2] + '-' + m[1];
+    return (y < 1970 || iso > today) ? null : iso;
   }
   function fmtDate(iso) { var m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(iso || ''); return m ? m[3] + '/' + m[2] + '/' + m[1] : (iso || ''); }
   function stageTitle(k) { for (var i = 0; i < STAGES.length; i++) if (STAGES[i].k === k) return STAGES[i].t; return ''; }
@@ -295,9 +323,9 @@ body.is-login .wrap{max-width:none;padding:0}
   function reasonMsg(r) {
     var f = LBL[r.field] || (r.field === 'school_id' ? 'المدرسة' : r.field === 'classes' ? 'الفصول' : r.field === 'deleg_classes' ? 'فصول الانتداب' : '');
     switch (r.reason) {
-      case 'bad_civil': return 'الرقم المدني يجب أن يكون 14 رقمًا.';
+      case 'bad_civil': return 'الرقم القومي يجب أن يكون 14 رقمًا.';
       case 'bad_phone': return 'اكتب رقم الهاتف كاملًا (11 رقمًا يبدأ بـ 01).';
-      case 'no_match': return 'البيانات غير مطابقة. تأكد من الرقم المدني ومن رقم هاتفك المسجّل ' + (r.sup ? 'وكود المعلم في سجل المعلمين. هذه الصفحة لمشرف المدرسة (أقدم معلم أساسي) فقط.' : 'لدى المدرسة.') +
+      case 'no_match': return 'البيانات غير مطابقة. تأكد من الرقم القومي ومن رقم هاتفك المسجّل ' + (r.sup ? 'وكود المعلم في سجل المعلمين. هذه الصفحة لمشرف المدرسة (أقدم معلم أساسي) فقط.' : 'لدى المدرسة.') +
         (r.remaining > 0 ? ' متبقي لك ' + plural(r.remaining, 'محاولة واحدة', 'محاولتان', 'محاولات') + '.' : ' كانت هذه آخر محاولة، وسيتوقف الدخول مؤقتًا.');
       case 'locked': return 'تم إيقاف الدخول مؤقتًا بسبب محاولات خاطئة متكررة. حاول بعد ' + (r.minutes || 15) + ' دقيقة.';
       case 'busy': return 'الخدمة مشغولة الآن، حاول بعد قليل.';
@@ -308,8 +336,8 @@ body.is-login .wrap{max-width:none;padding:0}
       case 'subject_required': return 'اختر المادة التي تدرّسها في كل فصل ثانوي اخترته.';
       case 'invalid_subject': return 'المادة المختارة غير مقررة لهذا الفصل.';
       case 'closed': return r.note || 'فترة تعديل البيانات مغلقة حاليًا.';
-      case 'exists': return isSup() ? 'هذا الرقم المدني مسجّل بالفعل في النظام. إن كان معلمًا في مدرستك فابحث عنه في القائمة، وإن كان في مدرسة أخرى فتواصل مع إدارة التوجيه.'
-        : 'هذا الرقم المدني مسجّل بالفعل. ارجع واختر «معلم مسجّل في النظام».';
+      case 'exists': return isSup() ? 'هذا الرقم القومي مسجّل بالفعل في النظام. إن كان معلمًا في مدرستك فابحث عنه في القائمة، وإن كان في مدرسة أخرى فتواصل مع إدارة التوجيه.'
+        : 'هذا الرقم القومي مسجّل بالفعل. ارجع واختر «معلم مسجّل في النظام».';
       case 'forbidden': return 'هذا الإجراء غير متاح لك على هذا المعلم أو هذه المدرسة.';
       case 'no_change': return 'لا توجد تعديلات لإرسالها. غيّر بيانًا أو فصلًا أولًا.';
       case 'no_term': return 'لا يوجد فصل دراسي نشط حاليًا.';
@@ -615,8 +643,8 @@ body.is-login .wrap{max-width:none;padding:0}
         await enterRegistered(r, c, p);
       } catch (e) { showErr(box, errMsg(e)); btnBusy(go1, false); }
     } },
-      h('p', { class: 'sub', style: 'text-align:right' }, 'اكتب الرقم المدني ورقم هاتفك المسجّل لدى المدرسة، وسنعرض عليك بياناتك لتراجعها دون إعادة كتابتها.'),
-      h('div', { class: 'fg' }, h('label', { for: 'g_civil' }, 'الرقم المدني (القومي)'), civil, hintC),
+      h('p', { class: 'sub', style: 'text-align:right' }, 'اكتب الرقم القومي ورقم هاتفك المسجّل لدى المدرسة، وسنعرض عليك بياناتك لتراجعها دون إعادة كتابتها.'),
+      h('div', { class: 'fg' }, h('label', { for: 'g_civil' }, 'الرقم القومي'), civil, hintC),
       h('div', { class: 'fg' }, h('label', { for: 'g_phone' }, 'رقم الهاتف'), phone, hintP),
       box, go1);
     var newBox = h('div', null,
@@ -752,8 +780,14 @@ body.is-login .wrap{max-width:none;padding:0}
     if (S.limited) return h('div', { class: 'warn', id: 'fill-nophone' }, 'هاتفك غير مسجّل في البرنامج، فلا يمكن إكمال البيانات من هنا. تواصل مع موجهك لتسجيل هاتفك.');
     if (!keys.length) return S.fillMsg ? h('div', { class: 'note ok-note', id: 'fill-msg' }, S.fillMsg) : null;
     var btn = mkBtn('btn-ok', '💾 حفظ البيانات الناقصة', async function () {
-      hideErr(box); var f = {}, n = 0;
-      keys.forEach(function (k) { var v = clean(FI[k].value); if (v) { f[k] = (k === 'teacher_code' || k === 'qualification_year') ? digits(v) : v; n++; } });
+      hideErr(box); var f = {}, n = 0, bad = '';
+      keys.forEach(function (k) {
+        var v = clean(FI[k].value); if (!v) return;
+        if (FI[k].getAttribute('data-date')) { var iso = dateIso(v); if (!iso) { if (!bad) bad = LBL[k]; return; } f[k] = iso; }
+        else f[k] = (k === 'teacher_code' || k === 'qualification_year') ? digits(v) : v;
+        n++;
+      });
+      if (bad) { showErr(box, 'تاريخ غير صحيح في «' + bad + '». اكتبه يوم/شهر/سنة مثل 01/09/2010 (ولا يكون بعد اليوم).'); return; }
       if (!n) { showErr(box, 'اكتب بيانًا واحدًا على الأقل ثم اضغط «حفظ».'); return; }
       btnBusy(btn, true, 'جارٍ الحفظ...');
       try {
@@ -768,14 +802,23 @@ body.is-login .wrap{max-width:none;padding:0}
   }
   VIEWS.confirm = function () {
     var miss = missingList(), box = errbox();
-    var rows = [kvRow('الاسم', pv('full_name')), kvRow('الرقم المدني', null)];
-    rows[1] = h('div', null, h('span', { class: 'k' }, 'الرقم المدني'), h('span', { class: 'v' }, h('span', { class: 'ltr' }, '••••••••••' + S.auth.civil.slice(-4))));
+    var rows = [kvRow('الاسم', pv('full_name')), kvRow('الرقم القومي', null)];
+    rows[1] = h('div', null, h('span', { class: 'k' }, 'الرقم القومي'), h('span', { class: 'v' }, h('span', { class: 'ltr' }, '••••••••••' + S.auth.civil.slice(-4))));
     /* v372: البيان الناقص حقل إدخال، والمسجّل للعرض فقط 🔒 */
     var FI = {}, canFill = !S.limited;
     var lock = h('span', { class: 'tag lk', title: 'مسجّل — للتعديل تواصل مع موجهك أو منسق المرحلة' }, '🔒');
     function lk() { return lock.cloneNode(true); }
     function fin(k, el) { FI[k] = el; el.id = 'fill-' + k; el.classList.add('fill-in'); return el; }
-    function txt(k, attrs) { return fin(k, h('input', Object.assign({ type: 'text', autocomplete: 'off' }, attrs || {}))); }
+    function txt(k, attrs) {
+      var el = fin(k, h('input', Object.assign({ type: 'text', autocomplete: 'off' }, attrs || {})));
+      if (attrs && attrs.inputmode === 'numeric') bindDigits(el, +attrs.maxlength || 8, null); /* v388: الأرقام العربية تتحول فورًا */
+      return el;
+    }
+    function dateIn(k) {
+      var el = fin(k, h('input', { type: 'text', inputmode: 'numeric', dir: 'ltr', maxlength: '10', autocomplete: 'off', placeholder: 'يوم/شهر/سنة', 'data-date': '1' }));
+      el.addEventListener('input', function () { var d = digits(el.value).slice(0, 8), o = d.slice(0, 2); if (d.length > 2) o += '/' + d.slice(2, 4); if (d.length > 4) o += '/' + d.slice(4); if (o !== el.value) el.value = o; });
+      return el;
+    }
     function fillRow(label, k, value, el) {
       if (value) return kvRow(label, value, false, lk());
       if (!canFill) return kvRow(label, '', true);
@@ -800,8 +843,8 @@ body.is-login .wrap{max-width:none;padding:0}
     if (perm || pv('job_title')) rows.push(kvRow('الدرجة الوظيفية', pv('job_title') || 'غير مسجّل'));
     ['appointment_date', 'grade_acquired_date', 'work_start_date'].forEach(function (k) {
       if (!(perm || pv(k) || k === 'work_start_date')) return;
-      rows.push(fillRow(LBL[k], k, pv(k) ? h('span', { class: 'ltr', id: 'v-' + k }, fmtDate(pv(k))) : '',
-        pv(k) ? null : fin(k, h('input', { type: 'date', max: new Date().toISOString().slice(0, 10), min: '1970-01-01' }))));
+      rows.push(fillRow(LBL[k], k, pv(k) ? h('span', { class: 'ltr nw', id: 'v-' + k }, fmtDate(pv(k))) : '',
+        pv(k) ? null : dateIn(k)));
     });
     var cn = classLines();
     rows.push(h('div', { class: miss.indexOf('classes') >= 0 ? 'miss' : null }, h('span', { class: 'k' }, 'الفصول'),
@@ -898,6 +941,11 @@ body.is-login .wrap{max-width:none;padding:0}
     var edit = function () { return T.mode === 'edit' && d.open; };
     var chips = h('div', { class: 'tt-chips', id: 'tt-chips' }), tbody = h('tbody'), count = h('div', { class: 'tt-count', id: 'tt-count' }), actions = h('div', { id: 'tt-actions' });
     var assigns = d.assignments || [];
+    /* v388: مجموعتان بنفس الرقم والمادة من نوعين مختلفين (عام/مهني…) تُميَّزان بالنوع في الشريحة والخانة */
+    var ambK = {}, KIND = /^(.*?)\s*[—–-]\s*مجموعة\s*\d+\s*$/;
+    function ak(a) { return a.school_id + '|' + ttShort(a) + '|' + ttSubj(a); }
+    assigns.forEach(function (a) { ambK[ak(a)] = (ambK[ak(a)] || 0) + 1; });
+    function kindOf(a) { if (ambK[ak(a)] < 2) return ''; var g = KIND.exec(a.class_label || ''); return g ? g[1] : ''; }
     // v373: المعلم المنتدب — تبويب لكل مدرسة، ورقم المدرسة في خانة الجدول
     var schools = [], sNo = {};
     assigns.forEach(function (a) { if (!(a.school_id in sNo)) { schools.push({ id: a.school_id, name: a.school_name || '' }); sNo[a.school_id] = schools.length; } });
@@ -930,7 +978,7 @@ body.is-login .wrap{max-width:none;padding:0}
         var left = a.periods - ttCount(T, a.assignment_id);
         chips.appendChild(h('button', { type: 'button', class: 'tt-chip' + (T.sel === a.assignment_id ? ' on' : '') + (left <= 0 ? ' done' : ''), 'data-aid': a.assignment_id,
           onclick: function () { T.sel = a.assignment_id; if (multi) T.stab = a.school_id; note.textContent = ''; drawChips(); drawGrid(); } },
-          ttShort(a) + (ttSubj(a) ? ' ' + ttSubj(a) : ''), h('small', null, left <= 0 ? 'مكتمل ✓' : 'باقي ' + left)));
+          ttShort(a) + (ttSubj(a) ? ' ' + ttSubj(a) : ''), h('small', null, (kindOf(a) ? kindOf(a) + ' · ' : '') + (left <= 0 ? 'مكتمل ✓' : 'باقي ' + left))));
       });
     }
     function drawGrid() {
@@ -939,7 +987,7 @@ body.is-login .wrap{max-width:none;padding:0}
         var tr = h('tr', null, h('td', { class: 'tt-p' }, String(p)));
         TT_DAYS.forEach(function (w) {
           var key = w + ':' + p, aid = T.grid.get(key), a = aid && T.byId[aid], cls = 'tt-cell', label = '', dis = !edit();
-          if (a) { cls += ' f'; label = [ttShort(a), ttSubj(a) ? h('small', null, ttSubj(a)) : null, multi ? h('span', { class: 'tt-sno' }, sMark(a.school_id)) : null]; }
+          if (a) { cls += ' f'; label = [ttShort(a), ttSubj(a) ? h('small', null, ttSubj(a)) : null, kindOf(a) ? h('span', { class: 'tt-kd' }, kindOf(a)) : null, multi ? h('span', { class: 'tt-sno' }, sMark(a.school_id)) : null]; }
           else if (T.other.has(key)) { cls += ' b'; label = '🏫'; }
           else if (edit() && T.sel && T.busy.has(T.byId[T.sel].class_id + ':' + w + ':' + p)) { cls += ' b'; label = '🔒'; }
           tr.appendChild(h('td', null, h('button', { type: 'button', class: cls, 'data-k': key, disabled: dis, 'aria-label': TT_NAMES[w] + ' الحصة ' + p, onclick: function () { tap(w, p); } }, label)));
@@ -1120,9 +1168,9 @@ body.is-login .wrap{max-width:none;padding:0}
       var ci = h('input', { type: 'tel', id: 'f_civil_id', inputmode: 'numeric', maxlength: '20', autocomplete: 'off', dir: 'ltr', value: S.person.civil_id || '' });
       var hc = h('div', { class: 'hint' }); bindDigits(ci, 14, hc);
       ci.addEventListener('input', function () { S.person.civil_id = ci.value; ci.classList.remove('invalid'); saveDraft(); });
-      body.appendChild(fg('الرقم المدني (القومي)', ci, 'f_civil_id', true, hc));
+      body.appendChild(fg('الرقم القومي', ci, 'f_civil_id', true, hc));
     } else {
-      body.appendChild(h('div', { class: 'fg' }, h('label', null, 'الرقم المدني'), h('input', { type: 'text', readonly: true, dir: 'ltr', value: '••••••••••' + (S.mode === 'sup_edit' ? S.sup.t.civil_last4 : S.auth.civil.slice(-4)), 'aria-readonly': 'true' })));
+      body.appendChild(h('div', { class: 'fg' }, h('label', null, 'الرقم القومي'), h('input', { type: 'text', readonly: true, dir: 'ltr', value: '••••••••••' + (S.mode === 'sup_edit' ? S.sup.t.civil_last4 : S.auth.civil.slice(-4)), 'aria-readonly': 'true' })));
     }
     var ph = h('input', { type: 'tel', id: 'f_phone', inputmode: 'numeric', maxlength: '20', autocomplete: 'off', dir: 'ltr', value: S.person.phone || '' });
     var hp = h('div', { class: 'hint' }); bindPhone(ph, hp);
@@ -1177,7 +1225,7 @@ body.is-login .wrap{max-width:none;padding:0}
     if (step === 1) {
       var name = pv('full_name');
       if (name.length < 6 || name.split(' ').length < 2) { setInvalid('f_full_name', 'اكتب الاسم الكامل.'); return false; }
-      if ((S.mode === 'new' || S.mode === 'sup_new') && digits(S.person.civil_id).length !== 14) { setInvalid('f_civil_id', 'الرقم المدني يجب أن يكون 14 رقمًا.'); return false; }
+      if ((S.mode === 'new' || S.mode === 'sup_new') && digits(S.person.civil_id).length !== 14) { setInvalid('f_civil_id', 'الرقم القومي يجب أن يكون 14 رقمًا.'); return false; }
       var ph = normPhone(S.person.phone);
       var okPhone = /^01[0125][0-9]{8}$/.test(ph) || (S.mode === 'registered' && ph !== '' && ph === normPhone(S.base.phone)) || (S.mode === 'sup_edit' && ph === '');
       if (!okPhone) { setInvalid('f_phone', 'اكتب رقم الهاتف كاملًا (11 رقمًا يبدأ بـ 01).'); return false; }
@@ -1425,7 +1473,7 @@ body.is-login .wrap{max-width:none;padding:0}
     var wt = S.person.work_type === 'permanent' ? 'معيّن (دائم)' : S.person.work_type === 'paid' ? 'بالأجر (عقد)' : '';
     if (S.supVisitor) rows.push(h('div', null, h('span', { class: 'k' }, 'المعلم'), h('span', { class: 'v' }, S.sup.t.full_name)));
     else row('full_name', 'الاسم', pv('full_name'), S.base.full_name);
-    if (isNew) rows.push(h('div', null, h('span', { class: 'k' }, 'الرقم المدني'), h('span', { class: 'v' }, h('span', { class: 'ltr' }, digits(S.person.civil_id)))), h('div', null, h('span', { class: 'k' }, 'نوع العمل'), h('span', { class: 'v' }, wt || '—')));
+    if (isNew) rows.push(h('div', null, h('span', { class: 'k' }, 'الرقم القومي'), h('span', { class: 'v' }, h('span', { class: 'ltr' }, digits(S.person.civil_id)))), h('div', null, h('span', { class: 'k' }, 'نوع العمل'), h('span', { class: 'v' }, wt || '—')));
     if (!S.supVisitor) {
       row('phone', 'التليفون', pv('phone'), S.base.phone);
       row('email', 'البريد', pv('email'), S.base.email);
@@ -1497,8 +1545,8 @@ body.is-login .wrap{max-width:none;padding:0}
         if (S.sup.schools.length === 1) await openSchool(S.sup.schools[0].id); else go('supschools');
       } catch (e) { showErr(box, errMsg(e)); btnBusy(btn, false); }
     } },
-      h('p', { class: 'sub', style: 'text-align:right' }, 'اكتب رقمك المدني ورقم هاتفك المسجّل في سجل المعلمين، وسنعرض لك معلمي مدرستك (لمشرف المدرسة: أقدم معلم أساسي).'),
-      h('div', { class: 'fg' }, h('label', { for: 'sg_civil' }, 'الرقم المدني (القومي)'), civil, hintC),
+      h('p', { class: 'sub', style: 'text-align:right' }, 'اكتب رقمك القومي ورقم هاتفك المسجّل في سجل المعلمين، وسنعرض لك معلمي مدرستك (لمشرف المدرسة: أقدم معلم أساسي).'),
+      h('div', { class: 'fg' }, h('label', { for: 'sg_civil' }, 'الرقم القومي'), civil, hintC),
       h('div', { class: 'fg' }, h('label', { for: 'sg_phone' }, 'رقم الهاتف'), phone, hintP),
       box, btn);
     return h('div', { class: 'card' }, suptop('مشرف مدرسة', '‹ الرئيسية', goHome), form);
@@ -1558,7 +1606,7 @@ body.is-login .wrap{max-width:none;padding:0}
   VIEWS.supteacher = function () {
     var t = S.sup.t, rows = [];
     rows.push(kvRow('الاسم', t.full_name));
-    rows.push(h('div', null, h('span', { class: 'k' }, 'الرقم المدني'), h('span', { class: 'v' }, h('span', { class: 'ltr' }, '••••••••••' + t.civil_last4))));
+    rows.push(h('div', null, h('span', { class: 'k' }, 'الرقم القومي'), h('span', { class: 'v' }, h('span', { class: 'ltr' }, '••••••••••' + t.civil_last4))));
     rows.push(kvRow('كود المعلم', t.teacher_code ? h('span', { class: 'ltr', id: 'v-code' }, t.teacher_code) : 'غير مسجّل'));
     if (t.work_type) rows.push(kvRow('نوع العمل', wtLabel(t.work_type) || String(t.work_type)));
     if (t.job_title) rows.push(kvRow('الدرجة الوظيفية', t.job_title));
@@ -1678,7 +1726,10 @@ body.is-login .wrap{max-width:none;padding:0}
     if (r && typeof r.reason === 'string' && /[؀-ۿ]/.test(r.reason)) return r.reason;
     return errMsg(r);
   }
-  function asgTileNo(t, multi) { var m = /(\d+)\s*$/.exec(t.class_label || ''); return (!multi && m) ? m[1] : (t.class_label || ''); }
+  /* v388: مجموعات الثانوي «النوع — مجموعة N» تُرقَّم من 1 لكل نوع، فيظهر النوع على البطاقة كي لا تتشابه (عام/مهني/الفيزياء/الأحياء…) */
+  var ASG_GRP = /^(.*?)\s*[—–-]\s*مجموعة\s*(\d+)\s*$/;
+  function asgTileNo(t, multi) { var l = t.class_label || '', g = ASG_GRP.exec(l); if (g) return g[2]; var m = /(\d+)\s*$/.exec(l); return (!multi && m) ? m[1] : l; }
+  function asgTileKind(t) { var g = ASG_GRP.exec(t.class_label || ''); return g ? g[1] : ''; }
 
   VIEWS.supassign = function () {
     var A = S.asg, box = errbox(), host = h('div', { id: 'asg-host' }), sheet = h('div', { id: 'asg-sheet' });
@@ -1767,14 +1818,14 @@ body.is-login .wrap{max-width:none;padding:0}
         (g ? g.kinds : []).forEach(function (k) { ksel.appendChild(h('option', { value: k.kind }, k.label)); });
       }
       gsel.addEventListener('change', drawKinds); drawKinds();
-      var go = mkBtn('btn', O.secondary ? 'إضافة المجموعة' : 'إضافة الفصل', async function (ev) {
+      var addBtn = mkBtn('btn', O.secondary ? 'إضافة المجموعة' : 'إضافة الفصل', async function (ev) {
         hideErr(sb); var b = ev.currentTarget; btnBusy(b, true, 'جارٍ الإضافة...');
         try {
           var r = await rpc('teacher_portal_sup_add_class', Object.assign(asgAuth(), { p_grade: gsel.value, p_kind: O.secondary ? ksel.value : null }));
           if (!r || r.ok !== true) { showErr(sb, asgMsg(r || {})); btnBusy(b, false); return; }
           closeSheet(); await reload();
         } catch (e) { showErr(sb, asgMsg(e)); btnBusy(b, false); }
-      }, { id: 'add-go' });
+      }, { id: 'add-go', disabled: O.open === false });
       sheet.replaceChildren(h('div', { class: 'asg-ov', onclick: closeSheet }),
         h('div', { class: 'asg-sheet', id: 'asg-panel' },
           h('h3', null, O.secondary ? 'إضافة مجموعة' : 'إضافة فصل'),
@@ -1783,7 +1834,7 @@ body.is-login .wrap{max-width:none;padding:0}
           O.secondary ? h('label', { class: 'sub', style: 'display:block;text-align:right;margin-top:8px' }, 'نوع المجموعة (بحصصها المقررة)') : null,
           O.secondary ? ksel : null,
           h('p', { class: 'sub', style: 'text-align:right' }, O.secondary ? 'تُضاف مجموعة جديدة برقمها التالي وحصصها المقررة، وتظهر غير مسندة.' : 'يُضاف الفصل بأصغر رقم ناقص وحصصه المقررة، ويظهر غير مسند.'),
-          sb, go, h('div', { style: 'height:8px' }), mkBtn('btn2', 'إغلاق', closeSheet, { id: 'asg-close' })));
+          sb, addBtn, h('div', { style: 'height:8px' }), mkBtn('btn2', 'إغلاق', closeSheet, { id: 'asg-close' })));
     }
 
     function paint() {
@@ -1803,6 +1854,7 @@ body.is-login .wrap{max-width:none;padding:0}
               return h('button', { type: 'button', class: 'asg-chip' + (t.assignment_id ? '' : ' free'), 'data-class': t.class_id, 'data-subject': t.subject_id,
                 onclick: function () { hideErr(box); if (t.assignment_id) showAssigned(t); else showPicker(t, false); } },
                 h('b', null, asgTileNo(t, multi)),
+                asgTileKind(t) ? h('small', { class: 'kd' }, asgTileKind(t)) : null,
                 h('small', null, (multi && t.subject_name ? t.subject_name + ' · ' : '') + (t.teacher_name || 'غير مسند')));
             })))));
       });
