@@ -1,5 +1,5 @@
 <!doctype html>
-<!-- v392: شاشة «صحائف الأحوال» لمدير النظام (بطلب المستخدم 2026-11-16، المرحلة 1): مفتاح رفع «صحيفة الأحوال الإلكترونية للمعلم» لكل مرحلة (إعدادي/ثانوي عام/ثانوي صناعي مفتوحة، الابتدائي مغلق) + قائمة من رفع ومن لم يرفع بفلاتر المرحلة والمدرسة والحالة والنوع + «عرض» الملف برابط مؤقت. قاعدة البيانات v392 (حاوية teacher-statements الخاصة، admin_statements_overview، admin_set_statement_stage) ودالة الحافة teacher-statement-upload وبطاقة الرفع في بوابة المعلمين. -->
+<!-- v392: شاشة «صحائف الأحوال» لمدير النظام (بطلب المستخدم 2026-11-16، المرحلة 1): مفتاح رفع «صحيفة الأحوال الإلكترونية للمعلم» لكل مرحلة (إعدادي/ثانوي عام/ثانوي صناعي مفتوحة، الابتدائي مغلق) + قائمة من رفع ومن لم يرفع (المعلمون الثابتون فقط — معلم الأجر لا صحيفة له) بفلاتر المرحلة والمدرسة والحالة + «عرض» الملف برابط مؤقت. قاعدة البيانات v392 (حاوية teacher-statements الخاصة، admin_statements_overview، admin_set_statement_stage) ودالة الحافة teacher-statement-upload وبطاقة الرفع في بوابة المعلمين. -->
 <!-- v391: تنبيه «مدرسة بلا موجه» لا يظهر لمدارس الثانوي التي لها موجه مادة نشط (supervisor_school_subjects)؛ حقل الموجه المباشر فيها فارغ عمدًا (قرار v208) فكانت الـ12 مدرسة ثانوية تظهر بالخطأ. عرض فقط. -->
 <!-- v390: «إدخال بيانات المدارس» للموجه (بطلب المستخدم 2026-11-16): الشاشة نفسها (v263) تظهر في قائمة الموجه ويعدّل بها مدارسه المباشرة (ابتدائي/إعدادي) كالمنسق: بيانات المدرسة الأساسية، الفصول، المعلمون، الإسناد. مدارس الثانوي (موجه المادة): عرض واعتماد فقط. زر «اعتماد البيانات» = الاعتماد الفعلي (supervisor-save-and-approve) بدل علامة المنسق. تبويب «الموجهون» والموجه المسؤول عن المعلم عرض فقط. قاعدة البيانات: v390 (سياسات الموجه على school_classes/teaching_assignments/schools بنطاق مدرسته المباشرة + مشغّل يمنع تغيير الموجه/المرحلة/الاسم/المدير/الاعتماد). -->
 <!-- v385: «تجاهل» في قائمة المكررين محفوظ في قاعدة البيانات لكل الأجهزة والمستخدمين (مدير/منسق/موجه) عبر dup_ignore_list/add/clear؛ وما حُفظ سابقًا على جهازك ينتقل تلقائيًا مرة واحدة. -->
@@ -15334,8 +15334,8 @@ teachersPage=async function(opts={}){
 /* v382-end */
 
 
-/* v392-begin: «صحائف الأحوال» لمدير النظام — مفتاح الرفع لكل مرحلة + من رفع ومن لم يرفع (المرحلة 1؛ التنزيل والتفريغ في المرحلة 2) */
-const V392={stages:[],rows:[],loaded:false,stage:'',school:'',status:'',wt:'',err:''};
+/* v392-begin: «صحائف الأحوال» لمدير النظام — مفتاح الرفع لكل مرحلة + من رفع ومن لم يرفع (المرحلة 1؛ التنزيل والتفريغ في المرحلة 2). المعلمون الثابتون فقط: معلم الأجر لا صحيفة له (الخادم يستثنيه) */
+const V392={stages:[],rows:[],loaded:false,stage:'',school:'',status:'',err:''};
 async function v392Load(){
  const r=await sb.rpc('admin_statements_overview');
  if(r.error)throw r.error;
@@ -15345,12 +15345,12 @@ function v392Date(iso){const d=new Date(iso);if(isNaN(d))return '—';const p=n=
 function v392Size(n){n=+n||0;return n>=1048576?(n/1048576).toFixed(1)+' ميجا':Math.max(1,Math.round(n/1024))+' كيلو'}
 function v392Rows(){
  const sq=v288Norm(V392.school);
- return V392.rows.filter(x=>(!V392.stage||x.stage===V392.stage)&&(!V392.wt||x.work_type===V392.wt)&&(!sq||v288Norm(x.school_name).includes(sq)||v288Norm(x.teacher_name).includes(sq))&&
+ return V392.rows.filter(x=>(!V392.stage||x.stage===V392.stage)&&(!sq||v288Norm(x.school_name).includes(sq)||v288Norm(x.teacher_name).includes(sq))&&
   (!V392.status||(V392.status==='up'?!!x.status:!x.status)));
 }
 function v392Cards(){
  return V392.stages.map(st=>{
-  const all=V392.rows.filter(x=>x.stage===st.stage&&(!V392.wt||x.work_type===V392.wt)),up=all.filter(x=>x.status).length;
+  const all=V392.rows.filter(x=>x.stage===st.stage),up=all.filter(x=>x.status).length;
   const pct=all.length?Math.round(up*100/all.length):0;
   return `<div class="v392-st ${st.open?'on':'off'}"><div class="v392-st-h"><b>${esc(st.stage)}</b><span class="v392-badge ${st.open?'on':'off'}">${st.open?'الرفع مفتوح':'الرفع مغلق'}</span></div>
   <div class="cell-sub">رفع ${up} من ${all.length} (${pct}%)</div>
@@ -15364,7 +15364,7 @@ function v392Table(){
  const LIM=300,shown=rows.slice(0,LIM);
  const body=shown.map((x,i)=>{
   const st=x.status==='uploaded'?'<span class="v392-badge on">✓ رُفعت</span>':x.status==='archived'?'<span class="v392-badge arch">استُلمت</span>':'<span class="v392-badge off">لم ترفع</span>';
-  return `<tr><td>${i+1}</td><td><b>${esc(x.teacher_name)}</b><div class="cell-sub">${x.work_type==='paid'?'أجر':'ثابت'}</div></td><td>${esc(x.school_name)}<div class="cell-sub">${esc(x.stage)}</div></td><td>${st}</td><td>${x.status?esc(v392Date(x.uploaded_at)):'—'}${x.status&&x.file_size?`<div class="cell-sub">${esc(v392Size(x.file_size))}</div>`:''}</td><td>${x.path&&x.status==='uploaded'?`<button type="button" class="btn small secondary" onclick="v392View('${esc(x.path)}')">عرض</button>`:''}</td></tr>`;
+  return `<tr><td>${i+1}</td><td><b>${esc(x.teacher_name)}</b></td><td>${esc(x.school_name)}<div class="cell-sub">${esc(x.stage)}</div></td><td>${st}</td><td>${x.status?esc(v392Date(x.uploaded_at)):'—'}${x.status&&x.file_size?`<div class="cell-sub">${esc(v392Size(x.file_size))}</div>`:''}</td><td>${x.path&&x.status==='uploaded'?`<button type="button" class="btn small secondary" onclick="v392View('${esc(x.path)}')">عرض</button>`:''}</td></tr>`;
  }).join('');
  return `<div class="table-wrap"><table class="v392-tbl"><thead><tr><th>#</th><th>المعلم</th><th>المدرسة</th><th>الحالة</th><th>التاريخ</th><th></th></tr></thead><tbody>${body}</tbody></table></div>`+(rows.length>LIM?`<div class="cell-sub" style="padding:8px">يعرض أول ${LIM} من ${rows.length} — ضيّق الفلاتر لرؤية الباقي.</div>`:'');
 }
@@ -15373,7 +15373,6 @@ function v392Filters(){
  const opt=(arr,cur,all)=>`<option value="">${all}</option>`+arr.map(a=>`<option value="${esc(a[0])}" ${cur===a[0]?'selected':''}>${esc(a[1])}</option>`).join('');
  return `<div class="v392-flt"><label>المرحلة<select onchange="v392Set('stage',this.value)">${opt(stages.map(s=>[s,s]),V392.stage,'الكل')}</select></label>
  <label>الحالة<select onchange="v392Set('status',this.value)">${opt([['up','رفعوا'],['no','لم يرفعوا']],V392.status,'الكل')}</select></label>
- <label>النوع<select onchange="v392Set('wt',this.value)">${opt([['permanent','ثابت'],['paid','أجر']],V392.wt,'الكل')}</select></label>
  <label class="v392-q">بحث<input type="search" autocomplete="off" placeholder="🔎 مدرسة أو معلم" value="${esc(V392.school)}" oninput="v392Search(this.value)"></label></div>`;
 }
 function v392Inner(){
