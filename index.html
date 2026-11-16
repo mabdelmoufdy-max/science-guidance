@@ -1,4 +1,5 @@
 <!doctype html>
+<!-- v398: «صحائف الأحوال» (مدير النظام، بطلب المستخدم 2026-11-16 «اتحكم أقفل للمنسق أو للمعلم في البوابة»): على كل بطاقة مرحلة مفتاحان مستقلان — «رفع المعلم (البوابة)» و«رفع المنسق» — يفتح أيًّا منهما ويغلقه دون الآخر. القاعدة: العمود الجديد statement_stage_settings.coordinator_open (قفل المنسق) وis_open يبقى قفل المعلم؛ القيمة الابتدائية لقفل المنسق = حالة المفتاح الحالية فلم يتغير سلوك أحد. المنسق يرى حالة قفله هو فقط. بلا تغيير في البوابة. -->
 <!-- v397: «صحائف الأحوال» لمنسق المرحلة (بطلب المستخدم 2026-11-16): تبويب «صحائف الأحوال» في قائمة المنسق بنفس شاشة المدير لمعلمي مراحله فقط — يطّلع على الصحيفة (عرض) ويرفعها أو يستبدلها بدل المعلم، ولا يحذف ولا يفرّغ ولا يفتح/يغلق الرفع (للمدير وحده)؛ يلتزم بمفتاح فتح الرفع لمرحلته، وتقرير «حالة صحائف الأحوال» متاح له بمراحله. إجراء جديد «رفع صحائف الأحوال» في مصفوفة الصلاحيات. قاعدة البيانات v397 + دالة الحافة coordinator-statement-upload. وعلى الهاتف (حتى 760px) تُعرض قائمة الصحائف بسطرين لكل معلم (الاسم وشارة الحالة، ثم المدرسة والتاريخ والحجم مع أزرار 👁 عرض · ⟳ استبدال · ⬆ رفع) بدل الجدول. -->
 <!-- v396: «صحائف الأحوال» (مدير النظام، بطلب المستخدم 2026-11-16 «ليه أسماء المعلمين كلها ظاهرة في الصفحة… اجعلها تظهر بالفلتر وطباعة تقرير»): قائمة المعلمين لا تظهر إلا بعد اختيار فلتر (المرحلة أو الحالة) أو كتابة بحث؛ وزر «📄 تقرير» في رأس الصفحة يطبع تقرير A4 «حالة صحائف الأحوال الإلكترونية للمعلمين» بالفلاتر الحالية (وبلا فلاتر = كل المعلمين). واجهة فقط، بلا قاعدة بيانات. -->
 <!-- v395: «صحائف الأحوال» (مدير النظام): المرحلة 2 — لوحة «ملفات الصحائف»: تنزيل صحائف مرحلة أو كل المراحل في ZIP مرتب (المرحلة/المدرسة/المعلم) مع ملف إكسل ببيانات المعلمين وروابط ملفاتهم، ثم «تفريغ» = نقل إلى سلة مؤقتة (قابل للاسترجاع) ثم إزالة نهائية؛ تتحول حالة المعلم إلى «استُلمت» (ويراها في بوابته «تم استلام صحيفتك»). اللوحة نفسها v393 صارت تعمل على أي حاوية. دالة الحافة admin-files-purge v2 (مزامنة الحالة) ورفع الصحيفة من البوابة بأسماء ملفات فريدة (teacher-statement-upload v2). بلا تغيير في قاعدة البيانات. -->
@@ -8,7 +9,6 @@
 <!-- v391: تنبيه «مدرسة بلا موجه» لا يظهر لمدارس الثانوي التي لها موجه مادة نشط (supervisor_school_subjects)؛ حقل الموجه المباشر فيها فارغ عمدًا (قرار v208) فكانت الـ12 مدرسة ثانوية تظهر بالخطأ. عرض فقط. -->
 <!-- v390: «إدخال بيانات المدارس» للموجه (بطلب المستخدم 2026-11-16): الشاشة نفسها (v263) تظهر في قائمة الموجه ويعدّل بها مدارسه المباشرة (ابتدائي/إعدادي) كالمنسق: بيانات المدرسة الأساسية، الفصول، المعلمون، الإسناد. مدارس الثانوي (موجه المادة): عرض واعتماد فقط. زر «اعتماد البيانات» = الاعتماد الفعلي (supervisor-save-and-approve) بدل علامة المنسق. تبويب «الموجهون» والموجه المسؤول عن المعلم عرض فقط. قاعدة البيانات: v390 (سياسات الموجه على school_classes/teaching_assignments/schools بنطاق مدرسته المباشرة + مشغّل يمنع تغيير الموجه/المرحلة/الاسم/المدير/الاعتماد). -->
 <!-- v385: «تجاهل» في قائمة المكررين محفوظ في قاعدة البيانات لكل الأجهزة والمستخدمين (مدير/منسق/موجه) عبر dup_ignore_list/add/clear؛ وما حُفظ سابقًا على جهازك ينتقل تلقائيًا مرة واحدة. -->
-<!-- v384: «تعديل بيانات المعلم» ← ③ المدرسة والانتداب: تحت كل مدرسة (الأصلية والمنتدب إليها) سطر «حصصه المسندة هنا: N حصة في M فصل» من إسناداته في الفصل الدراسي الحالي. عرض فقط. -->
 <html lang="ar" dir="rtl">
 <head>
 <!-- إعداد: أ/ محمود عبدالمفدي محمد أبوالنجا | الصفة: معلم -->
@@ -16,7 +16,7 @@
 <script>/* v226: العنوان الموحد — انظر التعليق أعلى الملف */(function(){try{if(/\.github\.io$/.test(location.hostname)&&/^\/science-guidance\/?(index\.html)?$/.test(location.pathname)&&!/[?&]stay\b/.test(location.search))location.replace('https://teachers-data-portal.vercel.app/app/'+location.hash)}catch(e){}})();</script>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#152c43">
-<title>نظام توجيه العلوم — v397</title>
+<title>نظام توجيه العلوم — v398</title>
 <link rel="manifest" href="./manifest.webmanifest">
 <link rel="icon" type="image/png" sizes="192x192" href="./app-icon-192.png">
 <link rel="apple-touch-icon" href="./app-icon-192.png">
@@ -2283,6 +2283,7 @@ body.v293-ro select[onchange*="v101ChangeSlot"]{pointer-events:none;opacity:.65}
  .v392-tbl .btn.up .v392-tx{display:inline}
  .v392-tbl .btn{min-height:40px;min-width:44px;padding:0 12px;gap:4px}
 }
+.v392-pr{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;padding:4px 0;border-top:1px dashed var(--line,#d9e0ea)}
 </style>
 </head>
 <body>
@@ -2653,6 +2654,7 @@ window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();window.v152
 window.addEventListener('appinstalled',()=>{window.v152InstallPrompt=null;v152SyncInstallBtn()});
 if('serviceWorker' in navigator&&location.protocol!=='file:')window.addEventListener('load',()=>navigator.serviceWorker.register('./service-worker.js').catch(()=>{}));
 const V145_NEWS=[
+ ['v398','صحائف الأحوال: قفل رفع المنسق منفصل عن قفل رفع المعلم في البوابة، لكل مرحلة، من بطاقات المراحل.'],
  ['v397','منسق المرحلة: شاشة «صحائف الأحوال» لمراحله — يطّلع على صحائف معلميه ويرفعها أو يستبدلها بدل المعلم (بلا حذف).'],
  ['v396','صحائف الأحوال: قائمة المعلمين تظهر بالفلتر أو البحث فقط، وزر «تقرير» لطباعة الحالة (بالفلاتر أو للكل).'],
  ['v395','صحائف الأحوال: لوحة «ملفات الصحائف» — تنزيل ZIP مرتب بالمرحلة والمدرسة والمعلم مع إكسل ببيانات المعلمين، ثم تفريغ إلى سلة قابلة للاسترجاع.'],
@@ -15390,10 +15392,12 @@ function v392Cards(){
  return V392.stages.map(st=>{
   const all=V392.rows.filter(x=>x.stage===st.stage),up=all.filter(x=>x.status).length;
   const pct=all.length?Math.round(up*100/all.length):0;
-  return `<div class="v392-st ${st.open?'on':'off'}"><div class="v392-st-h"><b>${esc(st.stage)}</b><span class="v392-badge ${st.open?'on':'off'}">${st.open?'الرفع مفتوح':'الرفع مغلق'}</span></div>
+  const adm=profile?.role==='admin';
+  const row=(party,label,on)=>`<div class="v392-pr"><span>${label} <span class="v392-badge ${on?'on':'off'}">${on?'مفتوح':'مغلق'}</span></span><button type="button" class="btn small ${on?'secondary':'primary'}" onclick="v392Toggle('${esc(st.stage)}','${party}',${on?'false':'true'})">${on?'إغلاق':'فتح'}</button></div>`;
+  return `<div class="v392-st ${st.open?'on':'off'}"><div class="v392-st-h"><b>${esc(st.stage)}</b>${adm?'':`<span class="v392-badge ${st.open?'on':'off'}">${st.open?'الرفع مفتوح':'الرفع مغلق'}</span>`}</div>
   <div class="cell-sub">رفع ${up} من ${all.length} (${pct}%)</div>
   <div class="v392-bar"><i style="width:${pct}%"></i></div>
-  ${profile?.role==='admin'?`<button type="button" class="btn small ${st.open?'secondary':'primary'}" onclick="v392Toggle('${esc(st.stage)}',${st.open?'false':'true'})">${st.open?'إغلاق الرفع':'فتح الرفع'}</button>`:''}</div>`;
+  ${adm?row('teacher','رفع المعلم (البوابة)',!!st.open)+row('coordinator','رفع المنسق',!!st.coordinator_open):''}</div>`;
  }).join('');
 }
 function v392Table(){
@@ -15424,12 +15428,13 @@ function v392Inner(){
 function v392Render(){const c=document.getElementById('v392Wrap');if(c)c.innerHTML=v392Inner()}
 function v392Set(k,v){V392[k]=v;v392Render()}
 function v392Search(v){V392.school=String(v||'');const b=document.getElementById('v392Body');if(b)b.innerHTML=v392Table();const t=document.querySelector('#v392Wrap .v294-head span');if(t)t.textContent=v392Head()}
-async function v392Toggle(stage,open){
- if(!confirm((open?'فتح':'إغلاق')+' رفع صحيفة الأحوال لمرحلة «'+stage+'»؟'+(open?'\nسيتمكن معلمو هذه المرحلة من رفع صحائفهم من بوابة المعلمين.':'\nلن يتمكن معلمو هذه المرحلة من الرفع (ما رُفع يبقى محفوظًا).')))return;
- const r=await sb.rpc('admin_set_statement_stage',{p_stage:stage,p_open:open});
+async function v392Toggle(stage,party,open){
+ const who=party==='coordinator'?'المنسق':'المعلم (من بوابة المعلمين)';
+ if(!confirm((open?'فتح':'إغلاق')+' رفع صحيفة الأحوال على '+who+' لمرحلة «'+stage+'»؟'+(open?'\nسيتمكن '+(party==='coordinator'?'منسق هذه المرحلة':'معلمو هذه المرحلة')+' من الرفع.':'\nلن يتمكن '+(party==='coordinator'?'منسق هذه المرحلة':'معلمو هذه المرحلة')+' من الرفع (ما رُفع يبقى محفوظًا).')))return;
+ const r=await sb.rpc('admin_set_statement_party',{p_stage:stage,p_party:party,p_open:open});
  if(r.error){toast(r.error.message||'تعذر التغيير',true);return}
- const s=V392.stages.find(x=>x.stage===stage);if(s)s.open=open;
- v392Render();toast((open?'فُتح':'أُغلق')+' الرفع لمرحلة '+stage);
+ const s=V392.stages.find(x=>x.stage===stage);if(s){if(party==='coordinator')s.coordinator_open=open;else s.open=open}
+ v392Render();toast((open?'فُتح':'أُغلق')+' الرفع على '+who+' لمرحلة '+stage);
 }
 async function v392View(path){
  const r=await sb.storage.from('teacher-statements').createSignedUrl(path,120);
