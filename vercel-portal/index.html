@@ -6,7 +6,7 @@
 <meta name="robots" content="noindex,nofollow">
 <meta name="referrer" content="no-referrer">
 <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; connect-src https://xehjwzszhsaqdqmcatum.supabase.co; img-src data: 'self'; manifest-src 'self'; worker-src 'self'; base-uri 'none'; form-action 'none'">
-<title>بوابة المعلمين — v377</title>
+<title>بوابة المعلمين — v387</title>
 <link rel="manifest" href="/portal.webmanifest">
 <meta name="theme-color" content="#0f214d">
 <meta name="mobile-web-app-capable" content="yes">
@@ -1672,7 +1672,8 @@ body.is-login .wrap{max-width:none;padding:0}
     return r;
   }
   function asgMsg(r) {
-    if (r && r.reason === 'closed') return 'إسناد الفصول مغلق حاليًا.';
+    if (r && r.reason === 'closed') return 'إدارة الفصول مغلقة حاليًا.';
+    if (r && r.reason === 'gone') return 'الفصل لم يعد موجودًا. تم تحديث القائمة.';
     if (r && r.reason === 'taken') return 'هذا الفصل أُسند بالفعل لمعلم آخر. تم تحديث القائمة.';
     if (r && typeof r.reason === 'string' && /[؀-ۿ]/.test(r.reason)) return r.reason;
     return errMsg(r);
@@ -1735,7 +1736,54 @@ body.is-login .wrap{max-width:none;padding:0}
         h('div', { class: 'asg-sheet', id: 'asg-panel' },
           h('h3', null, 'إسناد: ' + tileTitle(t)),
           afterCancel ? h('div', { class: 'note' }, 'أُلغي الإسناد. اختر معلمًا آخر لهذا الفصل، أو أغلق وسيبقى غير مسند.') : null,
-          q, list, sb, mkBtn('btn2', 'إغلاق', closeSheet, { id: 'asg-close' })));
+          q, list, sb,
+          mkBtn('asg-danger', 'حذف هذا الفصل', async function (ev) {
+            hideErr(sb);
+            if (!confirm('حذف «' + tileTitle(t) + '» نهائيًا؟ لا يُحذف فصل عليه معلم أو جدول.')) return;
+            var b = ev.currentTarget; btnBusy(b, true, 'جارٍ الحذف...');
+            try {
+              var r = await rpc('teacher_portal_sup_remove_class', Object.assign(asgAuth(), { p_class_id: t.class_id }));
+              if (!r || r.ok !== true) { r = r || {}; showErr(sb, asgMsg(r)); if (r.reason === 'gone') { await reload(); closeSheet(); } else btnBusy(b, false); return; }
+              closeSheet(); await reload();
+            } catch (e) { showErr(sb, asgMsg(e)); btnBusy(b, false); }
+          }, { id: 'asg-remove-class' }),
+          h('div', { style: 'height:8px' }), mkBtn('btn2', 'إغلاق', closeSheet, { id: 'asg-close' })));
+    }
+
+    /* v387: إضافة فصل/مجموعة */
+    async function showAdd(ev) {
+      hideErr(box); var b0 = ev && ev.currentTarget; if (b0) btnBusy(b0, true, 'لحظة...');
+      var sb = errbox(), O;
+      try {
+        O = await rpc('teacher_portal_class_options', asgAuth());
+        if (!O || O.ok !== true) throw (O || { reason: 'x' });
+      } catch (e) { showErr(box, asgMsg(e)); if (b0) btnBusy(b0, false); return; }
+      if (b0) btnBusy(b0, false);
+      var gsel = h('select', { id: 'add-grade' }, O.grades.map(function (g) { return h('option', { value: g.grade }, 'الصف ' + g.grade); }));
+      var ksel = h('select', { id: 'add-kind' });
+      function drawKinds() {
+        ksel.replaceChildren();
+        var g = O.grades.filter(function (x) { return x.grade === gsel.value; })[0];
+        (g ? g.kinds : []).forEach(function (k) { ksel.appendChild(h('option', { value: k.kind }, k.label)); });
+      }
+      gsel.addEventListener('change', drawKinds); drawKinds();
+      var go = mkBtn('btn', O.secondary ? 'إضافة المجموعة' : 'إضافة الفصل', async function (ev) {
+        hideErr(sb); var b = ev.currentTarget; btnBusy(b, true, 'جارٍ الإضافة...');
+        try {
+          var r = await rpc('teacher_portal_sup_add_class', Object.assign(asgAuth(), { p_grade: gsel.value, p_kind: O.secondary ? ksel.value : null }));
+          if (!r || r.ok !== true) { showErr(sb, asgMsg(r || {})); btnBusy(b, false); return; }
+          closeSheet(); await reload();
+        } catch (e) { showErr(sb, asgMsg(e)); btnBusy(b, false); }
+      }, { id: 'add-go' });
+      sheet.replaceChildren(h('div', { class: 'asg-ov', onclick: closeSheet }),
+        h('div', { class: 'asg-sheet', id: 'asg-panel' },
+          h('h3', null, O.secondary ? 'إضافة مجموعة' : 'إضافة فصل'),
+          O.open === false ? h('div', { class: 'warn' }, 'إضافة الفصول مغلقة حاليًا.') : null,
+          h('label', { class: 'sub', style: 'display:block;text-align:right' }, 'الصف'), gsel,
+          O.secondary ? h('label', { class: 'sub', style: 'display:block;text-align:right;margin-top:8px' }, 'نوع المجموعة (بحصصها المقررة)') : null,
+          O.secondary ? ksel : null,
+          h('p', { class: 'sub', style: 'text-align:right' }, O.secondary ? 'تُضاف مجموعة جديدة برقمها التالي وحصصها المقررة، وتظهر غير مسندة.' : 'يُضاف الفصل بأصغر رقم ناقص وحصصه المقررة، ويظهر غير مسند.'),
+          sb, go, h('div', { style: 'height:8px' }), mkBtn('btn2', 'إغلاق', closeSheet, { id: 'asg-close' })));
     }
 
     function paint() {
@@ -1764,7 +1812,9 @@ body.is-login .wrap{max-width:none;padding:0}
       suptop('الفصول والمجموعات', '‹ المعلمون', async function () { try { await openSchool(S.sup.school.id); } catch (e) { go('supschool'); } }),
       h('h2', null, S.sup.school.name),
       A.data.assign_open === false ? h('div', { class: 'warn', id: 'asg-closed' }, 'إسناد الفصول مغلق حاليًا، يمكنك المراجعة فقط.') : null,
-      h('p', { class: 'sub', style: 'text-align:right' }, 'اضغط فصلًا مسندًا لإلغاء إسناده، أو فصلًا غير مسند لإسناده لمعلم.'),
+      h('p', { class: 'sub', style: 'text-align:right' }, 'اضغط فصلًا مسندًا لإلغاء إسناده، أو فصلًا غير مسند لإسناده لمعلم أو حذفه.'),
+      mkBtn('btn', '+ إضافة فصل / مجموعة', showAdd, { id: 'asg-add' }),
+      h('div', { style: 'height:8px' }),
       box, host, sheet);
   };
 
