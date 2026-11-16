@@ -1,4 +1,5 @@
 <!doctype html>
+<!-- v395: «صحائف الأحوال» (مدير النظام): المرحلة 2 — لوحة «ملفات الصحائف»: تنزيل صحائف مرحلة أو كل المراحل في ZIP مرتب (المرحلة/المدرسة/المعلم) مع ملف إكسل ببيانات المعلمين وروابط ملفاتهم، ثم «تفريغ» = نقل إلى سلة مؤقتة (قابل للاسترجاع) ثم إزالة نهائية؛ تتحول حالة المعلم إلى «استُلمت» (ويراها في بوابته «تم استلام صحيفتك»). اللوحة نفسها v393 صارت تعمل على أي حاوية. دالة الحافة admin-files-purge v2 (مزامنة الحالة) ورفع الصحيفة من البوابة بأسماء ملفات فريدة (teacher-statement-upload v2). بلا تغيير في قاعدة البيانات. -->
 <!-- v394: «تعديل بيانات المعلم»: تعيين المدرسة الأصلية لمعلم بلا مدرسة أصلية كان يفشل برسالة «قيمة غير معلومة» لأن الواجهة تسأل عن انتداب إلى مدرسة فارغة؛ صار يتخطى هذا الفحص حين لا توجد مدرسة أصلية حالية. -->
 <!-- v393: «طلبات معلمي الأجر» (مدير النظام): لوحة «ملفات الشهادات» — تنزيل كل الملفات في ZIP على جهازك مع ملف إكسل ببيانات المتقدمين وروابط لملفاتهم، ثم «تفريغ» = نقل إلى سلة مؤقتة (قابل للاسترجاع) ثم إزالة نهائية (بطلب المستخدم 2026-11-16؛ تجربة أولى على ملفات الأجر قبل تعميمها على صحائف الأحوال). قاعدة البيانات v393 (file_archive_log) ودالة الحافة admin-files-purge. -->
 <!-- v392: شاشة «صحائف الأحوال» لمدير النظام (بطلب المستخدم 2026-11-16، المرحلة 1): مفتاح رفع «صحيفة الأحوال الإلكترونية للمعلم» لكل مرحلة (إعدادي/ثانوي عام/ثانوي صناعي مفتوحة، الابتدائي مغلق) + قائمة من رفع ومن لم يرفع (المعلمون الثابتون فقط — معلم الأجر لا صحيفة له) بفلاتر المرحلة والمدرسة والحالة + «عرض» الملف برابط مؤقت. قاعدة البيانات v392 (حاوية teacher-statements الخاصة، admin_statements_overview، admin_set_statement_stage) ودالة الحافة teacher-statement-upload وبطاقة الرفع في بوابة المعلمين. -->
@@ -8,7 +9,6 @@
 <!-- v384: «تعديل بيانات المعلم» ← ③ المدرسة والانتداب: تحت كل مدرسة (الأصلية والمنتدب إليها) سطر «حصصه المسندة هنا: N حصة في M فصل» من إسناداته في الفصل الدراسي الحالي. عرض فقط. -->
 <!-- v383: قائمة «المكررون»: زر «تجاهل» بجوار «فتح الثاني» يخفي الحالة (أشخاص مختلفون فعلًا) ويحفظ الإخفاء على هذا الجهاز؛ يعود الظهور إن تغيّر الاسم أو الرقم القومي لأحد السجلين، وزر «إظهار المتجاهَلة». -->
 <!-- v382: شاشة «المعلمون» (مدير النظام): زر «المكررون (N)» (مدير النظام: بجوار «المعلمون الموقوفون»؛ المنسق والموجه في نطاقهما) — قائمة أسماء متطابقة (نفس المدرسة/مدرستان) وأرقام قومية تختلف برقم واحد، ولكل حالة زر دمج أو فتح السجل. -->
-<!-- v381: «تعديل بيانات المعلم» (مدير النظام): زر «🔀 دمج مع سجل مكرر» — يختار السجل المكرر في المدرسة الأصلية نفسها وأي السجلين يبقى والرقم القومي الصحيح (اختياري)، ثم admin_merge_teachers (ينقل الإسنادات والجدول والانتدابات ويحفظ لقطة في سجل التدقيق). -->
 <html lang="ar" dir="rtl">
 <head>
 <!-- إعداد: أ/ محمود عبدالمفدي محمد أبوالنجا | الصفة: معلم -->
@@ -16,7 +16,7 @@
 <script>/* v226: العنوان الموحد — انظر التعليق أعلى الملف */(function(){try{if(/\.github\.io$/.test(location.hostname)&&/^\/science-guidance\/?(index\.html)?$/.test(location.pathname)&&!/[?&]stay\b/.test(location.search))location.replace('https://teachers-data-portal.vercel.app/app/'+location.hash)}catch(e){}})();</script>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#152c43">
-<title>نظام توجيه العلوم — v394</title>
+<title>نظام توجيه العلوم — v395</title>
 <link rel="manifest" href="./manifest.webmanifest">
 <link rel="icon" type="image/png" sizes="192x192" href="./app-icon-192.png">
 <link rel="apple-touch-icon" href="./app-icon-192.png">
@@ -2633,6 +2633,7 @@ window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();window.v152
 window.addEventListener('appinstalled',()=>{window.v152InstallPrompt=null;v152SyncInstallBtn()});
 if('serviceWorker' in navigator&&location.protocol!=='file:')window.addEventListener('load',()=>navigator.serviceWorker.register('./service-worker.js').catch(()=>{}));
 const V145_NEWS=[
+ ['v395','صحائف الأحوال: لوحة «ملفات الصحائف» — تنزيل ZIP مرتب بالمرحلة والمدرسة والمعلم مع إكسل ببيانات المعلمين، ثم تفريغ إلى سلة قابلة للاسترجاع.'],
  ['v394','تعيين المدرسة الأصلية لمعلم بلا مدرسة أصلية في «تعديل بيانات المعلم» لم يعد يُرفض.'],
  ['v393','طلبات معلمي الأجر: لوحة «ملفات الشهادات» — تنزيل ZIP (مجلد لكل متقدم + إكسل ببياناتهم وروابط ملفاتهم)، ثم تفريغ إلى سلة قابلة للاسترجاع.'],
  ['v392','مدير النظام: شاشة «صحائف الأحوال» — مفتاح رفع الصحيفة لكل مرحلة وقائمة من رفع ومن لم يرفع (والمعلم يرفعها من بوابة المعلمين).'],
@@ -15416,7 +15417,19 @@ if(Array.isArray(V307_ORDER.admin)&&!V307_ORDER.admin.includes('statements')){co
 
 /* v393-begin: أرشفة ملفات طلبات معلمي الأجر — تنزيل ZIP + إكسل على جهاز المدير ← نقل إلى سلة (قابل للاسترجاع) ← إزالة نهائية.
    التنزيل يُبنى في المتصفح (بلا مكتبات)؛ النقل والإزالة بدالة الحافة admin-files-purge؛ السجل في file_archive_log (admin_files_status / admin_files_log_download). */
-const V393={bucket:'paid-teacher-docs',files:[],archive:[],loaded:false,busy:false,err:'',msg:'',prog:null};
+const V393={bucket:'paid-teacher-docs',files:[],archive:[],loaded:false,busy:false,err:'',msg:'',prog:null,dlStage:''};
+/* v395: اللوحة نفسها تخدم حاويتين: ملفات شهادات الأجر وصحائف الأحوال */
+const V393_CFG={
+ 'paid-teacher-docs':{title:'ملفات الشهادات (التخزين)',what:'ملفات الشهادات',dlBtn:'⬇ تنزيل الملفات + الإكسل (ZIP)',
+  gone:'بعدها لن تظهر صور الشهادات في «عرض صور الشهادات»، لكن يمكنك <b>استرجاعها</b> من السلة ما دامت لم تُزَل نهائيًا.',
+  foot:'الـ ZIP يُبنى في متصفحك (كمبيوتر أنسب) ويضم مجلدًا لكل متقدم وملف إكسل ببياناتهم وروابط لملفاتهم. فُكّ الضغط كاملًا ثم افتح الإكسل من المجلد المفكوك لتعمل الروابط.'},
+ 'teacher-statements':{title:'ملفات الصحائف (التخزين)',what:'صحائف الأحوال',dlBtn:'⬇ تنزيل الصحائف + الإكسل (ZIP)',
+  gone:'بعدها يختفي زر «عرض» للصحيفة وتصبح حالة المعلم «استُلمت» (ويراها في بوابته «تم استلام صحيفتك»)، لكن يمكنك <b>استرجاعها</b> من السلة ما دامت لم تُزَل نهائيًا.',
+  foot:'الـ ZIP يُبنى في متصفحك (كمبيوتر أنسب) ويضم مجلدًا لكل مرحلة ثم مدرسة ثم المعلم، وملف إكسل ببيانات المعلمين وروابط لصحائفهم. اختر المرحلة المراد تنزيلها. فُكّ الضغط كاملًا ثم افتح الإكسل من المجلد المفكوك لتعمل الروابط. ما دامت المرحلة مفتوحة يستطيع المعلم استبدال ملفه فيظهر في التنزيل التالي؛ أغلق الرفع للمرحلة بعد الانتهاء منها.'}
+};
+function v393Cfg(){return V393_CFG[V393.bucket]||V393_CFG['paid-teacher-docs']}
+function v393Use(b){if(V393.busy)return;if(V393.bucket!==b){V393.bucket=b;V393.files=[];V393.archive=[];V393.err='';V393.msg='';V393.dlStage=''}V393.loaded=false}
+async function v393AfterChange(){await v393Refresh();if(V393.bucket==='teacher-statements'&&typeof v392Refresh==='function')await v392Refresh()}
 const V393_LABEL={basic:'الأساسي',diploma:'الدبلوم',master:'الماجستير',phd:'الدكتوراه'};
 function v393San(s,max){return String(s||'').replace(/[\\\/:*?"<>|\u0000-\u001f]/g,' ').replace(/\s+/g,' ').trim().replace(/^[. ]+|[. ]+$/g,'').slice(0,max||60)}
 function v393Col(n){let s='';n++;while(n>0){const m=(n-1)%26;s=String.fromCharCode(65+m)+s;n=Math.floor((n-1)/26)}return s}
@@ -15473,19 +15486,22 @@ function v393Stats(){
 function v393Prog(msg,pct){V393.prog=msg?{msg,pct:pct||0}:null;const b=document.getElementById('v393Prog');if(b)b.innerHTML=v393ProgHtml()}
 function v393ProgHtml(){const p=V393.prog;return p?`<div class="cell-sub">${esc(p.msg)}</div><div class="v393-bar"><i style="width:${Math.max(0,Math.min(100,p.pct))}%"></i></div>`:''}
 function v393Html(){
- if(V393.err)return `<div class="card v393"><h3>ملفات الشهادات (التخزين)</h3><div class="notice danger">${esc(V393.err)}</div></div>`;
- if(!V393.loaded)return '<div class="card v393"><h3>ملفات الشهادات (التخزين)</h3><div class="cell-sub">جارٍ القراءة…</div></div>';
+ const C=v393Cfg();
+ if(V393.err)return `<div class="card v393"><h3>${C.title}</h3><div class="notice danger">${esc(V393.err)}</div></div>`;
+ if(!V393.loaded)return `<div class="card v393"><h3>${C.title}</h3><div class="cell-sub">جارٍ القراءة…</div></div>`;
  const s=v393Stats(),b=V393.busy?' disabled':'';
- return `<div class="card v393"><h3>ملفات الشهادات (التخزين)</h3>
+ const stSel=V393.bucket==='teacher-statements'?`<div class="v392-flt"><label>المرحلة المراد تنزيلها<select onchange="V393.dlStage=this.value"${b}><option value="">كل المراحل</option>${['إعدادي','ثانوي عام','ثانوي صناعي','ابتدائي'].map(x=>`<option value="${esc(x)}"${V393.dlStage===x?' selected':''}>${esc(x)}</option>`).join('')}</select></label></div>`:'';
+ return `<div class="card v393"><h3>${C.title}</h3>
  <div class="cell-sub">في التخزين الآن: ${s.live} ملفًا (${esc(v392Size(s.liveB))}) · نُزّلت: ${s.dl} · لم تُنزَّل: ${s.notdl} · في السلة: ${s.qu}${s.qu?' ('+esc(v392Size(s.quB))+')':''} · أُزيلت نهائيًا: ${s.rm}</div>
+ ${stSel}
  <div class="actions v393-act">
-  <button class="btn primary" type="button" onclick="v393Download()"${b}>⬇ تنزيل الملفات + الإكسل (ZIP)</button>
+  <button class="btn primary" type="button" onclick="v393Download()"${b}>${C.dlBtn}</button>
   <button class="btn secondary" type="button" onclick="v393QuarantineForm()"${b}${s.dl?'':' disabled'}>🧺 تفريغ: نقل ما نُزّل إلى السلة</button>
   ${s.qu?`<button class="btn secondary" type="button" onclick="v393Restore()"${b}>↩ استرجاع من السلة</button><button class="btn danger" type="button" onclick="v393RemoveForm()"${b}>🗑 إزالة نهائية من السلة</button>`:''}
  </div>
  <div id="v393Prog">${v393ProgHtml()}</div>
  ${V393.msg?`<div class="notice ${V393.msgBad?'warn':'ok'}" id="v393Msg">${V393.msg}</div>`:''}
- <div class="cell-sub">الـ ZIP يُبنى في متصفحك (كمبيوتر أنسب) ويضم مجلدًا لكل متقدم وملف إكسل ببياناتهم وروابط لملفاتهم. فُكّ الضغط كاملًا ثم افتح الإكسل من المجلد المفكوك لتعمل الروابط.</div></div>`;
+ <div class="cell-sub">${C.foot}</div></div>`;
 }
 function v393Render(){const c=document.getElementById('v393Panel');if(c)c.innerHTML=v393Html()}
 async function v393Refresh(){
@@ -15494,6 +15510,7 @@ async function v393Refresh(){
  v393Render();
 }
 async function v393Download(){
+ if(V393.bucket==='teacher-statements')return v395Download();
  if(V393.busy||profile?.role!=='admin')return;
  V393.busy=true;V393.msg='';v393Render();
  try{
@@ -15576,7 +15593,7 @@ async function v393Download(){
   V393.msg=`تم تجهيز <b>${esc(zipName)}</b> (${esc(v392Size(file.size))}) وفيه ${plan.length} ملفًا و${sorted.length} متقدمًا + ملف الإكسل. سُجّل تنزيل ${lg.data?.logged||0} ملفًا.${bad.length?` <b>تنبيه:</b> ${bad.length} ملفًا لم يُسجَّل (تغيّر حجمه أثناء التنزيل) فأعد التنزيل.`:''} راجع محتويات الـ ZIP على جهازك ثم استعمل «تفريغ».`;
   toast('اكتمل التنزيل');
  }catch(e){V393.msgBad=true;V393.msg='تعذّر التنزيل: '+esc(e.message||e)}
- V393.busy=false;v393Prog(null);await v393Refresh();
+ V393.busy=false;v393Prog(null);await v393AfterChange();
 }
 async function v393Call(action){
  const r=await sb.functions.invoke('admin-files-purge',{body:{action,bucket:V393.bucket}});
@@ -15585,8 +15602,8 @@ async function v393Call(action){
 }
 function v393QuarantineForm(){
  const s=v393Stats();if(!s.dl)return toast('لا توجد ملفات منزَّلة للتفريغ');
- modal(`<h3>تفريغ ملفات الشهادات — نقل إلى السلة</h3>
- <div class="notice warn">سيُنقل <b>${s.dl}</b> ملفًا (${esc(v392Size(s.dlB))}) من التخزين إلى سلة مؤقتة. بعدها لن تظهر صور الشهادات في «عرض صور الشهادات»، لكن يمكنك <b>استرجاعها</b> من السلة ما دامت لم تُزَل نهائيًا.${s.notdl?`<br>${s.notdl} ملفًا لم يُنزَّل ولن يُمس.`:''}</div>
+ modal(`<h3>تفريغ ${v393Cfg().what} — نقل إلى السلة</h3>
+ <div class="notice warn">سيُنقل <b>${s.dl}</b> ملفًا (${esc(v392Size(s.dlB))}) من التخزين إلى سلة مؤقتة. ${v393Cfg().gone}${s.notdl?`<br>${s.notdl} ملفًا لم يُنزَّل ولن يُمس.`:''}</div>
  <label class="v393-ck"><input type="checkbox" id="v393Ck"> حفظتُ ملف الـ ZIP على جهازي وفتحتُه وراجعتُ محتوياته</label>
  <div class="field"><label>اكتب كلمة «تفريغ» للتأكيد</label><input id="v393Word" autocomplete="off"></div>
  <div class="actions"><button class="btn danger" type="button" id="v393Go" onclick="v393Quarantine()">نقل إلى السلة</button><button class="btn secondary" type="button" onclick="closeModal()">إلغاء</button></div>`);
@@ -15599,19 +15616,19 @@ async function v393Quarantine(){
  try{
   const r=await v393Call('quarantine');closeModal();
   const sc=(r.skipped_changed||[]).length,sm=(r.skipped_missing||[]).length,fl=(r.failed||[]).length;
-  V393.msgBad=!r.ok||sc>0||sm>0;
-  V393.msg=`نُقل <b>${r.moved||0}</b> ملفًا إلى السلة.${sc?` ${sc} ملفًا تغيّر بعد تنزيله فلم يُنقل (أعد التنزيل).`:''}${sm?` ${sm} ملفًا غير موجود.`:''}${fl?` تعذّر نقل ${fl} ملفًا: ${esc(r.failed[0].error)}`:''}`;
+  V393.msgBad=!r.ok||sc>0||sm>0||!!r.sync_error;
+  V393.msg=`نُقل <b>${r.moved||0}</b> ملفًا إلى السلة.${sc?` ${sc} ملفًا تغيّر بعد تنزيله فلم يُنقل (أعد التنزيل).`:''}${sm?` ${sm} ملفًا غير موجود.`:''}${fl?` تعذّر نقل ${fl} ملفًا: ${esc(r.failed[0].error)}`:''}${r.sync_error?` <b>تنبيه:</b> نُقلت الملفات لكن تعذّر تحديث حالة المعلمين: ${esc(r.sync_error)}`:''}`;
   toast(r.ok?'تم النقل إلى السلة':'اكتمل النقل مع تنبيهات');
  }catch(e){closeModal();V393.msgBad=true;V393.msg='تعذّر النقل: '+esc(e.message||e)}
- V393.busy=false;await v393Refresh();
+ V393.busy=false;await v393AfterChange();
 }
 async function v393Restore(){
  const s=v393Stats();if(!s.qu)return;
  if(!confirm(`استرجاع ${s.qu} ملفًا من السلة إلى أماكنها الأصلية؟`))return;
  V393.busy=true;v393Render();
- try{const r=await v393Call('restore');V393.msgBad=!r.ok;V393.msg=`أُعيد <b>${r.restored||0}</b> ملفًا إلى أماكنها.${(r.failed||[]).length?` تعذّر ${r.failed.length}: ${esc(r.failed[0].error)}`:''}`}
+ try{const r=await v393Call('restore');V393.msgBad=!r.ok||!!r.sync_error;V393.msg=`أُعيد <b>${r.restored||0}</b> ملفًا إلى أماكنها.${(r.failed||[]).length?` تعذّر ${r.failed.length}: ${esc(r.failed[0].error)}`:''}${r.sync_error?` <b>تنبيه:</b> تعذّر تحديث حالة المعلمين: ${esc(r.sync_error)}`:''}`}
  catch(e){V393.msgBad=true;V393.msg='تعذّر الاسترجاع: '+esc(e.message||e)}
- V393.busy=false;await v393Refresh();
+ V393.busy=false;await v393AfterChange();
 }
 function v393RemoveForm(){
  const s=v393Stats();if(!s.qu)return toast('السلة فارغة');
@@ -15626,14 +15643,14 @@ async function v393Remove(){
  V393.busy=true;
  try{const r=await v393Call('remove');closeModal();V393.msgBad=!r.ok;V393.msg=`أُزيل <b>${r.removed||0}</b> ملفًا نهائيًا.${(r.failed||[]).length?` تعذّر ${r.failed.length}: ${esc(r.failed[0].error)}`:''}`;toast(r.ok?'تمت الإزالة النهائية':'اكتملت الإزالة مع تنبيهات')}
  catch(e){closeModal();V393.msgBad=true;V393.msg='تعذّرت الإزالة: '+esc(e.message||e)}
- V393.busy=false;await v393Refresh();
+ V393.busy=false;await v393AfterChange();
 }
 /* شاشة «طلبات معلمي الأجر»: لوحة الملفات أعلى الإحصاءات، و«عرض صور الشهادات» يشرح إن نُقلت الملفات */
 const __v393V288Page=v288Page;
 v288Page=async function(){
  const html=await __v393V288Page.apply(this,arguments);
  if(typeof html!=='string'||profile?.role!=='admin'||!html.includes('<div class="grid4"'))return html;
- setTimeout(v393Refresh,0);
+ v393Use('paid-teacher-docs');setTimeout(v393Refresh,0);
  return html.replace('<div class="grid4"','<div id="v393Panel"></div><div class="grid4"');
 };
 const __v393ShowImgs=v288ShowImgs;
@@ -15647,6 +15664,94 @@ v288ShowImgs=async function(id){
  return __v393ShowImgs.apply(this,arguments);
 };
 /* v393-end */
+
+/* v395-begin: «صحائف الأحوال» — المرحلة 2: تنزيل ZIP (مرحلة/مدرسة/معلم) + إكسل ببيانات المعلمين وروابط ملفاتهم ← تفريغ إلى سلة ← إزالة نهائية.
+   اللوحة v393 نفسها؛ هنا التنزيل الخاص بالصحائف فقط. الخادم يحدّث حالة المعلم (archived/uploaded) عند النقل والاسترجاع. */
+const V395_STAGES=['ابتدائي','إعدادي','ثانوي عام','ثانوي صناعي'];
+const V395_MAX_BYTES=450*1048576;
+function v395D(v){const m=String(v||'').match(/^(\d{4})-(\d{2})-(\d{2})/);return m?`${m[3]}/${m[2]}/${m[1]}`:''}
+async function v395Download(){
+ if(V393.busy||profile?.role!=='admin')return;
+ V393.busy=true;V393.msg='';v393Render();
+ try{
+  v393Prog('جارٍ قراءة قوائم الملفات والمعلمين…',0);
+  const [st,ov,tr]=await Promise.all([sb.rpc('admin_files_status',{p_bucket:V393.bucket}),sb.rpc('admin_statements_overview'),
+   sb.from('teacher_records').select('id,civil_id,phone,job_title,appointment_date,grade_acquired_date,work_start_date,qualification,qualification_year,specialty,cadre_specialty,teacher_code').eq('active',true).limit(3000)]);
+  if(st.error)throw st.error;if(ov.error)throw ov.error;if(tr.error)throw tr.error;
+  const scope=V393.dlStage,trMap=new Map((tr.data||[]).map(x=>[x.id,x]));
+  const teachers=((ov.data&&ov.data.rows)||[]).filter(x=>!scope||x.stage===scope);
+  const byPath=new Map();((ov.data&&ov.data.rows)||[]).forEach(x=>{if(x.path)byPath.set(x.path,x)});
+  const live=(st.data?.files||[]).filter(f=>!f.state||f.state==='downloaded');
+  const plan=[];
+  live.forEach(f=>{const t=byPath.get(f.path)||null;if(scope&&!(t&&t.stage===scope))return;plan.push({f,t})});
+  if(!plan.length)throw new Error(scope?`لا توجد صحائف مرفوعة جاهزة للتنزيل في مرحلة «${scope}».`:'لا توجد صحائف مرفوعة جاهزة للتنزيل.');
+  const total=plan.reduce((n,p)=>n+(+p.f.size||0),0);
+  if(total>V395_MAX_BYTES)throw new Error(`حجم الصحائف ${v392Size(total)} أكبر من أن يُبنى في المتصفح دفعة واحدة. اختر مرحلة واحدة ثم أعد.`);
+  const used=new Set(),ORPH='_ملفات غير مرتبطة بمعلم';
+  plan.forEach(p=>{
+   const ext=(String(p.f.path).match(/\.[a-z0-9]+$/i)||['.jpg'])[0],parts=String(p.f.path).split('/');
+   let base;
+   if(p.t){const c=trMap.get(p.t.teacher_id),last4=c?v288Digits(c.civil_id).slice(-4):'';base=`${v393San(p.t.stage,30)}/${v393San(p.t.school_name,60)||'بدون مدرسة'}/${v393San(p.t.teacher_name,50)||'بدون اسم'}${last4?' - '+last4:''}`}
+   else base=`${ORPH}/${(parts[0]||'').slice(0,8)}_${(parts[parts.length-1]||'').replace(/\.[a-z0-9]+$/i,'')}`;
+   let nm=base+ext,i=2;while(used.has(nm.toLowerCase()))nm=`${base} (${i++})${ext}`;
+   used.add(nm.toLowerCase());p.zipPath=nm;
+  });
+  const urls=new Map();
+  for(let i=0;i<plan.length;i+=50){
+   const chunk=plan.slice(i,i+50).map(p=>p.f.path),r=await sb.storage.from(V393.bucket).createSignedUrls(chunk,3600);
+   if(r.error)throw r.error;
+   (r.data||[]).forEach((d,j)=>{if(d&&d.signedUrl)urls.set(d.path||chunk[j],d.signedUrl)});
+  }
+  let done=0,bytes=0;
+  await v393Pool(plan,4,async p=>{
+   const u=urls.get(p.f.path);if(!u)throw new Error('تعذر إنشاء رابط للملف: '+p.f.path);
+   const r=await fetch(u);if(!r.ok)throw new Error('تعذر تنزيل الملف '+p.f.path+' ('+r.status+')');
+   const buf=new Uint8Array(await r.arrayBuffer());
+   if(buf.length!==+p.f.size)throw new Error('حجم الملف المنزَّل لا يطابق المسجَّل: '+p.f.path);
+   p.buf=buf;p.sha=await v393Sha(buf);done++;bytes+=buf.length;
+   v393Prog(`جارٍ التنزيل… ${done} من ${plan.length} (${v392Size(bytes)} من ${v392Size(total)})`,Math.round(bytes*90/Math.max(1,total)));
+  });
+  v393Prog('جارٍ تجهيز ملف الإكسل…',92);
+  const inPlan=new Map();plan.forEach(p=>{if(p.t)inPlan.set(p.t.teacher_id,p)});
+  const H=t=>({head:true,v:t}),rank=x=>{const k=V395_STAGES.indexOf(x);return k<0?9:k};
+  const sorted=[...teachers].sort((a,b)=>rank(a.stage)-rank(b.stage)||String(a.school_name||'').localeCompare(String(b.school_name||''),'ar')||String(a.teacher_name||'').localeCompare(String(b.teacher_name||''),'ar'));
+  const rowsA=[[H('م'),H('الاسم'),H('الرقم القومي'),H('الهاتف'),H('المرحلة'),H('المدرسة الأصلية'),H('المسمى الوظيفي (الدرجة)'),H('تاريخ التعيين'),H('تاريخ الحصول على الدرجة'),H('تاريخ استلام العمل'),H('المؤهل'),H('سنة المؤهل'),H('التخصص'),H('التخصص على الكادر'),H('كود المعلم'),H('حالة الصحيفة'),H('تاريخ الرفع'),H('الحجم (كيلوبايت)'),H('الصحيفة')]];
+  sorted.forEach((x,i)=>{
+   const c=trMap.get(x.teacher_id)||{},p=inPlan.get(x.teacher_id);
+   const state=p?'في هذا الملف':x.status==='archived'?'استُلمت سابقًا (في تنزيل سابق)':x.status==='uploaded'?'مرفوعة — خارج هذا التنزيل':'لم ترفع';
+   rowsA.push([i+1,x.teacher_name||'',String(c.civil_id||''),String(c.phone||''),x.stage||'',x.school_name||'',c.job_title||'',v395D(c.appointment_date),v395D(c.grade_acquired_date),v395D(c.work_start_date),c.qualification||'',c.qualification_year==null?'':c.qualification_year,c.specialty||'',c.cadre_specialty||'',c.teacher_code||'',state,x.status?v392Date(x.uploaded_at):'',x.file_size?Math.round(x.file_size/1024):'',p?{link:p.zipPath,text:'فتح'}:'']);
+  });
+  const rowsF=[[H('م'),H('المعلم'),H('المرحلة'),H('المدرسة'),H('المسار الأصلي في التخزين'),H('اسمه في الـ ZIP'),H('الحجم (كيلوبايت)'),H('SHA-256'),H('الملف')]];
+  plan.forEach((p,i)=>rowsF.push([i+1,p.t?(p.t.teacher_name||''):'غير مرتبط بمعلم',p.t?(p.t.stage||''):'—',p.t?(p.t.school_name||''):'—',p.f.path,p.zipPath,Math.round((+p.f.size||0)/1024),p.sha||'',{link:p.zipPath,text:'فتح'}]));
+  const stamp=new Date(),pad=n=>String(n).padStart(2,'0'),when=`${stamp.getFullYear()}-${pad(stamp.getMonth()+1)}-${pad(stamp.getDate())}`;
+  const orphans=plan.filter(p=>!p.t).length;
+  const rowsR=[[H('تعليمات')],[`أُنشئ هذا الملف بتاريخ ${when} من شاشة «صحائف الأحوال» — ${scope?`مرحلة «${scope}»`:'كل المراحل'}: ${sorted.length} معلمًا في القائمة و${plan.length} صحيفة في الـ ZIP${orphans?` (منها ${orphans} غير مرتبطة بمعلم في مجلد «${ORPH}»)`:''}.`],['١) فُكّ الضغط عن الملف كاملًا في مجلد ثم افتح هذا الإكسل من المجلد المفكوك (لا من داخل معاينة الـ ZIP).'],['٢) الروابط نسبية: تعمل في إكسل الكمبيوتر وLibreOffice، وقد لا تعمل في إكسل الهاتف.'],['٣) ورقة «الملفات» فيها بصمة SHA-256 لكل ملف للتحقق من سلامته.'],['٤) «تاريخ الحصول على الدرجة» في ورقة المعلمين هو المسجَّل عندنا في البرنامج، للمقارنة بـ«التاريخ الاعتباري» في الصحيفة نفسها.']];
+  const xlsx=await v393Xlsx([{name:'المعلمون',rows:rowsA,widths:[5,28,18,15,12,26,22,13,16,15,22,10,18,16,11,26,13,11,10]},{name:'الملفات',rows:rowsF,widths:[5,28,12,26,60,50,12,66,10]},{name:'اقرأني',rows:rowsR,widths:[110]}]);
+  v393Prog('جارٍ بناء ملف الـ ZIP…',95);
+  const entries=plan.map(p=>({path:p.zipPath,data:p.buf}));
+  entries.push({path:'بيانات_المعلمين.xlsx',data:xlsx});
+  const zipName=`صحائف_الأحوال_${scope?v393San(scope,20).replace(/ /g,'_')+'_':''}${when}_${pad(stamp.getHours())}${pad(stamp.getMinutes())}.zip`;
+  const file=new File([v393Zip(entries)],zipName,{type:'application/zip'});
+  v393Prog('تم تجهيز الملف — جارٍ الحفظ…',98);
+  v169SaveFile(file,'تم تجهيز ملف الـ ZIP — احفظه وافتحه وراجع محتوياته قبل التفريغ.');
+  const lg=await sb.rpc('admin_files_log_download',{p_bucket:V393.bucket,p_items:plan.map(p=>({path:p.f.path,size:+p.f.size,sha256:p.sha})),p_zip:zipName});
+  if(lg.error)throw lg.error;
+  const bad=lg.data?.mismatched||[];
+  V393.msgBad=bad.length>0;
+  V393.msg=`تم تجهيز <b>${esc(zipName)}</b> (${esc(v392Size(file.size))}) وفيه ${plan.length} صحيفة + ملف الإكسل. سُجّل تنزيل ${lg.data?.logged||0} ملفًا.${bad.length?` <b>تنبيه:</b> ${bad.length} ملفًا لم يُسجَّل (تغيّر حجمه أثناء التنزيل) فأعد التنزيل.`:''} راجع محتويات الـ ZIP على جهازك ثم استعمل «تفريغ».`;
+  toast('اكتمل التنزيل');
+ }catch(e){V393.msgBad=true;V393.msg='تعذّر التنزيل: '+esc(e.message||e)}
+ V393.busy=false;v393Prog(null);await v393AfterChange();
+}
+/* شاشة «صحائف الأحوال»: اللوحة أعلى البطاقة */
+const __v395V392Page=v392Page;
+v392Page=async function(){
+ const html=await __v395V392Page.apply(this,arguments);
+ if(typeof html!=='string'||profile?.role!=='admin'||!html.includes('<div class="card v392"'))return html;
+ v393Use('teacher-statements');setTimeout(v393Refresh,0);
+ return html.replace('<div class="card v392"','<div id="v393Panel"></div><div class="card v392"');
+};
+/* v395-end */
 </script>
 
 <div id="reportPreviewOverlay" class="report-preview-overlay" role="dialog" aria-modal="true" aria-label="معاينة التقرير" aria-hidden="true">
