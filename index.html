@@ -1,4 +1,5 @@
 <!doctype html>
+<!-- v393: «طلبات معلمي الأجر» (مدير النظام): لوحة «ملفات الشهادات» — تنزيل كل الملفات في ZIP على جهازك مع ملف إكسل ببيانات المتقدمين وروابط لملفاتهم، ثم «تفريغ» = نقل إلى سلة مؤقتة (قابل للاسترجاع) ثم إزالة نهائية (بطلب المستخدم 2026-11-16؛ تجربة أولى على ملفات الأجر قبل تعميمها على صحائف الأحوال). قاعدة البيانات v393 (file_archive_log) ودالة الحافة admin-files-purge. -->
 <!-- v392: شاشة «صحائف الأحوال» لمدير النظام (بطلب المستخدم 2026-11-16، المرحلة 1): مفتاح رفع «صحيفة الأحوال الإلكترونية للمعلم» لكل مرحلة (إعدادي/ثانوي عام/ثانوي صناعي مفتوحة، الابتدائي مغلق) + قائمة من رفع ومن لم يرفع (المعلمون الثابتون فقط — معلم الأجر لا صحيفة له) بفلاتر المرحلة والمدرسة والحالة + «عرض» الملف برابط مؤقت. قاعدة البيانات v392 (حاوية teacher-statements الخاصة، admin_statements_overview، admin_set_statement_stage) ودالة الحافة teacher-statement-upload وبطاقة الرفع في بوابة المعلمين. -->
 <!-- v391: تنبيه «مدرسة بلا موجه» لا يظهر لمدارس الثانوي التي لها موجه مادة نشط (supervisor_school_subjects)؛ حقل الموجه المباشر فيها فارغ عمدًا (قرار v208) فكانت الـ12 مدرسة ثانوية تظهر بالخطأ. عرض فقط. -->
 <!-- v390: «إدخال بيانات المدارس» للموجه (بطلب المستخدم 2026-11-16): الشاشة نفسها (v263) تظهر في قائمة الموجه ويعدّل بها مدارسه المباشرة (ابتدائي/إعدادي) كالمنسق: بيانات المدرسة الأساسية، الفصول، المعلمون، الإسناد. مدارس الثانوي (موجه المادة): عرض واعتماد فقط. زر «اعتماد البيانات» = الاعتماد الفعلي (supervisor-save-and-approve) بدل علامة المنسق. تبويب «الموجهون» والموجه المسؤول عن المعلم عرض فقط. قاعدة البيانات: v390 (سياسات الموجه على school_classes/teaching_assignments/schools بنطاق مدرسته المباشرة + مشغّل يمنع تغيير الموجه/المرحلة/الاسم/المدير/الاعتماد). -->
@@ -8,7 +9,6 @@
 <!-- v382: شاشة «المعلمون» (مدير النظام): زر «المكررون (N)» (مدير النظام: بجوار «المعلمون الموقوفون»؛ المنسق والموجه في نطاقهما) — قائمة أسماء متطابقة (نفس المدرسة/مدرستان) وأرقام قومية تختلف برقم واحد، ولكل حالة زر دمج أو فتح السجل. -->
 <!-- v381: «تعديل بيانات المعلم» (مدير النظام): زر «🔀 دمج مع سجل مكرر» — يختار السجل المكرر في المدرسة الأصلية نفسها وأي السجلين يبقى والرقم القومي الصحيح (اختياري)، ثم admin_merge_teachers (ينقل الإسنادات والجدول والانتدابات ويحفظ لقطة في سجل التدقيق). -->
 <!-- v380: خيارات حالة الإجازة في نموذج الإجازات: «إجازة جديدة» / «إجازة مجددة» / «عودة إلى العمل» بلا عبارة «ماليًا» (النصوص فقط؛ القيم والحسابات بلا تغيير). -->
-<!-- v379: شاشة «اختر طريقة الدخول»: رابط «بوابة المعلمين» أسفل الأدوار (بطلب المستخدم). واجهة فقط. -->
 <html lang="ar" dir="rtl">
 <head>
 <!-- إعداد: أ/ محمود عبدالمفدي محمد أبوالنجا | الصفة: معلم -->
@@ -16,7 +16,7 @@
 <script>/* v226: العنوان الموحد — انظر التعليق أعلى الملف */(function(){try{if(/\.github\.io$/.test(location.hostname)&&/^\/science-guidance\/?(index\.html)?$/.test(location.pathname)&&!/[?&]stay\b/.test(location.search))location.replace('https://teachers-data-portal.vercel.app/app/'+location.hash)}catch(e){}})();</script>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#152c43">
-<title>نظام توجيه العلوم — v392</title>
+<title>نظام توجيه العلوم — v393</title>
 <link rel="manifest" href="./manifest.webmanifest">
 <link rel="icon" type="image/png" sizes="192x192" href="./app-icon-192.png">
 <link rel="apple-touch-icon" href="./app-icon-192.png">
@@ -2257,6 +2257,12 @@ body.v293-ro select[onchange*="v101ChangeSlot"]{pointer-events:none;opacity:.65}
 .v392-flt .v392-q{grid-column:span 2}
 .v392-tbl td,.v392-tbl th{vertical-align:top}
 @media(max-width:600px){.v392-flt .v392-q{grid-column:1/-1}.v392-tbl th:first-child,.v392-tbl td:first-child{display:none}}
+
+/* v393: لوحة ملفات الشهادات في «طلبات معلمي الأجر» */
+.v393{margin:10px 0}.v393 h3{margin:0 0 6px}
+.v393-act{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+.v393-bar{height:8px;border-radius:999px;background:#e5e9f0;overflow:hidden;margin:6px 0}.v393-bar i{display:block;height:100%;background:#16a34a;width:0;transition:width .2s}
+.v393-ck{display:flex;gap:8px;align-items:flex-start;margin:10px 0;line-height:1.5}
 </style>
 </head>
 <body>
@@ -2627,6 +2633,7 @@ window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();window.v152
 window.addEventListener('appinstalled',()=>{window.v152InstallPrompt=null;v152SyncInstallBtn()});
 if('serviceWorker' in navigator&&location.protocol!=='file:')window.addEventListener('load',()=>navigator.serviceWorker.register('./service-worker.js').catch(()=>{}));
 const V145_NEWS=[
+ ['v393','طلبات معلمي الأجر: لوحة «ملفات الشهادات» — تنزيل ZIP (مجلد لكل متقدم + إكسل ببياناتهم وروابط ملفاتهم)، ثم تفريغ إلى سلة قابلة للاسترجاع.'],
  ['v392','مدير النظام: شاشة «صحائف الأحوال» — مفتاح رفع الصحيفة لكل مرحلة وقائمة من رفع ومن لم يرفع (والمعلم يرفعها من بوابة المعلمين).'],
  ['v390','الموجه: «إدخال بيانات المدارس» في قائمتك — تعدّل مدارسك (ابتدائي/إعدادي) كاملة: البيانات والفصول والمعلمون والإسناد، ثم «اعتماد البيانات». مدارس الثانوي عرض واعتماد فقط.'],
  ['v384','«تعديل بيانات المعلم» ← المدرسة والانتداب: تحت كل مدرسة حصصه المسندة فيها (عدد الحصص والفصول).'],
@@ -15405,6 +15412,240 @@ async function v392Page(){
 NAV.admin.splice(NAV.admin.findIndex(x=>x[0]==='paidRequests')+1,0,['statements','صحائف الأحوال','📄']);
 if(Array.isArray(V307_ORDER.admin)&&!V307_ORDER.admin.includes('statements')){const k=V307_ORDER.admin.indexOf('paidRequests');V307_ORDER.admin.splice(k>=0?k+1:V307_ORDER.admin.length,0,'statements')}
 /* v392-end */
+
+/* v393-begin: أرشفة ملفات طلبات معلمي الأجر — تنزيل ZIP + إكسل على جهاز المدير ← نقل إلى سلة (قابل للاسترجاع) ← إزالة نهائية.
+   التنزيل يُبنى في المتصفح (بلا مكتبات)؛ النقل والإزالة بدالة الحافة admin-files-purge؛ السجل في file_archive_log (admin_files_status / admin_files_log_download). */
+const V393={bucket:'paid-teacher-docs',files:[],archive:[],loaded:false,busy:false,err:'',msg:'',prog:null};
+const V393_LABEL={basic:'الأساسي',diploma:'الدبلوم',master:'الماجستير',phd:'الدكتوراه'};
+function v393San(s,max){return String(s||'').replace(/[\\\/:*?"<>|\u0000-\u001f]/g,' ').replace(/\s+/g,' ').trim().replace(/^[. ]+|[. ]+$/g,'').slice(0,max||60)}
+function v393Col(n){let s='';n++;while(n>0){const m=(n-1)%26;s=String.fromCharCode(65+m)+s;n=Math.floor((n-1)/26)}return s}
+function v393X(v){return String(v??'').replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F]/g,'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
+async function v393Pool(items,n,fn){let i=0,stop=false;await Promise.all(Array.from({length:Math.min(n,items.length)},async()=>{while(i<items.length&&!stop){const x=items[i++];try{await fn(x)}catch(e){stop=true;throw e}}}))}
+async function v393Sha(buf){try{const h=await crypto.subtle.digest('SHA-256',buf);return [...new Uint8Array(h)].map(b=>b.toString(16).padStart(2,'0')).join('')}catch(e){return ''}}
+/* ZIP بلا ضغط (الصور مضغوطة أصلًا) يقبل بيانات ثنائية؛ أسماء UTF-8 */
+function v393Zip(entries){
+ const enc=new TextEncoder(),parts=[],central=[];let off=0;
+ const d=new Date(),dt=((d.getFullYear()-1980)<<9)|((d.getMonth()+1)<<5)|d.getDate(),tm=(d.getHours()<<11)|(d.getMinutes()<<5)|(d.getSeconds()>>1);
+ const u16=v=>[v&255,(v>>>8)&255],u32=v=>[v&255,(v>>>8)&255,(v>>>16)&255,(v>>>24)&255];
+ entries.forEach(e=>{
+  const name=enc.encode(e.path),data=e.data,crc=v169Crc(data);
+  const head=new Uint8Array([...u32(0x04034b50),...u16(20),...u16(0x0800),...u16(0),...u16(tm),...u16(dt),...u32(crc),...u32(data.length),...u32(data.length),...u16(name.length),...u16(0)]);
+  parts.push(head,name,data);
+  central.push(new Uint8Array([...u32(0x02014b50),...u16(20),...u16(20),...u16(0x0800),...u16(0),...u16(tm),...u16(dt),...u32(crc),...u32(data.length),...u32(data.length),...u16(name.length),...u16(0),...u16(0),...u16(0),...u16(0),...u32(0),...u32(off)]),name);
+  off+=head.length+name.length+data.length;
+ });
+ const csize=central.reduce((n,b)=>n+b.length,0);
+ return new Blob([...parts,...central,new Uint8Array([...u32(0x06054b50),...u16(0),...u16(0),...u16(entries.length),...u16(entries.length),...u32(csize),...u32(off),...u16(0)])],{type:'application/zip'});
+}
+/* xlsx: ورقة من اليمين لليسار، رأس ثابت، روابط نسبية بدالة HYPERLINK (تعمل بعد فك الضغط وفتح الملف من المجلد نفسه) */
+function v393Sheet(rows,widths){
+ const cols=widths.map((w,i)=>`<col min="${i+1}" max="${i+1}" width="${w}" customWidth="1"/>`).join('');
+ const nCols=Math.max(1,...rows.map(r=>r.length));
+ const body=rows.map((r,ri)=>`<row r="${ri+1}">`+r.map((c,ci)=>{
+  const ref=v393Col(ci)+(ri+1);
+  if(c==null||c==='')return '';
+  if(typeof c==='object'&&c.link!==undefined){const t=v393X(c.text||'فتح');return `<c r="${ref}" s="2" t="str"><f>HYPERLINK("${v393X(c.link)}","${t}")</f><v>${t}</v></c>`}
+  if(typeof c==='object'&&c.head)return `<c r="${ref}" s="1" t="inlineStr"><is><t>${v393X(c.v)}</t></is></c>`;
+  if(typeof c==='number')return `<c r="${ref}"><v>${c}</v></c>`;
+  return `<c r="${ref}" t="inlineStr"><is><t xml:space="preserve">${v393X(c)}</t></is></c>`;
+ }).join('')+'</row>').join('');
+ return `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><sheetViews><sheetView rightToLeft="1" workbookViewId="0"><pane ySplit="1" topLeftCell="A2" activePane="bottomLeft" state="frozen"/></sheetView></sheetViews><cols>${cols}</cols><sheetData>${body}</sheetData><autoFilter ref="A1:${v393Col(nCols-1)}${Math.max(1,rows.length)}"/></worksheet>`;
+}
+async function v393Xlsx(sheets){
+ const enc=new TextEncoder(),H='<?xml version="1.0" encoding="UTF-8" standalone="yes"?>',NS='http://schemas.openxmlformats.org/spreadsheetml/2006/main',RN='http://schemas.openxmlformats.org/officeDocument/2006/relationships';
+ const files=[
+  ['[Content_Types].xml',`${H}<Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/>${sheets.map((s,i)=>`<Override PartName="/xl/worksheets/sheet${i+1}.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/>`).join('')}<Override PartName="/xl/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.styles+xml"/></Types>`],
+  ['_rels/.rels',`${H}<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="${RN}/officeDocument" Target="xl/workbook.xml"/></Relationships>`],
+  ['xl/workbook.xml',`${H}<workbook xmlns="${NS}" xmlns:r="${RN}"><sheets>${sheets.map((s,i)=>`<sheet name="${v393X(s.name)}" sheetId="${i+1}" r:id="rId${i+1}"/>`).join('')}</sheets></workbook>`],
+  ['xl/_rels/workbook.xml.rels',`${H}<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">${sheets.map((s,i)=>`<Relationship Id="rId${i+1}" Type="${RN}/worksheet" Target="worksheets/sheet${i+1}.xml"/>`).join('')}<Relationship Id="rId${sheets.length+1}" Type="${RN}/styles" Target="styles.xml"/></Relationships>`],
+  ['xl/styles.xml',`${H}<styleSheet xmlns="${NS}"><fonts count="3"><font><sz val="11"/><name val="Calibri"/></font><font><b/><sz val="11"/><color rgb="FFFFFFFF"/><name val="Calibri"/></font><font><u/><sz val="11"/><color rgb="FF0563C1"/><name val="Calibri"/></font></fonts><fills count="3"><fill><patternFill patternType="none"/></fill><fill><patternFill patternType="gray125"/></fill><fill><patternFill patternType="solid"><fgColor rgb="FF0F214D"/><bgColor indexed="64"/></patternFill></fill></fills><borders count="1"><border><left/><right/><top/><bottom/><diagonal/></border></borders><cellStyleXfs count="1"><xf numFmtId="0" fontId="0" fillId="0" borderId="0"/></cellStyleXfs><cellXfs count="3"><xf numFmtId="0" fontId="0" fillId="0" borderId="0" xfId="0"/><xf numFmtId="0" fontId="1" fillId="2" borderId="0" xfId="0" applyFont="1" applyFill="1" applyAlignment="1"><alignment horizontal="center" vertical="center" wrapText="1"/></xf><xf numFmtId="0" fontId="2" fillId="0" borderId="0" xfId="0" applyFont="1"/></cellXfs><cellStyles count="1"><cellStyle name="Normal" xfId="0" builtinId="0"/></cellStyles></styleSheet>`],
+  ...sheets.map((s,i)=>[`xl/worksheets/sheet${i+1}.xml`,v393Sheet(s.rows,s.widths)])
+ ];
+ const blob=v393Zip(files.map(([path,text])=>({path,data:enc.encode(text)})));
+ return new Uint8Array(await blob.arrayBuffer());
+}
+function v393Stats(){
+ const f=V393.files,dl=f.filter(x=>x.state==='downloaded'),qu=V393.archive.filter(x=>x.state==='quarantined'),rm=V393.archive.filter(x=>x.state==='removed');
+ const sum=a=>a.reduce((n,x)=>n+(+x.size||0),0);
+ return {live:f.length,liveB:sum(f),dl:dl.length,dlB:sum(dl),notdl:f.length-dl.length,qu:qu.length,quB:sum(qu),rm:rm.length,rmB:sum(rm)};
+}
+function v393Prog(msg,pct){V393.prog=msg?{msg,pct:pct||0}:null;const b=document.getElementById('v393Prog');if(b)b.innerHTML=v393ProgHtml()}
+function v393ProgHtml(){const p=V393.prog;return p?`<div class="cell-sub">${esc(p.msg)}</div><div class="v393-bar"><i style="width:${Math.max(0,Math.min(100,p.pct))}%"></i></div>`:''}
+function v393Html(){
+ if(V393.err)return `<div class="card v393"><h3>ملفات الشهادات (التخزين)</h3><div class="notice danger">${esc(V393.err)}</div></div>`;
+ if(!V393.loaded)return '<div class="card v393"><h3>ملفات الشهادات (التخزين)</h3><div class="cell-sub">جارٍ القراءة…</div></div>';
+ const s=v393Stats(),b=V393.busy?' disabled':'';
+ return `<div class="card v393"><h3>ملفات الشهادات (التخزين)</h3>
+ <div class="cell-sub">في التخزين الآن: ${s.live} ملفًا (${esc(v392Size(s.liveB))}) · نُزّلت: ${s.dl} · لم تُنزَّل: ${s.notdl} · في السلة: ${s.qu}${s.qu?' ('+esc(v392Size(s.quB))+')':''} · أُزيلت نهائيًا: ${s.rm}</div>
+ <div class="actions v393-act">
+  <button class="btn primary" type="button" onclick="v393Download()"${b}>⬇ تنزيل الملفات + الإكسل (ZIP)</button>
+  <button class="btn secondary" type="button" onclick="v393QuarantineForm()"${b}${s.dl?'':' disabled'}>🧺 تفريغ: نقل ما نُزّل إلى السلة</button>
+  ${s.qu?`<button class="btn secondary" type="button" onclick="v393Restore()"${b}>↩ استرجاع من السلة</button><button class="btn danger" type="button" onclick="v393RemoveForm()"${b}>🗑 إزالة نهائية من السلة</button>`:''}
+ </div>
+ <div id="v393Prog">${v393ProgHtml()}</div>
+ ${V393.msg?`<div class="notice ${V393.msgBad?'warn':'ok'}" id="v393Msg">${V393.msg}</div>`:''}
+ <div class="cell-sub">الـ ZIP يُبنى في متصفحك (كمبيوتر أنسب) ويضم مجلدًا لكل متقدم وملف إكسل ببياناتهم وروابط لملفاتهم. فُكّ الضغط كاملًا ثم افتح الإكسل من المجلد المفكوك لتعمل الروابط.</div></div>`;
+}
+function v393Render(){const c=document.getElementById('v393Panel');if(c)c.innerHTML=v393Html()}
+async function v393Refresh(){
+ try{const r=await sb.rpc('admin_files_status',{p_bucket:V393.bucket});if(r.error)throw r.error;V393.files=r.data?.files||[];V393.archive=r.data?.archive||[];V393.err='';V393.loaded=true}
+ catch(e){V393.err='تعذّر قراءة حالة الملفات: '+(e.message||e)}
+ v393Render();
+}
+async function v393Download(){
+ if(V393.busy||profile?.role!=='admin')return;
+ V393.busy=true;V393.msg='';v393Render();
+ try{
+  v393Prog('جارٍ قراءة قوائم الملفات والطلبات…',0);
+  const [st,ar]=await Promise.all([sb.rpc('admin_files_status',{p_bucket:V393.bucket}),sb.from('paid_teacher_applications').select('*').order('created_at',{ascending:true})]);
+  if(st.error)throw st.error;if(ar.error)throw ar.error;
+  const live=(st.data?.files||[]).filter(f=>!f.state||f.state==='downloaded'),apps=ar.data||[];
+  if(!live.length)throw new Error('لا توجد ملفات حيّة في التخزين لتنزيلها.');
+  const ref=new Map();
+  apps.forEach(a=>Object.keys(V393_LABEL).forEach(k=>(Array.isArray(a[k+'_images'])?a[k+'_images']:[]).filter(Boolean).forEach((p,i)=>{if(!ref.has(p))ref.set(p,{a,k,n:i+1})})));
+  const used=new Set(),folders=new Map();
+  const folderOf=a=>{if(!folders.has(a.id)){const last4=v288Digits(a.civil_id).slice(-4),base=v393San(a.full_name||'بدون اسم',50)+(last4?' - '+last4:'');let nm=base,i=2;while(used.has(nm.toLowerCase()))nm=base+' ('+i++ +')';used.add(nm.toLowerCase());folders.set(a.id,nm)}return folders.get(a.id)};
+  const ORPH='_ملفات غير مرتبطة بطلب';
+  const plan=live.map(f=>{
+   const r=ref.get(f.path),ext=(String(f.path).match(/\.[a-z0-9]+$/i)||['.jpg'])[0],parts=String(f.path).split('/');
+   const zipPath=r?`${folderOf(r.a)}/${V393_LABEL[r.k]}_${r.n}${ext}`:`${ORPH}/${(parts[1]||'').slice(0,8)}_${parts[parts.length-1]}`;
+   return {f,zipPath,app:r?r.a:null,kind:r?r.k:null,n:r?r.n:null};
+  });
+  const urls=new Map();
+  for(let i=0;i<plan.length;i+=50){
+   const chunk=plan.slice(i,i+50).map(p=>p.f.path),r=await sb.storage.from(V393.bucket).createSignedUrls(chunk,3600);
+   if(r.error)throw r.error;
+   (r.data||[]).forEach((d,j)=>{if(d&&d.signedUrl)urls.set(d.path||chunk[j],d.signedUrl)});
+  }
+  const total=plan.reduce((n,p)=>n+(+p.f.size||0),0);let done=0,bytes=0;
+  await v393Pool(plan,4,async p=>{
+   const u=urls.get(p.f.path);if(!u)throw new Error('تعذر إنشاء رابط للملف: '+p.f.path);
+   const r=await fetch(u);if(!r.ok)throw new Error('تعذر تنزيل الملف '+p.f.path+' ('+r.status+')');
+   const buf=new Uint8Array(await r.arrayBuffer());
+   if(buf.length!==+p.f.size)throw new Error('حجم الملف المنزَّل لا يطابق المسجَّل: '+p.f.path);
+   p.buf=buf;p.sha=await v393Sha(buf);done++;bytes+=buf.length;
+   v393Prog(`جارٍ التنزيل… ${done} من ${plan.length} (${v392Size(bytes)} من ${v392Size(total)})`,Math.round(bytes*90/Math.max(1,total)));
+  });
+  v393Prog('جارٍ تجهيز ملف الإكسل…',92);
+  /* ورقة المتقدمين */
+  const byApp=new Map();
+  plan.forEach(p=>{if(!p.app)return;const o=byApp.get(p.app.id)||{};(o[p.kind]=o[p.kind]||[]).push(p);byApp.set(p.app.id,o)});
+  const kinds=Object.keys(V393_LABEL),mx={};
+  kinds.forEach(k=>{mx[k]=Math.max(0,...[...byApp.values()].map(o=>(o[k]||[]).length))});
+  const sorted=[...apps].sort((x,y)=>String(x.full_name||'').localeCompare(String(y.full_name||''),'ar'));
+  const hasM=apps.some(a=>a.has_master),hasP=apps.some(a=>a.has_phd);
+  const H=t=>({head:true,v:t});
+  const head=[H('م'),H('الاسم'),H('الرقم القومي'),H('الهاتف'),H('المدرسة الحالية'),H('منتدب؟'),H('المدرسة المنتدب إليها'),H('المؤهل الأساسي'),H('التخصص'),H('الجهة'),H('السنة'),H('التقدير'),H('النسبة %'),H('دبلوم؟'),H('جهة الدبلوم'),H('سنة الدبلوم'),H('تقدير الدبلوم'),H('نسبة الدبلوم %')];
+  if(hasM)head.push(H('ماجستير؟'),H('تخصص الماجستير'),H('جهة الماجستير'),H('سنة الماجستير'),H('تقدير الماجستير'),H('نسبة الماجستير %'));
+  if(hasP)head.push(H('دكتوراه؟'),H('تخصص الدكتوراه'),H('جهة الدكتوراه'),H('سنة الدكتوراه'),H('تقدير الدكتوراه'),H('نسبة الدكتوراه %'));
+  head.push(H('تاريخ التقديم'),H('آخر تعديل'),H('عدد التعديلات'),H('حالته في البرنامج'),H('مجلد ملفاته'));
+  kinds.forEach(k=>{for(let i=1;i<=mx[k];i++)head.push(H(`${V393_LABEL[k]} ${i}`))});
+  const yn=v=>v===true?'نعم':'لا',num=v=>v===null||v===undefined||v===''?'':(isNaN(+v)?String(v):+v);
+  const rowsA=[head];
+  sorted.forEach((a,i)=>{
+   const tr=(typeof V288!=='undefined'&&V288.tr)?V288.tr.get(v288Digits(a.civil_id)):null;
+   const stt=tr?`في البرنامج — ${v288SchoolName(tr.home_school_id)} — ${tr.work_type==='paid'?'بالأجر':'ثابت'}${tr.active?'':' (موقوف)'}`:'غير مضاف';
+   const row=[i+1,a.full_name||'',String(a.civil_id||''),String(a.phone||''),v288AppSchool(a),yn(a.is_delegated),a.is_delegated===true?(a.delegated_school||''):'',a.basic_name||'',a.basic_major||'',a.basic_institution||'',num(a.basic_year),a.basic_grade||'',num(a.basic_percentage),yn(a.has_diploma),a.has_diploma?(a.diploma_institution||''):'',a.has_diploma?num(a.diploma_year):'',a.has_diploma?(a.diploma_grade||''):'',a.has_diploma?num(a.diploma_percentage):''];
+   if(hasM)row.push(yn(a.has_master),a.has_master?(a.master_major||''):'',a.has_master?(a.master_institution||''):'',a.has_master?num(a.master_year):'',a.has_master?(a.master_grade||''):'',a.has_master?num(a.master_percentage):'');
+   if(hasP)row.push(yn(a.has_phd),a.has_phd?(a.phd_major||''):'',a.has_phd?(a.phd_institution||''):'',a.has_phd?num(a.phd_year):'',a.has_phd?(a.phd_grade||''):'',a.has_phd?num(a.phd_percentage):'');
+   const mine=byApp.get(a.id);
+   row.push(v392Date(a.created_at),a.updated_at&&a.updated_at!==a.created_at?v392Date(a.updated_at):'',num(a.edit_count),stt,mine?{link:folderOf(a),text:'فتح المجلد'}:'');
+   kinds.forEach(k=>{for(let n=1;n<=mx[k];n++){const p=((mine||{})[k]||[]).find(x=>x.n===n);row.push(p?{link:p.zipPath,text:'فتح'}:'')}});
+   rowsA.push(row);
+  });
+  const wA=[5,26,18,15,22,9,22,22,18,22,8,12,10,9,18,9,12,10,...(hasM?[9,18,22,9,12,10]:[]),...(hasP?[9,18,22,9,12,10]:[]),13,13,9,34,13,...kinds.flatMap(k=>Array.from({length:mx[k]},()=>11))];
+  /* ورقة الملفات */
+  const rowsF=[[H('م'),H('المتقدم'),H('النوع'),H('المسار الأصلي في التخزين'),H('اسمه في الـ ZIP'),H('الحجم (كيلوبايت)'),H('SHA-256'),H('الملف')]];
+  plan.forEach((p,i)=>rowsF.push([i+1,p.app?(p.app.full_name||''):'غير مرتبط بطلب',p.kind?V393_LABEL[p.kind]:'—',p.f.path,p.zipPath,Math.round((+p.f.size||0)/1024),p.sha||'',{link:p.zipPath,text:'فتح'}]));
+  const stamp=new Date(),pad=n=>String(n).padStart(2,'0'),when=`${stamp.getFullYear()}-${pad(stamp.getMonth()+1)}-${pad(stamp.getDate())}`;
+  const orphans=plan.filter(p=>!p.app).length;
+  const rowsR=[[H('تعليمات')],[`أُنشئ هذا الملف بتاريخ ${when} من شاشة «طلبات معلمي الأجر» — ${sorted.length} متقدمًا و${plan.length} ملفًا${orphans?` (منها ${orphans} غير مرتبطة بأي طلب في مجلد «${ORPH}»)`:''}.`],['١) فُكّ الضغط عن الملف كاملًا في مجلد ثم افتح هذا الإكسل من المجلد المفكوك (لا من داخل معاينة الـ ZIP).'],['٢) الروابط نسبية: تعمل في إكسل الكمبيوتر وLibreOffice، وقد لا تعمل في إكسل الهاتف.'],['٣) ورقة «الملفات» فيها بصمة SHA-256 لكل ملف للتحقق من سلامته.']];
+  const xlsx=await v393Xlsx([{name:'المتقدمون',rows:rowsA,widths:wA},{name:'الملفات',rows:rowsF,widths:[5,26,12,56,44,12,66,10]},{name:'اقرأني',rows:rowsR,widths:[110]}]);
+  v393Prog('جارٍ بناء ملف الـ ZIP…',95);
+  const entries=plan.map(p=>({path:p.zipPath,data:p.buf}));
+  entries.push({path:'بيانات_المتقدمين.xlsx',data:xlsx});
+  const zipName=`ملفات_طلبات_الأجر_${when}_${pad(stamp.getHours())}${pad(stamp.getMinutes())}.zip`;
+  const file=new File([v393Zip(entries)],zipName,{type:'application/zip'});
+  v393Prog('تم تجهيز الملف — جارٍ الحفظ…',98);
+  v169SaveFile(file,'تم تجهيز ملف الـ ZIP — احفظه وافتحه وراجع محتوياته قبل التفريغ.');
+  const lg=await sb.rpc('admin_files_log_download',{p_bucket:V393.bucket,p_items:plan.map(p=>({path:p.f.path,size:+p.f.size,sha256:p.sha})),p_zip:zipName});
+  if(lg.error)throw lg.error;
+  const bad=lg.data?.mismatched||[];
+  V393.msgBad=bad.length>0;
+  V393.msg=`تم تجهيز <b>${esc(zipName)}</b> (${esc(v392Size(file.size))}) وفيه ${plan.length} ملفًا و${sorted.length} متقدمًا + ملف الإكسل. سُجّل تنزيل ${lg.data?.logged||0} ملفًا.${bad.length?` <b>تنبيه:</b> ${bad.length} ملفًا لم يُسجَّل (تغيّر حجمه أثناء التنزيل) فأعد التنزيل.`:''} راجع محتويات الـ ZIP على جهازك ثم استعمل «تفريغ».`;
+  toast('اكتمل التنزيل');
+ }catch(e){V393.msgBad=true;V393.msg='تعذّر التنزيل: '+esc(e.message||e)}
+ V393.busy=false;v393Prog(null);await v393Refresh();
+}
+async function v393Call(action){
+ const r=await sb.functions.invoke('admin-files-purge',{body:{action,bucket:V393.bucket}});
+ if(r.error){let m=r.error.message;try{const j=await r.error.context.json();m=j.error||m}catch(e){}throw new Error(m)}
+ return r.data||{};
+}
+function v393QuarantineForm(){
+ const s=v393Stats();if(!s.dl)return toast('لا توجد ملفات منزَّلة للتفريغ');
+ modal(`<h3>تفريغ ملفات الشهادات — نقل إلى السلة</h3>
+ <div class="notice warn">سيُنقل <b>${s.dl}</b> ملفًا (${esc(v392Size(s.dlB))}) من التخزين إلى سلة مؤقتة. بعدها لن تظهر صور الشهادات في «عرض صور الشهادات»، لكن يمكنك <b>استرجاعها</b> من السلة ما دامت لم تُزَل نهائيًا.${s.notdl?`<br>${s.notdl} ملفًا لم يُنزَّل ولن يُمس.`:''}</div>
+ <label class="v393-ck"><input type="checkbox" id="v393Ck"> حفظتُ ملف الـ ZIP على جهازي وفتحتُه وراجعتُ محتوياته</label>
+ <div class="field"><label>اكتب كلمة «تفريغ» للتأكيد</label><input id="v393Word" autocomplete="off"></div>
+ <div class="actions"><button class="btn danger" type="button" id="v393Go" onclick="v393Quarantine()">نقل إلى السلة</button><button class="btn secondary" type="button" onclick="closeModal()">إلغاء</button></div>`);
+}
+async function v393Quarantine(){
+ if(!document.getElementById('v393Ck')?.checked)return toast('أكّد أولًا أنك حفظتَ الـ ZIP وراجعتَه');
+ if(String(document.getElementById('v393Word')?.value||'').trim()!=='تفريغ')return toast('اكتب كلمة «تفريغ» كما هي');
+ const b=document.getElementById('v393Go');if(b){b.disabled=true;b.textContent='جارٍ النقل…'}
+ V393.busy=true;
+ try{
+  const r=await v393Call('quarantine');closeModal();
+  const sc=(r.skipped_changed||[]).length,sm=(r.skipped_missing||[]).length,fl=(r.failed||[]).length;
+  V393.msgBad=!r.ok||sc>0||sm>0;
+  V393.msg=`نُقل <b>${r.moved||0}</b> ملفًا إلى السلة.${sc?` ${sc} ملفًا تغيّر بعد تنزيله فلم يُنقل (أعد التنزيل).`:''}${sm?` ${sm} ملفًا غير موجود.`:''}${fl?` تعذّر نقل ${fl} ملفًا: ${esc(r.failed[0].error)}`:''}`;
+  toast(r.ok?'تم النقل إلى السلة':'اكتمل النقل مع تنبيهات');
+ }catch(e){closeModal();V393.msgBad=true;V393.msg='تعذّر النقل: '+esc(e.message||e)}
+ V393.busy=false;await v393Refresh();
+}
+async function v393Restore(){
+ const s=v393Stats();if(!s.qu)return;
+ if(!confirm(`استرجاع ${s.qu} ملفًا من السلة إلى أماكنها الأصلية؟`))return;
+ V393.busy=true;v393Render();
+ try{const r=await v393Call('restore');V393.msgBad=!r.ok;V393.msg=`أُعيد <b>${r.restored||0}</b> ملفًا إلى أماكنها.${(r.failed||[]).length?` تعذّر ${r.failed.length}: ${esc(r.failed[0].error)}`:''}`}
+ catch(e){V393.msgBad=true;V393.msg='تعذّر الاسترجاع: '+esc(e.message||e)}
+ V393.busy=false;await v393Refresh();
+}
+function v393RemoveForm(){
+ const s=v393Stats();if(!s.qu)return toast('السلة فارغة');
+ modal(`<h3>إزالة نهائية من السلة</h3>
+ <div class="notice danger">ستُزال <b>${s.qu}</b> ملفًا (${esc(v392Size(s.quB))}) <b>نهائيًا ولا يمكن استرجاعها</b>. لن يبقى لها إلا ما حفظته في ملف الـ ZIP على جهازك.</div>
+ <div class="field"><label>اكتب «إزالة نهائية» للتأكيد</label><input id="v393Word2" autocomplete="off"></div>
+ <div class="actions"><button class="btn danger" type="button" id="v393Go2" onclick="v393Remove()">إزالة نهائية</button><button class="btn secondary" type="button" onclick="closeModal()">إلغاء</button></div>`);
+}
+async function v393Remove(){
+ if(String(document.getElementById('v393Word2')?.value||'').replace(/\s+/g,' ').trim()!=='إزالة نهائية')return toast('اكتب «إزالة نهائية» كما هي');
+ const b=document.getElementById('v393Go2');if(b){b.disabled=true;b.textContent='جارٍ الإزالة…'}
+ V393.busy=true;
+ try{const r=await v393Call('remove');closeModal();V393.msgBad=!r.ok;V393.msg=`أُزيل <b>${r.removed||0}</b> ملفًا نهائيًا.${(r.failed||[]).length?` تعذّر ${r.failed.length}: ${esc(r.failed[0].error)}`:''}`;toast(r.ok?'تمت الإزالة النهائية':'اكتملت الإزالة مع تنبيهات')}
+ catch(e){closeModal();V393.msgBad=true;V393.msg='تعذّرت الإزالة: '+esc(e.message||e)}
+ V393.busy=false;await v393Refresh();
+}
+/* شاشة «طلبات معلمي الأجر»: لوحة الملفات أعلى الإحصاءات، و«عرض صور الشهادات» يشرح إن نُقلت الملفات */
+const __v393V288Page=v288Page;
+v288Page=async function(){
+ const html=await __v393V288Page.apply(this,arguments);
+ if(typeof html!=='string'||profile?.role!=='admin'||!html.includes('<div class="grid4"'))return html;
+ setTimeout(v393Refresh,0);
+ return html.replace('<div class="grid4"','<div id="v393Panel"></div><div class="grid4"');
+};
+const __v393ShowImgs=v288ShowImgs;
+v288ShowImgs=async function(id){
+ const a=V288.apps.get(id);
+ if(a){
+  if(!V393.loaded)await v393Refresh();
+  const arch=new Set(V393.archive.map(x=>x.path)),paths=v288Imgs(a).map(x=>x.path),gone=paths.filter(p=>arch.has(p)),box=document.getElementById('v288Imgs');
+  if(gone.length&&box){box.innerHTML=`<div class="notice warn">${gone.length===paths.length?'صور هذا الطلب':`${gone.length} من ${paths.length} من صور هذا الطلب`} نُقلت من التخزين بعد تنزيلها (في السلة أو أُزيلت). راجعها في ملف الـ ZIP المحفوظ على جهازك — في مجلد المتقدم.</div>`;return}
+ }
+ return __v393ShowImgs.apply(this,arguments);
+};
+/* v393-end */
 </script>
 
 <div id="reportPreviewOverlay" class="report-preview-overlay" role="dialog" aria-modal="true" aria-label="معاينة التقرير" aria-hidden="true">
