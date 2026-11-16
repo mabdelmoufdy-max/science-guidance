@@ -1,5 +1,5 @@
 <!doctype html>
-<!-- v397: «صحائف الأحوال» لمنسق المرحلة (بطلب المستخدم 2026-11-16): تبويب «صحائف الأحوال» في قائمة المنسق بنفس شاشة المدير لمعلمي مراحله فقط — يطّلع على الصحيفة (عرض) ويرفعها أو يستبدلها بدل المعلم، ولا يحذف ولا يفرّغ ولا يفتح/يغلق الرفع (للمدير وحده)؛ يلتزم بمفتاح فتح الرفع لمرحلته، وتقرير «حالة صحائف الأحوال» متاح له بمراحله. إجراء جديد «رفع صحائف الأحوال» في مصفوفة الصلاحيات. قاعدة البيانات v397 + دالة الحافة coordinator-statement-upload. -->
+<!-- v397: «صحائف الأحوال» لمنسق المرحلة (بطلب المستخدم 2026-11-16): تبويب «صحائف الأحوال» في قائمة المنسق بنفس شاشة المدير لمعلمي مراحله فقط — يطّلع على الصحيفة (عرض) ويرفعها أو يستبدلها بدل المعلم، ولا يحذف ولا يفرّغ ولا يفتح/يغلق الرفع (للمدير وحده)؛ يلتزم بمفتاح فتح الرفع لمرحلته، وتقرير «حالة صحائف الأحوال» متاح له بمراحله. إجراء جديد «رفع صحائف الأحوال» في مصفوفة الصلاحيات. قاعدة البيانات v397 + دالة الحافة coordinator-statement-upload. وعلى الهاتف (حتى 760px) تُعرض قائمة الصحائف بسطرين لكل معلم (الاسم وشارة الحالة، ثم المدرسة والتاريخ والحجم مع أزرار 👁 عرض · ⟳ استبدال · ⬆ رفع) بدل الجدول. -->
 <!-- v396: «صحائف الأحوال» (مدير النظام، بطلب المستخدم 2026-11-16 «ليه أسماء المعلمين كلها ظاهرة في الصفحة… اجعلها تظهر بالفلتر وطباعة تقرير»): قائمة المعلمين لا تظهر إلا بعد اختيار فلتر (المرحلة أو الحالة) أو كتابة بحث؛ وزر «📄 تقرير» في رأس الصفحة يطبع تقرير A4 «حالة صحائف الأحوال الإلكترونية للمعلمين» بالفلاتر الحالية (وبلا فلاتر = كل المعلمين). واجهة فقط، بلا قاعدة بيانات. -->
 <!-- v395: «صحائف الأحوال» (مدير النظام): المرحلة 2 — لوحة «ملفات الصحائف»: تنزيل صحائف مرحلة أو كل المراحل في ZIP مرتب (المرحلة/المدرسة/المعلم) مع ملف إكسل ببيانات المعلمين وروابط ملفاتهم، ثم «تفريغ» = نقل إلى سلة مؤقتة (قابل للاسترجاع) ثم إزالة نهائية؛ تتحول حالة المعلم إلى «استُلمت» (ويراها في بوابته «تم استلام صحيفتك»). اللوحة نفسها v393 صارت تعمل على أي حاوية. دالة الحافة admin-files-purge v2 (مزامنة الحالة) ورفع الصحيفة من البوابة بأسماء ملفات فريدة (teacher-statement-upload v2). بلا تغيير في قاعدة البيانات. -->
 <!-- v394: «تعديل بيانات المعلم»: تعيين المدرسة الأصلية لمعلم بلا مدرسة أصلية كان يفشل برسالة «قيمة غير معلومة» لأن الواجهة تسأل عن انتداب إلى مدرسة فارغة؛ صار يتخطى هذا الفحص حين لا توجد مدرسة أصلية حالية. -->
@@ -2263,6 +2263,26 @@ body.v293-ro select[onchange*="v101ChangeSlot"]{pointer-events:none;opacity:.65}
 .v393-act{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
 .v393-bar{height:8px;border-radius:999px;background:#e5e9f0;overflow:hidden;margin:6px 0}.v393-bar i{display:block;height:100%;background:#16a34a;width:0;transition:width .2s}
 .v393-ck{display:flex;gap:8px;align-items:flex-start;margin:10px 0;line-height:1.5}
+/* v397: «صحائف الأحوال» على الهاتف — سطران لكل معلم بدل الجدول (حتى 760px؛ الكمبيوتر بلا تغيير) */
+.v392-ic,.v392-mm{display:none}
+@media(max-width:760px){
+ .v392 .table-wrap{overflow:visible}
+ .v392-tbl,.v392-tbl tbody{display:block;width:100%;min-width:0!important}
+ .v392-tbl thead{display:none}
+ .v392-tbl tr{display:grid;grid-template-columns:1fr auto;column-gap:8px;row-gap:6px;align-items:center;padding:10px 2px;border-bottom:1px solid var(--line-soft,#e3e8ef)}
+ .v392-tbl td{display:block;border:0;padding:0;min-width:0;vertical-align:middle;background:transparent}
+ .v392-tbl td.v392-c0,.v392-tbl td.v392-cd{display:none}
+ .v392-tbl td.v392-cn{grid-column:1;grid-row:1;font-size:15px;line-height:1.45}
+ .v392-tbl td.v392-cb{grid-column:2;grid-row:1;justify-self:end}
+ .v392-tbl td.v392-cs{grid-column:1;grid-row:2;font-size:12.5px;color:#556a7e}
+ .v392-tbl td.v392-cs .cell-sub{display:none}
+ .v392-tbl td.v392-cs .v392-mm{display:inline}
+ .v392-tbl td.v392-ca{grid-column:2;grid-row:2;display:flex;gap:6px;justify-self:end}
+ .v392-tbl td.v392-ca:empty{display:none}
+ .v392-tbl .v392-ic{display:inline}.v392-tbl .v392-tx{display:none}
+ .v392-tbl .btn.up .v392-tx{display:inline}
+ .v392-tbl .btn{min-height:40px;min-width:44px;padding:0 12px;gap:4px}
+}
 </style>
 </head>
 <body>
@@ -15383,7 +15403,9 @@ function v392Table(){
  const LIM=300,shown=rows.slice(0,LIM);
  const body=shown.map((x,i)=>{
   const st=x.status==='uploaded'?'<span class="v392-badge on">✓ رُفعت</span>':x.status==='archived'?'<span class="v392-badge arch">استُلمت</span>':'<span class="v392-badge off">لم ترفع</span>';
-  return `<tr><td>${i+1}</td><td><b>${esc(x.teacher_name)}</b></td><td>${esc(x.school_name)}<div class="cell-sub">${esc(x.stage)}</div></td><td>${st}</td><td>${x.status?esc(v392Date(x.uploaded_at)):'—'}${x.status&&x.file_size?`<div class="cell-sub">${esc(v392Size(x.file_size))}</div>`:''}</td><td>${x.path&&x.status==='uploaded'?`<button type="button" class="btn small secondary" onclick="v392View('${esc(x.path)}')">عرض</button>`:''}${v397Actions(x)}</td></tr>`;
+  const mm=x.status?` · ${esc(v392Date(x.uploaded_at).slice(0,5))}${x.file_size?' · '+esc(v392Size(x.file_size).replace(' كيلو',' ك')):''}`:'';
+  const vb=x.path&&x.status==='uploaded'?`<button type="button" class="btn small secondary" title="عرض" aria-label="عرض" onclick="v392View('${esc(x.path)}')"><span class="v392-ic">👁</span><span class="v392-tx">عرض</span></button>`:'';
+  return `<tr><td class="v392-c0">${i+1}</td><td class="v392-cn"><b>${esc(x.teacher_name)}</b></td><td class="v392-cs">${esc(x.school_name)}<span class="v392-mm">${mm}</span><div class="cell-sub">${esc(x.stage)}</div></td><td class="v392-cb">${st}</td><td class="v392-cd">${x.status?esc(v392Date(x.uploaded_at)):'—'}${x.status&&x.file_size?`<div class="cell-sub">${esc(v392Size(x.file_size))}</div>`:''}</td><td class="v392-ca">${vb}${v397Actions(x)}</td></tr>`;
  }).join('');
  return `<div class="table-wrap"><table class="v392-tbl"><thead><tr><th>#</th><th>المعلم</th><th>المدرسة</th><th>الحالة</th><th>التاريخ</th><th></th></tr></thead><tbody>${body}</tbody></table></div>`+(rows.length>LIM?`<div class="cell-sub" style="padding:8px">يعرض أول ${LIM} من ${rows.length} — ضيّق الفلاتر لرؤية الباقي.</div>`:'');
 }
@@ -15806,7 +15828,8 @@ function v397Actions(x){
  if(profile?.role!=='stage_coordinator'||!V392.up||x.work_type==='paid')return '';
  const st=V392.stages.find(s=>s.stage===x.stage);
  if(!st||!st.open)return '';
- return `<button type="button" class="btn small ${x.status?'secondary':'primary'}" onclick="v397Pick('${esc(x.teacher_id)}')">${x.status?'استبدال':'رفع'}</button>`;
+ const lb=x.status?'استبدال':'رفع';
+ return `<button type="button" class="btn small ${x.status?'secondary':'primary up'}" title="${lb}" aria-label="${lb}" onclick="v397Pick('${esc(x.teacher_id)}')"><span class="v392-ic">${x.status?'⟳':'⬆'}</span><span class="v392-tx">${lb}</span></button>`;
 }
 function v397Reason(r){
  return ({closed:'رفع صحائف هذه المرحلة مغلق — يفتحه مدير النظام.',out_of_scope:'هذا المعلم خارج مراحلك.',cap_blocked:'رفع الصحائف موقوف لدورك من مركز التحكم. للاستفسار راجع مدير النظام.',
