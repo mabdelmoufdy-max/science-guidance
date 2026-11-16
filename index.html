@@ -1,4 +1,5 @@
 <!doctype html>
+<!-- v392: شاشة «صحائف الأحوال» لمدير النظام (بطلب المستخدم 2026-11-16، المرحلة 1): مفتاح رفع «صحيفة الأحوال الإلكترونية للمعلم» لكل مرحلة (إعدادي/ثانوي عام/ثانوي صناعي مفتوحة، الابتدائي مغلق) + قائمة من رفع ومن لم يرفع بفلاتر المرحلة والمدرسة والحالة والنوع + «عرض» الملف برابط مؤقت. قاعدة البيانات v392 (حاوية teacher-statements الخاصة، admin_statements_overview، admin_set_statement_stage) ودالة الحافة teacher-statement-upload وبطاقة الرفع في بوابة المعلمين. -->
 <!-- v391: تنبيه «مدرسة بلا موجه» لا يظهر لمدارس الثانوي التي لها موجه مادة نشط (supervisor_school_subjects)؛ حقل الموجه المباشر فيها فارغ عمدًا (قرار v208) فكانت الـ12 مدرسة ثانوية تظهر بالخطأ. عرض فقط. -->
 <!-- v390: «إدخال بيانات المدارس» للموجه (بطلب المستخدم 2026-11-16): الشاشة نفسها (v263) تظهر في قائمة الموجه ويعدّل بها مدارسه المباشرة (ابتدائي/إعدادي) كالمنسق: بيانات المدرسة الأساسية، الفصول، المعلمون، الإسناد. مدارس الثانوي (موجه المادة): عرض واعتماد فقط. زر «اعتماد البيانات» = الاعتماد الفعلي (supervisor-save-and-approve) بدل علامة المنسق. تبويب «الموجهون» والموجه المسؤول عن المعلم عرض فقط. قاعدة البيانات: v390 (سياسات الموجه على school_classes/teaching_assignments/schools بنطاق مدرسته المباشرة + مشغّل يمنع تغيير الموجه/المرحلة/الاسم/المدير/الاعتماد). -->
 <!-- v385: «تجاهل» في قائمة المكررين محفوظ في قاعدة البيانات لكل الأجهزة والمستخدمين (مدير/منسق/موجه) عبر dup_ignore_list/add/clear؛ وما حُفظ سابقًا على جهازك ينتقل تلقائيًا مرة واحدة. -->
@@ -8,7 +9,6 @@
 <!-- v381: «تعديل بيانات المعلم» (مدير النظام): زر «🔀 دمج مع سجل مكرر» — يختار السجل المكرر في المدرسة الأصلية نفسها وأي السجلين يبقى والرقم القومي الصحيح (اختياري)، ثم admin_merge_teachers (ينقل الإسنادات والجدول والانتدابات ويحفظ لقطة في سجل التدقيق). -->
 <!-- v380: خيارات حالة الإجازة في نموذج الإجازات: «إجازة جديدة» / «إجازة مجددة» / «عودة إلى العمل» بلا عبارة «ماليًا» (النصوص فقط؛ القيم والحسابات بلا تغيير). -->
 <!-- v379: شاشة «اختر طريقة الدخول»: رابط «بوابة المعلمين» أسفل الأدوار (بطلب المستخدم). واجهة فقط. -->
-<!-- v375: بحث المدرسة في «تعديل بيانات المعلم» (المدرسة الأصلية والمنتدب إليها): قائمة منسدلة تحت الحقل بكل المدارس المطابقة (حتى 15) مع المرحلة بدل شريط اقتراح المتصفح الذي يعرض مدرسة واحدة على الهاتف — بقرار المستخدم «أ» 2026-11-13. -->
 <html lang="ar" dir="rtl">
 <head>
 <!-- إعداد: أ/ محمود عبدالمفدي محمد أبوالنجا | الصفة: معلم -->
@@ -16,7 +16,7 @@
 <script>/* v226: العنوان الموحد — انظر التعليق أعلى الملف */(function(){try{if(/\.github\.io$/.test(location.hostname)&&/^\/science-guidance\/?(index\.html)?$/.test(location.pathname)&&!/[?&]stay\b/.test(location.search))location.replace('https://teachers-data-portal.vercel.app/app/'+location.hash)}catch(e){}})();</script>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#152c43">
-<title>نظام توجيه العلوم — v391</title>
+<title>نظام توجيه العلوم — v392</title>
 <link rel="manifest" href="./manifest.webmanifest">
 <link rel="icon" type="image/png" sizes="192x192" href="./app-icon-192.png">
 <link rel="apple-touch-icon" href="./app-icon-192.png">
@@ -2243,6 +2243,20 @@ body.v293-ro select[onchange*="v101ChangeSlot"]{pointer-events:none;opacity:.65}
 .v375-opt .v375-st{color:#6b7a90;font-size:.85em;white-space:nowrap;flex:0 0 auto}
 .v375-empty,.v375-more{padding:10px 12px;color:#6b7a90;font-size:.9em}
 .v381-r{display:flex;align-items:center;gap:8px;font-weight:600;margin:5px 0}.v381-r input{width:auto!important;flex:none;margin:0}
+
+/* v392: صحائف الأحوال (مدير النظام) */
+.v392-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px;margin-bottom:12px}
+.v392-st{border:1px solid var(--line,#d9e0ea);border-radius:12px;padding:12px;display:flex;flex-direction:column;gap:6px}
+.v392-st.off{background:#fafafa}
+.v392-st-h{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.v392-badge{display:inline-block;padding:2px 8px;border-radius:999px;font-size:.78rem;background:#eef2f7;color:#334155}
+.v392-badge.on{background:#dcfce7;color:#166534}.v392-badge.off{background:#fef3c7;color:#92400e}.v392-badge.arch{background:#e0e7ff;color:#3730a3}
+.v392-bar{height:6px;border-radius:999px;background:#e5e9f0;overflow:hidden}.v392-bar i{display:block;height:100%;background:#16a34a}
+.v392-flt{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:8px;margin:8px 0}
+.v392-flt label{display:flex;flex-direction:column;gap:3px;font-size:.85rem}
+.v392-flt .v392-q{grid-column:span 2}
+.v392-tbl td,.v392-tbl th{vertical-align:top}
+@media(max-width:600px){.v392-flt .v392-q{grid-column:1/-1}.v392-tbl th:first-child,.v392-tbl td:first-child{display:none}}
 </style>
 </head>
 <body>
@@ -2613,6 +2627,7 @@ window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();window.v152
 window.addEventListener('appinstalled',()=>{window.v152InstallPrompt=null;v152SyncInstallBtn()});
 if('serviceWorker' in navigator&&location.protocol!=='file:')window.addEventListener('load',()=>navigator.serviceWorker.register('./service-worker.js').catch(()=>{}));
 const V145_NEWS=[
+ ['v392','مدير النظام: شاشة «صحائف الأحوال» — مفتاح رفع الصحيفة لكل مرحلة وقائمة من رفع ومن لم يرفع (والمعلم يرفعها من بوابة المعلمين).'],
  ['v390','الموجه: «إدخال بيانات المدارس» في قائمتك — تعدّل مدارسك (ابتدائي/إعدادي) كاملة: البيانات والفصول والمعلمون والإسناد، ثم «اعتماد البيانات». مدارس الثانوي عرض واعتماد فقط.'],
  ['v384','«تعديل بيانات المعلم» ← المدرسة والانتداب: تحت كل مدرسة حصصه المسندة فيها (عدد الحصص والفصول).'],
  ['v383','في «المكررون» زر «تجاهل (ليسا مكررين)» يخفي الحالة على هذا الجهاز.'],
@@ -2803,7 +2818,7 @@ async function loadPage(force=false){
  if(currentPage==='studyPlans'||currentPage==='budget')currentPage='dashboard';
  if(currentPage==='reports'&&typeof V186_MERGED!=='undefined'&&V186_MERGED.has(profile?.role))currentPage='statistics'; // v186
  __pageLoadController?.abort();__pageLoadController=new AbortController();const local=__pageLoadController;
- const pages={controlCenter:v355Page,timetableProgress:v306Page,onlineUsers:v294Page,paidRequests:v288Page,teacherTimetable:teacherTimetablePage,dashboard:dashboardPage,users:usersPage,supervisors:supervisorsPage,schools:schoolsPage,incoming:incomingDataPage,teachers:teachersPage,classes:classesPage,assignments:assignmentsPage,approval:approvalPage,myAssignments:myAssignmentsPage,workload:workloadPage,budget:budgetPage,completion:dataCompletionPage,alerts:alertsPage,statistics:statisticsPage,reports:reportsPage,announcements:announcementsPage,supervisorHealth:supervisorHealthPage,supDistribution:supDistributionPage,schoolEntry:v236SchoolEntryPage};
+ const pages={statements:v392Page,controlCenter:v355Page,timetableProgress:v306Page,onlineUsers:v294Page,paidRequests:v288Page,teacherTimetable:teacherTimetablePage,dashboard:dashboardPage,users:usersPage,supervisors:supervisorsPage,schools:schoolsPage,incoming:incomingDataPage,teachers:teachersPage,classes:classesPage,assignments:assignmentsPage,approval:approvalPage,myAssignments:myAssignmentsPage,workload:workloadPage,budget:budgetPage,completion:dataCompletionPage,alerts:alertsPage,statistics:statisticsPage,reports:reportsPage,announcements:announcementsPage,supervisorHealth:supervisorHealthPage,supDistribution:supDistributionPage,schoolEntry:v236SchoolEntryPage};
  const renderPage=pages[currentPage]||dashboardPage;
  const html=await v97RenderPage(renderPage,{force,signal:local.signal});if(local.signal.aborted)return;
  c.innerHTML=html;appNavRenderStrip();initializeCurrentPageUi(c);v97InstallStageFilter(c);enhanceMobileWorkspace(c);refreshMobileActionBar(c);if(currentPage==='dashboard')injectCompletionDashboardCards(c).catch(()=>{});
@@ -15318,6 +15333,79 @@ teachersPage=async function(opts={}){
 };
 /* v382-end */
 
+
+/* v392-begin: «صحائف الأحوال» لمدير النظام — مفتاح الرفع لكل مرحلة + من رفع ومن لم يرفع (المرحلة 1؛ التنزيل والتفريغ في المرحلة 2) */
+const V392={stages:[],rows:[],loaded:false,stage:'',school:'',status:'',wt:'',err:''};
+async function v392Load(){
+ const r=await sb.rpc('admin_statements_overview');
+ if(r.error)throw r.error;
+ V392.stages=(r.data&&r.data.stages)||[];V392.rows=(r.data&&r.data.rows)||[];V392.loaded=true;V392.err='';
+}
+function v392Date(iso){const d=new Date(iso);if(isNaN(d))return '—';const p=n=>String(n).padStart(2,'0');return p(d.getDate())+'/'+p(d.getMonth()+1)+'/'+d.getFullYear()}
+function v392Size(n){n=+n||0;return n>=1048576?(n/1048576).toFixed(1)+' ميجا':Math.max(1,Math.round(n/1024))+' كيلو'}
+function v392Rows(){
+ const sq=v288Norm(V392.school);
+ return V392.rows.filter(x=>(!V392.stage||x.stage===V392.stage)&&(!V392.wt||x.work_type===V392.wt)&&(!sq||v288Norm(x.school_name).includes(sq)||v288Norm(x.teacher_name).includes(sq))&&
+  (!V392.status||(V392.status==='up'?!!x.status:!x.status)));
+}
+function v392Cards(){
+ return V392.stages.map(st=>{
+  const all=V392.rows.filter(x=>x.stage===st.stage&&(!V392.wt||x.work_type===V392.wt)),up=all.filter(x=>x.status).length;
+  const pct=all.length?Math.round(up*100/all.length):0;
+  return `<div class="v392-st ${st.open?'on':'off'}"><div class="v392-st-h"><b>${esc(st.stage)}</b><span class="v392-badge ${st.open?'on':'off'}">${st.open?'الرفع مفتوح':'الرفع مغلق'}</span></div>
+  <div class="cell-sub">رفع ${up} من ${all.length} (${pct}%)</div>
+  <div class="v392-bar"><i style="width:${pct}%"></i></div>
+  <button type="button" class="btn small ${st.open?'secondary':'primary'}" onclick="v392Toggle('${esc(st.stage)}',${st.open?'false':'true'})">${st.open?'إغلاق الرفع':'فتح الرفع'}</button></div>`;
+ }).join('');
+}
+function v392Table(){
+ const rows=v392Rows();
+ if(!rows.length)return '<div class="cell-sub" style="padding:10px">لا توجد نتائج بهذه الفلاتر.</div>';
+ const LIM=300,shown=rows.slice(0,LIM);
+ const body=shown.map((x,i)=>{
+  const st=x.status==='uploaded'?'<span class="v392-badge on">✓ رُفعت</span>':x.status==='archived'?'<span class="v392-badge arch">استُلمت</span>':'<span class="v392-badge off">لم ترفع</span>';
+  return `<tr><td>${i+1}</td><td><b>${esc(x.teacher_name)}</b><div class="cell-sub">${x.work_type==='paid'?'أجر':'ثابت'}</div></td><td>${esc(x.school_name)}<div class="cell-sub">${esc(x.stage)}</div></td><td>${st}</td><td>${x.status?esc(v392Date(x.uploaded_at)):'—'}${x.status&&x.file_size?`<div class="cell-sub">${esc(v392Size(x.file_size))}</div>`:''}</td><td>${x.path&&x.status==='uploaded'?`<button type="button" class="btn small secondary" onclick="v392View('${esc(x.path)}')">عرض</button>`:''}</td></tr>`;
+ }).join('');
+ return `<div class="table-wrap"><table class="v392-tbl"><thead><tr><th>#</th><th>المعلم</th><th>المدرسة</th><th>الحالة</th><th>التاريخ</th><th></th></tr></thead><tbody>${body}</tbody></table></div>`+(rows.length>LIM?`<div class="cell-sub" style="padding:8px">يعرض أول ${LIM} من ${rows.length} — ضيّق الفلاتر لرؤية الباقي.</div>`:'');
+}
+function v392Filters(){
+ const stages=['ابتدائي','إعدادي','ثانوي عام','ثانوي صناعي'];
+ const opt=(arr,cur,all)=>`<option value="">${all}</option>`+arr.map(a=>`<option value="${esc(a[0])}" ${cur===a[0]?'selected':''}>${esc(a[1])}</option>`).join('');
+ return `<div class="v392-flt"><label>المرحلة<select onchange="v392Set('stage',this.value)">${opt(stages.map(s=>[s,s]),V392.stage,'الكل')}</select></label>
+ <label>الحالة<select onchange="v392Set('status',this.value)">${opt([['up','رفعوا'],['no','لم يرفعوا']],V392.status,'الكل')}</select></label>
+ <label>النوع<select onchange="v392Set('wt',this.value)">${opt([['permanent','ثابت'],['paid','أجر']],V392.wt,'الكل')}</select></label>
+ <label class="v392-q">بحث<input type="search" autocomplete="off" placeholder="🔎 مدرسة أو معلم" value="${esc(V392.school)}" oninput="v392Search(this.value)"></label></div>`;
+}
+function v392Inner(){
+ if(V392.err)return `<div class="notice danger">${esc(V392.err)}</div>`;
+ const rows=v392Rows(),up=rows.filter(x=>x.status).length;
+ return `<div class="v392-cards">${v392Cards()}</div>${v392Filters()}<div class="v294-head"><span>${rows.length} معلمًا — رفع ${up}، لم يرفع ${rows.length-up}</span></div><div id="v392Body">${v392Table()}</div>`;
+}
+function v392Render(){const c=document.getElementById('v392Wrap');if(c)c.innerHTML=v392Inner()}
+function v392Set(k,v){V392[k]=v;v392Render()}
+function v392Search(v){V392.school=String(v||'');const b=document.getElementById('v392Body');if(b)b.innerHTML=v392Table();const t=document.querySelector('#v392Wrap .v294-head span');if(t){const rows=v392Rows(),up=rows.filter(x=>x.status).length;t.textContent=`${rows.length} معلمًا — رفع ${up}، لم يرفع ${rows.length-up}`}}
+async function v392Toggle(stage,open){
+ if(!confirm((open?'فتح':'إغلاق')+' رفع صحيفة الأحوال لمرحلة «'+stage+'»؟'+(open?'\nسيتمكن معلمو هذه المرحلة من رفع صحائفهم من بوابة المعلمين.':'\nلن يتمكن معلمو هذه المرحلة من الرفع (ما رُفع يبقى محفوظًا).')))return;
+ const r=await sb.rpc('admin_set_statement_stage',{p_stage:stage,p_open:open});
+ if(r.error){toast(r.error.message||'تعذر التغيير',true);return}
+ const s=V392.stages.find(x=>x.stage===stage);if(s)s.open=open;
+ v392Render();toast((open?'فُتح':'أُغلق')+' الرفع لمرحلة '+stage);
+}
+async function v392View(path){
+ const r=await sb.storage.from('teacher-statements').createSignedUrl(path,120);
+ if(r.error||!r.data?.signedUrl){toast('تعذر فتح الملف',true);return}
+ window.open(r.data.signedUrl,'_blank','noopener');
+}
+async function v392Refresh(){try{await v392Load()}catch(e){V392.err='تعذّر التحديث: '+(e.message||e)}v392Render()}
+async function v392Page(){
+ if(profile?.role!=='admin')return '<div class="notice warn">هذه الشاشة لمدير النظام فقط.</div>';
+ try{await v392Load()}catch(e){V392.err='تعذّر تحميل الصحائف: '+(e.message||e)}
+ return `<div class="page-head"><div><h2>صحائف الأحوال</h2><div class="cell-sub">صحيفة الأحوال الإلكترونية للمعلم — يرفعها المعلم من بوابة المعلمين</div></div><div class="actions"><button class="btn secondary" type="button" onclick="v392Refresh()">تحديث</button></div></div>
+ <div class="card v392" id="v392Wrap">${v392Inner()}</div>`;
+}
+NAV.admin.splice(NAV.admin.findIndex(x=>x[0]==='paidRequests')+1,0,['statements','صحائف الأحوال','📄']);
+if(Array.isArray(V307_ORDER.admin)&&!V307_ORDER.admin.includes('statements')){const k=V307_ORDER.admin.indexOf('paidRequests');V307_ORDER.admin.splice(k>=0?k+1:V307_ORDER.admin.length,0,'statements')}
+/* v392-end */
 </script>
 
 <div id="reportPreviewOverlay" class="report-preview-overlay" role="dialog" aria-modal="true" aria-label="معاينة التقرير" aria-hidden="true">

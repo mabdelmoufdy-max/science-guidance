@@ -6,7 +6,7 @@
 <meta name="robots" content="noindex,nofollow">
 <meta name="referrer" content="no-referrer">
 <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; connect-src https://xehjwzszhsaqdqmcatum.supabase.co; img-src data: 'self'; manifest-src 'self'; worker-src 'self'; base-uri 'none'; form-action 'none'">
-<title>بوابة المعلمين — v389</title>
+<title>بوابة المعلمين — v392</title>
 <link rel="manifest" href="/portal.webmanifest">
 <meta name="theme-color" content="#0f214d">
 <meta name="mobile-web-app-capable" content="yes">
@@ -202,6 +202,14 @@ body.is-login .wrap{max-width:none;padding:0}
 .kv .fill .v>span:not(.tag){flex:1;min-width:0;display:flex;justify-content:flex-end}
 .tag.lk{background:none;padding:0 2px;font-size:.8rem;opacity:.7}
 .fill-save{margin-top:12px}.ok-note{background:#ecfdf5;border-color:#a7f3d0;color:#065f46}
+/* v392: صحيفة الأحوال الإلكترونية للمعلم */
+.stmt{margin-top:16px;border:1px solid var(--line,#d9e0ea);border-radius:12px;padding:14px;background:#fff}
+.stmt h3{margin:0 0 6px;font-size:1.02rem}
+.stmt .st-line{margin:6px 0;font-size:.95rem}
+.stmt .st-ok{color:#065f46}.stmt .st-no{color:#92400e}
+.stmt .st-help{color:#55657a;font-size:.88rem;margin:6px 0 10px}
+.stmt .st-pick{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.stmt .st-file{font-size:.88rem;color:#334155;word-break:break-all}
 /* v388: إصلاحات التنسيق على الهاتف وتمييز المجموعات */
 .coord-link{display:inline-block;padding:6px 2px}
 .kv .nw{white-space:nowrap}
@@ -783,6 +791,7 @@ body.is-login .wrap{max-width:none;padding:0}
     S.step = 1; S.draft = loadDraft(dkey());
     try { await loadSchools(); if (S.school) await loadClasses(S.school.id); } catch (e) { /* تُعاد المحاولة عند الحاجة */ }
     try { var ct = await rpc('teacher_portal_contacts', { p_civil: c, p_phone: p }); S.contacts = ct && ct.ok ? ct : null; } catch (e) { S.contacts = null; } /* v372 */
+    try { var st = await rpc('teacher_portal_statement_status', { p_civil: c, p_phone: p }); S.stmt = st && st.ok ? st : null; } catch (e) { S.stmt = null; } /* v392 */
     go('confirm'); /* v303: مراجعة فقط */
   }
   async function startNew() {
@@ -842,6 +851,100 @@ body.is-login .wrap{max-width:none;padding:0}
       } catch (e) { btnBusy(btn, false); showErr(box, errMsg(e)); }
     }, { id: 'fill-save' });
     return h('div', { class: 'fill-save' }, S.fillMsg ? h('div', { class: 'note ok-note', id: 'fill-msg' }, S.fillMsg) : null, box, btn);
+  }
+  /* ---------- v392: صحيفة الأحوال الإلكترونية للمعلم (رفع صورة أو PDF) ---------- */
+  var STMT_MAX_PDF = 1500000, STMT_TARGET = 600000;
+  function stmtDate(iso) {
+    var d = new Date(iso); if (isNaN(d.getTime())) return '';
+    return ('0' + d.getDate()).slice(-2) + '/' + ('0' + (d.getMonth() + 1)).slice(-2) + '/' + d.getFullYear();
+  }
+  function stmtKB(n) { return n >= 1048576 ? (n / 1048576).toFixed(1) + ' ميجا' : Math.max(1, Math.round(n / 1024)) + ' كيلو'; }
+  function stmtReadImage(file) { /* data: URL لأن سياسة الصفحة تسمح بـ data: ولا تسمح بـ blob: */
+    return new Promise(function (res, rej) {
+      var fr = new FileReader();
+      fr.onerror = function () { rej(new Error('read')); };
+      fr.onload = function () { var im = new Image(); im.onload = function () { res(im); }; im.onerror = function () { rej(new Error('img')); }; im.src = fr.result; };
+      fr.readAsDataURL(file);
+    });
+  }
+  async function stmtCompress(file) {
+    var im = await stmtReadImage(file), W = im.naturalWidth, H = im.naturalHeight;
+    if (!W || !H) throw new Error('img');
+    var sc = Math.min(1, 1800 / Math.max(W, H)), q = 0.8, blob = null;
+    for (var i = 0; i < 6; i++) {
+      var c = document.createElement('canvas'); c.width = Math.max(1, Math.round(W * sc)); c.height = Math.max(1, Math.round(H * sc));
+      var cx = c.getContext('2d'); cx.fillStyle = '#fff'; cx.fillRect(0, 0, c.width, c.height); cx.drawImage(im, 0, 0, c.width, c.height);
+      blob = await new Promise(function (r) { c.toBlob(r, 'image/jpeg', q); });
+      if (blob && blob.size <= STMT_TARGET) break;
+      q = Math.max(0.5, q - 0.1); if (i >= 2) sc *= 0.85;
+    }
+    if (!blob || blob.size > 1400000) throw new Error('big');
+    return blob;
+  }
+  async function stmtUpload(blob, name) {
+    var fd = new FormData(); fd.append('civil', S.auth.civil); fd.append('phone', S.auth.phone); fd.append('file', blob, name);
+    var ctl = new AbortController(), t = setTimeout(function () { ctl.abort(); }, 60000), r, j = null;
+    try {
+      r = await fetch(CFG.url + '/functions/v1/teacher-statement-upload', { method: 'POST', body: fd, signal: ctl.signal });
+      try { j = await r.json(); } catch (e) { j = null; }
+    } catch (e) { throw { net: true }; } finally { clearTimeout(t); }
+    return j || { ok: false, reason: 'server' };
+  }
+  function stmtReasonMsg(r) {
+    switch (r.reason) {
+      case 'closed': return 'الرفع متوقف حاليًا لمرحلتك.';
+      case 'too_many': return 'وصلت للحد الأقصى لعدد مرات الرفع. تواصل مع موجهك.';
+      case 'bad_type': return 'الملف غير صالح. ارفع صورة أو ملف PDF.';
+      case 'too_big': return 'حجم الملف كبير. التقط صورة أوضح بحجم أصغر، أو استخدم ملف PDF أقل من 1.5 ميجا.';
+      case 'storage': case 'server': case 'invalid': case 'no_file': return 'تعذر الرفع الآن، حاول مرة أخرى بعد قليل.';
+      default: return reasonMsg(r);
+    }
+  }
+  function stmtCard() {
+    var s0 = S.stmt;
+    if (S.limited || !s0) return null;
+    if (!s0.open && s0.status !== 'uploaded' && s0.status !== 'archived') return null; /* المرحلة مغلقة ولم يرفع: لا تظهر البطاقة */
+    var box = errbox(), line = h('div', { id: 'stmt-line' }), info = h('div', { class: 'st-file', id: 'stmt-info' }), picked = null, chooseBtn, upBtn;
+    var fileIn = h('input', { type: 'file', accept: 'image/*,application/pdf', id: 'stmt-file', style: 'display:none' });
+    function paint() {
+      var s = S.stmt, ok = s.status === 'uploaded', ar = s.status === 'archived';
+      line.className = 'st-line ' + (ok || ar ? 'st-ok' : 'st-no');
+      line.textContent = ok ? '✓ تم رفع صحيفتك بتاريخ ' + stmtDate(s.uploaded_at) + '.' : ar ? '✓ تم استلام صحيفتك.' : 'لم ترفع صحيفتك بعد.';
+      if (chooseBtn) { var lb = ok || ar ? 'استبدال الملف' : 'اختيار الصحيفة'; chooseBtn.setAttribute('data-label', lb); chooseBtn.textContent = lb; }
+    }
+    fileIn.addEventListener('change', async function () {
+      hideErr(box); picked = null; upBtn.disabled = true; info.textContent = '';
+      var f = fileIn.files && fileIn.files[0]; if (!f) return;
+      var isPdf = f.type === 'application/pdf' || /\.pdf$/i.test(f.name);
+      try {
+        if (isPdf) {
+          if (f.size > STMT_MAX_PDF) { showErr(box, 'ملف PDF كبير (' + stmtKB(f.size) + ')، والحد 1.5 ميجا. التقط صورة للصحيفة بدلًا منه.'); return; }
+          picked = { blob: f, name: 'statement.pdf' };
+        } else if (/^image\//.test(f.type) || /\.(jpe?g|png|webp)$/i.test(f.name)) {
+          info.textContent = 'جارٍ تجهيز الصورة...';
+          picked = { blob: await stmtCompress(f), name: 'statement.jpg' };
+        } else { showErr(box, 'اختر صورة أو ملف PDF.'); return; }
+      } catch (e) { info.textContent = ''; showErr(box, 'تعذر تجهيز الصورة. التقطها بالكاميرا أو اختر صورة JPEG أو PNG واضحة.'); return; }
+      info.textContent = 'جاهز للرفع: ' + stmtKB(picked.blob.size);
+      upBtn.disabled = false;
+    });
+    chooseBtn = mkBtn('btn2', 'اختيار الصحيفة', function () { fileIn.click(); }, { id: 'stmt-choose' });
+    upBtn = mkBtn('btn-ok', 'رفع الصحيفة', async function () {
+      if (!picked) return;
+      hideErr(box); btnBusy(upBtn, true, 'جارٍ الرفع...');
+      try {
+        var r = await stmtUpload(picked.blob, picked.name);
+        if (!r || r.ok !== true) { btnBusy(upBtn, false); showErr(box, stmtReasonMsg(r || {})); return; }
+        var n = await rpc('teacher_portal_statement_status', { p_civil: S.auth.civil, p_phone: S.auth.phone });
+        if (n && n.ok) S.stmt = n;
+        picked = null; fileIn.value = ''; btnBusy(upBtn, false); upBtn.disabled = true; info.textContent = '✓ تم الرفع بنجاح.'; paint();
+      } catch (e) { btnBusy(upBtn, false); showErr(box, errMsg(e)); }
+    }, { id: 'stmt-upload', disabled: true });
+    paint();
+    var canUp = !!s0.open;
+    return h('div', { class: 'stmt', id: 'stmt-card' }, h('h3', null, 'صحيفة الأحوال الإلكترونية للمعلم'), line,
+      h('div', { class: 'st-help' }, canUp ? 'ارفع صورة واضحة أو ملف PDF لصحيفة الأحوال الإلكترونية (بيان الحالة) من منظومة الوزارة. تُحفظ بشكل خاص ولا يطّلع عليها إلا مدير النظام.' : 'الرفع متوقف حاليًا لمرحلتك.'),
+      canUp ? h('div', { class: 'st-pick' }, chooseBtn, upBtn, fileIn) : null, canUp ? info : null, box);
   }
   VIEWS.confirm = function () {
     var miss = missingList(), box = errbox();
@@ -931,6 +1034,7 @@ body.is-login .wrap{max-width:none;padding:0}
       otherN > 0 ? h('div', { class: 'note' }, 'لديك ' + otherN + ' فصل في مدرسة أخرى (انتداب/إعارة)؛ تُدار من المشرف ولا تتغير من هنا.') : null,
       h('div', { class: 'kv' }, rows),
       fillSave(FI, box),
+      stmtCard(),
       h('div', { style: 'height:14px' }),
       h('div', null, mkBtn('btn', 'التالي: جدولي الأسبوعي ←', function (ev) { openTimetable(ev.currentTarget); }, { id: 'tt-next' })));
   };
