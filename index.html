@@ -1,4 +1,5 @@
 <!doctype html>
+<!-- v402: «الإجازات» (بطلب المستخدم 2026-11-17 «مفيش حاجة اسمها بانتظار التجديد»): أُزيلت حالة «بانتظار التجديد» من الواجهة (خيار «إجازة جديدة» في نموذج الإجازة، وقسمها في قائمة الإجازات، وعدّاداتها وفلاتر التقارير)، وصُحّحت نصوص القاعدة: من لم تُقطع إجازته لا تُسند له حصص ونصابه المالي صفر. قاعدة البيانات v379 توحّد الحالة (أي إجازة تُحفظ «مجددة» برقم قرار مؤقت). -->
 <!-- v401: «صحائف الأحوال» — مراجعة بالعين (مدير النظام ومنسق المرحلة لمراحله، بطلب المستخدم 2026-11-17 «نفذ أ»): زر «مقارنة» لكل معلم رفع صحيفته يفتح شاشة تقارن الصورة بيانات المعلم في البرنامج (الاسم، الرقم القومي، الدرجة، تاريخ التعيين، التاريخ الاعتباري، المؤهل، المدرسة): الهاتف = صورة ثابتة في الأعلى وحقل واحد في كل مرة (✓ مطابق / ✗ فرق مع القيمة المطبوعة، تخطي، «كل الحقول مطابقة — حفظ»)، الكمبيوتر = جدول بجانب الصورة؛ صورة بتكبير وتدوير وملء الشاشة؛ التالي/السابق؛ عمود «المراجعة» وفلتر وعدّاد في القائمة، وتقرير A4 «فروق صحائف الأحوال». القاعدة: جدول teacher_statement_reviews ودالتا statement_review_get/save؛ المراجعة تُعدّ قديمة إن استُبدلت الصحيفة بعدها. لا تعديل تلقائي لأي بيان للمعلم. وفي الشاشة زر «✎ تعديل بيانات المعلم» (مدير النظام والمنسق) يفتح صفحة تعديل المعلم الموجودة بنفس صلاحيات الدور فوق شاشة المقارنة، وعند العودة تتحدث قيم «في البرنامج» وما صار مطابقًا يُعلَّم تلقائيًا ويبقى بانتظار «حفظ»؛ وأُصلحت رسائل التنبيه التي كانت تختفي خلف الشاشة. -->
 <!-- v400: صفحة «إنجاز إدخال الجداول» (بطلب المستخدم 2026-11-17 «شيل من الصفحة ما تم انجازه»): عند «ما تم إدخاله: الكل» لا تُعرض المدارس التي اكتمل جدول كل معلميها، وداخل المدرسة المختارة لا يُعرض المعلمون المكتملون؛ يظهر عددهم في السطر الرمادي تحت المؤشرات، ويُعرضون باختيار «أدخلوا جدولهم». المؤشرات والنسبة بلا تغيير، ولا تغيير في تقرير A4 ولا قاعدة البيانات. -->
 <!-- v399: «المتصلون الآن ← سجل الدخول» (مدير النظام، بطلب المستخدم 2026-11-17 «نفذ إضافة عمود عدد الإجراءات»): بجانب المدة يظهر عدد الإجراءات الفعلية للمستخدم في الفترة نفسها (تعديلات واعتمادات وإسنادات… من سجل التدقيق) ليُميَّز من فتح البرنامج ومن عمل فيه؛ و«بلا إجراءات» لمن لم يُسجَّل له شيء. العمود نفسه في تقرير A4 «سجل الدخول»، وفي تقرير مستخدم واحد مؤشر «الإجراءات». دالة قراءة جديدة admin_access_actions (v399، للمدير فقط؛ الاسترجاع rollback_v399_access_log_actions_2026-11-17.sql). لا تغيير في أي حساب أو قاعدة أخرى. العدّ من سجل التدقيق وحده: التصفح وفتح التقارير لا يُعدّان إجراءً، وإجراءات معلمي بوابة المعلمين (بلا حساب) لا تُنسب لأحد. -->
@@ -8,7 +9,6 @@
 <!-- v395: «صحائف الأحوال» (مدير النظام): المرحلة 2 — لوحة «ملفات الصحائف»: تنزيل صحائف مرحلة أو كل المراحل في ZIP مرتب (المرحلة/المدرسة/المعلم) مع ملف إكسل ببيانات المعلمين وروابط ملفاتهم، ثم «تفريغ» = نقل إلى سلة مؤقتة (قابل للاسترجاع) ثم إزالة نهائية؛ تتحول حالة المعلم إلى «استُلمت» (ويراها في بوابته «تم استلام صحيفتك»). اللوحة نفسها v393 صارت تعمل على أي حاوية. دالة الحافة admin-files-purge v2 (مزامنة الحالة) ورفع الصحيفة من البوابة بأسماء ملفات فريدة (teacher-statement-upload v2). بلا تغيير في قاعدة البيانات. -->
 <!-- v394: «تعديل بيانات المعلم»: تعيين المدرسة الأصلية لمعلم بلا مدرسة أصلية كان يفشل برسالة «قيمة غير معلومة» لأن الواجهة تسأل عن انتداب إلى مدرسة فارغة؛ صار يتخطى هذا الفحص حين لا توجد مدرسة أصلية حالية. -->
 <!-- v393: «طلبات معلمي الأجر» (مدير النظام): لوحة «ملفات الشهادات» — تنزيل كل الملفات في ZIP على جهازك مع ملف إكسل ببيانات المتقدمين وروابط لملفاتهم، ثم «تفريغ» = نقل إلى سلة مؤقتة (قابل للاسترجاع) ثم إزالة نهائية (بطلب المستخدم 2026-11-16؛ تجربة أولى على ملفات الأجر قبل تعميمها على صحائف الأحوال). قاعدة البيانات v393 (file_archive_log) ودالة الحافة admin-files-purge. -->
-<!-- v392: شاشة «صحائف الأحوال» لمدير النظام (بطلب المستخدم 2026-11-16، المرحلة 1): مفتاح رفع «صحيفة الأحوال الإلكترونية للمعلم» لكل مرحلة (إعدادي/ثانوي عام/ثانوي صناعي مفتوحة، الابتدائي مغلق) + قائمة من رفع ومن لم يرفع (المعلمون الثابتون فقط — معلم الأجر لا صحيفة له) بفلاتر المرحلة والمدرسة والحالة + «عرض» الملف برابط مؤقت. قاعدة البيانات v392 (حاوية teacher-statements الخاصة، admin_statements_overview، admin_set_statement_stage) ودالة الحافة teacher-statement-upload وبطاقة الرفع في بوابة المعلمين. -->
 <html lang="ar" dir="rtl">
 <head>
 <!-- إعداد: أ/ محمود عبدالمفدي محمد أبوالنجا | الصفة: معلم -->
@@ -16,7 +16,7 @@
 <script>/* v226: العنوان الموحد — انظر التعليق أعلى الملف */(function(){try{if(/\.github\.io$/.test(location.hostname)&&/^\/science-guidance\/?(index\.html)?$/.test(location.pathname)&&!/[?&]stay\b/.test(location.search))location.replace('https://teachers-data-portal.vercel.app/app/'+location.hash)}catch(e){}})();</script>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#152c43">
-<title>نظام توجيه العلوم — v401</title>
+<title>نظام توجيه العلوم — v402</title>
 <link rel="manifest" href="./manifest.webmanifest">
 <link rel="icon" type="image/png" sizes="192x192" href="./app-icon-192.png">
 <link rel="apple-touch-icon" href="./app-icon-192.png">
@@ -2714,6 +2714,7 @@ window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();window.v152
 window.addEventListener('appinstalled',()=>{window.v152InstallPrompt=null;v152SyncInstallBtn()});
 if('serviceWorker' in navigator&&location.protocol!=='file:')window.addEventListener('load',()=>navigator.serviceWorker.register('./service-worker.js').catch(()=>{}));
 const V145_NEWS=[
+ ['v402','الإجازات: لم تعد هناك حالة «بانتظار التجديد»؛ أي إجازة لم تُقطع = المعلم في إجازة، لا تُسند له حصص ونصابه المالي صفر.'],
  ['v401','صحائف الأحوال: مراجعة بالعين — زر «مقارنة» لكل معلم يعرض صحيفته بجانب بياناته المسجلة (على الهاتف صورة ثابتة وحقل واحد في كل مرة) مع حفظ النتيجة وفلتر وتقرير للفروق، وزر «تعديل بيانات المعلم» من نفس الشاشة للمدير والمنسق.'],
  ['v400','إنجاز إدخال الجداول: تختفي المدارس والمعلمون الذين اكتمل جدولهم من القائمة للتركيز على الناقص (وتبقى ظاهرة باختيار «أدخلوا جدولهم»).'],
  ['v399','المتصلون الآن ← سجل الدخول: عدد الإجراءات الفعلية بجانب مدة بقاء كل مستخدم (وفي تقرير الطباعة)، للتمييز بين من فتح البرنامج ومن عمل فيه.'],
@@ -6471,7 +6472,6 @@ function rebuildFilteredReportMetrics(schema){
   case 'financialGuidance':
    schema.summary=[
     metric('المعلمون',rows.length),
-    metric('بانتظار التجديد',rows.filter(r=>r.leaveCode==='pending_renewal').length),
     metric('إجازة مجددة',rows.filter(r=>r.leaveCode==='renewed').length),
     metric('إجمالي النصاب المالي',reportSum(rows,'financial')),
     metric('إجمالي الإشراف',reportSum(rows,'supervision')),
@@ -8563,8 +8563,8 @@ Object.assign(STATISTICS_REPORTS,{
  staffRoster:{title:'تقرير الكادر',subtitle:'من يعمل في كل مدرسة: نوع التعاقد وحصص التدريس الفعلية (بلا بيانات شخصية)',icon:'👨‍🏫',adapter:'staffRoster',filters:['stage','supervisor','school','status'],purpose:true,statusLabel:'نوع التعاقد',statuses:['ثابت','بالأجر'],note:'يظهر المعلم داخل كل مدرسة يعمل بها، وتُحسب أعداد المعلمين دون تكرار. حصص التدريس تخص المدرسة الظاهرة في الصف.'},
  schoolShortage:{title:'تقرير العجز',subtitle:'الحصص المطلوبة والتغطية والعجز قبل الأجر وبعده',icon:'⇅',adapter:'schoolShortage',filters:['stage','supervisor','school','status'],purpose:true,statuses:['عجز','متوازن','زيادة','بيانات غير مكتملة'],note:'العجز قبل الأجر = المطلوب ناقص التدريس الفعلي للثابت والمنتدب. المتبقي بعد الأجر يخص التغطية الفعلية. المدارس غير المكتملة تُعرض دون تقدير العجز.'},
  teacherDelegations:{title:'تقرير الانتداب',subtitle:'الانتدابات السارية ومدارس الأصل والوجهة وحصص الوجهة',icon:'↔',adapter:'teacherDelegations',filters:['stage','supervisor','school','status'],purpose:true,statusLabel:'نوع الانتداب',statuses:['جزئي','كلي'],note:'يعرض الانتدابات السارية اليوم. اختيار المدرسة يعرض الانتدابات منها وإليها؛ كل انتداب يُحتسب مرة واحدة، ويشمل معلمي الأجر.'},
- teacherLeaves:{title:'تقرير الإجازات',subtitle:'إجازات العام الدراسي وقراراتها وموقف التجديد',icon:'◷',adapter:'teacherLeaves',filters:['stage','supervisor','school','status'],purpose:true,statuses:['بانتظار التجديد','إجازة مجددة','عاد للعمل'],note:'يعرض الإجازات الطويلة المسجلة وموقفها في العام الدراسي المحدد. الإجازة المرحّلة من عام سابق تظهر بانتظار التجديد، دون نسب قرار سابق إلى العام الحالي.'},
- financialGuidance:{...STATISTICS_REPORTS.financialGuidance,title:'التقرير المالي',subtitle:'النصاب المالي والإشراف وموقف الإجازة السنوي',icon:'◫',adapter:'financialGuidance',filters:['stage','supervisor','school','status'],purpose:true,statuses:['على قوة العمل','بانتظار التجديد','إجازة مجددة','عاد للعمل'],note:'النصاب المالي يختلف عن التدريس الفعلي. الإجازة المجددة صفر ماليًا؛ بانتظار التجديد يُحتسب ماليًا. الانتداب الجزئي يُحتسب في الأصل فقط، والكلي في الوجهة. معلم الأجر خارج حساب النصاب المالي.'}
+ teacherLeaves:{title:'تقرير الإجازات',subtitle:'إجازات العام الدراسي وقراراتها وموقف التجديد',icon:'◷',adapter:'teacherLeaves',filters:['stage','supervisor','school','status'],purpose:true,statuses:['إجازة مجددة','عاد للعمل'],note:'يعرض الإجازات الطويلة المسجلة وموقفها في العام الدراسي المحدد. الإجازة المرحّلة من عام سابق تظهر بانتظار التجديد، دون نسب قرار سابق إلى العام الحالي.'},
+ financialGuidance:{...STATISTICS_REPORTS.financialGuidance,title:'التقرير المالي',subtitle:'النصاب المالي والإشراف وموقف الإجازة السنوي',icon:'◫',adapter:'financialGuidance',filters:['stage','supervisor','school','status'],purpose:true,statuses:['على قوة العمل','إجازة مجددة','عاد للعمل'],note:'النصاب المالي يختلف عن التدريس الفعلي. الإجازة صفر ماليًا. الانتداب الجزئي يُحتسب في الأصل فقط، والكلي في الوجهة. معلم الأجر خارج حساب النصاب المالي.'}
 });
 function v103CanViewReport(id){return !['teacherLeaves','financialGuidance'].includes(id)||canViewFinancialGuidanceReport()}
 function v103AvailableReports(){return V103_PURPOSE_REPORTS.filter(v103CanViewReport)}
@@ -8605,7 +8605,7 @@ function v103RebuildMetrics(schema){
   values=[['المدارس',rows.length],['بيانات غير مكتملة',rows.length-ready.length],['الحصص المطلوبة المعلومة',sum(ready,'required')],['العجز قبل الأجر',sum(ready,'shortage')],['المتبقي بعد الأجر',sum(ready,'unfilled')]];
  }
  if(schema.reportId==='teacherDelegations')values=[['الانتدابات السارية',rows.length],['المعلمون دون تكرار',unique(rows,'teacherId')],['جزئي',count('type','جزئي')],['كلي',count('type','كلي')],['حصص الوجهة الظاهرة',sum(rows,'destinationPeriods')]];
- if(schema.reportId==='teacherLeaves')values=[['المعلمون بإجازات مسجلة',unique(rows,'teacherId')],['بانتظار التجديد',count('status','بانتظار التجديد')],['إجازات مجددة',count('status','إجازة مجددة')],['عادوا للعمل',count('status','عاد للعمل')]];
+ if(schema.reportId==='teacherLeaves')values=[['المعلمون بإجازات مسجلة',unique(rows,'teacherId')],['إجازات مجددة',count('status','إجازة مجددة')],['عادوا للعمل',count('status','عاد للعمل')]];
  if(schema.reportId==='financialGuidance'){
   const seen=new Set(),counted=rows.filter(r=>{if(!r.counted||seen.has(r.teacherId))return false;seen.add(r.teacherId);return true});
   values=[['المعلمون دون تكرار',unique(rows,'teacherId')],['سجلات المدارس',rows.length],['النصاب المالي للتدريس',sum(counted,'financial')],['الإشراف المالي',sum(counted,'supervision')],['الريادة',sum(counted,'leadership')],['الإجمالي المالي',sum(counted,'total')]];
@@ -8665,7 +8665,7 @@ ReportAdapters.financialGuidance={async load(ctx){
   const f=financial.get(v91TeacherId(s)),fullTarget=fullTargets.get(v91TeacherId(s)),counted=fullTarget?v91ScopeSchoolId(s)===fullTarget:s.school_relation!=='delegated_in_partial',legal=reportNumber(f.legal_quota),supervision=counted&&legal>0?reportNumber(s.supervision_periods):0,leadership=counted&&legal>0?reportNumber(s.leadership_periods):0,status=v103LeaveStatus(f);
   return {index:i+1,teacherId:v91TeacherId(s),name:reportCellValue(f.full_name),school:v91SchoolCell(s),job:reportCellValue(f.job_title),status:counted?status:`${status} — يُحتسب ${fullTarget?'في الوجهة':'في الأصل'}`,legal:counted?legal:'—',financial:counted?Math.max(legal-supervision-leadership,0):'—',supervision:counted?supervision:'—',leadership:counted?leadership:'—',total:counted?legal:'—',counted,...v103ScopeMeta([s]),_status:status,_search:[f.full_name,f.civil_id,v91SchoolCell(s),f.job_title,f.leave_type,status].filter(Boolean).join(' ')};
  });
- return v103BaseReport('financialGuidance',ctx,[reportColumn('index','م',.3,{numeric:true}),reportColumn('name','المعلم',1.6),reportColumn('school','المدرسة / الانتداب',2),reportColumn('job','الدرجة',.85),reportColumn('status','الحالة',1.6),reportColumn('legal','النصاب القانوني',.8,{numeric:true}),reportColumn('financial','المالي للتدريس',.8,{numeric:true}),reportColumn('supervision','الإشراف المالي',.7,{numeric:true}),reportColumn('leadership','الريادة',.6,{numeric:true}),reportColumn('total','الإجمالي المالي',.8,{numeric:true})],rows,'الأنصبة حصص أسبوعية. المالي للتدريس = القانوني − الإشراف − الريادة؛ الإجازة المجددة صفر ماليًا، وبانتظار التجديد يُحتسب ماليًا. الجزئي يُحتسب في الأصل فقط والكلي في الوجهة. صف الوجهة للجزئي للبيان فقط. معلم الأجر خارج حساب النصاب المالي.');
+ return v103BaseReport('financialGuidance',ctx,[reportColumn('index','م',.3,{numeric:true}),reportColumn('name','المعلم',1.6),reportColumn('school','المدرسة / الانتداب',2),reportColumn('job','الدرجة',.85),reportColumn('status','الحالة',1.6),reportColumn('legal','النصاب القانوني',.8,{numeric:true}),reportColumn('financial','المالي للتدريس',.8,{numeric:true}),reportColumn('supervision','الإشراف المالي',.7,{numeric:true}),reportColumn('leadership','الريادة',.6,{numeric:true}),reportColumn('total','الإجمالي المالي',.8,{numeric:true})],rows,'الأنصبة حصص أسبوعية. المالي للتدريس = القانوني − الإشراف − الريادة؛ الإجازة صفر ماليًا. الجزئي يُحتسب في الأصل فقط والكلي في الوجهة. صف الوجهة للجزئي للبيان فقط. معلم الأجر خارج حساب النصاب المالي.');
 }};
 
 const v103BaseFilteredMetrics=rebuildFilteredReportMetrics;
@@ -10280,7 +10280,7 @@ financialLeaveEdit=function(teacherId){const s=document.getElementById('financia
 
 /* v180: نافذة «الإجازات وتجديدها» — القائمة لأصحاب الإجازات فقط بأقسام، تنبيه الانتهاء (عرض فقط)، تحذير الفصول المسندة عند التجديد، وكشف الإجازات بدل التقرير المالي داخل النافذة. لا تغيير في الحفظ أو قواعد الحساب. */
 const V180_LEAVE_STATUSES=['pending_renewal','renewed','returned'];
-const V180_LEAVE_TABS=[['all','كل الإجازات'],['pending_renewal','بانتظار التجديد'],['renewed','مجددة'],['temp','قرار مؤقت'],['expiry','تنتهي / انتهت'],['returned','عادوا للعمل']];
+const V180_LEAVE_TABS=[['all','كل الإجازات'],['renewed','مجددة'],['temp','قرار مؤقت'],['expiry','تنتهي / انتهت'],['returned','عادوا للعمل']];
 let __v180LeaveTab='all';
 function v180Today(){const d=new Date();return new Date(d.getFullYear(),d.getMonth(),d.getDate())}
 function v180LeaveDays(row){if(!row?.effective_to)return null;const t=new Date(row.effective_to+'T00:00:00');return Number.isNaN(+t)?null:Math.round((t-v180Today())/86400000)}
@@ -10343,7 +10343,7 @@ openLongLeaveCenter=async function(){
  const rows=r.data||[];window.__financialLeaveRows=rows;
  const options=rows.map(x=>`<option value="${x.teacher_id}">${esc(x.full_name)} — ${esc(x.civil_id)} — ${esc(x.school_name||'')}</option>`).join('');
  modal(`<div class="modal-head"><div><h3>الإجازات الطويلة وتجديدها</h3><div class="muted">${esc(activeYear.label||'')} • نطاق البيانات حسب دورك ومدارسك</div></div><button class="close" type="button" onclick="closeModal()">×</button></div>
-  <div class="notice info"><b>قاعدة الاحتساب:</b> «بانتظار التجديد» يحسب النصاب كاملًا، و«إجازة مجددة» يظهر اسم المعلم ونوع الإجازة وتكون جميع حصصه المالية صفرًا. تاريخ نهاية الإجازة للتنبيه فقط ولا يغيّر الحالة تلقائيًا.</div>
+  <div class="notice info"><b>قاعدة الاحتساب:</b> أي إجازة لم تُقطع يظهر اسم المعلم ونوع الإجازة وتكون جميع حصصه المالية صفرًا ولا تُسند له حصص. تاريخ نهاية الإجازة للتنبيه فقط ولا يغيّر الحالة تلقائيًا.</div>
   <div id="v180LeaveTabs" class="approval-center-summary v180-leave-tabs"></div>
   <div class="actions">${profile?.role==='first_supervisor'?'':'<button type="button" class="btn primary" onclick="v180LeaveShowForm(true)">+ تسجيل إجازة</button>'}<button type="button" id="v180LeaveReportBtn" class="btn secondary" onclick="openReportById('longLeaves',{section:__v180LeaveTab,filterState:{active:false}})">طباعة كشف الإجازات</button><button type="button" class="btn danger" onclick="closeModal()">إغلاق</button></div>
   <div id="v180LeaveBody" class="v249-leave-list"></div>
@@ -10352,7 +10352,7 @@ openLongLeaveCenter=async function(){
    <div class="form-grid">
     <div class="field" style="grid-column:1/-1"><label for="financialLeaveSearch">المعلم — ابحث بالاسم أو الرقم القومي</label><input id="financialLeaveSearch" class="v156-leave-search" type="search" autocomplete="off" placeholder="🔎 اكتب جزءًا من الاسم أو الرقم القومي" oninput="v156LeaveSearch(this.value)"><select id="financialLeaveTeacher" name="teacher_id" onchange="financialLeaveTeacherChanged()" required><option value="">— اختر المعلم —</option>${options}</select><small id="financialLeaveSearchHint" class="muted"></small></div>
     <div class="field"><label>نوع الإجازة الطويلة</label><input id="financialLeaveType" name="leave_type" list="financialLeaveTypes" placeholder="مثال: رعاية طفل" required><datalist id="financialLeaveTypes"><option value="رعاية طفل"><option value="إجازة بدون مرتب"><option value="مرافقة زوج أو زوجة"><option value="إجازة مرضية طويلة"><option value="إجازة طويلة أخرى"></datalist></div>
-    <div class="field"><label>الحالة في العام الحالي</label><select id="financialLeaveStatus" name="renewal_status" onchange="financialLeaveToggleRenewal()" required><option value="">— اختر الحالة —</option><option value="pending_renewal">إجازة جديدة</option><option value="renewed">إجازة مجددة</option><option value="returned">عودة إلى العمل</option></select></div>
+    <div class="field"><label>الحالة في العام الحالي</label><select id="financialLeaveStatus" name="renewal_status" onchange="financialLeaveToggleRenewal()" required><option value="">— اختر الحالة —</option><option value="renewed">إجازة مجددة</option><option value="returned">عودة إلى العمل</option></select></div>
     <div class="field financial-renewal-only" style="display:none"><label>رقم قرار التجديد</label><input id="financialLeaveDecisionNumber" name="decision_number"></div>
     <div class="field financial-renewal-only" style="display:none"><label>تاريخ قرار التجديد</label><input id="financialLeaveDecisionDate" name="decision_date" type="date"></div>
     <div class="field"><label>بداية الإجازة (اختياري)</label><input id="financialLeaveFrom" name="effective_from" type="date"></div>
@@ -10406,11 +10406,10 @@ function formatLongLeavesReport(sourceRows,ctx,section){
  return makeReportSchema({
   reportId:'longLeaves',
   title:'كشف الإجازات الطويلة'+(section&&section!=='all'?' — '+v180LeaveTabTitle(section):''),
-  subtitle:'المعلمون الدائمون أصحاب الإجازات الطويلة في العام الحالي: «بانتظار التجديد» يحسب نصابه كاملًا، و«إجازة مجددة» لا تُسند لها حصص.',
+  subtitle:'المعلمون الدائمون أصحاب الإجازات الطويلة في العام الحالي: من لم تُقطع إجازته لا تُسند له حصص ويظهر نصابه المالي صفرًا.',
   period:ctx.period,
   summary:[
    reportMetric('عدد الكشف',rows.length),
-   reportMetric('بانتظار التجديد',all.filter(r=>r.leave_status==='pending_renewal').length),
    reportMetric('مجددة',all.filter(r=>r.leave_status==='renewed').length),
    reportMetric('قرار مؤقت',all.filter(v180LeaveTemp).length),
    reportMetric('تنتهي / انتهت',all.filter(r=>v180LeaveExpiry(r)).length),
