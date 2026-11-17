@@ -1,4 +1,5 @@
 <!doctype html>
+<!-- v399: «المتصلون الآن ← سجل الدخول» (مدير النظام، بطلب المستخدم 2026-11-17 «نفذ إضافة عمود عدد الإجراءات»): بجانب المدة يظهر عدد الإجراءات الفعلية للمستخدم في الفترة نفسها (تعديلات واعتمادات وإسنادات… من سجل التدقيق) ليُميَّز من فتح البرنامج ومن عمل فيه؛ و«بلا إجراءات» لمن لم يُسجَّل له شيء. العمود نفسه في تقرير A4 «سجل الدخول»، وفي تقرير مستخدم واحد مؤشر «الإجراءات». دالة قراءة جديدة admin_access_actions (v399، للمدير فقط؛ الاسترجاع rollback_v399_access_log_actions_2026-11-17.sql). لا تغيير في أي حساب أو قاعدة أخرى. العدّ من سجل التدقيق وحده: التصفح وفتح التقارير لا يُعدّان إجراءً، وإجراءات معلمي بوابة المعلمين (بلا حساب) لا تُنسب لأحد. -->
 <!-- v398: «صحائف الأحوال» (مدير النظام، بطلب المستخدم 2026-11-16 «اتحكم أقفل للمنسق أو للمعلم في البوابة»): على كل بطاقة مرحلة مفتاحان مستقلان — «رفع المعلم (البوابة)» و«رفع المنسق» — يفتح أيًّا منهما ويغلقه دون الآخر. القاعدة: العمود الجديد statement_stage_settings.coordinator_open (قفل المنسق) وis_open يبقى قفل المعلم؛ القيمة الابتدائية لقفل المنسق = حالة المفتاح الحالية فلم يتغير سلوك أحد. المنسق يرى حالة قفله هو فقط. بلا تغيير في البوابة. -->
 <!-- v397: «صحائف الأحوال» لمنسق المرحلة (بطلب المستخدم 2026-11-16): تبويب «صحائف الأحوال» في قائمة المنسق بنفس شاشة المدير لمعلمي مراحله فقط — يطّلع على الصحيفة (عرض) ويرفعها أو يستبدلها بدل المعلم، ولا يحذف ولا يفرّغ ولا يفتح/يغلق الرفع (للمدير وحده)؛ يلتزم بمفتاح فتح الرفع لمرحلته، وتقرير «حالة صحائف الأحوال» متاح له بمراحله. إجراء جديد «رفع صحائف الأحوال» في مصفوفة الصلاحيات. قاعدة البيانات v397 + دالة الحافة coordinator-statement-upload. وعلى الهاتف (حتى 760px) تُعرض قائمة الصحائف بسطرين لكل معلم (الاسم وشارة الحالة، ثم المدرسة والتاريخ والحجم مع أزرار 👁 عرض · ⟳ استبدال · ⬆ رفع) بدل الجدول. -->
 <!-- v396: «صحائف الأحوال» (مدير النظام، بطلب المستخدم 2026-11-16 «ليه أسماء المعلمين كلها ظاهرة في الصفحة… اجعلها تظهر بالفلتر وطباعة تقرير»): قائمة المعلمين لا تظهر إلا بعد اختيار فلتر (المرحلة أو الحالة) أو كتابة بحث؛ وزر «📄 تقرير» في رأس الصفحة يطبع تقرير A4 «حالة صحائف الأحوال الإلكترونية للمعلمين» بالفلاتر الحالية (وبلا فلاتر = كل المعلمين). واجهة فقط، بلا قاعدة بيانات. -->
@@ -8,7 +9,6 @@
 <!-- v392: شاشة «صحائف الأحوال» لمدير النظام (بطلب المستخدم 2026-11-16، المرحلة 1): مفتاح رفع «صحيفة الأحوال الإلكترونية للمعلم» لكل مرحلة (إعدادي/ثانوي عام/ثانوي صناعي مفتوحة، الابتدائي مغلق) + قائمة من رفع ومن لم يرفع (المعلمون الثابتون فقط — معلم الأجر لا صحيفة له) بفلاتر المرحلة والمدرسة والحالة + «عرض» الملف برابط مؤقت. قاعدة البيانات v392 (حاوية teacher-statements الخاصة، admin_statements_overview، admin_set_statement_stage) ودالة الحافة teacher-statement-upload وبطاقة الرفع في بوابة المعلمين. -->
 <!-- v391: تنبيه «مدرسة بلا موجه» لا يظهر لمدارس الثانوي التي لها موجه مادة نشط (supervisor_school_subjects)؛ حقل الموجه المباشر فيها فارغ عمدًا (قرار v208) فكانت الـ12 مدرسة ثانوية تظهر بالخطأ. عرض فقط. -->
 <!-- v390: «إدخال بيانات المدارس» للموجه (بطلب المستخدم 2026-11-16): الشاشة نفسها (v263) تظهر في قائمة الموجه ويعدّل بها مدارسه المباشرة (ابتدائي/إعدادي) كالمنسق: بيانات المدرسة الأساسية، الفصول، المعلمون، الإسناد. مدارس الثانوي (موجه المادة): عرض واعتماد فقط. زر «اعتماد البيانات» = الاعتماد الفعلي (supervisor-save-and-approve) بدل علامة المنسق. تبويب «الموجهون» والموجه المسؤول عن المعلم عرض فقط. قاعدة البيانات: v390 (سياسات الموجه على school_classes/teaching_assignments/schools بنطاق مدرسته المباشرة + مشغّل يمنع تغيير الموجه/المرحلة/الاسم/المدير/الاعتماد). -->
-<!-- v385: «تجاهل» في قائمة المكررين محفوظ في قاعدة البيانات لكل الأجهزة والمستخدمين (مدير/منسق/موجه) عبر dup_ignore_list/add/clear؛ وما حُفظ سابقًا على جهازك ينتقل تلقائيًا مرة واحدة. -->
 <html lang="ar" dir="rtl">
 <head>
 <!-- إعداد: أ/ محمود عبدالمفدي محمد أبوالنجا | الصفة: معلم -->
@@ -16,7 +16,7 @@
 <script>/* v226: العنوان الموحد — انظر التعليق أعلى الملف */(function(){try{if(/\.github\.io$/.test(location.hostname)&&/^\/science-guidance\/?(index\.html)?$/.test(location.pathname)&&!/[?&]stay\b/.test(location.search))location.replace('https://teachers-data-portal.vercel.app/app/'+location.hash)}catch(e){}})();</script>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#152c43">
-<title>نظام توجيه العلوم — v398</title>
+<title>نظام توجيه العلوم — v399</title>
 <link rel="manifest" href="./manifest.webmanifest">
 <link rel="icon" type="image/png" sizes="192x192" href="./app-icon-192.png">
 <link rel="apple-touch-icon" href="./app-icon-192.png">
@@ -2654,6 +2654,7 @@ window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();window.v152
 window.addEventListener('appinstalled',()=>{window.v152InstallPrompt=null;v152SyncInstallBtn()});
 if('serviceWorker' in navigator&&location.protocol!=='file:')window.addEventListener('load',()=>navigator.serviceWorker.register('./service-worker.js').catch(()=>{}));
 const V145_NEWS=[
+ ['v399','المتصلون الآن ← سجل الدخول: عدد الإجراءات الفعلية بجانب مدة بقاء كل مستخدم (وفي تقرير الطباعة)، للتمييز بين من فتح البرنامج ومن عمل فيه.'],
  ['v398','صحائف الأحوال: قفل رفع المنسق منفصل عن قفل رفع المعلم في البوابة، لكل مرحلة، من بطاقات المراحل.'],
  ['v397','منسق المرحلة: شاشة «صحائف الأحوال» لمراحله — يطّلع على صحائف معلميه ويرفعها أو يستبدلها بدل المعلم (بلا حذف).'],
  ['v396','صحائف الأحوال: قائمة المعلمين تظهر بالفلتر أو البحث فقط، وزر «تقرير» لطباعة الحالة (بالفلاتر أو للكل).'],
@@ -9224,7 +9225,7 @@ async function v294Page(){
  <div class="card" id="v352Wrap">${v352Inner()}</div>`;
 }
 /* v352-begin: تبويبا «سجل الدخول» و«محاولات مرفوضة» داخل «المتصلون الآن» */
-const V352={tab:'online',range:'day',from:'',to:'',q:'',log:[],den:[],err:''};
+const V352={tab:'online',range:'day',from:'',to:'',q:'',log:[],den:[],err:'',acts:new Map(),actsOk:false};
 function v352LogFail(id,error,reason){
  try{
   if(reason==='bad_credentials'&&error&&!(error.status===400||/invalid/i.test(String(error.message||''))))return;
@@ -9248,8 +9249,16 @@ async function v352Load(){
  if(!r){V352.err='اختر تاريخ البداية والنهاية (البداية ليست بعد النهاية).';return}
  let res;try{res=await sb.rpc(V352.tab==='log'?'admin_access_report':'admin_denied_attempts',{p_from:r.from,p_to:r.to})}catch(e){res={error:e}}
  if(res.error){V352.err='تعذّر تحميل التقرير: '+(res.error.message||res.error);return}
- if(V352.tab==='log')V352.log=res.data||[];else V352.den=res.data||[];
+ if(V352.tab==='log'){V352.log=res.data||[];await v399LoadActs(r)}else V352.den=res.data||[];
 }
+/* v399: عدد الإجراءات لكل مستخدم في الفترة (من سجل التدقيق)؛ فشل الطلب لا يعطّل التقرير — يختفي العمود فقط */
+async function v399LoadActs(r){
+ V352.acts=new Map();V352.actsOk=false;
+ try{const a=await sb.rpc('admin_access_actions',{p_from:r.from,p_to:r.to});
+  if(!a.error&&Array.isArray(a.data)){a.data.forEach(x=>V352.acts.set(x.profile_id,Number(x.actions)||0));V352.actsOk=true}
+ }catch(e){}
+}
+function v399Acts(n){return n===null||n===undefined?'':n===0?'بلا إجراءات':n===1?'إجراء واحد':n===2?'إجراءان':(n>=3&&n<=10)?n+' إجراءات':n+' إجراء'}
 function v352Dur(ms){const m=Math.max(1,Math.round(ms/60000));if(m<60)return m+' د';const h=Math.floor(m/60),r=m%60;return h+' س'+(r?' '+r+' د':'')}
 function v352Ms(x){return Math.max(60000,new Date(x.last_seen_at)-new Date(x.started_at))}
 function v352Times(n){return n===1?'مرة واحدة':n===2?'مرتان':(n>=3&&n<=10)?n+' مرات':n+' مرة'}
@@ -9273,7 +9282,7 @@ function v354DenGroups(rows){
 function v354Why(o){const m=[...o.why];return m.length===1&&o.n>1?m[0][0]:m.map(([w,c])=>c>1?w+' ×'+c:w).join('، ')}
 function v352Users(rows){
  const by=new Map();
- rows.forEach(x=>{const o=by.get(x.profile_id)||{name:x.full_name||'—',n:0,ms:0,last:'',roles:new Set(),dev:new Set(),rows:[]};o.n++;o.ms+=v352Ms(x);if(String(x.started_at)>o.last)o.last=String(x.started_at);if(x.active_role)o.roles.add(v294Role(x.active_role));if(x.device)o.dev.add(v352Dev(x.device));o.rows.push(x);by.set(x.profile_id,o)});
+ rows.forEach(x=>{const o=by.get(x.profile_id)||{name:x.full_name||'—',acts:V352.actsOk?(V352.acts.get(x.profile_id)||0):null,n:0,ms:0,last:'',roles:new Set(),dev:new Set(),rows:[]};o.n++;o.ms+=v352Ms(x);if(String(x.started_at)>o.last)o.last=String(x.started_at);if(x.active_role)o.roles.add(v294Role(x.active_role));if(x.device)o.dev.add(v352Dev(x.device));o.rows.push(x);by.set(x.profile_id,o)});
  return [...by.values()].sort((a,b)=>b.n-a.n||b.ms-a.ms);
 }
 function v352Tabs(){
@@ -9292,7 +9301,7 @@ function v352LogBody(){
  if(!rows.length)return '<div class="cell-sub" style="padding:10px">لا يوجد دخول مسجل في هذه الفترة. (التسجيل بدأ من 12/11/2026)</div>';
  const users=v352Users(rows),LIM=100;
  return `<div class="v294-head v352-head"><span>المستخدمون (${users.length}) — مرات الدخول (${rows.length})</span><button type="button" class="btn small secondary" onclick="v353Report('accessLog')">📄 تقرير</button></div>`+
- users.map(o=>`<details class="v352-u"><summary><b>${esc(o.name)}</b><span class="cell-sub">${esc([v352Times(o.n),v352Dur(o.ms),'آخر دخول '+v294Clock(o.last),[...o.dev].join(' و')].filter(Boolean).join(' · '))}</span></summary><div class="v352-ses"><div class="cell-sub">الدور: ${esc([...o.roles].join('، ')||'—')}</div>${o.rows.slice(0,LIM).map(x=>`<div>${esc([v294Time(x.started_at),v352Dur(v352Ms(x)),v352Dev(x.device)].join(' — '))}</div>`).join('')}${o.rows.length>LIM?`<div class="cell-sub">يُعرض أحدث ${LIM} من ${o.rows.length}؛ التقرير المطبوع يعرضها كلها عند البحث باسمه.</div>`:''}</div></details>`).join('');
+ users.map(o=>`<details class="v352-u"><summary><b>${esc(o.name)}</b><span class="cell-sub">${esc([v352Times(o.n),v352Dur(o.ms),v399Acts(o.acts),'آخر دخول '+v294Clock(o.last),[...o.dev].join(' و')].filter(Boolean).join(' · '))}</span></summary><div class="v352-ses"><div class="cell-sub">الدور: ${esc([...o.roles].join('، ')||'—')}</div>${o.rows.slice(0,LIM).map(x=>`<div>${esc([v294Time(x.started_at),v352Dur(v352Ms(x)),v352Dev(x.device)].join(' — '))}</div>`).join('')}${o.rows.length>LIM?`<div class="cell-sub">يُعرض أحدث ${LIM} من ${o.rows.length}؛ التقرير المطبوع يعرضها كلها عند البحث باسمه.</div>`:''}</div></details>`).join('');
 }
 function v352DenBody(){
  if(V352.err)return `<div class="notice warn">${esc(V352.err)}</div>`;
@@ -14166,11 +14175,11 @@ ReportAdapters.accessLog={async load(ctx){
   return makeReportSchema({reportId:'accessLog',title:'سجل دخول مستخدم على البرنامج',subtitle:`${u.name} — ${per}`,period:ctx.period,issuer:ctx.issuer,
    columns:[reportColumn('n','م',.4),reportColumn('at','وقت الدخول',1.6),reportColumn('role','الدور',1.3),reportColumn('dur','المدة',.9),reportColumn('dev','الجهاز',.8)],
    rows:u.rows.map((x,i)=>({n:String(i+1),at:v353Stamp(x.started_at),role:v294Role(x.active_role),dur:v352Dur(v352Ms(x)),dev:v352Dev(x.device)})),
-   summary:[reportMetric('مرات الدخول',u.n),reportMetric('إجمالي الوقت',v352Dur(u.ms)),reportMetric('آخر دخول',v353Stamp(u.last))],totals:[],approval:{enabled:false}});
+   summary:[reportMetric('مرات الدخول',u.n),reportMetric('إجمالي الوقت',v352Dur(u.ms)),reportMetric('آخر دخول',v353Stamp(u.last))].concat(u.acts===null?[]:[reportMetric('الإجراءات',u.acts)]),totals:[],approval:{enabled:false}});
  }
  return makeReportSchema({reportId:'accessLog',title:'سجل الدخول على البرنامج',subtitle:per+(V352.q.trim()?` — بحث: ${V352.q.trim()}`:''),period:ctx.period,issuer:ctx.issuer,
-  columns:[reportColumn('n','م',.4),reportColumn('name','المستخدم',2.4),reportColumn('role','الدور',1.5),reportColumn('count','مرات الدخول',.8,{numeric:true}),reportColumn('dur','إجمالي الوقت',1),reportColumn('last','آخر دخول',1.5),reportColumn('dev','الجهاز',.9)],
-  rows:users.map((u,i)=>({n:String(i+1),name:u.name,role:[...u.roles].join('، ')||'—',count:u.n,dur:v352Dur(u.ms),last:v353Stamp(u.last),dev:[...u.dev].join(' و')||'—'})),
+  columns:[reportColumn('n','م',.4),reportColumn('name','المستخدم',2.4),reportColumn('role','الدور',1.5),reportColumn('count','مرات الدخول',.8,{numeric:true}),reportColumn('dur','إجمالي الوقت',1)].concat(V352.actsOk?[reportColumn('acts','الإجراءات',.8,{numeric:true})]:[],[reportColumn('last','آخر دخول',1.5),reportColumn('dev','الجهاز',.9)]),
+  rows:users.map((u,i)=>({n:String(i+1),name:u.name,role:[...u.roles].join('، ')||'—',count:u.n,dur:v352Dur(u.ms),acts:u.acts,last:v353Stamp(u.last),dev:[...u.dev].join(' و')||'—'})),
   summary:[reportMetric('المستخدمون',users.length),reportMetric('مرات الدخول',rows.length),reportMetric('إجمالي الوقت',v352Dur(total))],totals:[],approval:{enabled:false}});
 }};
 ReportAdapters.deniedAttempts={async load(ctx){
