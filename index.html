@@ -1,4 +1,5 @@
 <!doctype html>
+<!-- v400: صفحة «إنجاز إدخال الجداول» (بطلب المستخدم 2026-11-17 «شيل من الصفحة ما تم انجازه»): عند «ما تم إدخاله: الكل» لا تُعرض المدارس التي اكتمل جدول كل معلميها، وداخل المدرسة المختارة لا يُعرض المعلمون المكتملون؛ يظهر عددهم في السطر الرمادي تحت المؤشرات، ويُعرضون باختيار «أدخلوا جدولهم». المؤشرات والنسبة بلا تغيير، ولا تغيير في تقرير A4 ولا قاعدة البيانات. -->
 <!-- v399: «المتصلون الآن ← سجل الدخول» (مدير النظام، بطلب المستخدم 2026-11-17 «نفذ إضافة عمود عدد الإجراءات»): بجانب المدة يظهر عدد الإجراءات الفعلية للمستخدم في الفترة نفسها (تعديلات واعتمادات وإسنادات… من سجل التدقيق) ليُميَّز من فتح البرنامج ومن عمل فيه؛ و«بلا إجراءات» لمن لم يُسجَّل له شيء. العمود نفسه في تقرير A4 «سجل الدخول»، وفي تقرير مستخدم واحد مؤشر «الإجراءات». دالة قراءة جديدة admin_access_actions (v399، للمدير فقط؛ الاسترجاع rollback_v399_access_log_actions_2026-11-17.sql). لا تغيير في أي حساب أو قاعدة أخرى. العدّ من سجل التدقيق وحده: التصفح وفتح التقارير لا يُعدّان إجراءً، وإجراءات معلمي بوابة المعلمين (بلا حساب) لا تُنسب لأحد. -->
 <!-- v398: «صحائف الأحوال» (مدير النظام، بطلب المستخدم 2026-11-16 «اتحكم أقفل للمنسق أو للمعلم في البوابة»): على كل بطاقة مرحلة مفتاحان مستقلان — «رفع المعلم (البوابة)» و«رفع المنسق» — يفتح أيًّا منهما ويغلقه دون الآخر. القاعدة: العمود الجديد statement_stage_settings.coordinator_open (قفل المنسق) وis_open يبقى قفل المعلم؛ القيمة الابتدائية لقفل المنسق = حالة المفتاح الحالية فلم يتغير سلوك أحد. المنسق يرى حالة قفله هو فقط. بلا تغيير في البوابة. -->
 <!-- v397: «صحائف الأحوال» لمنسق المرحلة (بطلب المستخدم 2026-11-16): تبويب «صحائف الأحوال» في قائمة المنسق بنفس شاشة المدير لمعلمي مراحله فقط — يطّلع على الصحيفة (عرض) ويرفعها أو يستبدلها بدل المعلم، ولا يحذف ولا يفرّغ ولا يفتح/يغلق الرفع (للمدير وحده)؛ يلتزم بمفتاح فتح الرفع لمرحلته، وتقرير «حالة صحائف الأحوال» متاح له بمراحله. إجراء جديد «رفع صحائف الأحوال» في مصفوفة الصلاحيات. قاعدة البيانات v397 + دالة الحافة coordinator-statement-upload. وعلى الهاتف (حتى 760px) تُعرض قائمة الصحائف بسطرين لكل معلم (الاسم وشارة الحالة، ثم المدرسة والتاريخ والحجم مع أزرار 👁 عرض · ⟳ استبدال · ⬆ رفع) بدل الجدول. -->
@@ -8,7 +9,6 @@
 <!-- v393: «طلبات معلمي الأجر» (مدير النظام): لوحة «ملفات الشهادات» — تنزيل كل الملفات في ZIP على جهازك مع ملف إكسل ببيانات المتقدمين وروابط لملفاتهم، ثم «تفريغ» = نقل إلى سلة مؤقتة (قابل للاسترجاع) ثم إزالة نهائية (بطلب المستخدم 2026-11-16؛ تجربة أولى على ملفات الأجر قبل تعميمها على صحائف الأحوال). قاعدة البيانات v393 (file_archive_log) ودالة الحافة admin-files-purge. -->
 <!-- v392: شاشة «صحائف الأحوال» لمدير النظام (بطلب المستخدم 2026-11-16، المرحلة 1): مفتاح رفع «صحيفة الأحوال الإلكترونية للمعلم» لكل مرحلة (إعدادي/ثانوي عام/ثانوي صناعي مفتوحة، الابتدائي مغلق) + قائمة من رفع ومن لم يرفع (المعلمون الثابتون فقط — معلم الأجر لا صحيفة له) بفلاتر المرحلة والمدرسة والحالة + «عرض» الملف برابط مؤقت. قاعدة البيانات v392 (حاوية teacher-statements الخاصة، admin_statements_overview، admin_set_statement_stage) ودالة الحافة teacher-statement-upload وبطاقة الرفع في بوابة المعلمين. -->
 <!-- v391: تنبيه «مدرسة بلا موجه» لا يظهر لمدارس الثانوي التي لها موجه مادة نشط (supervisor_school_subjects)؛ حقل الموجه المباشر فيها فارغ عمدًا (قرار v208) فكانت الـ12 مدرسة ثانوية تظهر بالخطأ. عرض فقط. -->
-<!-- v390: «إدخال بيانات المدارس» للموجه (بطلب المستخدم 2026-11-16): الشاشة نفسها (v263) تظهر في قائمة الموجه ويعدّل بها مدارسه المباشرة (ابتدائي/إعدادي) كالمنسق: بيانات المدرسة الأساسية، الفصول، المعلمون، الإسناد. مدارس الثانوي (موجه المادة): عرض واعتماد فقط. زر «اعتماد البيانات» = الاعتماد الفعلي (supervisor-save-and-approve) بدل علامة المنسق. تبويب «الموجهون» والموجه المسؤول عن المعلم عرض فقط. قاعدة البيانات: v390 (سياسات الموجه على school_classes/teaching_assignments/schools بنطاق مدرسته المباشرة + مشغّل يمنع تغيير الموجه/المرحلة/الاسم/المدير/الاعتماد). -->
 <html lang="ar" dir="rtl">
 <head>
 <!-- إعداد: أ/ محمود عبدالمفدي محمد أبوالنجا | الصفة: معلم -->
@@ -16,7 +16,7 @@
 <script>/* v226: العنوان الموحد — انظر التعليق أعلى الملف */(function(){try{if(/\.github\.io$/.test(location.hostname)&&/^\/science-guidance\/?(index\.html)?$/.test(location.pathname)&&!/[?&]stay\b/.test(location.search))location.replace('https://teachers-data-portal.vercel.app/app/'+location.hash)}catch(e){}})();</script>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#152c43">
-<title>نظام توجيه العلوم — v399</title>
+<title>نظام توجيه العلوم — v400</title>
 <link rel="manifest" href="./manifest.webmanifest">
 <link rel="icon" type="image/png" sizes="192x192" href="./app-icon-192.png">
 <link rel="apple-touch-icon" href="./app-icon-192.png">
@@ -2654,6 +2654,7 @@ window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();window.v152
 window.addEventListener('appinstalled',()=>{window.v152InstallPrompt=null;v152SyncInstallBtn()});
 if('serviceWorker' in navigator&&location.protocol!=='file:')window.addEventListener('load',()=>navigator.serviceWorker.register('./service-worker.js').catch(()=>{}));
 const V145_NEWS=[
+ ['v400','إنجاز إدخال الجداول: تختفي المدارس والمعلمون الذين اكتمل جدولهم من القائمة للتركيز على الناقص (وتبقى ظاهرة باختيار «أدخلوا جدولهم»).'],
  ['v399','المتصلون الآن ← سجل الدخول: عدد الإجراءات الفعلية بجانب مدة بقاء كل مستخدم (وفي تقرير الطباعة)، للتمييز بين من فتح البرنامج ومن عمل فيه.'],
  ['v398','صحائف الأحوال: قفل رفع المنسق منفصل عن قفل رفع المعلم في البوابة، لكل مرحلة، من بطاقات المراحل.'],
  ['v397','منسق المرحلة: شاشة «صحائف الأحوال» لمراحله — يطّلع على صحائف معلميه ويرفعها أو يستبدلها بدل المعلم (بلا حذف).'],
@@ -13522,15 +13523,17 @@ function v306PageInner(rows){
  const filters=`<div class="v306-filters"><label>المرحلة<select onchange="v306SetStage(this.value)">${opt('','الكل',!v306F.stage)}${stages.map(x=>opt(x,x,x===v306F.stage)).join('')}</select></label><label>المدرسة<select onchange="v306SetSchool(this.value)">${opt('','الكل',!v306F.school)}${sch.map(g=>opt(g.id,g.name,String(g.id)===v306F.school)).join('')}</select></label><label>ما تم إدخاله<select onchange="v306SetStatus(this.value)">${stOpts.map(([v,t])=>opt(v,t,v===v306F.status)).join('')}</select></label></div>`;
  const f=rows.filter(r=>(!v306F.stage||r.stage===v306F.stage)&&(!v306F.school||String(r.school_id)===v306F.school));
  const c=st=>f.filter(r=>v306Status(r)===st).length,done=c(V306_ST[0]),part=c(V306_ST[1]),none=c(V306_ST[2]),noc=c(V306_ST[3]),tot=done+part+none,pc=tot?Math.round(done/tot*100):0;
- const kpis=`<div class="v124-kpis">${v124Kpi('اكتمل جدوله',done,'ok')}${v124Kpi('ناقص',part,part?'warn':'ok')}${v124Kpi('لم يبدأ',none,none?'danger':'ok')}${v124Kpi('نسبة الإنجاز',pc+'%',pc>=100?'ok':'warn')}</div><div class="muted" style="font-size:.85em;margin:4px 2px">${tot} معلمًا لهم فصول مسندة${noc?` • ${noc} بلا فصول مسندة (لا يُحسب عليهم تقصير)`:''}</div>`;
+ const doneSch=v306F.status||v306F.school?0:v306Schools(f).filter(g=>g.total&&g.done===g.total).length,doneT=v306F.status||!v306F.school?0:f.filter(r=>v306Status(r)===V306_ST[0]).length,hidNote=doneSch?` • أُخفيت ${doneSch} مدرسة اكتمل جدول كل معلميها (اختر «أدخلوا جدولهم» لعرضها)`:doneT?` • أُخفي ${doneT} معلمًا اكتمل جدوله (اختر «أدخلوا جدولهم» لعرضهم)`:'';
+ const kpis=`<div class="v124-kpis">${v124Kpi('اكتمل جدوله',done,'ok')}${v124Kpi('ناقص',part,part?'warn':'ok')}${v124Kpi('لم يبدأ',none,none?'danger':'ok')}${v124Kpi('نسبة الإنجاز',pc+'%',pc>=100?'ok':'warn')}</div><div class="muted" style="font-size:.85em;margin:4px 2px">${tot} معلمًا لهم فصول مسندة${noc?` • ${noc} بلا فصول مسندة (لا يُحسب عليهم تقصير)`:''}${hidNote}</div>`;
  const fl=v306F.status?f.filter(r=>v306Status(r)===v306F.status):f;
  let body;
  if(!fl.length)body='<div class="notice">لا توجد بيانات ضمن هذا الاختيار.</div>';
- else if(v306F.school){const g=v306Schools(fl)[0];body=`<div class="card">${v306TeacherRows(v306SortTeachers(g.list))}</div>`}
+ else if(v306F.school){const g=v306Schools(fl)[0],lst=v306F.status?g.list:g.list.filter(r=>v306Status(r)!==V306_ST[0]);body=lst.length?`<div class="card">${v306TeacherRows(v306SortTeachers(lst))}</div>`:'<div class="notice ok">اكتمل جدول كل معلمي هذه المدرسة ✓</div>'}
  else{
   /* المدارس: الأعلى إنجازًا أولًا (أو الأكثر معلمين بالحالة المختارة) */
-  const list=v306Schools(fl).sort((a,b)=>v306F.status?(b.total+b.noc)-(a.total+a.noc)||String(a.name).localeCompare(String(b.name),'ar'):(a.total?0:1)-(b.total?0:1)||b.pct-a.pct||b.done-a.done||String(a.name).localeCompare(String(b.name),'ar'));
-  body=`<div class="card">${list.map(g=>v306Line(g,true)).join('')}</div>`;
+  let list=v306Schools(fl).sort((a,b)=>v306F.status?(b.total+b.noc)-(a.total+a.noc)||String(a.name).localeCompare(String(b.name),'ar'):(a.total?0:1)-(b.total?0:1)||b.pct-a.pct||b.done-a.done||String(a.name).localeCompare(String(b.name),'ar'));
+  if(!v306F.status)list=list.filter(g=>!(g.total&&g.done===g.total));
+  body=list.length?`<div class="card">${list.map(g=>v306Line(g,true)).join('')}</div>`:'<div class="notice ok">اكتمل إدخال الجداول لكل المدارس ضمن هذا الاختيار ✓</div>';
  }
  const sel=v306F.school?v306Schools(rows.filter(r=>String(r.school_id)===v306F.school))[0]:null,canPrint=!!sel&&profile?.role!=='first_supervisor';
  const acts=`<div class="v306-acts"><button type="button" class="btn primary" onclick="v306Print()">📄 تقرير</button>${canPrint?`<button type="button" class="btn secondary" onclick="v306PrintSchool('${esc(v306F.school)}')">🖨 طباعة</button>`:''}</div>`;
