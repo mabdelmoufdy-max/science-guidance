@@ -1,6 +1,7 @@
 <!doctype html>
 <!-- v402: «الإجازات» (بطلب المستخدم 2026-11-17 «مفيش حاجة اسمها بانتظار التجديد»): أُزيلت حالة «بانتظار التجديد» من الواجهة (خيار «إجازة جديدة» في نموذج الإجازة، وقسمها في قائمة الإجازات، وعدّاداتها وفلاتر التقارير)، وصُحّحت نصوص القاعدة: من لم تُقطع إجازته لا تُسند له حصص ونصابه المالي صفر. قاعدة البيانات v379 توحّد الحالة (أي إجازة تُحفظ «مجددة» برقم قرار مؤقت)، وإجازة مشرف المادة تُلغي إشرافه دون نقله لأحد (يختار الموجه) فلا يُطلب اختيار بديل في النموذج. -->
 <!-- v401: «صحائف الأحوال» — مراجعة بالعين (مدير النظام ومنسق المرحلة لمراحله، بطلب المستخدم 2026-11-17 «نفذ أ»): زر «مقارنة» لكل معلم رفع صحيفته يفتح شاشة تقارن الصورة بيانات المعلم في البرنامج (الاسم، الرقم القومي، الدرجة، تاريخ التعيين، التاريخ الاعتباري، المؤهل، المدرسة): الهاتف = صورة ثابتة في الأعلى وحقل واحد في كل مرة (✓ مطابق / ✗ فرق مع القيمة المطبوعة، تخطي، «كل الحقول مطابقة — حفظ»)، الكمبيوتر = جدول بجانب الصورة؛ صورة بتكبير وتدوير وملء الشاشة؛ التالي/السابق؛ عمود «المراجعة» وفلتر وعدّاد في القائمة، وتقرير A4 «فروق صحائف الأحوال». القاعدة: جدول teacher_statement_reviews ودالتا statement_review_get/save؛ المراجعة تُعدّ قديمة إن استُبدلت الصحيفة بعدها. لا تعديل تلقائي لأي بيان للمعلم. وفي الشاشة زر «✎ تعديل بيانات المعلم» (مدير النظام والمنسق) يفتح صفحة تعديل المعلم الموجودة بنفس صلاحيات الدور فوق شاشة المقارنة، وعند العودة تتحدث قيم «في البرنامج» وما صار مطابقًا يُعلَّم تلقائيًا ويبقى بانتظار «حفظ»؛ وأُصلحت رسائل التنبيه التي كانت تختفي خلف الشاشة. -->
+<!-- v405: «إنجاز الجداول» — فلتر «الموجه» (اسمه وبجواره عدد معلميه الذين لم يكتمل جدولهم: ناقص + لم يبدأ) يضيّق المدارس والمعلمين؛ للصفحة فقط (تقرير A4 بلا تغيير). لا قاعدة بيانات. -->
 <!-- v404: رسالة تذكير «إنجاز الجداول» تذكر اسم المعلم كاملًا واسم المدرسة المطلوب فيها الجدول (بطلب المستخدم). واجهة فقط. -->
 <!-- v403: تصحيح v400 (بطلب المستخدم): الإخفاء للمدارس المكتملة في القائمة الرئيسية فقط؛ داخل المدرسة المختارة يظهر كل المعلمين (المكتمل جدوله وغير المكتمل). لا قاعدة بيانات. -->
 <!-- v400: صفحة «إنجاز إدخال الجداول» (بطلب المستخدم 2026-11-17 «شيل من الصفحة ما تم انجازه»): عند «ما تم إدخاله: الكل» لا تُعرض المدارس التي اكتمل جدول كل معلميها، وداخل المدرسة المختارة لا يُعرض المعلمون المكتملون؛ يظهر عددهم في السطر الرمادي تحت المؤشرات، ويُعرضون باختيار «أدخلوا جدولهم». المؤشرات والنسبة بلا تغيير، ولا تغيير في تقرير A4 ولا قاعدة البيانات. -->
@@ -18,7 +19,7 @@
 <script>/* v226: العنوان الموحد — انظر التعليق أعلى الملف */(function(){try{if(/\.github\.io$/.test(location.hostname)&&/^\/science-guidance\/?(index\.html)?$/.test(location.pathname)&&!/[?&]stay\b/.test(location.search))location.replace('https://teachers-data-portal.vercel.app/app/'+location.hash)}catch(e){}})();</script>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#152c43">
-<title>نظام توجيه العلوم — v404</title>
+<title>نظام توجيه العلوم — v405</title>
 <link rel="manifest" href="./manifest.webmanifest">
 <link rel="icon" type="image/png" sizes="192x192" href="./app-icon-192.png">
 <link rel="apple-touch-icon" href="./app-icon-192.png">
@@ -13562,7 +13563,18 @@ function v306SortTeachers(list){
  const ord={[V306_ST[2]]:0,[V306_ST[1]]:1,[V306_ST[0]]:2,[V306_ST[3]]:3};
  return [...list].sort((a,b)=>ord[v306Status(a)]-ord[v306Status(b)]||String(a.teacher_name).localeCompare(String(b.teacher_name),'ar'));
 }
-const v306F={stage:'',school:'',status:'',apply:false};
+const v306F={stage:'',school:'',status:'',sup:'',apply:false};
+/* v405: فلتر الموجه — المدرسة ← موجهوها (المباشر + موجهو المواد في الثانوي) */
+let v306Sup=null;
+async function v306LoadSup(){
+ if(v306Sup&&Date.now()-v306Sup.t<300000)return;
+ const m=new Map(),names=new Map(),add=(sid,uid)=>{if(!sid||!uid)return;if(!m.has(uid))m.set(uid,new Set());m.get(uid).add(sid)};
+ try{
+  const [a,b,c]=await Promise.all([sb.from('schools').select('id,supervisor_id'),sb.from('supervisor_school_subjects').select('school_id,supervisor_id').eq('active',true),sb.from('supervisors').select('id,full_name')]);
+  (a.data||[]).forEach(x=>add(x.id,x.supervisor_id));(b.data||[]).forEach(x=>add(x.school_id,x.supervisor_id));(c.data||[]).forEach(x=>names.set(x.id,x.full_name));
+ }catch(e){}
+ v306Sup={t:Date.now(),map:m,names};
+}
 function v306Line(g,page){
  const p=Math.round(g.pct*100),col=!g.total?'#cbd5e1':p>=100?'#2fa84f':p>=40?'#e8a317':'#e0584d';
  const act=page?`v306SetSchool('${esc(g.id)}')`:`v306Open('${esc(g.id)}')`,sm=page&&v306F.status;
@@ -13570,13 +13582,16 @@ function v306Line(g,page){
  return `<button type="button" class="v306-row" onclick="${act}"><span class="nm" title="${esc(g.name)}">${esc(g.name)}</span><span class="bar"><i style="width:${g.total?p:0}%;background:${col}"></i></span><span class="pc">${g.total?`${g.done} من ${g.total}`:'لا فصول'}${g.total&&g.done===g.total?' ✓':''}</span></button>`;
 }
 function v306PageInner(rows){
- const so=['ابتدائي','إعدادي','ثانوي عام','ثانوي صناعي'],stages=[...new Set(rows.map(r=>r.stage))].sort((a,b)=>(so.indexOf(a)<0?9:so.indexOf(a))-(so.indexOf(b)<0?9:so.indexOf(b)));
+ const allRows=rows,supOf=v306Sup?.map||new Map(),stRows=v306F.stage?allRows.filter(r=>r.stage===v306F.stage):allRows,supOpts=[...supOf.entries()].map(([id,set])=>{const rs=stRows.filter(r=>set.has(r.school_id));return rs.length?{id,name:v306Sup.names.get(id)||'—',n:rs.filter(r=>[V306_ST[1],V306_ST[2]].includes(v306Status(r))).length}:null}).filter(Boolean).sort((a,b)=>String(a.name).localeCompare(String(b.name),'ar'));
+ if(v306F.sup&&!supOpts.some(o=>o.id===v306F.sup))v306F.sup='';
+ if(v306F.sup){const ss=supOf.get(v306F.sup);rows=allRows.filter(r=>ss&&ss.has(r.school_id))}
+ const so=['ابتدائي','إعدادي','ثانوي عام','ثانوي صناعي'],stages=[...new Set(allRows.map(r=>r.stage))].sort((a,b)=>(so.indexOf(a)<0?9:so.indexOf(a))-(so.indexOf(b)<0?9:so.indexOf(b)));
  if(v306F.stage&&!stages.includes(v306F.stage))v306F.stage='';
  const sch=v306Schools(rows.filter(r=>!v306F.stage||r.stage===v306F.stage)).sort((a,b)=>String(a.name).localeCompare(String(b.name),'ar'));
  if(v306F.school&&!sch.some(g=>String(g.id)===v306F.school))v306F.school='';
  const opt=(v,t,sel)=>`<option value="${esc(v)}"${sel?' selected':''}>${esc(t)}</option>`;
  const stOpts=[['','الكل'],[V306_ST[0],'أدخلوا جدولهم'],[V306_ST[1],'ناقص'],[V306_ST[2],'لم يدخلوا بعد']];
- const filters=`<div class="v306-filters"><label>المرحلة<select onchange="v306SetStage(this.value)">${opt('','الكل',!v306F.stage)}${stages.map(x=>opt(x,x,x===v306F.stage)).join('')}</select></label><label>المدرسة<select onchange="v306SetSchool(this.value)">${opt('','الكل',!v306F.school)}${sch.map(g=>opt(g.id,g.name,String(g.id)===v306F.school)).join('')}</select></label><label>ما تم إدخاله<select onchange="v306SetStatus(this.value)">${stOpts.map(([v,t])=>opt(v,t,v===v306F.status)).join('')}</select></label></div>`;
+ const filters=`<div class="v306-filters"><label>المرحلة<select onchange="v306SetStage(this.value)">${opt('','الكل',!v306F.stage)}${stages.map(x=>opt(x,x,x===v306F.stage)).join('')}</select></label>${supOpts.length>1||v306F.sup?`<label>الموجه<select onchange="v306SetSup(this.value)">${opt('','الكل',!v306F.sup)}${supOpts.map(o=>opt(o.id,`${o.name} (${o.n})`,o.id===v306F.sup)).join('')}</select></label>`:''}<label>المدرسة<select onchange="v306SetSchool(this.value)">${opt('','الكل',!v306F.school)}${sch.map(g=>opt(g.id,g.name,String(g.id)===v306F.school)).join('')}</select></label><label>ما تم إدخاله<select onchange="v306SetStatus(this.value)">${stOpts.map(([v,t])=>opt(v,t,v===v306F.status)).join('')}</select></label></div>`;
  const f=rows.filter(r=>(!v306F.stage||r.stage===v306F.stage)&&(!v306F.school||String(r.school_id)===v306F.school));
  const c=st=>f.filter(r=>v306Status(r)===st).length,done=c(V306_ST[0]),part=c(V306_ST[1]),none=c(V306_ST[2]),noc=c(V306_ST[3]),tot=done+part+none,pc=tot?Math.round(done/tot*100):0;
  const doneSch=v306F.status||v306F.school?0:v306Schools(f).filter(g=>g.total&&g.done===g.total).length,hidNote=doneSch?` • أُخفيت ${doneSch} مدرسة اكتمل جدول كل معلميها (اختر «أدخلوا جدولهم» لعرضها)`:'';
@@ -13597,6 +13612,7 @@ function v306PageInner(rows){
 }
 function v306Redraw(){const el=document.getElementById('v306Page');if(el&&v306Cache)el.innerHTML=v306PageInner(v306Cache.rows)}
 function v306SetStage(v){v306F.stage=v;v306F.school='';v306Redraw()}
+function v306SetSup(v){v306F.sup=v;v306F.school='';v306Redraw()}
 function v306SetSchool(v){v306F.school=v;v306Redraw()}
 function v306SetStatus(v){v306F.status=v;v306Redraw()}
 function v306Print(){v306F.apply=true;openReportById(V306_ID)}
@@ -13618,7 +13634,7 @@ async function v306PrintSchool(schoolId){
 /* رجوع: من تفاصيل مدرسة إلى صفحة الإنجاز (قائمة المدارس)، ومن القائمة إلى الشاشة السابقة */
 function v306Back(){if(v306F.school){v306SetSchool('');return}appNavGoBack()}
 async function v306Page({force=false}={}){
- let rows;try{rows=await v306Load(!!force)}catch(e){return `<div class="error">تعذر تحميل إنجاز الجداول: ${esc(e?.message||e)}</div>`}
+ let rows;try{rows=await v306Load(!!force);await v306LoadSup()}catch(e){return `<div class="error">تعذر تحميل إنجاز الجداول: ${esc(e?.message||e)}</div>`}
  return `<div class="page-head"><div><h2>إنجاز إدخال الجداول</h2><p>من أدخل جدوله الفعلي ومن لم يكمله — للمتابعة والتذكير.</p></div><div class="actions"><button type="button" class="btn secondary" onclick="v306Back()">← رجوع</button><button type="button" class="btn secondary" onclick="refreshCurrentPage({invalidate:['page:timetableProgress']});v306Cache=null">تحديث</button></div></div><div id="v306Page">${v306PageInner(rows)}</div>`;
 }
 {
