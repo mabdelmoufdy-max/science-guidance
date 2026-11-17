@@ -1,4 +1,5 @@
 <!doctype html>
+<!-- v401: «صحائف الأحوال» — مراجعة بالعين (مدير النظام ومنسق المرحلة لمراحله، بطلب المستخدم 2026-11-17 «نفذ أ»): زر «مقارنة» لكل معلم رفع صحيفته يفتح شاشة تقارن الصورة بيانات المعلم في البرنامج (الاسم، الرقم القومي، الدرجة، تاريخ التعيين، التاريخ الاعتباري، المؤهل، المدرسة): الهاتف = صورة ثابتة في الأعلى وحقل واحد في كل مرة (✓ مطابق / ✗ فرق مع القيمة المطبوعة، تخطي، «كل الحقول مطابقة — حفظ»)، الكمبيوتر = جدول بجانب الصورة؛ صورة بتكبير وتدوير وملء الشاشة؛ التالي/السابق؛ عمود «المراجعة» وفلتر وعدّاد في القائمة، وتقرير A4 «فروق صحائف الأحوال». القاعدة: جدول teacher_statement_reviews ودالتا statement_review_get/save؛ المراجعة تُعدّ قديمة إن استُبدلت الصحيفة بعدها. لا تعديل تلقائي لأي بيان للمعلم. -->
 <!-- v400: صفحة «إنجاز إدخال الجداول» (بطلب المستخدم 2026-11-17 «شيل من الصفحة ما تم انجازه»): عند «ما تم إدخاله: الكل» لا تُعرض المدارس التي اكتمل جدول كل معلميها، وداخل المدرسة المختارة لا يُعرض المعلمون المكتملون؛ يظهر عددهم في السطر الرمادي تحت المؤشرات، ويُعرضون باختيار «أدخلوا جدولهم». المؤشرات والنسبة بلا تغيير، ولا تغيير في تقرير A4 ولا قاعدة البيانات. -->
 <!-- v399: «المتصلون الآن ← سجل الدخول» (مدير النظام، بطلب المستخدم 2026-11-17 «نفذ إضافة عمود عدد الإجراءات»): بجانب المدة يظهر عدد الإجراءات الفعلية للمستخدم في الفترة نفسها (تعديلات واعتمادات وإسنادات… من سجل التدقيق) ليُميَّز من فتح البرنامج ومن عمل فيه؛ و«بلا إجراءات» لمن لم يُسجَّل له شيء. العمود نفسه في تقرير A4 «سجل الدخول»، وفي تقرير مستخدم واحد مؤشر «الإجراءات». دالة قراءة جديدة admin_access_actions (v399، للمدير فقط؛ الاسترجاع rollback_v399_access_log_actions_2026-11-17.sql). لا تغيير في أي حساب أو قاعدة أخرى. العدّ من سجل التدقيق وحده: التصفح وفتح التقارير لا يُعدّان إجراءً، وإجراءات معلمي بوابة المعلمين (بلا حساب) لا تُنسب لأحد. -->
 <!-- v398: «صحائف الأحوال» (مدير النظام، بطلب المستخدم 2026-11-16 «اتحكم أقفل للمنسق أو للمعلم في البوابة»): على كل بطاقة مرحلة مفتاحان مستقلان — «رفع المعلم (البوابة)» و«رفع المنسق» — يفتح أيًّا منهما ويغلقه دون الآخر. القاعدة: العمود الجديد statement_stage_settings.coordinator_open (قفل المنسق) وis_open يبقى قفل المعلم؛ القيمة الابتدائية لقفل المنسق = حالة المفتاح الحالية فلم يتغير سلوك أحد. المنسق يرى حالة قفله هو فقط. بلا تغيير في البوابة. -->
@@ -8,7 +9,6 @@
 <!-- v394: «تعديل بيانات المعلم»: تعيين المدرسة الأصلية لمعلم بلا مدرسة أصلية كان يفشل برسالة «قيمة غير معلومة» لأن الواجهة تسأل عن انتداب إلى مدرسة فارغة؛ صار يتخطى هذا الفحص حين لا توجد مدرسة أصلية حالية. -->
 <!-- v393: «طلبات معلمي الأجر» (مدير النظام): لوحة «ملفات الشهادات» — تنزيل كل الملفات في ZIP على جهازك مع ملف إكسل ببيانات المتقدمين وروابط لملفاتهم، ثم «تفريغ» = نقل إلى سلة مؤقتة (قابل للاسترجاع) ثم إزالة نهائية (بطلب المستخدم 2026-11-16؛ تجربة أولى على ملفات الأجر قبل تعميمها على صحائف الأحوال). قاعدة البيانات v393 (file_archive_log) ودالة الحافة admin-files-purge. -->
 <!-- v392: شاشة «صحائف الأحوال» لمدير النظام (بطلب المستخدم 2026-11-16، المرحلة 1): مفتاح رفع «صحيفة الأحوال الإلكترونية للمعلم» لكل مرحلة (إعدادي/ثانوي عام/ثانوي صناعي مفتوحة، الابتدائي مغلق) + قائمة من رفع ومن لم يرفع (المعلمون الثابتون فقط — معلم الأجر لا صحيفة له) بفلاتر المرحلة والمدرسة والحالة + «عرض» الملف برابط مؤقت. قاعدة البيانات v392 (حاوية teacher-statements الخاصة، admin_statements_overview، admin_set_statement_stage) ودالة الحافة teacher-statement-upload وبطاقة الرفع في بوابة المعلمين. -->
-<!-- v391: تنبيه «مدرسة بلا موجه» لا يظهر لمدارس الثانوي التي لها موجه مادة نشط (supervisor_school_subjects)؛ حقل الموجه المباشر فيها فارغ عمدًا (قرار v208) فكانت الـ12 مدرسة ثانوية تظهر بالخطأ. عرض فقط. -->
 <html lang="ar" dir="rtl">
 <head>
 <!-- إعداد: أ/ محمود عبدالمفدي محمد أبوالنجا | الصفة: معلم -->
@@ -16,7 +16,7 @@
 <script>/* v226: العنوان الموحد — انظر التعليق أعلى الملف */(function(){try{if(/\.github\.io$/.test(location.hostname)&&/^\/science-guidance\/?(index\.html)?$/.test(location.pathname)&&!/[?&]stay\b/.test(location.search))location.replace('https://teachers-data-portal.vercel.app/app/'+location.hash)}catch(e){}})();</script>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#152c43">
-<title>نظام توجيه العلوم — v400</title>
+<title>نظام توجيه العلوم — v401</title>
 <link rel="manifest" href="./manifest.webmanifest">
 <link rel="icon" type="image/png" sizes="192x192" href="./app-icon-192.png">
 <link rel="apple-touch-icon" href="./app-icon-192.png">
@@ -2284,6 +2284,63 @@ body.v293-ro select[onchange*="v101ChangeSlot"]{pointer-events:none;opacity:.65}
  .v392-tbl .btn{min-height:40px;min-width:44px;padding:0 12px;gap:4px}
 }
 .v392-pr{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;padding:4px 0;border-top:1px dashed var(--line,#d9e0ea)}
+/* v401: مراجعة صحائف الأحوال بالعين — شاشة المقارنة (الهاتف: صورة ثابتة + حقل واحد؛ الكمبيوتر: جدول بجانب الصورة) */
+.v392-badge.rv-ok{background:#dcfce7;color:#166534}.v392-badge.rv-diff{background:#fee2e2;color:#991b1b}.v392-badge.rv-none{background:#eef2f7;color:#64748b}
+.v392-cr{white-space:nowrap}
+body.v401-open{overflow:hidden}
+.v401{position:fixed;inset:0;z-index:9000;background:#f1f4f8;display:flex;flex-direction:column;direction:rtl}
+.v401-top{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:8px 10px;background:#fff;border-bottom:1px solid var(--line,#d9e0ea)}
+.v401 .btn.g{background:#dcfce7;border-color:#86efac;color:#166534}.v401-top .btn:disabled{opacity:.4}.v401-nav{display:flex;gap:6px}
+.v401-prog{font-size:14px;color:#475569}.v401-prog b{font-size:17px;color:var(--primary,#152c43)}
+.v401-nm{display:flex;gap:8px;align-items:center;flex-wrap:wrap;padding:6px 12px;background:#fff;font-size:15px;border-bottom:1px solid var(--line,#d9e0ea)}
+.v401-body{flex:1;min-height:0;display:flex;flex-direction:column;gap:8px;padding:8px 10px}
+.v401-imgp{position:relative;flex:none;height:38vh;height:38dvh;min-height:200px;background:#e8edf3;border-radius:10px;overflow:hidden;display:flex;flex-direction:column}
+.v401-tools{position:relative;z-index:2;display:flex;gap:5px;padding:6px 6px 0;flex:none}
+.v401-tools button{background:#fff;border:1px solid var(--line,#d9e0ea);border-radius:8px;min-width:38px;height:34px;padding:0 9px;font:inherit;font-size:14px;color:var(--primary,#152c43)}
+.v401-pan{flex:1;min-height:0;overflow:auto;display:flex;align-items:center;justify-content:center;padding:6px;-webkit-overflow-scrolling:touch}
+.v401-pan.zoomed{align-items:flex-start;justify-content:flex-start}
+.v401-im{display:block;border-radius:4px;background:#fff;flex:none}
+.v401-pdf{width:100%;height:100%;border:0;background:#fff}
+.v401-msg{color:#64748b;font-size:14px;padding:16px;text-align:center}
+.v401-imgp.full{position:fixed;inset:0;z-index:9100;height:auto;min-height:0;border-radius:0;background:#0f172a}
+.v401-imgp.full .v401-tools{padding:10px 10px 0}
+.v401-fld{flex:1;min-height:0;overflow:auto}
+.v401-dots{display:flex;gap:6px;justify-content:center;align-items:center;margin:2px 0 6px;font-size:12px;color:#64748b}
+.v401-dots i{width:9px;height:9px;border-radius:50%;background:#cbd5e1;display:inline-block}.v401-dots i.d{background:#16a34a}.v401-dots i.x{background:#dc2626}.v401-dots i.c{background:var(--gold,#c9a227);width:13px;height:13px}
+.v401-card{background:#fff;border:1px solid var(--line,#d9e0ea);border-radius:14px;padding:12px;text-align:center}
+.v401-card .t{font-size:15px;color:#475569}.v401-card .v{font-size:28px;font-weight:700;color:var(--primary,#152c43);margin:4px 0 8px;direction:ltr;word-break:break-word}
+.v401-card .q{font-size:13px;color:#64748b;margin-bottom:8px}
+.v401-hint{font-size:12px;color:#64748b;margin-top:2px}
+.v401-card .bb{display:flex;gap:10px}.v401-card .bb button{flex:1;border-radius:12px;font:inherit;font-size:19px;font-weight:700;height:58px;border:2px solid transparent}
+.v401-card .bb .y{background:#16a34a;color:#fff}.v401-card .bb .n{background:#fff;border-color:#dc2626;color:#dc2626}
+.v401-card .in,.v401-note{width:100%;border:1px solid var(--line,#d9e0ea);border-radius:10px;padding:10px;font:inherit;font-size:16px;background:#fff}
+.v401-card .in.diff{border-color:#ef4444;background:#fff5f5;direction:ltr;text-align:right;margin-bottom:8px}
+.v401-wide{width:100%;justify-content:center;margin-top:8px;min-height:46px}
+.v401-lk{background:none;border:0;color:#2563eb;font:inherit;font-size:13px;margin-top:6px}
+.v401-lnk{display:flex;justify-content:space-between;margin:8px 6px 0}.v401-lnk button{background:none;border:0;color:#2563eb;font:inherit;font-size:14px;padding:6px 4px}.v401-lnk button:disabled{color:#94a3b8}
+.v401-sum{background:#fff;border:1px solid var(--line,#d9e0ea);border-radius:14px;padding:10px}
+.v401-sr{display:flex;gap:8px;align-items:center;justify-content:space-between;padding:8px 4px;border-bottom:1px solid var(--line-soft,#e3e8ef);font-size:14px}.v401-sr .k{font-weight:700;min-width:92px}.v401-sr .pv{flex:1;color:#334155;direction:ltr;text-align:right}
+.v401-sr .st{font-weight:700;color:#64748b}.v401-sr .st.ok{color:#16a34a}.v401-sr .st.diff{color:#dc2626}
+.v401-note{margin-top:10px;min-height:56px;resize:vertical}
+.v401-acts{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}.v401-acts .btn{flex:1;justify-content:center;min-height:44px}
+.v401 .seg{display:inline-flex;border:1px solid var(--line,#d9e0ea);border-radius:9px;overflow:hidden}
+.v401 .seg span{padding:5px 11px;font-size:13px;background:#fff;color:#64748b;cursor:pointer;user-select:none}
+.v401 .seg span.ok{background:#16a34a;color:#fff}.v401 .seg span.no{background:#dc2626;color:#fff}
+.v401-tbl{border-collapse:collapse;width:100%;font-size:14px;background:#fff}
+.v401-tbl th{background:#eef3f8;text-align:right;padding:7px 8px;font-size:13px;border:1px solid var(--line,#d9e0ea)}
+.v401-tbl td{padding:6px 8px;border:1px solid var(--line,#d9e0ea);vertical-align:middle}.v401-tbl td.k{font-weight:700;background:#fafbfd;white-space:nowrap}.v401-tbl td.pv{direction:ltr;text-align:right}
+.v401-tbl .in{width:100%;border:1px solid var(--line,#d9e0ea);border-radius:8px;padding:5px 8px;font:inherit;font-size:14px;direction:ltr;text-align:right}.v401-tbl .in.diff{border-color:#ef4444;background:#fff5f5}
+@media(min-width:761px){
+ .v401-body{display:grid;grid-template-columns:46% 54%;gap:14px;align-items:stretch}
+ .v401-fld{grid-column:1;grid-row:1}
+ .v401-imgp{grid-column:2;grid-row:1;height:auto;min-height:0}
+}
+@media(min-width:761px) and (max-height:520px){.v401-tbl td,.v401-tbl th{padding:3px 6px;font-size:13px}.v401-acts .btn{min-height:36px}.v401-note{min-height:36px}}
+@media(max-width:760px){
+ .v392-tbl td.v392-cr{grid-column:1/3;grid-row:3}
+ .v392-tbl td.v392-cr:empty{display:none}
+ .v392-tbl td.v392-ca{flex-wrap:wrap;justify-content:flex-end}
+}
 </style>
 </head>
 <body>
@@ -2654,6 +2711,7 @@ window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();window.v152
 window.addEventListener('appinstalled',()=>{window.v152InstallPrompt=null;v152SyncInstallBtn()});
 if('serviceWorker' in navigator&&location.protocol!=='file:')window.addEventListener('load',()=>navigator.serviceWorker.register('./service-worker.js').catch(()=>{}));
 const V145_NEWS=[
+ ['v401','صحائف الأحوال: مراجعة بالعين — زر «مقارنة» لكل معلم يعرض صحيفته بجانب بياناته المسجلة (على الهاتف صورة ثابتة وحقل واحد في كل مرة) مع حفظ النتيجة وفلتر وتقرير للفروق.'],
  ['v400','إنجاز إدخال الجداول: تختفي المدارس والمعلمون الذين اكتمل جدولهم من القائمة للتركيز على الناقص (وتبقى ظاهرة باختيار «أدخلوا جدولهم»).'],
  ['v399','المتصلون الآن ← سجل الدخول: عدد الإجراءات الفعلية بجانب مدة بقاء كل مستخدم (وفي تقرير الطباعة)، للتمييز بين من فتح البرنامج ومن عمل فيه.'],
  ['v398','صحائف الأحوال: قفل رفع المنسق منفصل عن قفل رفع المعلم في البوابة، لكل مرحلة، من بطاقات المراحل.'],
@@ -15380,7 +15438,7 @@ teachersPage=async function(opts={}){
 
 
 /* v392-begin: «صحائف الأحوال» لمدير النظام — مفتاح الرفع لكل مرحلة + من رفع ومن لم يرفع (المرحلة 1؛ التنزيل والتفريغ في المرحلة 2). المعلمون الثابتون فقط: معلم الأجر لا صحيفة له (الخادم يستثنيه) */
-const V392={stages:[],rows:[],loaded:false,stage:'',school:'',status:'',err:'',up:false};
+const V392={stages:[],rows:[],loaded:false,stage:'',school:'',status:'',review:'',err:'',up:false};
 async function v392Load(){
  const co=profile?.role==='stage_coordinator';
  const r=await sb.rpc(co?'coordinator_statements_overview':'admin_statements_overview');
@@ -15389,16 +15447,17 @@ async function v392Load(){
 }
 function v392Date(iso){const d=new Date(iso);if(isNaN(d))return '—';const p=n=>String(n).padStart(2,'0');return p(d.getDate())+'/'+p(d.getMonth()+1)+'/'+d.getFullYear()}
 function v392Size(n){n=+n||0;return n>=1048576?(n/1048576).toFixed(1)+' ميجا':Math.max(1,Math.round(n/1024))+' كيلو'}
-function v392Gated(){return !V392.stage&&!V392.status&&!String(V392.school||'').trim()}
+function v392Gated(){return !V392.stage&&!V392.status&&!V392.review&&!String(V392.school||'').trim()}
 function v392Head(){
- if(v392Gated())return `${V392.rows.length} معلمًا في كل المراحل — اختر المرحلة أو اكتب اسمًا لعرض القائمة`;
+ if(v392Gated())return `${V392.rows.length} معلمًا في كل المراحل${v401Summary(V392.rows)} — اختر المرحلة أو اكتب اسمًا لعرض القائمة`;
  const rows=v392Rows(),up=rows.filter(x=>x.status).length;
- return `${rows.length} معلمًا — رفع ${up}، لم يرفع ${rows.length-up}`;
+ return `${rows.length} معلمًا — رفع ${up}، لم يرفع ${rows.length-up}${v401Summary(rows)}`;
 }
 function v392Rows(){
  const sq=v288Norm(V392.school);
  return V392.rows.filter(x=>(!V392.stage||x.stage===V392.stage)&&(!sq||v288Norm(x.school_name).includes(sq)||v288Norm(x.teacher_name).includes(sq))&&
-  (!V392.status||(V392.status==='up'?!!x.status:!x.status)));
+  (!V392.status||(V392.status==='up'?!!x.status:!x.status))&&
+  (!V392.review||(V392.review==='none'?(x.status==='uploaded'&&(!x.review_status||x.review_status==='stale')):x.review_status===V392.review)));
 }
 function v392Cards(){
  return V392.stages.map(st=>{
@@ -15421,15 +15480,16 @@ function v392Table(){
   const st=x.status==='uploaded'?'<span class="v392-badge on">✓ رُفعت</span>':x.status==='archived'?'<span class="v392-badge arch">استُلمت</span>':'<span class="v392-badge off">لم ترفع</span>';
   const mm=x.status?` · ${esc(v392Date(x.uploaded_at).slice(0,5))}${x.file_size?' · '+esc(v392Size(x.file_size).replace(' كيلو',' ك')):''}`:'';
   const vb=x.path&&x.status==='uploaded'?`<button type="button" class="btn small secondary" title="عرض" aria-label="عرض" onclick="v392View('${esc(x.path)}')"><span class="v392-ic">👁</span><span class="v392-tx">عرض</span></button>`:'';
-  return `<tr><td class="v392-c0">${i+1}</td><td class="v392-cn"><b>${esc(x.teacher_name)}</b></td><td class="v392-cs">${esc(x.school_name)}<span class="v392-mm">${mm}</span><div class="cell-sub">${esc(x.stage)}</div></td><td class="v392-cb">${st}</td><td class="v392-cd">${x.status?esc(v392Date(x.uploaded_at)):'—'}${x.status&&x.file_size?`<div class="cell-sub">${esc(v392Size(x.file_size))}</div>`:''}</td><td class="v392-ca">${vb}${v397Actions(x)}</td></tr>`;
+  return `<tr><td class="v392-c0">${i+1}</td><td class="v392-cn"><b>${esc(x.teacher_name)}</b></td><td class="v392-cs">${esc(x.school_name)}<span class="v392-mm">${mm}</span><div class="cell-sub">${esc(x.stage)}</div></td><td class="v392-cb">${st}</td><td class="v392-cd">${x.status?esc(v392Date(x.uploaded_at)):'—'}${x.status&&x.file_size?`<div class="cell-sub">${esc(v392Size(x.file_size))}</div>`:''}</td><td class="v392-cr">${v401Badge(x)}</td><td class="v392-ca">${vb}${v401Btn(x)}${v397Actions(x)}</td></tr>`;
  }).join('');
- return `<div class="table-wrap"><table class="v392-tbl"><thead><tr><th>#</th><th>المعلم</th><th>المدرسة</th><th>الحالة</th><th>التاريخ</th><th></th></tr></thead><tbody>${body}</tbody></table></div>`+(rows.length>LIM?`<div class="cell-sub" style="padding:8px">يعرض أول ${LIM} من ${rows.length} — ضيّق الفلاتر لرؤية الباقي.</div>`:'');
+ return `<div class="table-wrap"><table class="v392-tbl"><thead><tr><th>#</th><th>المعلم</th><th>المدرسة</th><th>الحالة</th><th>التاريخ</th><th>المراجعة</th><th></th></tr></thead><tbody>${body}</tbody></table></div>`+(rows.length>LIM?`<div class="cell-sub" style="padding:8px">يعرض أول ${LIM} من ${rows.length} — ضيّق الفلاتر لرؤية الباقي.</div>`:'');
 }
 function v392Filters(){
  const stages=profile?.role==='stage_coordinator'?V392.stages.map(s=>s.stage):['ابتدائي','إعدادي','ثانوي عام','ثانوي صناعي'];
  const opt=(arr,cur,all)=>`<option value="">${all}</option>`+arr.map(a=>`<option value="${esc(a[0])}" ${cur===a[0]?'selected':''}>${esc(a[1])}</option>`).join('');
  return `<div class="v392-flt"><label>المرحلة<select onchange="v392Set('stage',this.value)">${opt(stages.map(s=>[s,s]),V392.stage,'الكل')}</select></label>
  <label>الحالة<select onchange="v392Set('status',this.value)">${opt([['up','رفعوا'],['no','لم يرفعوا']],V392.status,'الكل')}</select></label>
+ <label>المراجعة<select onchange="v392Set('review',this.value)">${opt([['match','مطابقة'],['diff','فيها فروق'],['none','لم تُراجَع']],V392.review,'الكل')}</select></label>
  <label class="v392-q">بحث<input type="search" autocomplete="off" placeholder="🔎 مدرسة أو معلم" value="${esc(V392.school)}" oninput="v392Search(this.value)"></label></div>`;
 }
 function v392Inner(){
@@ -15457,7 +15517,7 @@ async function v392Refresh(){try{await v392Load()}catch(e){V392.err='تعذّر 
 async function v392Page(){
  if(!['admin','stage_coordinator'].includes(profile?.role))return '<div class="notice warn">هذه الشاشة لمدير النظام ومنسق المرحلة فقط.</div>';
  try{await v392Load()}catch(e){V392.err='تعذّر تحميل الصحائف: '+(e.message||e)}
- return `<div class="page-head"><div><h2>صحائف الأحوال</h2><div class="cell-sub">صحيفة الأحوال الإلكترونية للمعلم — ${profile?.role==='stage_coordinator'?'يرفعها المعلم من بوابة المعلمين أو ترفعها أنت بدلًا منه':'يرفعها المعلم من بوابة المعلمين'}</div></div><div class="actions"><button class="btn secondary" type="button" onclick="v396Report()">📄 تقرير</button><button class="btn secondary" type="button" onclick="v392Refresh()">تحديث</button></div></div>
+ return `<div class="page-head"><div><h2>صحائف الأحوال</h2><div class="cell-sub">صحيفة الأحوال الإلكترونية للمعلم — ${profile?.role==='stage_coordinator'?'يرفعها المعلم من بوابة المعلمين أو ترفعها أنت بدلًا منه':'يرفعها المعلم من بوابة المعلمين'}</div></div><div class="actions"><button class="btn secondary" type="button" onclick="v396Report()">📄 تقرير</button><button class="btn secondary" type="button" onclick="v401Report()">📄 تقرير الفروق</button><button class="btn secondary" type="button" onclick="v392Refresh()">تحديث</button></div></div>
  <div class="card v392" id="v392Wrap">${v392Inner()}</div>`;
 }
 NAV.admin.splice(NAV.admin.findIndex(x=>x[0]==='paidRequests')+1,0,['statements','صحائف الأحوال','📄']);
@@ -15905,6 +15965,219 @@ async function v397Upload(id,file){
  finally{V397.busy=false}
 }
 /* v397-end */
+
+/* v401-begin: «صحائف الأحوال» — مراجعة بالعين: مقارنة صحيفة كل معلم ببياناته في البرنامج وحفظ النتيجة (مدير النظام، ومنسق المرحلة لمراحله).
+   القراءة/الحفظ: statement_review_get / statement_review_save؛ الصورة: رابط مؤقت من التخزين الخاص؛ لا تعديل تلقائي لأي بيان للمعلم — الفروق تُسجَّل فقط.
+   الهاتف: حقل واحد في كل مرة تحت صورة ثابتة؛ الكمبيوتر: جدول الحقول بجانب الصورة. */
+const V401={list:[],idx:0,id:'',name:'',stage:'',school:'',fields:[],step:0,note:'',url:'',mime:'',rot:0,zoom:1,full:false,busy:false,dirty:false,pushed:false,img:null,imgFail:false,status:null};
+const V401_ZOOM=[1,1.5,2,3];
+function v401Mobile(){return !!(window.matchMedia&&window.matchMedia('(max-width:760px)').matches)}
+function v401Dig(s){return String(s==null?'':s).replace(/[٠-٩]/g,d=>'٠١٢٣٤٥٦٧٨٩'.indexOf(d)).replace(/[۰-۹]/g,d=>'۰۱۲۳۴۵۶۷۸۹'.indexOf(d))}
+function v401Badge(x){
+ if(!x||x.status!=='uploaded')return '';
+ const s=x.review_status;
+ if(s==='match')return '<span class="v392-badge rv-ok">✓ مطابقة</span>';
+ if(s==='diff'){const n=Array.isArray(x.review_diffs)?x.review_diffs.length:0;return `<span class="v392-badge rv-diff">⚠ فيها فروق${n?' ('+n+')':''}</span>`}
+ if(s==='stale')return '<span class="v392-badge rv-none">تُراجَع من جديد</span>';
+ return '<span class="v392-badge rv-none">لم تُراجَع</span>';
+}
+function v401Summary(rows){
+ const up=rows.filter(x=>x.status==='uploaded');
+ if(!up.length)return '';
+ const m=up.filter(x=>x.review_status==='match').length,d=up.filter(x=>x.review_status==='diff').length;
+ return ` — المراجعة: مطابقة ${m} · فيها فروق ${d} · لم تُراجَع ${up.length-m-d}`;
+}
+function v401Btn(x){
+ return x&&x.status==='uploaded'&&x.path?`<button type="button" class="btn small primary up" title="مقارنة" aria-label="مقارنة" onclick="v401Open('${esc(x.teacher_id)}')"><span class="v392-ic">⇄</span><span class="v392-tx">مقارنة</span></button>`:'';
+}
+function v401Mount(){
+ const old=document.getElementById('v401');if(old)old.remove();
+ const el=document.createElement('div');el.id='v401';el.className='v401';el.setAttribute('role','dialog');el.setAttribute('aria-modal','true');
+ el.innerHTML='<div class="v401-top"></div><div class="v401-nm"></div><div class="v401-body"><div class="v401-imgp" id="v401ImgP"></div><div class="v401-fld" id="v401Fld"></div></div>';
+ document.body.appendChild(el);document.body.classList.add('v401-open');
+}
+async function v401Open(id){
+ if(!['admin','stage_coordinator'].includes(profile?.role))return;
+ const rows=v392Rows().filter(x=>x.status==='uploaded'&&x.path);
+ const i=rows.findIndex(x=>String(x.teacher_id)===String(id));
+ if(i<0)return toast('لا توجد صحيفة مرفوعة لهذا المعلم.',true);
+ V401.list=rows.map(x=>x.teacher_id);V401.idx=i;V401.full=false;
+ v401Mount();
+ try{history.pushState({...(history.state||{}),v401:true},'',location.href);V401.pushed=true}catch(_){V401.pushed=false}
+ await v401Load();
+}
+async function v401Load(){
+ const id=V401.list[V401.idx];
+ V401.busy=true;V401.id=id;V401.fields=[];V401.step=0;V401.note='';V401.dirty=false;V401.url='';V401.img=null;V401.imgFail=false;V401.rot=0;V401.zoom=1;V401.mime='';
+ const row=V392.rows.find(x=>String(x.teacher_id)===String(id))||{};
+ V401.name=row.teacher_name||'';V401.stage=row.stage||'';V401.school=row.school_name||'';V401.status=row.review_status||null;
+ v401Top();v401Fields();v401ImgShell();
+ const r=await sb.rpc('statement_review_get',{p_teacher:id});
+ if(String(V401.id)!==String(id))return;
+ if(r.error||!r.data||r.data.ok!==true){V401.busy=false;toast(r.error?.message||'تعذر تحميل بيانات المقارنة',true);v401Close(true);return}
+ V401.fields=(r.data.fields||[]).map(f=>({k:f.k,label:f.label,ours:f.ours||'',state:f.state||null,theirs:f.theirs||''}));
+ V401.note=r.data.note||'';V401.status=r.data.status||null;V401.mime=(r.data.statement&&r.data.statement.mime)||row.mime||'';
+ V401.busy=false;
+ const first=V401.fields.findIndex(f=>!f.state);V401.step=first<0?V401.fields.length:first;
+ v401Top();v401Fields();
+ const p=(r.data.statement&&r.data.statement.path)||row.path;
+ const u=await sb.storage.from('teacher-statements').createSignedUrl(p,900);
+ if(String(V401.id)!==String(id))return;
+ if(u.error||!u.data||!u.data.signedUrl){toast('تعذر فتح صورة الصحيفة',true);v401ImgShell('تعذر تحميل صورة الصحيفة');return}
+ V401.url=u.data.signedUrl;v401LoadImg();
+}
+function v401Top(){
+ const t=document.querySelector('#v401 .v401-top'),n=document.querySelector('#v401 .v401-nm');if(!t||!n)return;
+ t.innerHTML=`<button type="button" class="btn small" onclick="v401Close()">← القائمة</button><span class="v401-prog"><b>${V401.idx+1}</b> من ${V401.list.length}</span><span class="v401-nav"><button type="button" class="btn small" ${V401.idx<=0?'disabled':''} onclick="v401Go(-1)">‹ السابق</button><button type="button" class="btn small" ${V401.idx>=V401.list.length-1?'disabled':''} onclick="v401Go(1)">التالي ›</button></span>`;
+ const st=V401.status==='match'?'<span class="v392-badge rv-ok">✓ مطابقة</span>':V401.status==='diff'?'<span class="v392-badge rv-diff">⚠ فيها فروق</span>':'<span class="v392-badge rv-none">لم تُراجَع</span>';
+ n.innerHTML=`<b>${esc(V401.name)}</b><span class="v392-badge">${esc(V401.school)}</span><span class="v392-badge">${esc(V401.stage)}</span>${st}`;
+}
+function v401ImgShell(msg){
+ const p=document.getElementById('v401ImgP');if(!p)return;
+ p.className='v401-imgp'+(V401.full?' full':'');
+ p.innerHTML=`<div class="v401-tools"><button type="button" onclick="v401Zoom(1)" aria-label="تكبير">＋</button><button type="button" onclick="v401Zoom(-1)" aria-label="تصغير">－</button><button type="button" onclick="v401Rotate()" aria-label="تدوير">⟳</button><button type="button" id="v401FullBtn" onclick="v401Full()">${V401.full?'✕ إغلاق':'⤢ ملء الشاشة'}</button></div><div class="v401-pan" id="v401Pan"><div class="v401-msg">${esc(msg||'جارٍ تحميل صورة الصحيفة…')}</div></div>`;
+}
+function v401LoadImg(){
+ const pan=document.getElementById('v401Pan');if(!pan)return;
+ if(/pdf/i.test(V401.mime)){pan.innerHTML=`<iframe class="v401-pdf" src="${esc(V401.url)}" title="الصحيفة"></iframe>`;return}
+ const im=new Image(),u=V401.url;im.crossOrigin='anonymous';
+ im.onload=()=>{if(V401.url!==u)return;V401.img=im;v401Draw()};
+ im.onerror=()=>{if(V401.url!==u)return;V401.imgFail=true;v401Draw()};
+ im.src=u;
+}
+function v401Draw(){
+ const pan=document.getElementById('v401Pan');if(!pan||!V401.url)return;
+ pan.classList.toggle('zoomed',V401.zoom>1);
+ const sz=V401.zoom>1?`width:${V401.zoom*100}%;max-width:none;height:auto`:'max-width:100%;max-height:100%';
+ if(V401.imgFail||!V401.img){pan.innerHTML=`<img class="v401-im" alt="صحيفة الأحوال" src="${esc(V401.url)}" style="${sz};transform:rotate(${V401.rot}deg)">`;return}
+ const im=V401.img,sw=V401.rot%180!==0,c=document.createElement('canvas');
+ c.width=sw?im.naturalHeight:im.naturalWidth;c.height=sw?im.naturalWidth:im.naturalHeight;
+ const g=c.getContext('2d');g.translate(c.width/2,c.height/2);g.rotate(V401.rot*Math.PI/180);g.drawImage(im,-im.naturalWidth/2,-im.naturalHeight/2);
+ c.className='v401-im';c.style.cssText=sz;pan.innerHTML='';pan.appendChild(c);
+}
+function v401Zoom(d){if(/pdf/i.test(V401.mime))return;const k=V401_ZOOM.indexOf(V401.zoom);V401.zoom=V401_ZOOM[Math.max(0,Math.min(V401_ZOOM.length-1,(k<0?0:k)+d))];v401Draw()}
+function v401Rotate(){if(/pdf/i.test(V401.mime))return;V401.rot=(V401.rot+90)%360;v401Draw()}
+function v401Full(){
+ V401.full=!V401.full;const p=document.getElementById('v401ImgP');if(!p)return;
+ p.classList.toggle('full',V401.full);const b=document.getElementById('v401FullBtn');if(b)b.textContent=V401.full?'✕ إغلاق':'⤢ ملء الشاشة';
+}
+function v401Fields(){
+ const el=document.getElementById('v401Fld');if(!el)return;
+ if(V401.busy||!V401.fields.length){el.innerHTML='<div class="v401-msg">جارٍ تحميل بيانات المعلم…</div>';return}
+ el.innerHTML=v401Mobile()?v401Wizard():v401Table();
+}
+function v401Dots(){
+ const F=V401.fields;
+ return `<div class="v401-dots">${F.map((f,i)=>`<i class="${i===V401.step?'c':f.state==='ok'?'d':f.state==='diff'?'x':''}"></i>`).join('')}<span>${V401.step<F.length?`الحقل ${V401.step+1} من ${F.length}`:'الملخص'}</span></div>`;
+}
+function v401Wizard(){
+ const F=V401.fields,s=V401.step;
+ if(s>=F.length)return v401Dots()+v401SummaryHtml();
+ const f=F[s],diff=f.state==='diff';
+ const hint=f.k==='grade_date'?'<div class="v401-hint">يقابل «تاريخ الحصول على الدرجة» عندنا</div>':'';
+ const body=diff
+  ?`<input id="v401In" class="in diff" type="text" autocomplete="off" placeholder="اكتب القيمة المطبوعة في الصحيفة" value="${esc(f.theirs)}" oninput="v401Theirs(this.value)"><button type="button" class="btn primary v401-wide" onclick="v401Next()">تأكيد ›</button><button type="button" class="v401-lk" onclick="v401Mark('ok')">↩ بل هو مطابق</button>`
+  :`<div class="q">هل يطابق ما في الصحيفة؟</div><div class="bb"><button type="button" class="n" onclick="v401Mark('diff')">✗ فرق</button><button type="button" class="y${f.state==='ok'?' on':''}" onclick="v401Mark('ok')">✓ مطابق</button></div>`;
+ return v401Dots()+`<div class="v401-card"><div class="t">${esc(f.label)}</div>${hint}<div class="v">${esc(f.ours)||'—'}</div>${body}</div>
+ <div class="v401-lnk"><button type="button" onclick="v401Back()" ${s<=0?'disabled':''}>‹ الحقل السابق</button><button type="button" onclick="v401Next()">تخطي ›</button></div>
+ <button type="button" class="btn g v401-wide" onclick="v401AllOk()">✓ كل الحقول مطابقة — حفظ ›</button>`;
+}
+function v401SummaryHtml(){
+ const rows=V401.fields.map((f,i)=>`<div class="v401-sr" role="button" tabindex="0" onclick="v401Edit(${i})"><span class="k">${esc(f.label)}</span><span class="pv">${esc(f.ours)||'—'}</span><span class="st ${f.state||'n'}">${f.state==='ok'?'✓ مطابق':f.state==='diff'?'✗ '+esc(f.theirs||'فرق'):'— لم يُراجَع'}</span></div>`).join('');
+ return `<div class="v401-sum">${rows}<textarea id="v401Note" class="v401-note" rows="2" maxlength="500" placeholder="ملاحظة (اختيارية)" oninput="v401Note(this.value)">${esc(V401.note)}</textarea><div class="v401-acts"><button type="button" class="btn primary" onclick="v401Save(true)">حفظ ثم التالي ›</button><button type="button" class="btn" onclick="v401Save(false)">حفظ وإغلاق</button></div></div>`;
+}
+function v401Table(){
+ const rows=V401.fields.map((f,i)=>{
+  const h=f.k==='grade_date'?'<div class="v401-hint">يقابل «تاريخ الحصول على الدرجة» عندنا</div>':'';
+  return `<tr><td class="k">${esc(f.label)}${h}</td><td class="pv">${esc(f.ours)||'—'}</td><td><input class="in${f.state==='diff'?' diff':''}" type="text" autocomplete="off" value="${esc(f.theirs)}" oninput="v401TheirsAt(${i},this.value)"></td><td><div class="seg"><span class="${f.state==='ok'?'ok':''}" role="button" tabindex="0" onclick="v401MarkAt(${i},'ok')">✓ مطابق</span><span class="${f.state==='diff'?'no':''}" role="button" tabindex="0" onclick="v401MarkAt(${i},'diff')">✗ فرق</span></div></td></tr>`;
+ }).join('');
+ return `<table class="v401-tbl"><thead><tr><th>الحقل</th><th>في البرنامج</th><th>في الصحيفة (اكتبها عند وجود فرق)</th><th>القرار</th></tr></thead><tbody>${rows}</tbody></table>
+ <textarea id="v401Note" class="v401-note" rows="2" maxlength="500" placeholder="ملاحظة (اختيارية)" oninput="v401Note(this.value)">${esc(V401.note)}</textarea>
+ <div class="v401-acts"><button type="button" class="btn g" onclick="v401AllOk()">✓ الكل مطابق</button><button type="button" class="btn primary" onclick="v401Save(true)">حفظ ثم التالي ›</button><button type="button" class="btn" onclick="v401Save(false)">حفظ</button></div>`;
+}
+function v401Note(v){V401.note=String(v||'');V401.dirty=true}
+function v401Mark(st){
+ const f=V401.fields[V401.step];if(!f)return;
+ f.state=st;if(st==='ok')f.theirs='';V401.dirty=true;
+ if(st==='ok'){v401Next();return}
+ v401Fields();const i=document.getElementById('v401In');if(i)i.focus();
+}
+function v401Theirs(v){const f=V401.fields[V401.step];if(f){f.theirs=String(v||'');V401.dirty=true}}
+function v401Next(){V401.step=Math.min(V401.fields.length,V401.step+1);v401Fields()}
+function v401Back(){V401.step=Math.max(0,V401.step-1);v401Fields()}
+function v401Edit(i){V401.step=i;v401Fields()}
+function v401AllOk(){V401.fields.forEach(f=>{if(f.state!=='diff'){f.state='ok';f.theirs=''}});V401.dirty=true;v401Save(true)}
+function v401MarkAt(i,st){
+ const f=V401.fields[i];if(!f)return;
+ f.state=(f.state===st)?null:st;if(f.state==='ok')f.theirs='';V401.dirty=true;v401Fields();
+}
+function v401TheirsAt(i,v){
+ const f=V401.fields[i];if(!f)return;
+ f.theirs=String(v||'');V401.dirty=true;
+ if(f.theirs.trim()&&f.state!=='diff'){
+  f.state='diff';
+  const tr=document.querySelectorAll('#v401Fld .v401-tbl tbody tr')[i];
+  if(tr){const sp=tr.querySelectorAll('.seg span');if(sp[0])sp[0].className='';if(sp[1])sp[1].className='no';const inp=tr.querySelector('input.in');if(inp)inp.classList.add('diff')}
+ }
+}
+async function v401Save(goNext){
+ if(V401.busy||!V401.fields.length)return;
+ V401.busy=true;
+ const F=V401.fields,payload=F.map(x=>({k:x.k,state:x.state||'skip',theirs:x.state==='diff'?(x.theirs||''):''}));
+ const r=await sb.rpc('statement_review_save',{p_teacher:V401.id,p_fields:payload,p_note:V401.note||''});
+ V401.busy=false;
+ if(r.error||!r.data||r.data.ok!==true){toast(r.error?.message||'تعذر حفظ المراجعة',true);return}
+ const diffs=F.filter(x=>x.state==='diff').map(x=>({k:x.k,label:x.label,ours:x.ours,theirs:v401Dig(x.theirs).trim()}));
+ const row=V392.rows.find(x=>String(x.teacher_id)===String(V401.id));
+ if(row){row.review_status=r.data.status;row.review_diffs=diffs;row.review_note=String(V401.note||'').trim()||null}
+ V401.dirty=false;V401.status=r.data.status;
+ toast(r.data.status==='diff'?'حُفظت المراجعة — فيها '+r.data.diff_count+' فرق':'حُفظت المراجعة — مطابقة');
+ if(goNext&&V401.idx<V401.list.length-1){V401.idx++;await v401Load();return}
+ if(goNext)toast('انتهت القائمة — هذا آخر معلم.');
+ v401Close(true);
+}
+function v401Go(d){
+ const n=V401.idx+d;if(n<0||n>=V401.list.length)return;
+ if(V401.dirty&&!confirm('توجد تغييرات غير محفوظة في هذه المراجعة. تجاهلها والانتقال؟'))return;
+ V401.idx=n;v401Load();
+}
+function v401Cleanup(){
+ const el=document.getElementById('v401');if(el)el.remove();
+ document.body.classList.remove('v401-open');V401.dirty=false;V401.id='';V401.full=false;
+}
+function v401Close(force){
+ if(!force&&V401.dirty&&!confirm('توجد تغييرات غير محفوظة. إغلاق بدون حفظ؟'))return;
+ v401Cleanup();
+ if(V401.pushed){V401.pushed=false;try{if(history.state&&history.state.v401)history.back()}catch(_){}}
+ v392Render();
+}
+window.addEventListener('popstate',()=>{if(document.getElementById('v401')&&!(history.state&&history.state.v401)){V401.pushed=false;v401Cleanup();v392Render()}});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&document.getElementById('v401')){if(V401.full)v401Full();else v401Close()}});
+(function(){const m=window.matchMedia&&window.matchMedia('(max-width:760px)');if(m&&m.addEventListener)m.addEventListener('change',()=>{if(document.getElementById('v401'))v401Fields()})})();
+function v401DiffRows(){
+ const sq=v288Norm(V392.school);
+ return V392.rows.filter(x=>x.review_status==='diff'&&Array.isArray(x.review_diffs)&&x.review_diffs.length&&(!V392.stage||x.stage===V392.stage)&&(!sq||v288Norm(x.school_name).includes(sq)||v288Norm(x.teacher_name).includes(sq)));
+}
+ReportAdapters.statementReviewDiffs={async load(ctx){
+ if(!['admin','stage_coordinator'].includes(profile?.role))throw new Error('هذا التقرير لمدير النظام ومنسق المرحلة فقط.');
+ if(!V392.loaded)await v392Load();
+ const rk=x=>{const k=V396_RANK.indexOf(x);return k<0?9:k};
+ const ts=v401DiffRows().slice().sort((a,b)=>rk(a.stage)-rk(b.stage)||String(a.school_name||'').localeCompare(String(b.school_name||''),'ar')||String(a.teacher_name||'').localeCompare(String(b.teacher_name||''),'ar'));
+ if(!ts.length)throw new Error('لا توجد فروق مسجلة بهذه الفلاتر.');
+ const f=[];if(V392.stage)f.push('المرحلة: '+V392.stage);if(String(V392.school||'').trim())f.push('بحث: '+String(V392.school).trim());
+ const oneStage=!!V392.stage,rows=[];
+ ts.forEach(x=>x.review_diffs.forEach(d=>rows.push({n:String(rows.length+1),name:x.teacher_name||'',school:x.school_name||'',stage:x.stage||'',field:d.label||'',ours:d.ours||'—',theirs:d.theirs||'—',note:x.review_note||''})));
+ return makeReportSchema({reportId:'statementReviewDiffs',title:'فروق صحائف الأحوال الإلكترونية للمعلمين',subtitle:f.length?f.join(' — '):'كل المراحل',period:ctx.period,issuer:ctx.issuer,
+  columns:[reportColumn('n','م',.4),reportColumn('name','المعلم',2),reportColumn('school','المدرسة',2),...(oneStage?[]:[reportColumn('stage','المرحلة',1)]),reportColumn('field','الحقل',1.3),reportColumn('ours','في البرنامج',1.4),reportColumn('theirs','في الصحيفة',1.4),reportColumn('note','ملاحظة',1.8)],
+  rows,summary:[reportMetric('معلمون فيهم فروق',ts.length),reportMetric('عدد الفروق',rows.length)],totals:[],approval:{enabled:false}});
+}};
+const __v401BaseApplyFilters=applyCurrentFiltersToReportSchema;
+applyCurrentFiltersToReportSchema=function(schema,state){
+ if(schema&&schema.reportId==='statementReviewDiffs')return __v401BaseApplyFilters.call(this,schema,{active:false});
+ return __v401BaseApplyFilters.apply(this,arguments);
+};
+function v401Report(){if(!['admin','stage_coordinator'].includes(profile?.role))return toast('هذا التقرير لمدير النظام ومنسق المرحلة فقط.');return openReportById('statementReviewDiffs')}
+/* v401-end */
 </script>
 
 <div id="reportPreviewOverlay" class="report-preview-overlay" role="dialog" aria-modal="true" aria-label="معاينة التقرير" aria-hidden="true">
