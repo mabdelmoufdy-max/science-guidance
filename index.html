@@ -1,5 +1,5 @@
 <!doctype html>
-<!-- v401: «صحائف الأحوال» — مراجعة بالعين (مدير النظام ومنسق المرحلة لمراحله، بطلب المستخدم 2026-11-17 «نفذ أ»): زر «مقارنة» لكل معلم رفع صحيفته يفتح شاشة تقارن الصورة بيانات المعلم في البرنامج (الاسم، الرقم القومي، الدرجة، تاريخ التعيين، التاريخ الاعتباري، المؤهل، المدرسة): الهاتف = صورة ثابتة في الأعلى وحقل واحد في كل مرة (✓ مطابق / ✗ فرق مع القيمة المطبوعة، تخطي، «كل الحقول مطابقة — حفظ»)، الكمبيوتر = جدول بجانب الصورة؛ صورة بتكبير وتدوير وملء الشاشة؛ التالي/السابق؛ عمود «المراجعة» وفلتر وعدّاد في القائمة، وتقرير A4 «فروق صحائف الأحوال». القاعدة: جدول teacher_statement_reviews ودالتا statement_review_get/save؛ المراجعة تُعدّ قديمة إن استُبدلت الصحيفة بعدها. لا تعديل تلقائي لأي بيان للمعلم. -->
+<!-- v401: «صحائف الأحوال» — مراجعة بالعين (مدير النظام ومنسق المرحلة لمراحله، بطلب المستخدم 2026-11-17 «نفذ أ»): زر «مقارنة» لكل معلم رفع صحيفته يفتح شاشة تقارن الصورة بيانات المعلم في البرنامج (الاسم، الرقم القومي، الدرجة، تاريخ التعيين، التاريخ الاعتباري، المؤهل، المدرسة): الهاتف = صورة ثابتة في الأعلى وحقل واحد في كل مرة (✓ مطابق / ✗ فرق مع القيمة المطبوعة، تخطي، «كل الحقول مطابقة — حفظ»)، الكمبيوتر = جدول بجانب الصورة؛ صورة بتكبير وتدوير وملء الشاشة؛ التالي/السابق؛ عمود «المراجعة» وفلتر وعدّاد في القائمة، وتقرير A4 «فروق صحائف الأحوال». القاعدة: جدول teacher_statement_reviews ودالتا statement_review_get/save؛ المراجعة تُعدّ قديمة إن استُبدلت الصحيفة بعدها. لا تعديل تلقائي لأي بيان للمعلم. وفي الشاشة زر «✎ تعديل بيانات المعلم» (مدير النظام والمنسق) يفتح صفحة تعديل المعلم الموجودة بنفس صلاحيات الدور فوق شاشة المقارنة، وعند العودة تتحدث قيم «في البرنامج» وما صار مطابقًا يُعلَّم تلقائيًا ويبقى بانتظار «حفظ»؛ وأُصلحت رسائل التنبيه التي كانت تختفي خلف الشاشة. -->
 <!-- v400: صفحة «إنجاز إدخال الجداول» (بطلب المستخدم 2026-11-17 «شيل من الصفحة ما تم انجازه»): عند «ما تم إدخاله: الكل» لا تُعرض المدارس التي اكتمل جدول كل معلميها، وداخل المدرسة المختارة لا يُعرض المعلمون المكتملون؛ يظهر عددهم في السطر الرمادي تحت المؤشرات، ويُعرضون باختيار «أدخلوا جدولهم». المؤشرات والنسبة بلا تغيير، ولا تغيير في تقرير A4 ولا قاعدة البيانات. -->
 <!-- v399: «المتصلون الآن ← سجل الدخول» (مدير النظام، بطلب المستخدم 2026-11-17 «نفذ إضافة عمود عدد الإجراءات»): بجانب المدة يظهر عدد الإجراءات الفعلية للمستخدم في الفترة نفسها (تعديلات واعتمادات وإسنادات… من سجل التدقيق) ليُميَّز من فتح البرنامج ومن عمل فيه؛ و«بلا إجراءات» لمن لم يُسجَّل له شيء. العمود نفسه في تقرير A4 «سجل الدخول»، وفي تقرير مستخدم واحد مؤشر «الإجراءات». دالة قراءة جديدة admin_access_actions (v399، للمدير فقط؛ الاسترجاع rollback_v399_access_log_actions_2026-11-17.sql). لا تغيير في أي حساب أو قاعدة أخرى. العدّ من سجل التدقيق وحده: التصفح وفتح التقارير لا يُعدّان إجراءً، وإجراءات معلمي بوابة المعلمين (بلا حساب) لا تُنسب لأحد. -->
 <!-- v398: «صحائف الأحوال» (مدير النظام، بطلب المستخدم 2026-11-16 «اتحكم أقفل للمنسق أو للمعلم في البوابة»): على كل بطاقة مرحلة مفتاحان مستقلان — «رفع المعلم (البوابة)» و«رفع المنسق» — يفتح أيًّا منهما ويغلقه دون الآخر. القاعدة: العمود الجديد statement_stage_settings.coordinator_open (قفل المنسق) وis_open يبقى قفل المعلم؛ القيمة الابتدائية لقفل المنسق = حالة المفتاح الحالية فلم يتغير سلوك أحد. المنسق يرى حالة قفله هو فقط. بلا تغيير في البوابة. -->
@@ -2336,6 +2336,9 @@ body.v401-open{overflow:hidden}
  .v401-imgp{grid-column:2;grid-row:1;height:auto;min-height:0}
 }
 @media(min-width:761px) and (max-height:520px){.v401-tbl td,.v401-tbl th{padding:3px 6px;font-size:13px}.v401-acts .btn{min-height:36px}.v401-note{min-height:36px}}
+body.v401-open #modal{z-index:9500}
+body.v401-open .toast{z-index:9700}
+.v401-nm .v401-edit{margin-inline-start:auto;background:#fff;border:1px solid var(--line,#d9e0ea);color:var(--primary,#152c43);white-space:nowrap}
 @media(max-width:760px){
  .v392-tbl td.v392-cr{grid-column:1/3;grid-row:3}
  .v392-tbl td.v392-cr:empty{display:none}
@@ -2711,7 +2714,7 @@ window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();window.v152
 window.addEventListener('appinstalled',()=>{window.v152InstallPrompt=null;v152SyncInstallBtn()});
 if('serviceWorker' in navigator&&location.protocol!=='file:')window.addEventListener('load',()=>navigator.serviceWorker.register('./service-worker.js').catch(()=>{}));
 const V145_NEWS=[
- ['v401','صحائف الأحوال: مراجعة بالعين — زر «مقارنة» لكل معلم يعرض صحيفته بجانب بياناته المسجلة (على الهاتف صورة ثابتة وحقل واحد في كل مرة) مع حفظ النتيجة وفلتر وتقرير للفروق.'],
+ ['v401','صحائف الأحوال: مراجعة بالعين — زر «مقارنة» لكل معلم يعرض صحيفته بجانب بياناته المسجلة (على الهاتف صورة ثابتة وحقل واحد في كل مرة) مع حفظ النتيجة وفلتر وتقرير للفروق، وزر «تعديل بيانات المعلم» من نفس الشاشة للمدير والمنسق.'],
  ['v400','إنجاز إدخال الجداول: تختفي المدارس والمعلمون الذين اكتمل جدولهم من القائمة للتركيز على الناقص (وتبقى ظاهرة باختيار «أدخلوا جدولهم»).'],
  ['v399','المتصلون الآن ← سجل الدخول: عدد الإجراءات الفعلية بجانب مدة بقاء كل مستخدم (وفي تقرير الطباعة)، للتمييز بين من فتح البرنامج ومن عمل فيه.'],
  ['v398','صحائف الأحوال: قفل رفع المنسق منفصل عن قفل رفع المعلم في البوابة، لكل مرحلة، من بطاقات المراحل.'],
@@ -16030,7 +16033,7 @@ function v401Top(){
  const t=document.querySelector('#v401 .v401-top'),n=document.querySelector('#v401 .v401-nm');if(!t||!n)return;
  t.innerHTML=`<button type="button" class="btn small" onclick="v401Close()">← القائمة</button><span class="v401-prog"><b>${V401.idx+1}</b> من ${V401.list.length}</span><span class="v401-nav"><button type="button" class="btn small" ${V401.idx<=0?'disabled':''} onclick="v401Go(-1)">‹ السابق</button><button type="button" class="btn small" ${V401.idx>=V401.list.length-1?'disabled':''} onclick="v401Go(1)">التالي ›</button></span>`;
  const st=V401.status==='match'?'<span class="v392-badge rv-ok">✓ مطابقة</span>':V401.status==='diff'?'<span class="v392-badge rv-diff">⚠ فيها فروق</span>':'<span class="v392-badge rv-none">لم تُراجَع</span>';
- n.innerHTML=`<b>${esc(V401.name)}</b><span class="v392-badge">${esc(V401.school)}</span><span class="v392-badge">${esc(V401.stage)}</span>${st}`;
+ n.innerHTML=`<b>${esc(V401.name)}</b><span class="v392-badge">${esc(V401.school)}</span><span class="v392-badge">${esc(V401.stage)}</span>${st}<button type="button" class="btn small v401-edit" onclick="v401EditTeacher()">✎ تعديل بيانات المعلم</button>`;
 }
 function v401ImgShell(msg){
  const p=document.getElementById('v401ImgP');if(!p)return;
@@ -16152,8 +16155,39 @@ function v401Close(force){
  v392Render();
 }
 window.addEventListener('popstate',()=>{if(document.getElementById('v401')&&!(history.state&&history.state.v401)){V401.pushed=false;v401Cleanup();v392Render()}});
-document.addEventListener('keydown',e=>{if(e.key==='Escape'&&document.getElementById('v401')){if(V401.full)v401Full();else v401Close()}});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&document.getElementById('v401')&&!document.getElementById('modal')){if(V401.full)v401Full();else v401Close()}});
 (function(){const m=window.matchMedia&&window.matchMedia('(max-width:760px)');if(m&&m.addEventListener)m.addEventListener('change',()=>{if(document.getElementById('v401'))v401Fields()})})();
+/* تعديل بيانات المعلم من شاشة المقارنة: نفس صفحة «تعديل بيانات المعلم» وبنفس صلاحيات الدور (لا تعديل تلقائي لأي بيان) */
+async function v401EditTeacher(){
+ if(!['admin','stage_coordinator'].includes(profile?.role)||!V401.id||typeof editTeacherForm!=='function')return;
+ await editTeacherForm(V401.id);
+}
+let v401RefT=0;
+function v401AfterModal(){
+ if(!document.getElementById('v401'))return;
+ clearTimeout(v401RefT);
+ v401RefT=setTimeout(v401RefreshOurs,350);
+}
+async function v401RefreshOurs(){
+ if(!document.getElementById('v401')||document.getElementById('modal')||V401.busy||!V401.id)return;
+ const id=V401.id,r=await sb.rpc('statement_review_get',{p_teacher:id});
+ if(String(V401.id)!==String(id)||document.getElementById('modal')||r.error||!r.data||r.data.ok!==true)return;
+ const norm=x=>v401Dig(x).replace(/\s+/g,' ').trim();
+ const changed=[],matched=[];
+ (r.data.fields||[]).forEach(n=>{
+  const f=V401.fields.find(x=>x.k===n.k),now=n.ours||'';
+  if(!f||f.ours===now)return;
+  f.ours=now;changed.push(f.label);
+  if(f.state==='diff'&&norm(f.theirs)&&norm(f.theirs)===norm(now)){f.state='ok';f.theirs='';matched.push(f.label)}
+  if(f.k==='school')V401.school=now;
+ });
+ if(r.data.teacher_name&&r.data.teacher_name!==V401.name){V401.name=r.data.teacher_name;if(!changed.includes('الاسم'))changed.push('الاسم')}
+ if(!changed.length)return;
+ V401.dirty=V401.dirty||matched.length>0;
+ v401Top();v401Fields();
+ toast(matched.length?'تحدّثت بيانات المعلم — صار مطابقًا: '+matched.join('، ')+' (اضغط حفظ لتسجيل ذلك)':'تحدّثت بيانات المعلم في البرنامج — راجع قرارك للحقول المعدّلة');
+}
+(function(){const b=window.closeModal;if(typeof b!=='function')return;window.closeModal=function(){const r=b.apply(this,arguments);try{v401AfterModal()}catch(_){}return r}})();
 function v401DiffRows(){
  const sq=v288Norm(V392.school);
  return V392.rows.filter(x=>x.review_status==='diff'&&Array.isArray(x.review_diffs)&&x.review_diffs.length&&(!V392.stage||x.stage===V392.stage)&&(!sq||v288Norm(x.school_name).includes(sq)||v288Norm(x.teacher_name).includes(sq)));
