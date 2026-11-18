@@ -1,6 +1,7 @@
 <!doctype html>
 <!-- v402: «الإجازات» (بطلب المستخدم 2026-11-17 «مفيش حاجة اسمها بانتظار التجديد»): أُزيلت حالة «بانتظار التجديد» من الواجهة (خيار «إجازة جديدة» في نموذج الإجازة، وقسمها في قائمة الإجازات، وعدّاداتها وفلاتر التقارير)، وصُحّحت نصوص القاعدة: من لم تُقطع إجازته لا تُسند له حصص ونصابه المالي صفر. قاعدة البيانات v379 توحّد الحالة (أي إجازة تُحفظ «مجددة» برقم قرار مؤقت)، وإجازة مشرف المادة تُلغي إشرافه دون نقله لأحد (يختار الموجه) فلا يُطلب اختيار بديل في النموذج. -->
 <!-- v401: «صحائف الأحوال» — مراجعة بالعين (مدير النظام ومنسق المرحلة لمراحله، بطلب المستخدم 2026-11-17 «نفذ أ»): زر «مقارنة» لكل معلم رفع صحيفته يفتح شاشة تقارن الصورة بيانات المعلم في البرنامج (الاسم، الرقم القومي، الدرجة، تاريخ التعيين، التاريخ الاعتباري، المؤهل، المدرسة): الهاتف = صورة ثابتة في الأعلى وحقل واحد في كل مرة (✓ مطابق / ✗ فرق مع القيمة المطبوعة، تخطي، «كل الحقول مطابقة — حفظ»)، الكمبيوتر = جدول بجانب الصورة؛ صورة بتكبير وتدوير وملء الشاشة؛ التالي/السابق؛ عمود «المراجعة» وفلتر وعدّاد في القائمة، وتقرير A4 «فروق صحائف الأحوال». القاعدة: جدول teacher_statement_reviews ودالتا statement_review_get/save؛ المراجعة تُعدّ قديمة إن استُبدلت الصحيفة بعدها. لا تعديل تلقائي لأي بيان للمعلم. وفي الشاشة زر «✎ تعديل بيانات المعلم» (مدير النظام والمنسق) يفتح صفحة تعديل المعلم الموجودة بنفس صلاحيات الدور فوق شاشة المقارنة، وعند العودة تتحدث قيم «في البرنامج» وما صار مطابقًا يُعلَّم تلقائيًا ويبقى بانتظار «حفظ»؛ وأُصلحت رسائل التنبيه التي كانت تختفي خلف الشاشة. -->
+<!-- v410: «الإجازات الطويلة» (بطلب المستخدم): زر «🖨 طباعة» في بطاقة كل معلم داخل شاشة الإجازات يفتح تقرير A4 «إجازة المعلم — الاسم» لهذا المعلم وحده (نفس أعمدة كشف الإجازات الطويلة)، دون المرور بصفحة تعديل المعلم. واجهة فقط. -->
 <!-- v409: «الإجازات الطويلة» (بطلب المستخدم): قائمة «نوع الإجازة» صارت بأنواع القانون (وضع، رعاية طفل، مرافقة زوج/زوجة، مرضية طويلة، إصابة عمل، رعاية أحد أفراد الأسرة، بدون مرتب، أخرى) مع ملاحظة نظامية تحت «نهاية الإجازة»، واقتراح تاريخ النهاية من البداية (وضع 4 أشهر، رعاية طفل عامان) دون الكتابة فوق ما يدخله المستخدم. واجهة فقط. -->
 <!-- v408: لوحة قرارات المرحلة وتقاريرها (بطلب المستخدم «احذفهما»): حُذف تفكيك «يُسد داخليًا/من الخارج/يغطيه المقترح/بلا تغطية» من «④ أعلى المدارس عجزًا» (صار اسم المدرسة والعجز بعد الأجر) ومن تقارير العجز واجتماع المرحلة (عمود «العجز بعد الأجر» بدلها) ومقاييس مقترح التغطية؛ وحُذف تقرير «عجز يُسد داخل المدارس»؛ يبقى تقرير «مقترح التغطية» بأسماء المعلمين المقترحين. لا تغيير في الحساب ولا قاعدة البيانات. -->
 <!-- v407: لوحة قرارات المرحلة (بطلب المستخدم «غير عملي»): حُذف من بطاقة «يحتاج قرارًا الآن» سطر «تقدير بعد المقترحات» والشريط الملوّن ومفتاحه وملاحظة «يُسد داخل المدارس» (البطاقة نفسها تُستعمل في كل شاشات المنسق والموجه والموجه الأول)؛ يبقى العنوان والعجز الفعلي. لا تغيير في أي حساب ولا في ④ ولا التقارير. -->
@@ -23,7 +24,7 @@
 <script>/* v226: العنوان الموحد — انظر التعليق أعلى الملف */(function(){try{if(/\.github\.io$/.test(location.hostname)&&/^\/science-guidance\/?(index\.html)?$/.test(location.pathname)&&!/[?&]stay\b/.test(location.search))location.replace('https://teachers-data-portal.vercel.app/app/'+location.hash)}catch(e){}})();</script>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#152c43">
-<title>نظام توجيه العلوم — v409</title>
+<title>نظام توجيه العلوم — v410</title>
 <link rel="manifest" href="./manifest.webmanifest">
 <link rel="icon" type="image/png" sizes="192x192" href="./app-icon-192.png">
 <link rel="apple-touch-icon" href="./app-icon-192.png">
@@ -10308,7 +10309,7 @@ function v180LeaveFlags(row){
 function v180LeaveTableRows(rows){
  /* v249: بطاقة لكل معلم بدل الجدول */
  return rows.map(r=>{const dec=[r.decision_number,r.decision_date].filter(Boolean).join(' — ')||'—',per=(r.effective_from||r.effective_to)?`${r.effective_from||'—'} ← ${r.effective_to||'—'}`:'—';return `<div class="v249-leave-card">
-  <div class="v249-lc-top"><div class="v249-lc-name"><b>${esc(r.full_name)}</b><small dir="ltr">${esc(r.civil_id||'')}</small></div>${profile?.role==='first_supervisor'?'':`<button type="button" class="btn secondary" onclick="financialLeaveEdit('${r.teacher_id}')">تعديل</button>`}</div>
+  <div class="v249-lc-top"><div class="v249-lc-name"><b>${esc(r.full_name)}</b><small dir="ltr">${esc(r.civil_id||'')}</small></div><span style="display:flex;gap:6px"><button type="button" class="btn secondary" onclick="v410PrintLeave('${r.teacher_id}')">🖨 طباعة</button>${profile?.role==='first_supervisor'?'':`<button type="button" class="btn secondary" onclick="financialLeaveEdit('${r.teacher_id}')">تعديل</button>`}</span></div>
   <div class="v249-lc-line"><span class="v249-lc-school">${esc(r.school_name||'—')}</span>${financialLeaveStatusBadge(r)}${v180LeaveFlags(r)}</div>
   <div class="v249-lc-meta"><span><small>القرار:</small> ${esc(dec)}</span><span><small>المدة:</small> <bdi>${esc(per)}</bdi></span></div>
  </div>`}).join('');
@@ -10321,6 +10322,7 @@ function v180LeaveRender(){
  if(body)body.innerHTML=v180LeaveTableRows(list)||`<div class="muted v249-leave-empty">لا توجد إجازات في قسم «${esc(v180LeaveTabTitle(__v180LeaveTab))}».</div>`;
  const btn=document.getElementById('v180LeaveReportBtn');if(btn)btn.textContent=`طباعة كشف الإجازات — ${v180LeaveTabTitle(__v180LeaveTab)}`;
 }
+function v410PrintLeave(id){openReportById('longLeaves',{section:'all',teacherId:id,filterState:{active:false}})}
 function v180LeaveSetTab(tab){__v180LeaveTab=V180_LEAVE_TABS.some(t=>t[0]===tab)?tab:'all';v180LeaveRender()}
 function v180LeaveShowForm(clear){
  const box=document.getElementById('v180LeaveFormBox');if(!box)return;box.style.display='';
@@ -10384,8 +10386,10 @@ financialLeaveToggleRenewal=async function(){
  }
  return p;
 };
-function formatLongLeavesReport(sourceRows,ctx,section){
- const rows=(sourceRows||[]).filter(r=>v180LeaveInTab(r,section)).map((r,i)=>({
+function formatLongLeavesReport(sourceRows,ctx,section,teacherId){
+ const one=teacherId?(sourceRows||[]).find(r=>String(r.teacher_id)===String(teacherId)):null;
+ if(teacherId)sourceRows=(sourceRows||[]).filter(r=>String(r.teacher_id)===String(teacherId));
+ const rows=(sourceRows||[]).filter(r=>teacherId||v180LeaveInTab(r,section)).map((r,i)=>({
   index:i+1,
   name:reportCellValue(r.full_name),
   civil:reportCellValue(r.civil_id),
@@ -10402,7 +10406,7 @@ function formatLongLeavesReport(sourceRows,ctx,section){
  const all=(sourceRows||[]).filter(r=>v180LeaveInTab(r,'all'));
  return makeReportSchema({
   reportId:'longLeaves',
-  title:'كشف الإجازات الطويلة'+(section&&section!=='all'?' — '+v180LeaveTabTitle(section):''),
+  title:teacherId?'إجازة المعلم'+(one?' — '+one.full_name:''):'كشف الإجازات الطويلة'+(section&&section!=='all'?' — '+v180LeaveTabTitle(section):''),
   subtitle:'المعلمون الدائمون أصحاب الإجازات الطويلة في العام الحالي: من لم تُقطع إجازته لا تُسند له حصص ويظهر نصابه المالي صفرًا.',
   period:ctx.period,
   summary:[
@@ -10438,7 +10442,7 @@ ReportAdapters.longLeaves={async load(ctx,options={}){
   .in('leave_status',V180_LEAVE_STATUSES)
   .order('school_name')
   .order('full_name');
- return formatLongLeavesReport(reportError(r,'الإجازات'),ctx,options.section||'all');
+ return formatLongLeavesReport(reportError(r,'الإجازات'),ctx,options.section||'all',options.teacherId||null);
 }};
 /* تنبيه الجرس: إجازة مجددة/بانتظار التجديد انتهى تاريخها أو ينتهي خلال 30 يومًا (عرض فقط) */
 const v180BaseSmartAlerts=loadSmartAlerts;
