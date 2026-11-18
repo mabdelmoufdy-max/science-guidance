@@ -1,6 +1,7 @@
 <!doctype html>
 <!-- v402: «الإجازات» (بطلب المستخدم 2026-11-17 «مفيش حاجة اسمها بانتظار التجديد»): أُزيلت حالة «بانتظار التجديد» من الواجهة (خيار «إجازة جديدة» في نموذج الإجازة، وقسمها في قائمة الإجازات، وعدّاداتها وفلاتر التقارير)، وصُحّحت نصوص القاعدة: من لم تُقطع إجازته لا تُسند له حصص ونصابه المالي صفر. قاعدة البيانات v379 توحّد الحالة (أي إجازة تُحفظ «مجددة» برقم قرار مؤقت)، وإجازة مشرف المادة تُلغي إشرافه دون نقله لأحد (يختار الموجه) فلا يُطلب اختيار بديل في النموذج. -->
 <!-- v401: «صحائف الأحوال» — مراجعة بالعين (مدير النظام ومنسق المرحلة لمراحله، بطلب المستخدم 2026-11-17 «نفذ أ»): زر «مقارنة» لكل معلم رفع صحيفته يفتح شاشة تقارن الصورة بيانات المعلم في البرنامج (الاسم، الرقم القومي، الدرجة، تاريخ التعيين، التاريخ الاعتباري، المؤهل، المدرسة): الهاتف = صورة ثابتة في الأعلى وحقل واحد في كل مرة (✓ مطابق / ✗ فرق مع القيمة المطبوعة، تخطي، «كل الحقول مطابقة — حفظ»)، الكمبيوتر = جدول بجانب الصورة؛ صورة بتكبير وتدوير وملء الشاشة؛ التالي/السابق؛ عمود «المراجعة» وفلتر وعدّاد في القائمة، وتقرير A4 «فروق صحائف الأحوال». القاعدة: جدول teacher_statement_reviews ودالتا statement_review_get/save؛ المراجعة تُعدّ قديمة إن استُبدلت الصحيفة بعدها. لا تعديل تلقائي لأي بيان للمعلم. وفي الشاشة زر «✎ تعديل بيانات المعلم» (مدير النظام والمنسق) يفتح صفحة تعديل المعلم الموجودة بنفس صلاحيات الدور فوق شاشة المقارنة، وعند العودة تتحدث قيم «في البرنامج» وما صار مطابقًا يُعلَّم تلقائيًا ويبقى بانتظار «حفظ»؛ وأُصلحت رسائل التنبيه التي كانت تختفي خلف الشاشة. -->
+<!-- v409: «الإجازات الطويلة» (بطلب المستخدم): قائمة «نوع الإجازة» صارت بأنواع القانون (وضع، رعاية طفل، مرافقة زوج/زوجة، مرضية طويلة، إصابة عمل، رعاية أحد أفراد الأسرة، بدون مرتب، أخرى) مع ملاحظة نظامية تحت «نهاية الإجازة»، واقتراح تاريخ النهاية من البداية (وضع 4 أشهر، رعاية طفل عامان) دون الكتابة فوق ما يدخله المستخدم. واجهة فقط. -->
 <!-- v408: لوحة قرارات المرحلة وتقاريرها (بطلب المستخدم «احذفهما»): حُذف تفكيك «يُسد داخليًا/من الخارج/يغطيه المقترح/بلا تغطية» من «④ أعلى المدارس عجزًا» (صار اسم المدرسة والعجز بعد الأجر) ومن تقارير العجز واجتماع المرحلة (عمود «العجز بعد الأجر» بدلها) ومقاييس مقترح التغطية؛ وحُذف تقرير «عجز يُسد داخل المدارس»؛ يبقى تقرير «مقترح التغطية» بأسماء المعلمين المقترحين. لا تغيير في الحساب ولا قاعدة البيانات. -->
 <!-- v407: لوحة قرارات المرحلة (بطلب المستخدم «غير عملي»): حُذف من بطاقة «يحتاج قرارًا الآن» سطر «تقدير بعد المقترحات» والشريط الملوّن ومفتاحه وملاحظة «يُسد داخل المدارس» (البطاقة نفسها تُستعمل في كل شاشات المنسق والموجه والموجه الأول)؛ يبقى العنوان والعجز الفعلي. لا تغيير في أي حساب ولا في ④ ولا التقارير. -->
 <!-- v406: لوحة قرارات المرحلة (بطلب المستخدم «٣٠ رقم مضلل»): الرقم الكبير في «يحتاج قرارًا الآن» = العجز الفعلي الآن (t.net)، والتقدير بعد تنفيذ المقترحات (t.uncovered) سطر صغير تحته ويُسمّى تقديرًا؛ لا تغيير في أي حساب. -->
@@ -22,7 +23,7 @@
 <script>/* v226: العنوان الموحد — انظر التعليق أعلى الملف */(function(){try{if(/\.github\.io$/.test(location.hostname)&&/^\/science-guidance\/?(index\.html)?$/.test(location.pathname)&&!/[?&]stay\b/.test(location.search))location.replace('https://teachers-data-portal.vercel.app/app/'+location.hash)}catch(e){}})();</script>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#152c43">
-<title>نظام توجيه العلوم — v408</title>
+<title>نظام توجيه العلوم — v409</title>
 <link rel="manifest" href="./manifest.webmanifest">
 <link rel="icon" type="image/png" sizes="192x192" href="./app-icon-192.png">
 <link rel="apple-touch-icon" href="./app-icon-192.png">
@@ -10347,12 +10348,12 @@ openLongLeaveCenter=async function(){
   <form id="financialLeaveForm" onsubmit="saveLongLeaveStatus(event)">
    <div class="form-grid">
     <div class="field" style="grid-column:1/-1"><label for="financialLeaveSearch">المعلم — ابحث بالاسم أو الرقم القومي</label><input id="financialLeaveSearch" class="v156-leave-search" type="search" autocomplete="off" placeholder="🔎 اكتب جزءًا من الاسم أو الرقم القومي" oninput="v156LeaveSearch(this.value)"><select id="financialLeaveTeacher" name="teacher_id" onchange="financialLeaveTeacherChanged()" required><option value="">— اختر المعلم —</option>${options}</select><small id="financialLeaveSearchHint" class="muted"></small></div>
-    <div class="field"><label>نوع الإجازة الطويلة</label><input id="financialLeaveType" name="leave_type" list="financialLeaveTypes" placeholder="مثال: رعاية طفل" required><datalist id="financialLeaveTypes"><option value="رعاية طفل"><option value="إجازة بدون مرتب"><option value="مرافقة زوج أو زوجة"><option value="إجازة مرضية طويلة"><option value="إجازة طويلة أخرى"></datalist></div>
+    <div class="field"><label>نوع الإجازة الطويلة</label><input id="financialLeaveType" name="leave_type" list="financialLeaveTypes" placeholder="مثال: رعاية طفل" oninput="v409LeaveSuggest()" required><datalist id="financialLeaveTypes"><option value="إجازة وضع"><option value="رعاية طفل"><option value="مرافقة زوج أو زوجة"><option value="إجازة مرضية طويلة"><option value="إصابة عمل"><option value="رعاية أحد أفراد الأسرة"><option value="إجازة بدون مرتب"><option value="إجازة طويلة أخرى"></datalist></div>
     <div class="field"><label>الحالة في العام الحالي</label><select id="financialLeaveStatus" name="renewal_status" onchange="financialLeaveToggleRenewal()" required><option value="">— اختر الحالة —</option><option value="renewed">إجازة مجددة</option><option value="returned">عودة إلى العمل</option></select></div>
     <div class="field financial-renewal-only" style="display:none"><label>رقم قرار التجديد</label><input id="financialLeaveDecisionNumber" name="decision_number"></div>
     <div class="field financial-renewal-only" style="display:none"><label>تاريخ قرار التجديد</label><input id="financialLeaveDecisionDate" name="decision_date" type="date"></div>
-    <div class="field"><label>بداية الإجازة (اختياري)</label><input id="financialLeaveFrom" name="effective_from" type="date"></div>
-    <div class="field"><label>نهاية الإجازة (اختياري)</label><input id="financialLeaveTo" name="effective_to" type="date"></div>
+    <div class="field"><label>بداية الإجازة (اختياري)</label><input id="financialLeaveFrom" name="effective_from" type="date" onchange="v409LeaveSuggest()" oninput="v409LeaveSuggest()"></div>
+    <div class="field"><label>نهاية الإجازة (اختياري)</label><input id="financialLeaveTo" name="effective_to" type="date"><small id="financialLeaveHint" class="muted"></small></div>
     <div class="field" style="grid-column:1/-1"><label>ملاحظات</label><textarea id="financialLeaveNotes" name="notes" rows="2"></textarea></div>
    </div>
    <div id="financialLeaveCurrent" class="notice" style="margin-top:9px">اختر معلمًا لعرض حالته المالية.</div>
@@ -16222,6 +16223,21 @@ applyCurrentFiltersToReportSchema=function(schema,state){
 };
 function v401Report(){if(!['admin','stage_coordinator'].includes(profile?.role))return toast('هذا التقرير لمدير النظام ومنسق المرحلة فقط.');return openReportById('statementReviewDiffs')}
 /* v401-end */
+
+/* v409-begin: أنواع الإجازة الطويلة بحسب قانون الخدمة المدنية + اقتراح تاريخ الانتهاء (واجهة فقط؛ الاقتراح يعدّله المستخدم) */
+const V409_LEAVE={'إجازة وضع':{m:4,note:'مدتها 4 أشهر بأجر كامل، بحد أقصى ثلاث مرات في مدة الخدمة'},'رعاية طفل':{m:24,note:'بدون أجر، عامان كحد أقصى في المرة وبحد أقصى 6 سنوات في الخدمة'},'مرافقة زوج أو زوجة':{note:'لا تقل عن 6 أشهر مع ما يفيد السفر، بلا حد أقصى لعدد المرات'},'إجازة مرضية طويلة':{note:'للأمراض المزمنة بأجر كامل حتى الشفاء أو ثبوت العجز'},'إصابة عمل':{note:'تُحدد مدتها بمعرفة المجلس الطبي المختص'},'رعاية أحد أفراد الأسرة':{note:'تحتاج شهادة طبية أصلية وطلبًا رسميًا بالمستندات'}};
+function v409AddMonths(iso,m){const d=new Date(iso+'T00:00:00Z');if(isNaN(d))return '';const day=d.getUTCDate();d.setUTCMonth(d.getUTCMonth()+m);if(d.getUTCDate()!==day)d.setUTCDate(0);d.setUTCDate(d.getUTCDate()-1);return d.toISOString().slice(0,10)}
+function v409LeaveSuggest(){
+ const t=document.getElementById('financialLeaveType'),f=document.getElementById('financialLeaveFrom'),e=document.getElementById('financialLeaveTo'),h=document.getElementById('financialLeaveHint');
+ if(!t||!f||!e)return;
+ const info=V409_LEAVE[String(t.value||'').trim()];
+ if(h)h.textContent=info?('ℹ '+info.note+(info.m&&f.value?' — النهاية المقترحة قابلة للتعديل':'')):'';
+ if(!info||!info.m||!f.value||!/^\d{4}-\d{2}-\d{2}$/.test(f.value))return;
+ if(e.value&&e.value!==e.dataset.v409auto)return;
+ const v=v409AddMonths(f.value,info.m);if(!v)return;
+ e.dataset.v409auto=v;e.value=v;e.dispatchEvent(new Event('input',{bubbles:true}));
+}
+/* v409-end */
 </script>
 
 <div id="reportPreviewOverlay" class="report-preview-overlay" role="dialog" aria-modal="true" aria-label="معاينة التقرير" aria-hidden="true">
