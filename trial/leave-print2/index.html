@@ -16323,7 +16323,13 @@ ReportAdapters.teacherLeaveHistory={async load(ctx){
 }};
 const __v413BaseApply=applyCurrentFiltersToReportSchema;
 applyCurrentFiltersToReportSchema=function(schema,state){if(schema&&schema.reportId==='teacherLeaveHistory')return __v413BaseApply.call(this,schema,{active:false});return __v413BaseApply.apply(this,arguments)};
-function v413Print(){return openReportById('teacherLeaveHistory')}
+async function v413Print(){
+ const msgs=[],bt=toast;toast=function(m){msgs.push(String(m??''));return bt.apply(this,arguments)};
+ let r,err='';try{r=await openReportById('teacherLeaveHistory')}catch(e){err=e?.message||String(e)}finally{toast=bt}
+ const ov=document.getElementById('reportPreviewOverlay');
+ if(!(ov&&ov.classList.contains('open')))alert('لم تُفتح معاينة التقرير.\nالسبب: '+(err||msgs.join(' — ')||('لا رسالة (النتيجة: '+r+')'))+'\nأرسل لقطة من هذه الرسالة.');
+ return r;
+}
 /* v410-end */
 </script>
 
