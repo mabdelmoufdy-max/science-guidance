@@ -1,4 +1,5 @@
 <!doctype html>
+<!-- v410: «الإجازات» تبويب «إجازات المعلم» (بطلب المستخدم 2026-11-19، المرحلة 1 من خطة الإجازات): فلاتر المرحلة/المدرسة/المعلم/الفترة + «بحث» تعرض إجازاته الطويلة من teacher_long_leaves (قراءة فقط). كتلة v410 آخر السكربت. -->
 <!-- v402: «الإجازات» (بطلب المستخدم 2026-11-17 «مفيش حاجة اسمها بانتظار التجديد»): أُزيلت حالة «بانتظار التجديد» من الواجهة (خيار «إجازة جديدة» في نموذج الإجازة، وقسمها في قائمة الإجازات، وعدّاداتها وفلاتر التقارير)، وصُحّحت نصوص القاعدة: من لم تُقطع إجازته لا تُسند له حصص ونصابه المالي صفر. قاعدة البيانات v379 توحّد الحالة (أي إجازة تُحفظ «مجددة» برقم قرار مؤقت)، وإجازة مشرف المادة تُلغي إشرافه دون نقله لأحد (يختار الموجه) فلا يُطلب اختيار بديل في النموذج. -->
 <!-- v401: «صحائف الأحوال» — مراجعة بالعين (مدير النظام ومنسق المرحلة لمراحله، بطلب المستخدم 2026-11-17 «نفذ أ»): زر «مقارنة» لكل معلم رفع صحيفته يفتح شاشة تقارن الصورة بيانات المعلم في البرنامج (الاسم، الرقم القومي، الدرجة، تاريخ التعيين، التاريخ الاعتباري، المؤهل، المدرسة): الهاتف = صورة ثابتة في الأعلى وحقل واحد في كل مرة (✓ مطابق / ✗ فرق مع القيمة المطبوعة، تخطي، «كل الحقول مطابقة — حفظ»)، الكمبيوتر = جدول بجانب الصورة؛ صورة بتكبير وتدوير وملء الشاشة؛ التالي/السابق؛ عمود «المراجعة» وفلتر وعدّاد في القائمة، وتقرير A4 «فروق صحائف الأحوال». القاعدة: جدول teacher_statement_reviews ودالتا statement_review_get/save؛ المراجعة تُعدّ قديمة إن استُبدلت الصحيفة بعدها. لا تعديل تلقائي لأي بيان للمعلم. وفي الشاشة زر «✎ تعديل بيانات المعلم» (مدير النظام والمنسق) يفتح صفحة تعديل المعلم الموجودة بنفس صلاحيات الدور فوق شاشة المقارنة، وعند العودة تتحدث قيم «في البرنامج» وما صار مطابقًا يُعلَّم تلقائيًا ويبقى بانتظار «حفظ»؛ وأُصلحت رسائل التنبيه التي كانت تختفي خلف الشاشة. -->
 <!-- v409: «الإجازات الطويلة» (بطلب المستخدم): قائمة «نوع الإجازة» صارت بأنواع القانون (وضع، رعاية طفل، مرافقة زوج/زوجة، مرضية طويلة، إصابة عمل، رعاية أحد أفراد الأسرة، بدون مرتب، أخرى) مع ملاحظة نظامية تحت «نهاية الإجازة»، واقتراح تاريخ النهاية من البداية (وضع 4 أشهر، رعاية طفل عامان) دون الكتابة فوق ما يدخله المستخدم. واجهة فقط. -->
@@ -8,9 +9,6 @@
 <!-- v405: «إنجاز الجداول» — فلتر «الموجه» (اسمه وبجواره عدد معلميه الذين لم يكتمل جدولهم: ناقص + لم يبدأ) يضيّق المدارس والمعلمين؛ للصفحة فقط (تقرير A4 بلا تغيير). لا قاعدة بيانات. -->
 <!-- v404: رسالة تذكير «إنجاز الجداول» تذكر اسم المعلم كاملًا واسم المدرسة المطلوب فيها الجدول (بطلب المستخدم). واجهة فقط. -->
 <!-- v403: تصحيح v400 (بطلب المستخدم): الإخفاء للمدارس المكتملة في القائمة الرئيسية فقط؛ داخل المدرسة المختارة يظهر كل المعلمين (المكتمل جدوله وغير المكتمل). لا قاعدة بيانات. -->
-<!-- v400: صفحة «إنجاز إدخال الجداول» (بطلب المستخدم 2026-11-17 «شيل من الصفحة ما تم انجازه»): عند «ما تم إدخاله: الكل» لا تُعرض المدارس التي اكتمل جدول كل معلميها، وداخل المدرسة المختارة لا يُعرض المعلمون المكتملون؛ يظهر عددهم في السطر الرمادي تحت المؤشرات، ويُعرضون باختيار «أدخلوا جدولهم». المؤشرات والنسبة بلا تغيير، ولا تغيير في تقرير A4 ولا قاعدة البيانات. -->
-<!-- v399: «المتصلون الآن ← سجل الدخول» (مدير النظام، بطلب المستخدم 2026-11-17 «نفذ إضافة عمود عدد الإجراءات»): بجانب المدة يظهر عدد الإجراءات الفعلية للمستخدم في الفترة نفسها (تعديلات واعتمادات وإسنادات… من سجل التدقيق) ليُميَّز من فتح البرنامج ومن عمل فيه؛ و«بلا إجراءات» لمن لم يُسجَّل له شيء. العمود نفسه في تقرير A4 «سجل الدخول»، وفي تقرير مستخدم واحد مؤشر «الإجراءات». دالة قراءة جديدة admin_access_actions (v399، للمدير فقط؛ الاسترجاع rollback_v399_access_log_actions_2026-11-17.sql). لا تغيير في أي حساب أو قاعدة أخرى. العدّ من سجل التدقيق وحده: التصفح وفتح التقارير لا يُعدّان إجراءً، وإجراءات معلمي بوابة المعلمين (بلا حساب) لا تُنسب لأحد. -->
-<!-- v398: «صحائف الأحوال» (مدير النظام، بطلب المستخدم 2026-11-16 «اتحكم أقفل للمنسق أو للمعلم في البوابة»): على كل بطاقة مرحلة مفتاحان مستقلان — «رفع المعلم (البوابة)» و«رفع المنسق» — يفتح أيًّا منهما ويغلقه دون الآخر. القاعدة: العمود الجديد statement_stage_settings.coordinator_open (قفل المنسق) وis_open يبقى قفل المعلم؛ القيمة الابتدائية لقفل المنسق = حالة المفتاح الحالية فلم يتغير سلوك أحد. المنسق يرى حالة قفله هو فقط. بلا تغيير في البوابة. -->
 <!-- v397: «صحائف الأحوال» لمنسق المرحلة (بطلب المستخدم 2026-11-16): تبويب «صحائف الأحوال» في قائمة المنسق بنفس شاشة المدير لمعلمي مراحله فقط — يطّلع على الصحيفة (عرض) ويرفعها أو يستبدلها بدل المعلم، ولا يحذف ولا يفرّغ ولا يفتح/يغلق الرفع (للمدير وحده)؛ يلتزم بمفتاح فتح الرفع لمرحلته، وتقرير «حالة صحائف الأحوال» متاح له بمراحله. إجراء جديد «رفع صحائف الأحوال» في مصفوفة الصلاحيات. قاعدة البيانات v397 + دالة الحافة coordinator-statement-upload. وعلى الهاتف (حتى 760px) تُعرض قائمة الصحائف بسطرين لكل معلم (الاسم وشارة الحالة، ثم المدرسة والتاريخ والحجم مع أزرار 👁 عرض · ⟳ استبدال · ⬆ رفع) بدل الجدول. -->
 <!-- v396: «صحائف الأحوال» (مدير النظام، بطلب المستخدم 2026-11-16 «ليه أسماء المعلمين كلها ظاهرة في الصفحة… اجعلها تظهر بالفلتر وطباعة تقرير»): قائمة المعلمين لا تظهر إلا بعد اختيار فلتر (المرحلة أو الحالة) أو كتابة بحث؛ وزر «📄 تقرير» في رأس الصفحة يطبع تقرير A4 «حالة صحائف الأحوال الإلكترونية للمعلمين» بالفلاتر الحالية (وبلا فلاتر = كل المعلمين). واجهة فقط، بلا قاعدة بيانات. -->
 <!-- v395: «صحائف الأحوال» (مدير النظام): المرحلة 2 — لوحة «ملفات الصحائف»: تنزيل صحائف مرحلة أو كل المراحل في ZIP مرتب (المرحلة/المدرسة/المعلم) مع ملف إكسل ببيانات المعلمين وروابط ملفاتهم، ثم «تفريغ» = نقل إلى سلة مؤقتة (قابل للاسترجاع) ثم إزالة نهائية؛ تتحول حالة المعلم إلى «استُلمت» (ويراها في بوابته «تم استلام صحيفتك»). اللوحة نفسها v393 صارت تعمل على أي حاوية. دالة الحافة admin-files-purge v2 (مزامنة الحالة) ورفع الصحيفة من البوابة بأسماء ملفات فريدة (teacher-statement-upload v2). بلا تغيير في قاعدة البيانات. -->
@@ -23,7 +21,7 @@
 <script>/* v226: العنوان الموحد — انظر التعليق أعلى الملف */(function(){try{if(/\.github\.io$/.test(location.hostname)&&/^\/science-guidance\/?(index\.html)?$/.test(location.pathname)&&!/[?&]stay\b/.test(location.search))location.replace('https://teachers-data-portal.vercel.app/app/'+location.hash)}catch(e){}})();</script>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#152c43">
-<title>نظام توجيه العلوم — v409</title>
+<title>نظام توجيه العلوم — v410</title>
 <link rel="manifest" href="./manifest.webmanifest">
 <link rel="icon" type="image/png" sizes="192x192" href="./app-icon-192.png">
 <link rel="apple-touch-icon" href="./app-icon-192.png">
@@ -2351,6 +2349,13 @@ body.v401-open .toast{z-index:9700}
  .v392-tbl td.v392-cr:empty{display:none}
  .v392-tbl td.v392-ca{flex-wrap:wrap;justify-content:flex-end}
 }
+/* v410b: «الإجازات وتجديدها» صفحة كاملة */
+#modal.v410-page{padding:0!important;place-items:stretch}
+#modal.v410-page>.modal-card{width:100%!important;max-width:none!important;height:100%;max-height:none!important;border-radius:0!important;border-top:0;box-shadow:none;padding:0 18px 24px}
+#modal.v410-page>.modal-card>*{max-width:1100px;margin-inline:auto}
+#modal.v410-page .modal-head{position:sticky;top:0;z-index:3;background:#fff;border-bottom:1px solid #e2e8f0;max-width:none;margin:0 -18px 12px;padding:10px 18px}
+#modal.v410-page .v249-leave-list{max-height:none;overflow:visible}
+@media(max-width:760px){#modal.v410-page>.modal-card{padding:0 12px 20px}#modal.v410-page .modal-head{margin:0 -12px 10px;padding:8px 12px}#modal.v410-page .v180-leave-tabs{grid-template-columns:repeat(3,minmax(0,1fr))}#modal.v410-page .v410-panel .form-grid{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -2721,6 +2726,7 @@ window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();window.v152
 window.addEventListener('appinstalled',()=>{window.v152InstallPrompt=null;v152SyncInstallBtn()});
 if('serviceWorker' in navigator&&location.protocol!=='file:')window.addEventListener('load',()=>navigator.serviceWorker.register('./service-worker.js').catch(()=>{}));
 const V145_NEWS=[
+ ['v410','الإجازات: تبويب «إجازات المعلم» — اختر المرحلة والمدرسة والمعلم والفترة ثم «بحث» لعرض كل إجازاته.'],
  ['v402','الإجازات: لم تعد هناك حالة «بانتظار التجديد»؛ أي إجازة لم تُقطع = المعلم في إجازة، لا تُسند له حصص ونصابه المالي صفر. وإجازة مشرف المادة تُلغي إشرافه ويختار الموجه بديلًا.'],
  ['v401','صحائف الأحوال: مراجعة بالعين — زر «مقارنة» لكل معلم يعرض صحيفته بجانب بياناته المسجلة (على الهاتف صورة ثابتة وحقل واحد في كل مرة) مع حفظ النتيجة وفلتر وتقرير للفروق، وزر «تعديل بيانات المعلم» من نفس الشاشة للمدير والمنسق.'],
  ['v400','إنجاز إدخال الجداول: تختفي المدارس التي اكتمل جدول كل معلميها من القائمة الرئيسية (وتظهر باختيار «أدخلوا جدولهم»)، وداخل المدرسة يظهر كل معلميها المكتمل وغير المكتمل.'],
@@ -16238,6 +16244,69 @@ function v409LeaveSuggest(){
  e.dataset.v409auto=v;e.value=v;e.dispatchEvent(new Event('input',{bubbles:true}));
 }
 /* v409-end */
+/* v410-begin: تبويب «إجازات المعلم» في نافذة الإجازات — فلاتر المرحلة/المدرسة/المعلم/الفترة + «بحث» ثم عرض إجازاته الطويلة (قراءة فقط؛ الطباعة في المرحلة التالية) */
+V180_LEAVE_TABS.push(['byTeacher','إجازات المعلم']);
+const __v410={stage:'',school:'',teacher:'',from:'',to:'',html:''};
+const v410BaseInTab=v180LeaveInTab;
+v180LeaveInTab=function(row,tab){return tab==='byTeacher'?false:v410BaseInTab(row,tab)};
+function v410D(v){return v?(typeof v337DateText==='function'?v337DateText(v):v):'—'}
+function v410Status(s){return s==='returned'?'عاد للعمل':s==='pending_renewal'?'بانتظار التجديد':s==='renewed'?'في إجازة':(s||'—')}
+function v410Days(a,b){if(!a||!b)return '';const d=Math.round((new Date(b+'T00:00:00')-new Date(a+'T00:00:00'))/86400000)+1;return d>0?d:''}
+function v410Panel(){
+ const all=window.__financialLeaveRows||[],s=__v410;
+ const stages=[...new Set(all.map(r=>r.stage).filter(Boolean))];
+ const inSt=all.filter(r=>!s.stage||r.stage===s.stage);
+ const schools=[...new Map(inSt.filter(r=>r.home_school_id).map(r=>[r.home_school_id,r.school_name||''])).entries()].sort((a,b)=>String(a[1]).localeCompare(String(b[1]),'ar'));
+ const teachers=inSt.filter(r=>!s.school||r.home_school_id===s.school).sort((a,b)=>String(a.full_name).localeCompare(String(b.full_name),'ar'));
+ const opt=(v,l,cur)=>`<option value="${esc(v)}"${v===cur?' selected':''}>${esc(l)}</option>`;
+ return `<div class="card v410-panel"><div class="form-grid">
+  <div class="field"><label>المرحلة</label><select onchange="v410Set('stage',this.value)">${opt('','الكل',s.stage)}${stages.map(x=>opt(x,x,s.stage)).join('')}</select></div>
+  <div class="field"><label>المدرسة</label><select onchange="v410Set('school',this.value)">${opt('','الكل',s.school)}${schools.map(([id,n])=>opt(id,n,s.school)).join('')}</select></div>
+  <div class="field"><label>المعلم</label><select id="v410Teacher" onchange="v410Set('teacher',this.value)">${opt('','— اختر المعلم —',s.teacher)}${teachers.map(t=>opt(t.teacher_id,t.full_name+(s.school?'':' — '+(t.school_name||'')),s.teacher)).join('')}</select></div>
+  <div class="field"><label>الإجازة من تاريخ</label><input type="date" value="${esc(s.from)}" onchange="__v410.from=this.value"></div>
+  <div class="field"><label>إلى تاريخ</label><input type="date" value="${esc(s.to)}" onchange="__v410.to=this.value"></div>
+ </div><div style="margin-top:10px"><button type="button" class="btn primary" onclick="v410Search()">🔎 بحث</button></div></div><div id="v410Result">${s.html}</div>`;
+}
+function v410Set(k,v){
+ __v410[k]=v;__v410.html='';
+ if(k==='stage'){__v410.school='';__v410.teacher=''}
+ if(k==='school')__v410.teacher='';
+ v180LeaveRender();
+}
+async function v410Search(){
+ const s=__v410,box=document.getElementById('v410Result');
+ if(!s.teacher)return toast('اختر المعلم أولًا.');
+ if(s.from&&s.to&&s.from>s.to)return toast('تاريخ «من» بعد تاريخ «إلى».');
+ const t=(window.__financialLeaveRows||[]).find(r=>r.teacher_id===s.teacher)||{};
+ if(box)box.innerHTML='<div class="muted">جاري البحث…</div>';
+ let leaves=[];
+ const r=await sb.from('teacher_long_leaves').select('*').eq('teacher_id',s.teacher);
+ if(!r.error)leaves=(r.data||[]).map(x=>({type:x.leave_type,status:x.renewal_status,from:x.effective_from,to:x.effective_to,dec:[x.decision_number,x.decision_date?v410D(x.decision_date):''].filter(Boolean).join(' — '),notes:x.notes}));
+ else if(t.leave_type)leaves=[{type:t.leave_type,status:t.leave_status,from:t.effective_from,to:t.effective_to,dec:[t.decision_number,t.decision_date?v410D(t.decision_date):''].filter(Boolean).join(' — '),notes:t.notes}];
+ leaves=leaves.filter(x=>(!s.from||!x.to||x.to>=s.from)&&(!s.to||!x.from||x.from<=s.to)).sort((a,b)=>String(b.from||'').localeCompare(String(a.from||'')));
+ const per=(s.from||s.to)?`من ${v410D(s.from)} إلى ${v410D(s.to)}`:'كل الفترات';
+ const head=`<div class="v249-leave-card v410-teacher"><div class="v249-lc-top"><div class="v249-lc-name"><b>${esc(t.full_name||'')}</b><small dir="ltr">${esc(t.civil_id||'')}</small></div></div>
+  <div class="v249-lc-line"><span class="v249-lc-school">${esc(t.school_name||'—')}</span><span class="badge info">${esc(t.stage||'')}</span>${t.job_title?`<span class="badge">${esc(t.job_title)}</span>`:''}</div>
+  <div class="v249-lc-meta"><span><small>الفترة:</small> ${esc(per)}</span><span><small>عدد الإجازات:</small> ${leaves.length}</span></div></div>`;
+ const list=leaves.map(x=>{const d=v410Days(x.from,x.to);return `<div class="v249-leave-card"><div class="v249-lc-line"><b>${esc(x.type||'إجازة')}</b><span class="badge ${x.status==='returned'?'ok':'warn'}">${esc(v410Status(x.status))}</span></div>
+  <div class="v249-lc-meta"><span><small>من:</small> <bdi>${esc(v410D(x.from))}</bdi></span><span><small>إلى:</small> <bdi>${esc(v410D(x.to))}</bdi></span>${d?`<span><small>المدة:</small> ${d} يوم</span>`:''}<span><small>القرار:</small> ${esc(x.dec||'—')}</span></div>${x.notes?`<div class="muted">${esc(x.notes)}</div>`:''}</div>`}).join('');
+ s.html=head+(list||`<div class="muted v249-leave-empty">لا توجد إجازات لهذا المعلم في ${esc(per)}.</div>`);
+ if(box)box.innerHTML=s.html;
+}
+const v410BaseRender=v180LeaveRender;
+v180LeaveRender=function(){
+ v410BaseRender();
+ const on=__v180LeaveTab==='byTeacher';
+ const card=document.querySelector('#v180LeaveTabs [onclick*="byTeacher"] b');if(card)card.textContent='🔎';
+ const btn=document.getElementById('v180LeaveReportBtn');if(btn)btn.style.display=on?'none':'';
+ const body=document.getElementById('v180LeaveBody');if(on&&body)body.innerHTML=v410Panel();
+};
+/* v410b: نافذة «الإجازات وتجديدها» صفحة كاملة على الكمبيوتر والهاتف */
+const v410BaseModal=modal;
+modal=function(h){document.getElementById('modal')?.classList.remove('v410-page');return v410BaseModal(h)};
+const v410BaseCenter=openLongLeaveCenter;
+openLongLeaveCenter=async function(){const r=await v410BaseCenter.apply(this,arguments);const m=document.getElementById('modal');if(m&&document.getElementById('v180LeaveTabs')){m.classList.add('v410-page');m.querySelector('.modal-card')?.scrollTo?.(0,0)}return r};
+/* v410-end */
 </script>
 
 <div id="reportPreviewOverlay" class="report-preview-overlay" role="dialog" aria-modal="true" aria-label="معاينة التقرير" aria-hidden="true">
