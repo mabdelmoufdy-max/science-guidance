@@ -1,4 +1,5 @@
 <!doctype html>
+<!-- v416: «الإجازات» (بطلب المستخدم 2026-11-19 «الجزء العلوي فوق الجدول كبير»): الفلاتر وأسهم الأسبوع في سطر واحد، والأرقام الثلاثة سطر نصي، وبطاقات التبويبات أقصر في صفحة الإجازات فقط. -->
 <!-- v415: «الإجازات» (بطلب المستخدم 2026-11-19، الحل 2 أسبوعي، أ): تبويب «الأسبوع» أول وافتراضي — تقويم السبت–الخميس من teacher_long_leaves لمعلمي المدرسة (أو الغائبين فقط عند «كل المدارس»). كتلة v415. -->
 <!-- v414: التقارير (بطلب المستخدم 2026-11-19): اسم ملف «حفظ PDF» كلمات عربية بحروف إنجليزية — reportPdfFileName عبر v414Translit (قاموس كلمات + تحويل حرفي). -->
 <!-- v413: «إجازات المعلم» (بطلب المستخدم 2026-11-19، المرحلة 2): زر «طباعة إجازاته» ← تقرير A4 teacherLeaveHistory «بيان إجازات المعلم» من نتيجة البحث (__v410.last). -->
@@ -8,7 +9,6 @@
 <!-- v408: لوحة قرارات المرحلة وتقاريرها (بطلب المستخدم «احذفهما»): حُذف تفكيك «يُسد داخليًا/من الخارج/يغطيه المقترح/بلا تغطية» من «④ أعلى المدارس عجزًا» (صار اسم المدرسة والعجز بعد الأجر) ومن تقارير العجز واجتماع المرحلة (عمود «العجز بعد الأجر» بدلها) ومقاييس مقترح التغطية؛ وحُذف تقرير «عجز يُسد داخل المدارس»؛ يبقى تقرير «مقترح التغطية» بأسماء المعلمين المقترحين. لا تغيير في الحساب ولا قاعدة البيانات. -->
 <!-- v407: لوحة قرارات المرحلة (بطلب المستخدم «غير عملي»): حُذف من بطاقة «يحتاج قرارًا الآن» سطر «تقدير بعد المقترحات» والشريط الملوّن ومفتاحه وملاحظة «يُسد داخل المدارس» (البطاقة نفسها تُستعمل في كل شاشات المنسق والموجه والموجه الأول)؛ يبقى العنوان والعجز الفعلي. لا تغيير في أي حساب ولا في ④ ولا التقارير. -->
 <!-- v406: لوحة قرارات المرحلة (بطلب المستخدم «٣٠ رقم مضلل»): الرقم الكبير في «يحتاج قرارًا الآن» = العجز الفعلي الآن (t.net)، والتقدير بعد تنفيذ المقترحات (t.uncovered) سطر صغير تحته ويُسمّى تقديرًا؛ لا تغيير في أي حساب. -->
-<!-- v405: «إنجاز الجداول» — فلتر «الموجه» (اسمه وبجواره عدد معلميه الذين لم يكتمل جدولهم: ناقص + لم يبدأ) يضيّق المدارس والمعلمين؛ للصفحة فقط (تقرير A4 بلا تغيير). لا قاعدة بيانات. -->
 <html lang="ar" dir="rtl">
 <head>
 <!-- إعداد: أ/ محمود عبدالمفدي محمد أبوالنجا | الصفة: معلم -->
@@ -16,7 +16,7 @@
 <script>/* v226: العنوان الموحد — انظر التعليق أعلى الملف */(function(){try{if(/\.github\.io$/.test(location.hostname)&&/^\/science-guidance\/?(index\.html)?$/.test(location.pathname)&&!/[?&]stay\b/.test(location.search))location.replace('https://teachers-data-portal.vercel.app/app/'+location.hash)}catch(e){}})();</script>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#152c43">
-<title>نظام توجيه العلوم — v415</title>
+<title>نظام توجيه العلوم — v416</title>
 <link rel="manifest" href="./manifest.webmanifest">
 <link rel="icon" type="image/png" sizes="192x192" href="./app-icon-192.png">
 <link rel="apple-touch-icon" href="./app-icon-192.png">
@@ -2351,7 +2351,19 @@ body.v401-open .toast{z-index:9700}
 #modal.v410-page .modal-head{position:sticky;top:0;z-index:3;background:#fff;border-bottom:1px solid #e2e8f0;max-width:none;margin:0 -18px 12px;padding:10px 18px}
 #modal.v410-page .v249-leave-list{max-height:none;overflow:visible}
 @media(max-width:760px){#modal.v410-page>.modal-card{padding:0 12px 20px}#modal.v410-page .modal-head{margin:0 -12px 10px;padding:8px 12px}#modal.v410-page .v180-leave-tabs{grid-template-columns:repeat(3,minmax(0,1fr))}#modal.v410-page .v410-panel .form-grid{grid-template-columns:1fr}}
-/* v415: التقويم الأسبوعي للإجازات */
+/* v415: التقويم الأسبوعي للإجازات (v416: شريط مضغوط) */
+.v415-bar{background:#fff;border:1px solid #dfe5ee;border-radius:10px;padding:8px 10px}
+.v415-f{display:grid;grid-template-columns:1fr 1.4fr auto;gap:8px;align-items:end}
+.v415-f .field{margin:0}.v415-f .field label{font-size:12px;margin-bottom:2px}
+.v415-bar .v415-nav{margin:0;flex-wrap:nowrap;gap:6px}.v415-bar .v415-nav b{font-size:13px;white-space:nowrap}
+.v415-bar .v415-nav .btn{min-height:34px;padding:4px 10px}
+.v415-stats{margin:8px 2px;font-size:13px;color:#55607a}.v415-stats b{color:#14325c}
+#modal.v410-page .v180-leave-tabs .approval-filter-card{padding:6px 4px;min-height:0}
+#modal.v410-page .v180-leave-tabs .approval-filter-card b{font-size:17px;line-height:1.2}
+#modal.v410-page .v180-leave-tabs .approval-filter-card span{font-size:12px}
+#modal.v410-page .v180-leave-tabs{margin:6px 0}
+#modal.v410-page .modal-head h3{font-size:18px}
+@media(max-width:760px){.v415-f{grid-template-columns:1fr 1fr}.v415-f .v415-nav{grid-column:1/-1;justify-content:center}}
 .v415-nav{display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap;margin-top:8px}
 .v415-cards{grid-template-columns:repeat(3,minmax(0,1fr))!important;margin:10px 0}
 .v415-wrap{overflow-x:auto}
@@ -2736,6 +2748,7 @@ window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();window.v152
 window.addEventListener('appinstalled',()=>{window.v152InstallPrompt=null;v152SyncInstallBtn()});
 if('serviceWorker' in navigator&&location.protocol!=='file:')window.addEventListener('load',()=>navigator.serviceWorker.register('./service-worker.js').catch(()=>{}));
 const V145_NEWS=[
+ ['v416','الإجازات: شريط أعلى التقويم الأسبوعي أصغر (الفلاتر والأسبوع في سطر واحد) ليظهر الجدول مباشرة.'],
  ['v415','الإجازات: الصفحة تبدأ بالتقويم الأسبوعي (السبت–الخميس) لمعلمي المدرسة، وكل الإجازات في تبويبها.'],
  ['v414','التقارير: اسم ملف «حفظ PDF» صار بحروف إنجليزية (مثل Bayan_Egazat_Al_Moalem) ليفتح على كل الأجهزة.'],
  ['v413','إجازات المعلم: زر «🖨 طباعة إجازاته» بعد البحث يطبع بيان إجازات المعلم على A4.'],
@@ -16393,10 +16406,10 @@ function v415Panel(){
  const inSt=all.filter(r=>!s.stage||r.stage===s.stage);
  const schools=[...new Map(inSt.filter(r=>r.home_school_id).map(r=>[r.home_school_id,r.school_name||''])).entries()].sort((a,b)=>String(a[1]).localeCompare(String(b[1]),'ar'));
  const days=v415Days(),isos=days.map(v415Iso),today=v415Iso(new Date());
- const head=`<div class="card v415-panel"><div class="form-grid">
+ const head=`<div class="v415-panel v415-bar"><div class="v415-f">
   <div class="field"><label>المرحلة</label><select onchange="v415Set('stage',this.value)">${opt('','الكل',s.stage)}${stages.map(x=>opt(x,x,s.stage)).join('')}</select></div>
   <div class="field"><label>المدرسة</label><select onchange="v415Set('school',this.value)">${opt('','كل المدارس (الغائبون فقط)',s.school)}${schools.map(([id,n])=>opt(id,n,s.school)).join('')}</select></div>
- </div><div class="v415-nav"><button type="button" class="btn secondary" onclick="v415Move(-1)">▶ السابق</button><b>${esc(v410D(isos[0]))} – ${esc(v410D(isos[5]))}</b><button type="button" class="btn secondary" onclick="v415Move(1)">التالي ◀</button>${s.start?'<button type="button" class="btn secondary" onclick="v415Move(0)">هذا الأسبوع</button>':''}</div></div>`;
+ <div class="v415-nav"><button type="button" class="btn secondary" onclick="v415Move(-1)">▶ السابق</button><b>${esc(v410D(isos[0]))} – ${esc(v410D(isos[5]))}</b><button type="button" class="btn secondary" onclick="v415Move(1)">التالي ◀</button>${s.start?'<button type="button" class="btn secondary" onclick="v415Move(0)">هذا الأسبوع</button>':''}</div></div></div>`;
  if(!s.leaves)return head+'<div class="muted">جاري تحميل الإجازات…</div>';
  const byT={};s.leaves.forEach(l=>{(byT[l.teacher_id]=byT[l.teacher_id]||[]).push(l)});
  const cell=(id,iso)=>(byT[id]||[]).find(l=>v415On(l,iso));
@@ -16406,7 +16419,7 @@ function v415Panel(){
  const absent=rows.filter(r=>isos.some(i=>cell(r.teacher_id,i))).length;
  const todayN=isos.includes(today)?rows.filter(r=>cell(r.teacher_id,today)).length:null;
  const multi=isos.filter(i=>rows.filter(r=>cell(r.teacher_id,i)).length>1).length;
- const cards=`<div class="approval-center-summary v415-cards"><div class="approval-filter-card"><b>${absent}</b><span>غائبون هذا الأسبوع</span></div><div class="approval-filter-card"><b>${todayN===null?'—':todayN}</b><span>غائب اليوم</span></div><div class="approval-filter-card"><b>${multi}</b><span>أيام بها أكثر من غائب</span></div></div>`;
+ const cards=`<div class="v415-stats">غائبون هذا الأسبوع <b>${absent}</b> · غائب اليوم <b>${todayN===null?'—':todayN}</b> · أيام بها أكثر من غائب <b>${multi}</b></div>`;
  if(!rows.length)return head+cards+`<div class="notice ok">لا يوجد معلم في إجازة ${s.school?'في هذه المدرسة ':''}خلال هذا الأسبوع.</div>`;
  const th=days.map((d,i)=>`<th class="${isos[i]===today?'v415-today':''}">${V415_DN[d.getDay()]}<small>${d.getDate()}/${d.getMonth()+1}</small></th>`).join('');
  const tr=rows.map(r=>`<tr><td class="v415-n"><a href="javascript:void 0" onclick="v415Open('${r.teacher_id}')">${esc(r.full_name)}</a>${s.school?'':`<small>${esc(r.school_name||'')}</small>`}</td>${isos.map(i=>{const l=cell(r.teacher_id,i);return l?`<td class="v415-L" title="${esc(l.leave_type||'إجازة')}"><span>${esc(l.leave_type||'إجازة')}</span></td>`:'<td></td>'}).join('')}</tr>`).join('');
