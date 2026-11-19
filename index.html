@@ -1,4 +1,5 @@
 <!doctype html>
+<!-- v415: «الإجازات» (بطلب المستخدم 2026-11-19، الحل 2 أسبوعي، أ): تبويب «الأسبوع» أول وافتراضي — تقويم السبت–الخميس من teacher_long_leaves لمعلمي المدرسة (أو الغائبين فقط عند «كل المدارس»). كتلة v415. -->
 <!-- v414: التقارير (بطلب المستخدم 2026-11-19): اسم ملف «حفظ PDF» كلمات عربية بحروف إنجليزية — reportPdfFileName عبر v414Translit (قاموس كلمات + تحويل حرفي). -->
 <!-- v413: «إجازات المعلم» (بطلب المستخدم 2026-11-19، المرحلة 2): زر «طباعة إجازاته» ← تقرير A4 teacherLeaveHistory «بيان إجازات المعلم» من نتيجة البحث (__v410.last). -->
 <!-- v412: «إجازات المعلم» (بطلب المستخدم 2026-11-19): فلاتر المرحلة/المدرسة/المعلم تعرض من لهم إجازة فقط (v410Has/v410LoadIds من teacher_long_leaves). -->
@@ -8,7 +9,6 @@
 <!-- v407: لوحة قرارات المرحلة (بطلب المستخدم «غير عملي»): حُذف من بطاقة «يحتاج قرارًا الآن» سطر «تقدير بعد المقترحات» والشريط الملوّن ومفتاحه وملاحظة «يُسد داخل المدارس» (البطاقة نفسها تُستعمل في كل شاشات المنسق والموجه والموجه الأول)؛ يبقى العنوان والعجز الفعلي. لا تغيير في أي حساب ولا في ④ ولا التقارير. -->
 <!-- v406: لوحة قرارات المرحلة (بطلب المستخدم «٣٠ رقم مضلل»): الرقم الكبير في «يحتاج قرارًا الآن» = العجز الفعلي الآن (t.net)، والتقدير بعد تنفيذ المقترحات (t.uncovered) سطر صغير تحته ويُسمّى تقديرًا؛ لا تغيير في أي حساب. -->
 <!-- v405: «إنجاز الجداول» — فلتر «الموجه» (اسمه وبجواره عدد معلميه الذين لم يكتمل جدولهم: ناقص + لم يبدأ) يضيّق المدارس والمعلمين؛ للصفحة فقط (تقرير A4 بلا تغيير). لا قاعدة بيانات. -->
-<!-- v404: رسالة تذكير «إنجاز الجداول» تذكر اسم المعلم كاملًا واسم المدرسة المطلوب فيها الجدول (بطلب المستخدم). واجهة فقط. -->
 <html lang="ar" dir="rtl">
 <head>
 <!-- إعداد: أ/ محمود عبدالمفدي محمد أبوالنجا | الصفة: معلم -->
@@ -16,7 +16,7 @@
 <script>/* v226: العنوان الموحد — انظر التعليق أعلى الملف */(function(){try{if(/\.github\.io$/.test(location.hostname)&&/^\/science-guidance\/?(index\.html)?$/.test(location.pathname)&&!/[?&]stay\b/.test(location.search))location.replace('https://teachers-data-portal.vercel.app/app/'+location.hash)}catch(e){}})();</script>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#152c43">
-<title>نظام توجيه العلوم — v414</title>
+<title>نظام توجيه العلوم — v415</title>
 <link rel="manifest" href="./manifest.webmanifest">
 <link rel="icon" type="image/png" sizes="192x192" href="./app-icon-192.png">
 <link rel="apple-touch-icon" href="./app-icon-192.png">
@@ -2351,6 +2351,21 @@ body.v401-open .toast{z-index:9700}
 #modal.v410-page .modal-head{position:sticky;top:0;z-index:3;background:#fff;border-bottom:1px solid #e2e8f0;max-width:none;margin:0 -18px 12px;padding:10px 18px}
 #modal.v410-page .v249-leave-list{max-height:none;overflow:visible}
 @media(max-width:760px){#modal.v410-page>.modal-card{padding:0 12px 20px}#modal.v410-page .modal-head{margin:0 -12px 10px;padding:8px 12px}#modal.v410-page .v180-leave-tabs{grid-template-columns:repeat(3,minmax(0,1fr))}#modal.v410-page .v410-panel .form-grid{grid-template-columns:1fr}}
+/* v415: التقويم الأسبوعي للإجازات */
+.v415-nav{display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap;margin-top:8px}
+.v415-cards{grid-template-columns:repeat(3,minmax(0,1fr))!important;margin:10px 0}
+.v415-wrap{overflow-x:auto}
+.v415-t{width:100%;border-collapse:collapse;table-layout:fixed;background:#fff}
+.v415-t th,.v415-t td{border:1px solid #dfe5ee;padding:4px;text-align:center;font-size:12px}
+.v415-t th{background:#e9eef7}.v415-t th small{display:block;font-weight:normal;color:#55607a}
+.v415-t th:first-child,.v415-t td.v415-n{width:28%;text-align:right}
+.v415-t td.v415-n small{display:block;color:#64748b;font-size:11px}
+.v415-t th.v415-today{background:#fde9b8}
+td.v415-L,span.v415-L{background:#e8a5a0}
+td.v415-L span{font-size:10px;display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+span.v415-L{border-radius:10px;padding:2px 8px}
+.v415-legend{margin-top:8px;font-size:12px;color:#55607a}
+@media(max-width:760px){.v415-t th,.v415-t td{font-size:10px;padding:3px 1px}td.v415-L span{display:none}.v415-t th:first-child,.v415-t td.v415-n{width:32%}}
 </style>
 </head>
 <body>
@@ -2721,6 +2736,7 @@ window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();window.v152
 window.addEventListener('appinstalled',()=>{window.v152InstallPrompt=null;v152SyncInstallBtn()});
 if('serviceWorker' in navigator&&location.protocol!=='file:')window.addEventListener('load',()=>navigator.serviceWorker.register('./service-worker.js').catch(()=>{}));
 const V145_NEWS=[
+ ['v415','الإجازات: الصفحة تبدأ بالتقويم الأسبوعي (السبت–الخميس) لمعلمي المدرسة، وكل الإجازات في تبويبها.'],
  ['v414','التقارير: اسم ملف «حفظ PDF» صار بحروف إنجليزية (مثل Bayan_Egazat_Al_Moalem) ليفتح على كل الأجهزة.'],
  ['v413','إجازات المعلم: زر «🖨 طباعة إجازاته» بعد البحث يطبع بيان إجازات المعلم على A4.'],
  ['v412','إجازات المعلم: قوائم المرحلة والمدرسة والمعلم تعرض من لهم إجازة فقط.'],
@@ -16297,7 +16313,7 @@ async function v410Search(){
   <div class="v249-lc-meta"><span><small>من:</small> <bdi>${esc(v410D(x.from))}</bdi></span><span><small>إلى:</small> <bdi>${esc(v410D(x.to))}</bdi></span>${d?`<span><small>المدة:</small> ${d} يوم</span>`:''}<span><small>القرار:</small> ${esc(x.dec||'—')}</span></div>${x.notes?`<div class="muted">${esc(x.notes)}</div>`:''}</div>`}).join('');
  s.last={t,leaves,per};
  s.html=head+(leaves.length?`<div style="margin:8px 0"><button type="button" class="btn secondary" onclick="v413Print()">🖨 طباعة إجازاته</button></div>`:'')+(list||`<div class="muted v249-leave-empty">لا توجد إجازات لهذا المعلم في ${esc(per)}.</div>`);
- if(box)box.innerHTML=s.html;
+ const box2=document.getElementById('v410Result');if(box2)box2.innerHTML=s.html;
 }
 const v410BaseRender=v180LeaveRender;
 v180LeaveRender=function(){
@@ -16351,6 +16367,61 @@ function v414Translit(s){
 }
 reportPdfFileName=function(){return v414Translit(reportPreviewTitle())+'_'+new Date().toISOString().slice(0,10)+'.pdf'};
 /* v414-end */
+/* v415-begin: «الإجازات» — التقويم الأسبوعي (السبت–الخميس) أول ما يظهر في صفحة الإجازات (بطلب المستخدم 2026-11-19، الحل 2 أسبوعي، الخيار أ) */
+V180_LEAVE_TABS.unshift(['week','الأسبوع']);
+const __v415={stage:'',school:'',start:'',leaves:null,loading:false};
+function v415Iso(d){return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')}
+function v415WeekStart(iso){const d=iso?new Date(iso+'T00:00:00'):new Date();d.setHours(0,0,0,0);d.setDate(d.getDate()-((d.getDay()+1)%7));return d}
+function v415Days(){const s=v415WeekStart(__v415.start);return [...Array(6)].map((_,i)=>{const d=new Date(s);d.setDate(s.getDate()+i);return d})}
+const V415_DN=['الأحد','الاثنين','الثلاثاء','الأربعاء','الخميس','الجمعة','السبت'];
+async function v415Load(){
+ if(__v415.leaves||__v415.loading)return;__v415.loading=true;
+ try{const q=await sb.from('teacher_long_leaves').select('teacher_id,leave_type,renewal_status,effective_from,effective_to');__v415.leaves=q.error?[]:(q.data||[])}catch(e){__v415.leaves=[]}
+ __v415.loading=false;if(__v180LeaveTab==='week')v180LeaveRender();
+}
+function v415On(l,iso){
+ if(l.effective_from&&iso<l.effective_from)return false;
+ if(l.effective_to)return iso<=l.effective_to;
+ return l.renewal_status!=='returned';
+}
+function v415Set(k,v){__v415[k]=v;if(k==='stage')__v415.school='';v180LeaveRender()}
+function v415Move(n){const s=v415WeekStart(__v415.start);s.setDate(s.getDate()+7*n);__v415.start=n?v415Iso(s):'';v180LeaveRender()}
+function v415Open(id){const t=(window.__financialLeaveRows||[]).find(r=>r.teacher_id===id)||{};Object.assign(__v410,{stage:t.stage||'',school:t.home_school_id||'',teacher:id,from:'',to:'',html:''});v180LeaveSetTab('byTeacher');v410Search()}
+function v415Panel(){
+ const s=__v415,all=window.__financialLeaveRows||[],opt=(v,l,c)=>`<option value="${esc(v)}"${v===c?' selected':''}>${esc(l)}</option>`;
+ const stages=[...new Set(all.map(r=>r.stage).filter(Boolean))];
+ const inSt=all.filter(r=>!s.stage||r.stage===s.stage);
+ const schools=[...new Map(inSt.filter(r=>r.home_school_id).map(r=>[r.home_school_id,r.school_name||''])).entries()].sort((a,b)=>String(a[1]).localeCompare(String(b[1]),'ar'));
+ const days=v415Days(),isos=days.map(v415Iso),today=v415Iso(new Date());
+ const head=`<div class="card v415-panel"><div class="form-grid">
+  <div class="field"><label>المرحلة</label><select onchange="v415Set('stage',this.value)">${opt('','الكل',s.stage)}${stages.map(x=>opt(x,x,s.stage)).join('')}</select></div>
+  <div class="field"><label>المدرسة</label><select onchange="v415Set('school',this.value)">${opt('','كل المدارس (الغائبون فقط)',s.school)}${schools.map(([id,n])=>opt(id,n,s.school)).join('')}</select></div>
+ </div><div class="v415-nav"><button type="button" class="btn secondary" onclick="v415Move(-1)">▶ السابق</button><b>${esc(v410D(isos[0]))} – ${esc(v410D(isos[5]))}</b><button type="button" class="btn secondary" onclick="v415Move(1)">التالي ◀</button>${s.start?'<button type="button" class="btn secondary" onclick="v415Move(0)">هذا الأسبوع</button>':''}</div></div>`;
+ if(!s.leaves)return head+'<div class="muted">جاري تحميل الإجازات…</div>';
+ const byT={};s.leaves.forEach(l=>{(byT[l.teacher_id]=byT[l.teacher_id]||[]).push(l)});
+ const cell=(id,iso)=>(byT[id]||[]).find(l=>v415On(l,iso));
+ let rows=inSt.filter(r=>!s.school||r.home_school_id===s.school);
+ if(!s.school)rows=rows.filter(r=>isos.some(i=>cell(r.teacher_id,i)));
+ rows.sort((a,b)=>String(a.school_name||'').localeCompare(String(b.school_name||''),'ar')||String(a.full_name).localeCompare(String(b.full_name),'ar'));
+ const absent=rows.filter(r=>isos.some(i=>cell(r.teacher_id,i))).length;
+ const todayN=isos.includes(today)?rows.filter(r=>cell(r.teacher_id,today)).length:null;
+ const multi=isos.filter(i=>rows.filter(r=>cell(r.teacher_id,i)).length>1).length;
+ const cards=`<div class="approval-center-summary v415-cards"><div class="approval-filter-card"><b>${absent}</b><span>غائبون هذا الأسبوع</span></div><div class="approval-filter-card"><b>${todayN===null?'—':todayN}</b><span>غائب اليوم</span></div><div class="approval-filter-card"><b>${multi}</b><span>أيام بها أكثر من غائب</span></div></div>`;
+ if(!rows.length)return head+cards+`<div class="notice ok">لا يوجد معلم في إجازة ${s.school?'في هذه المدرسة ':''}خلال هذا الأسبوع.</div>`;
+ const th=days.map((d,i)=>`<th class="${isos[i]===today?'v415-today':''}">${V415_DN[d.getDay()]}<small>${d.getDate()}/${d.getMonth()+1}</small></th>`).join('');
+ const tr=rows.map(r=>`<tr><td class="v415-n"><a href="javascript:void 0" onclick="v415Open('${r.teacher_id}')">${esc(r.full_name)}</a>${s.school?'':`<small>${esc(r.school_name||'')}</small>`}</td>${isos.map(i=>{const l=cell(r.teacher_id,i);return l?`<td class="v415-L" title="${esc(l.leave_type||'إجازة')}"><span>${esc(l.leave_type||'إجازة')}</span></td>`:'<td></td>'}).join('')}</tr>`).join('');
+ return head+cards+`<div class="v415-wrap"><table class="v415-t"><thead><tr><th>المعلم</th>${th}</tr></thead><tbody>${tr}</tbody></table></div><div class="v415-legend"><span class="v415-L">إجازة طويلة</span> — اضغط اسم المعلم لعرض إجازاته وطباعتها. الإجازات القصيرة تظهر هنا بعد تفعيل تسجيلها.</div>`;
+}
+const v415BaseRender=v180LeaveRender;
+v180LeaveRender=function(){
+ v415BaseRender();
+ const on=__v180LeaveTab==='week';
+ const card=document.querySelector('#v180LeaveTabs [onclick*="\'week\'"] b');if(card)card.textContent='📅';
+ if(on){const btn=document.getElementById('v180LeaveReportBtn');if(btn)btn.style.display='none';const body=document.getElementById('v180LeaveBody');if(body){body.innerHTML=v415Panel();v415Load()}}
+};
+const v415BaseCenter=openLongLeaveCenter;
+openLongLeaveCenter=async function(){__v180LeaveTab='week';__v415.leaves=null;return v415BaseCenter.apply(this,arguments)};
+/* v415-end */
 </script>
 
 <div id="reportPreviewOverlay" class="report-preview-overlay" role="dialog" aria-modal="true" aria-label="معاينة التقرير" aria-hidden="true">
