@@ -2349,6 +2349,13 @@ body.v401-open .toast{z-index:9700}
  .v392-tbl td.v392-cr:empty{display:none}
  .v392-tbl td.v392-ca{flex-wrap:wrap;justify-content:flex-end}
 }
+/* v410b: «الإجازات وتجديدها» صفحة كاملة */
+#modal.v410-page{padding:0!important;place-items:stretch}
+#modal.v410-page>.modal-card{width:100%!important;max-width:none!important;height:100%;max-height:none!important;border-radius:0!important;border-top:0;box-shadow:none;padding:0 18px 24px}
+#modal.v410-page>.modal-card>*{max-width:1100px;margin-inline:auto}
+#modal.v410-page .modal-head{position:sticky;top:0;z-index:3;background:#fff;border-bottom:1px solid #e2e8f0;max-width:none;margin:0 -18px 12px;padding:10px 18px}
+#modal.v410-page .v249-leave-list{max-height:none;overflow:visible}
+@media(max-width:760px){#modal.v410-page>.modal-card{padding:0 12px 20px}#modal.v410-page .modal-head{margin:0 -12px 10px;padding:8px 12px}#modal.v410-page .v180-leave-tabs{grid-template-columns:repeat(3,minmax(0,1fr))}#modal.v410-page .v410-panel .form-grid{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -16294,6 +16301,11 @@ v180LeaveRender=function(){
  const btn=document.getElementById('v180LeaveReportBtn');if(btn)btn.style.display=on?'none':'';
  const body=document.getElementById('v180LeaveBody');if(on&&body)body.innerHTML=v410Panel();
 };
+/* v410b: نافذة «الإجازات وتجديدها» صفحة كاملة على الكمبيوتر والهاتف */
+const v410BaseModal=modal;
+modal=function(h){document.getElementById('modal')?.classList.remove('v410-page');return v410BaseModal(h)};
+const v410BaseCenter=openLongLeaveCenter;
+openLongLeaveCenter=async function(){const r=await v410BaseCenter.apply(this,arguments);const m=document.getElementById('modal');if(m&&document.getElementById('v180LeaveTabs')){m.classList.add('v410-page');m.querySelector('.modal-card')?.scrollTo?.(0,0)}return r};
 /* v410-end */
 </script>
 
