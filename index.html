@@ -1,4 +1,5 @@
 <!doctype html>
+<!-- v417: «الإجازات» على الهاتف (بطلب المستخدم 2026-11-19): أزرار الصفحة داخل شبكة التبويبات بجوار «إجازات المعلم» (نسخ .v417-act، والأصل .v417-orig مخفي ≤760px). -->
 <!-- v416: «الإجازات» (بطلب المستخدم 2026-11-19 «الجزء العلوي فوق الجدول كبير»): الفلاتر وأسهم الأسبوع في سطر واحد، والأرقام الثلاثة سطر نصي، وبطاقات التبويبات أقصر في صفحة الإجازات فقط. -->
 <!-- v415: «الإجازات» (بطلب المستخدم 2026-11-19، الحل 2 أسبوعي، أ): تبويب «الأسبوع» أول وافتراضي — تقويم السبت–الخميس من teacher_long_leaves لمعلمي المدرسة (أو الغائبين فقط عند «كل المدارس»). كتلة v415. -->
 <!-- v414: التقارير (بطلب المستخدم 2026-11-19): اسم ملف «حفظ PDF» كلمات عربية بحروف إنجليزية — reportPdfFileName عبر v414Translit (قاموس كلمات + تحويل حرفي). -->
@@ -8,7 +9,6 @@
 <!-- v409: «الإجازات الطويلة» (بطلب المستخدم): قائمة «نوع الإجازة» صارت بأنواع القانون (وضع، رعاية طفل، مرافقة زوج/زوجة، مرضية طويلة، إصابة عمل، رعاية أحد أفراد الأسرة، بدون مرتب، أخرى) مع ملاحظة نظامية تحت «نهاية الإجازة»، واقتراح تاريخ النهاية من البداية (وضع 4 أشهر، رعاية طفل عامان) دون الكتابة فوق ما يدخله المستخدم. واجهة فقط. -->
 <!-- v408: لوحة قرارات المرحلة وتقاريرها (بطلب المستخدم «احذفهما»): حُذف تفكيك «يُسد داخليًا/من الخارج/يغطيه المقترح/بلا تغطية» من «④ أعلى المدارس عجزًا» (صار اسم المدرسة والعجز بعد الأجر) ومن تقارير العجز واجتماع المرحلة (عمود «العجز بعد الأجر» بدلها) ومقاييس مقترح التغطية؛ وحُذف تقرير «عجز يُسد داخل المدارس»؛ يبقى تقرير «مقترح التغطية» بأسماء المعلمين المقترحين. لا تغيير في الحساب ولا قاعدة البيانات. -->
 <!-- v407: لوحة قرارات المرحلة (بطلب المستخدم «غير عملي»): حُذف من بطاقة «يحتاج قرارًا الآن» سطر «تقدير بعد المقترحات» والشريط الملوّن ومفتاحه وملاحظة «يُسد داخل المدارس» (البطاقة نفسها تُستعمل في كل شاشات المنسق والموجه والموجه الأول)؛ يبقى العنوان والعجز الفعلي. لا تغيير في أي حساب ولا في ④ ولا التقارير. -->
-<!-- v406: لوحة قرارات المرحلة (بطلب المستخدم «٣٠ رقم مضلل»): الرقم الكبير في «يحتاج قرارًا الآن» = العجز الفعلي الآن (t.net)، والتقدير بعد تنفيذ المقترحات (t.uncovered) سطر صغير تحته ويُسمّى تقديرًا؛ لا تغيير في أي حساب. -->
 <html lang="ar" dir="rtl">
 <head>
 <!-- إعداد: أ/ محمود عبدالمفدي محمد أبوالنجا | الصفة: معلم -->
@@ -16,7 +16,7 @@
 <script>/* v226: العنوان الموحد — انظر التعليق أعلى الملف */(function(){try{if(/\.github\.io$/.test(location.hostname)&&/^\/science-guidance\/?(index\.html)?$/.test(location.pathname)&&!/[?&]stay\b/.test(location.search))location.replace('https://teachers-data-portal.vercel.app/app/'+location.hash)}catch(e){}})();</script>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#152c43">
-<title>نظام توجيه العلوم — v416</title>
+<title>نظام توجيه العلوم — v417</title>
 <link rel="manifest" href="./manifest.webmanifest">
 <link rel="icon" type="image/png" sizes="192x192" href="./app-icon-192.png">
 <link rel="apple-touch-icon" href="./app-icon-192.png">
@@ -2352,6 +2352,8 @@ body.v401-open .toast{z-index:9700}
 #modal.v410-page .v249-leave-list{max-height:none;overflow:visible}
 @media(max-width:760px){#modal.v410-page>.modal-card{padding:0 12px 20px}#modal.v410-page .modal-head{margin:0 -12px 10px;padding:8px 12px}#modal.v410-page .v180-leave-tabs{grid-template-columns:repeat(3,minmax(0,1fr))}#modal.v410-page .v410-panel .form-grid{grid-template-columns:1fr}}
 /* v415: التقويم الأسبوعي للإجازات (v416: شريط مضغوط) */
+.v180-leave-tabs .v417-act{display:none}
+@media(max-width:760px){#modal.v410-page .v417-orig{display:none!important}#modal.v410-page .v180-leave-tabs .v417-act{display:flex;align-items:center;justify-content:center;min-height:0;height:100%;padding:6px 4px;font-size:13px;line-height:1.3;white-space:normal;text-align:center}}
 .v415-bar{background:#fff;border:1px solid #dfe5ee;border-radius:10px;padding:8px 10px}
 .v415-f{display:grid;grid-template-columns:1fr 1.4fr auto;gap:8px;align-items:end}
 .v415-f .field{margin:0}.v415-f .field label{font-size:12px;margin-bottom:2px}
@@ -2748,6 +2750,7 @@ window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();window.v152
 window.addEventListener('appinstalled',()=>{window.v152InstallPrompt=null;v152SyncInstallBtn()});
 if('serviceWorker' in navigator&&location.protocol!=='file:')window.addEventListener('load',()=>navigator.serviceWorker.register('./service-worker.js').catch(()=>{}));
 const V145_NEWS=[
+ ['v417','الإجازات على الهاتف: زرا «تسجيل إجازة» و«إغلاق» بجوار «إجازات المعلم».'],
  ['v416','الإجازات: شريط أعلى التقويم الأسبوعي أصغر (الفلاتر والأسبوع في سطر واحد) ليظهر الجدول مباشرة.'],
  ['v415','الإجازات: الصفحة تبدأ بالتقويم الأسبوعي (السبت–الخميس) لمعلمي المدرسة، وكل الإجازات في تبويبها.'],
  ['v414','التقارير: اسم ملف «حفظ PDF» صار بحروف إنجليزية (مثل Bayan_Egazat_Al_Moalem) ليفتح على كل الأجهزة.'],
@@ -16434,6 +16437,15 @@ v180LeaveRender=function(){
 };
 const v415BaseCenter=openLongLeaveCenter;
 openLongLeaveCenter=async function(){__v180LeaveTab='week';__v415.leaves=null;return v415BaseCenter.apply(this,arguments)};
+/* v417: على الهاتف أزرار الصفحة (تسجيل إجازة/طباعة/إغلاق) داخل شبكة التبويبات بجوار «إجازات المعلم» — نسخ بنفس الأوامر، والأصل يُخفى على الهاتف فقط */
+const v417BaseRender=v180LeaveRender;
+v180LeaveRender=function(){
+ v417BaseRender();
+ const tabs=document.getElementById('v180LeaveTabs'),btn=document.getElementById('v180LeaveReportBtn'),act=btn&&btn.closest('.actions');
+ if(!tabs||!act)return;act.classList.add('v417-orig');
+ tabs.querySelectorAll('.v417-act').forEach(x=>x.remove());
+ [...act.querySelectorAll('button')].filter(b=>b.style.display!=='none').forEach(b=>{const c=b.cloneNode(true);c.removeAttribute('id');c.classList.add('v417-act');tabs.appendChild(c)});
+};
 /* v415-end */
 </script>
 
