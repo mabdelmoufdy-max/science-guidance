@@ -6,7 +6,7 @@
 <meta name="robots" content="noindex,nofollow">
 <meta name="referrer" content="no-referrer">
 <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; connect-src https://xehjwzszhsaqdqmcatum.supabase.co; img-src data: 'self'; manifest-src 'self'; worker-src 'self'; base-uri 'none'; form-action 'none'">
-<title>بوابة المعلمين — v424</title>
+<title>بوابة المعلمين — v427</title>
 <link rel="manifest" href="/portal.webmanifest">
 <meta name="theme-color" content="#0f214d">
 <meta name="mobile-web-app-capable" content="yes">
@@ -203,7 +203,8 @@ body.is-login .wrap{max-width:none;padding:0}
 .kv .fill-in{flex:1;min-width:0;width:100%;max-width:260px;padding:8px 10px;font-size:15px}
 .kv .fill .v>span:not(.tag){flex:1;min-width:0;display:flex;justify-content:flex-end}
 .tag.lk{background:none;padding:0 2px;font-size:.8rem;opacity:.7}
-.fill-save{margin-top:12px}.ok-note{background:#ecfdf5;border-color:#a7f3d0;color:#065f46}
+.fill-save{margin-top:12px}
+.sf-list{display:flex;flex-direction:column;gap:10px;margin:10px 0}.sf-row{display:flex;flex-direction:column;gap:4px;font-weight:700}.sf-row>span{font-size:.9rem;color:var(--muted)}.sf-row input,.sf-row select{width:100%;box-sizing:border-box}.ok-note{background:#ecfdf5;border-color:#a7f3d0;color:#065f46}
 /* v392: صحيفة الأحوال الإلكترونية للمعلم */
 .stmt{margin-top:16px;border:1px solid var(--line,#d9e0ea);border-radius:12px;padding:14px;background:#fff}
 .stmt h3{margin:0 0 6px;font-size:1.02rem}
@@ -494,7 +495,7 @@ body.has-tabs{padding-bottom:76px}
   var NAV = { marker: false, cur: 0, seq: 0, skip: 0, at: 0 };
   function navIsRoot() {
     switch (S.view) {
-      case 'timetable': case 'supteacher': case 'supassign': case 'supleave': return false;
+      case 'timetable': case 'supteacher': case 'supassign': case 'supleave': case 'supfill': case 'supinfo': return false;
       case 'supschool': return !(S.sup && S.sup.schools && S.sup.schools.length > 1);
       default: return true;
     }
@@ -517,6 +518,8 @@ body.has-tabs{padding-bottom:76px}
       case 'timetable': if (S.ttBack) S.ttBack(); return;
       case 'supteacher': go('supschool'); return;
       case 'supleave': go('supteacher'); return;
+      case 'supfill': go('supteacher'); return;
+      case 'supinfo': go('supschool'); return;
       case 'supassign': if (S.sup && S.sup.school) openSchool(S.sup.school.id).catch(function () { go('supschool'); }); return;
       case 'supschool': if (S.sup && S.sup.schools && S.sup.schools.length > 1) go('supschools'); return;
     }
@@ -1832,7 +1835,7 @@ body.has-tabs{padding-bottom:76px}
       if (!res.length) { listEl.appendChild(h('div', { class: 'empty' }, sup.teachers.length ? 'لا يوجد معلم بهذا الاسم' : 'لا يوجد معلمون في هذه المدرسة بعد')); return; }
       res.forEach(function (t) {
         var tot = supTotal(t);
-        listEl.appendChild(h('button', { type: 'button', 'data-teacher': t.id, onclick: function () { sup.t = t; go('supteacher'); } },
+        listEl.appendChild(h('button', { type: 'button', 'data-teacher': t.id, onclick: function () { sup.t = t; S.supMsg = ''; go('supteacher'); } },
           h('span', null, t.full_name),
           t.is_home ? null : h('span', { class: 'tag c' }, 'منتدب'),
           t.leave ? h('span', { class: 'tag lv' }, '🟣 ' + lvText(t.leave)) : null, // v420
@@ -1852,7 +1855,7 @@ body.has-tabs{padding-bottom:76px}
       suptop(sch.name, sup.schools.length > 1 ? '‹ المدارس' : '‹ الرئيسية', sup.schools.length > 1 ? function () { go('supschools'); } : goHome),
       h('p', { class: 'sub', style: 'text-align:right' }, stageTitle(sch.stage_key) + ' · ' + sup.teachers.length + ' معلم'),
       h('div', { class: 'note' }, 'البوابة الآن لعرض البيانات والاستعلام، ويمكنك إدخال جدول المعلم من بطاقته، وإسناد الفصول للمعلمين وإلغاء إسنادها.'),
-      abtn, abox, h('div', { style: 'height:10px' }),
+      abtn, mkBtn('btn2', '🏫 بيانات المدرسة', function () { go('supinfo'); }, { id: 'sup-info-open', style: 'margin-top:8px' }), abox, h('div', { style: 'height:10px' }), // v427
       q, listEl);
   };
 
@@ -1878,6 +1881,7 @@ body.has-tabs{padding-bottom:76px}
       t.leave ? h('div', { class: 'note lv', id: 'leave-note' }, '🟣 ' + lvText(t.leave) + ' — لا تُسند له حصص أثناء الإجازة.') : null, // v420
       t.is_home ? null : h('div', { class: 'note', id: 'visitor-note' }, 'هذا المعلم منتدب إلى مدرستك؛ مدرسته الأصلية في مدرسة أخرى.'),
       cl.length ? h('div', { id: 'sup-tt-wrap', style: 'margin:8px 0 12px' }, mkBtn('btn', '📅 جدول المعلم', function (ev) { S.ttFrom = null; openTimetable(ev.currentTarget, true); }, { id: 'sup-tt-open' })) : null, // v339
+      S.supMsg ? h('div', { class: 'note ok-note', id: 'sup-msg' }, S.supMsg) : null, // v427
       supTeacherExtras(t), // v423
       h('div', { class: 'kv' }, rows));
   };
@@ -2187,7 +2191,7 @@ body.has-tabs{padding-bottom:76px}
     if (WHO && WHO.role === 'teacher') return { thome: 'thome', confirm: 'confirm', tleaves: 'tleaves', tstmt: 'tstmt', timetable: S.ttSup ? null : 'tt' }[v] || null;
     if (WHO && WHO.role === 'sup') {
       if (v === 'timetable') return S.ttSup ? (S.ttFrom === 'supttov' ? 'supttov' : 'supschool') : null;
-      return { supschool: 'supschool', supteacher: 'supschool', supleave: 'supschool', supassign: 'asg', supttov: 'supttov', supschools: 'supschools' }[v] || null;
+      return { supschool: 'supschool', supteacher: 'supschool', supleave: 'supschool', supfill: 'supschool', supinfo: 'supschool', supassign: 'asg', supttov: 'supttov', supschools: 'supschools' }[v] || null;
     }
     return null;
   }
@@ -2545,7 +2549,8 @@ body.has-tabs{padding-bottom:76px}
   function supTeacherExtras(t) {
     return h('div', { class: 'sup-x', id: 'sup-x' },
       t.work_type === 'permanent' && !t.leave ? mkBtn('btn2', '🗓 إجازات المعلم', function () { go('supleave'); }, { id: 'sup-leaves' }) : null,
-      t.is_home ? mkBtn('btn2', '🖨 طباعة بطاقة البيانات', function () { printCard(supCardData(t)); }, { id: 'sup-print' }) : null);
+      t.is_home ? mkBtn('btn2', '🖨 طباعة بطاقة البيانات', function () { printCard(supCardData(t)); }, { id: 'sup-print' }) : null,
+      t.is_home && supMissing(t).length ? mkBtn('btn2', '✏️ إكمال البيانات الناقصة (' + supMissing(t).length + ')', function () { S.supMsg = ''; go('supfill'); }, { id: 'sup-fill' }) : null); // v427
   }
   function supXRows(t, rows) {
     if (!t.is_home) return;
@@ -2553,6 +2558,102 @@ body.has-tabs{padding-bottom:76px}
     if (t.cadre_specialty) rows.push(kvRow('التخصص على الكادر', t.cadre_specialty));
     ['appointment_date', 'grade_acquired_date', 'work_start_date'].forEach(function (k) { if (t[k]) rows.push(kvRow(LBL[k], h('span', { class: 'ltr nw' }, fmtDate(t[k])))); });
   }
+
+  /* ===== v427: مشرف المدرسة — بيانات المدرسة + إكمال البيانات الناقصة لمعلمي مدرسته ===== */
+  var FKEYS = ['email', 'residence', 'qualification', 'qualification_year', 'specialty', 'appointment_date', 'grade_acquired_date', 'work_start_date', 'teacher_code'].concat(XKEYS);
+  var FDATES = { appointment_date: 1, grade_acquired_date: 1, work_start_date: 1, qualification_date: 1 };
+  function supMissing(t) {
+    return FKEYS.filter(function (k) {
+      if ((k === 'appointment_date' || k === 'grade_acquired_date') && t.work_type !== 'permanent') return false;
+      return t[k] == null || String(t[k]).trim() === '';
+    });
+  }
+  function specOpts() { var st = (S.sup && S.sup.school && (S.sup.school.stage || '')) + ''; return /ثانوي/.test(st) ? ['فيزياء', 'كيمياء', 'أحياء'] : ['علوم']; }
+  VIEWS.supfill = function () {
+    var t = S.sup.t, keys = supMissing(t), FI = {}, box = errbox();
+    var rows = keys.map(function (k) {
+      var el;
+      if (XOPTS[k] || k === 'specialty') el = h('select', null, h('option', { value: '' }, '— اختر —'), (k === 'specialty' ? specOpts() : XOPTS[k]).map(function (x) { return h('option', { value: x }, x); }));
+      else if (FDATES[k]) el = dateBox('sf-' + k);
+      else el = h('input', { type: k === 'email' ? 'email' : 'text', autocomplete: 'off', dir: (k === 'email' || k === 'teacher_code' || k === 'qualification_year') ? 'ltr' : null,
+        inputmode: (k === 'teacher_code' || k === 'qualification_year') ? 'numeric' : null, maxlength: k === 'qualification_year' ? '4' : k === 'teacher_code' ? '8' : '150' });
+      el.id = 'sf-' + k; FI[k] = el;
+      return h('label', { class: 'sf-row' }, h('span', null, LBL[k]), el);
+    });
+    var btn = keys.length ? mkBtn('btn-ok', '💾 حفظ', async function () {
+      hideErr(box); var f = {}, n = 0, bad = '';
+      keys.forEach(function (k) {
+        var v = clean(FI[k].value); if (!v) return;
+        if (FDATES[k]) { var iso = dateIso(v); if (!iso) { if (!bad) bad = LBL[k]; return; } f[k] = iso; }
+        else f[k] = (k === 'teacher_code' || k === 'qualification_year') ? digits(v) : v;
+        n++;
+      });
+      if (bad) { showErr(box, 'تاريخ غير صحيح في «' + bad + '». اكتبه يوم/شهر/سنة مثل 01/09/2010 (ولا يكون بعد اليوم).'); return; }
+      if (!n) { showErr(box, 'اكتب بيانًا واحدًا على الأقل ثم اضغط «حفظ».'); return; }
+      btnBusy(btn, true, 'جارٍ الحفظ...');
+      try {
+        var a = S.sup.auth, r = await rpc('teacher_portal_sup_fill_missing', { p_civil: a.civil, p_phone: a.phone, p_teacher_id: t.id, p_fields: f });
+        if (!r || r.ok !== true) {
+          btnBusy(btn, false);
+          showErr(box, r && r.reason === 'closed' ? 'إكمال البيانات متوقف حاليًا.' : r && r.reason === 'no_change' ? 'لا توجد بيانات جديدة للحفظ (ربما سُجّلت من قبل).'
+            : r && r.reason === 'code_taken' ? 'كود المعلم مسجّل لمعلم آخر.' : r && r.reason === 'invalid' && r.field ? 'قيمة غير صحيحة في «' + (LBL[r.field] || r.field) + '».'
+            : r && r.reason === 'forbidden' ? 'هذا المعلم ليس من معلمي مدرستك الأصليين.' : reasonMsg(r || {}));
+          return;
+        }
+        (r.saved || []).forEach(function (k) { t[k] = f[k]; });
+        S.supMsg = '✓ تم حفظ ' + plural((r.saved || []).length, 'بيان واحد', 'بيانين', 'بيانات') + ' لـ ' + t.full_name + '.';
+        go('supteacher');
+      } catch (e) { btnBusy(btn, false); showErr(box, errMsg(e)); }
+    }, { id: 'sf-save' }) : null;
+    return h('div', { class: 'card', id: 'supfill' },
+      suptop('إكمال بيانات المعلم', '‹ بيانات المعلم', function () { go('supteacher'); }),
+      h('h2', null, t.full_name),
+      keys.length ? h('div', { class: 'note' }, 'تظهر هنا البيانات غير المسجّلة فقط. ما تكتبه يُحفظ مباشرة ولا يمكن تعديله من هنا بعد الحفظ؛ لتصحيح بيان مسجّل تواصل مع الموجه.')
+        : h('div', { class: 'note ok-note' }, '✓ كل بيانات هذا المعلم مسجّلة.'),
+      h('div', { class: 'sf-list' }, rows), box, btn);
+  };
+  VIEWS.supinfo = function () {
+    var box = errbox(), body = h('div', { id: 'si-body' }, h('div', { class: 'empty' }, 'جارٍ التحميل...'));
+    var card = h('div', { class: 'card', id: 'supinfo' }, suptop('بيانات المدرسة', '‹ المعلمون', function () { go('supschool'); }), box, body);
+    var a = S.sup.auth;
+    rpc('teacher_portal_sup_school_details', { p_civil: a.civil, p_phone: a.phone }).then(function (r) {
+      if (!r || r.ok !== true) { body.replaceChildren(); showErr(box, reasonMsg(r || {})); return; }
+      var sc = r.school, open = r.open !== false;
+      var g = h('select', { id: 'si-gender' }, h('option', { value: '' }, '— اختر —'), ['بنين', 'بنات', 'مشترك'].map(function (x) { var o = h('option', { value: x }, x); if (sc.gender_type === x) o.selected = true; return o; }));
+      function inp(id, v, ltr, max) { var e = h('input', { type: ltr ? 'tel' : 'text', id: id, autocomplete: 'off', dir: ltr ? 'ltr' : null, inputmode: ltr ? 'numeric' : null, maxlength: max || '200' }); e.value = v || ''; return e; }
+      var ph = inp('si-phone', sc.phone, true, '20'), ad = inp('si-address', sc.address), mn = inp('si-mname', sc.manager_name, false, '150'), mp = inp('si-mphone', sc.manager_phone, true, '20');
+      [g, ph, ad, mn, mp].forEach(function (e) { e.disabled = !open; });
+      var msg = h('div', { id: 'si-msg' });
+      var btn = open ? mkBtn('btn-ok', '💾 حفظ بيانات المدرسة', async function () {
+        hideErr(box); msg.replaceChildren();
+        var f = { gender_type: g.value, phone: digits(ph.value), address: clean(ad.value), manager_name: clean(mn.value), manager_phone: digits(mp.value) };
+        btnBusy(btn, true, 'جارٍ الحفظ...');
+        try {
+          var x = await rpc('teacher_portal_sup_school_update', { p_civil: a.civil, p_phone: a.phone, p_fields: f });
+          btnBusy(btn, false);
+          if (!x || x.ok !== true) {
+            var L = { gender_type: 'بنين/بنات', phone: 'هاتف المدرسة', address: 'العنوان', manager_name: 'اسم المدير', manager_phone: 'هاتف المدير' };
+            showErr(box, x && x.reason === 'no_change' ? 'لم تغيّر شيئًا.' : x && x.reason === 'closed' ? 'تعديل بيانات المدرسة متوقف حاليًا.'
+              : x && x.reason === 'invalid' && x.field ? 'قيمة غير صحيحة في «' + (L[x.field] || x.field) + '».' : reasonMsg(x || {}));
+            return;
+          }
+          msg.appendChild(h('div', { class: 'note ok-note' }, '✓ تم حفظ ' + plural((x.saved || []).length, 'بيان واحد', 'بيانين', 'بيانات') + '.'));
+        } catch (e) { btnBusy(btn, false); showErr(box, errMsg(e)); }
+      }, { id: 'si-save' }) : null;
+      body.replaceChildren(
+        h('div', { class: 'kv' }, kvRow('اسم المدرسة', sc.name), kvRow('المرحلة', sc.stage), sc.school_type ? kvRow('نوع المدرسة', sc.school_type) : null),
+        open ? h('div', { class: 'note' }, 'الاسم والمرحلة والنوع والموجه تُعدَّل من البرنامج الرئيسي فقط.') : h('div', { class: 'warn' }, 'تعديل بيانات المدرسة متوقف حاليًا؛ العرض فقط.'),
+        h('div', { class: 'sf-list' },
+          h('label', { class: 'sf-row' }, h('span', null, 'بنين / بنات'), g),
+          h('label', { class: 'sf-row' }, h('span', null, 'هاتف المدرسة'), ph),
+          h('label', { class: 'sf-row' }, h('span', null, 'العنوان'), ad),
+          h('label', { class: 'sf-row' }, h('span', null, 'اسم مدير المدرسة'), mn),
+          h('label', { class: 'sf-row' }, h('span', null, 'هاتف المدير'), mp)),
+        msg, btn);
+    }).catch(function (e) { body.replaceChildren(); showErr(box, e && e.http === 404 ? 'هذه الخاصية ستُفعَّل قريبًا.' : errMsg(e)); });
+    return card;
+  };
+  /* ===== v427-end ===== */
   /* ===== v423-end ===== */
 
   async function boot() {
