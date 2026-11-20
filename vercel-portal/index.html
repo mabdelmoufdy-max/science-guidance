@@ -6,7 +6,7 @@
 <meta name="robots" content="noindex,nofollow">
 <meta name="referrer" content="no-referrer">
 <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; connect-src https://xehjwzszhsaqdqmcatum.supabase.co; img-src data: 'self'; manifest-src 'self'; worker-src 'self'; base-uri 'none'; form-action 'none'">
-<title>بوابة المعلمين — v397</title>
+<title>بوابة المعلمين — v420</title>
 <link rel="manifest" href="/portal.webmanifest">
 <meta name="theme-color" content="#0f214d">
 <meta name="mobile-web-app-capable" content="yes">
@@ -74,6 +74,8 @@ input[readonly]{background:#f1f5f9;color:var(--muted)}
 .tag{display:inline-block;font-size:.72rem;font-weight:700;border-radius:999px;padding:1px 8px;margin-inline-start:6px;vertical-align:middle}
 .tag.m{background:#fde68a;color:#92400e}
 .tag.c{background:#dbeafe;color:#1e40af}
+.tag.lv{background:#f3e8ff;color:#6b21a8;border:1px solid #c084fc}
+.note.lv{background:#faf5ff;border-color:#c084fc;color:#6b21a8}
 .old{display:block;color:var(--muted);font-weight:400;font-size:.8rem;text-decoration:line-through}
 .chips{display:flex;flex-wrap:wrap;gap:8px;margin:6px 0 14px}
 .chip{background:#fff;border:2px solid var(--border);color:var(--text);padding:8px 14px;min-height:44px;font-size:.95rem;border-radius:999px}
@@ -287,6 +289,7 @@ body.is-login .wrap{max-width:none;padding:0}
     var n = new Date(), today = n.getFullYear() + '-' + ('0' + (n.getMonth() + 1)).slice(-2) + '-' + ('0' + n.getDate()).slice(-2), iso = m[3] + '-' + m[2] + '-' + m[1];
     return (y < 1970 || iso > today) ? null : iso;
   }
+  function lvText(l) { var ty = String((l && l.type) || '').trim(); return (/^[اإأ]جاز/.test(ty) ? ty : 'في إجازة' + (ty ? ' ' + ty : '')) + (l && l.to ? ' حتى ' + fmtDate(l.to) : ''); } // v420
   function fmtDate(iso) { var m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(iso || ''); return m ? m[3] + '/' + m[2] + '/' + m[1] : (iso || ''); }
   function stageTitle(k) { for (var i = 0; i < STAGES.length; i++) if (STAGES[i].k === k) return STAGES[i].t; return ''; }
   function plural(n, one, two, many) { return n === 1 ? one : n === 2 ? two : n + ' ' + many; }
@@ -1732,9 +1735,10 @@ body.is-login .wrap{max-width:none;padding:0}
         listEl.appendChild(h('button', { type: 'button', 'data-teacher': t.id, onclick: function () { sup.t = t; go('supteacher'); } },
           h('span', null, t.full_name),
           t.is_home ? null : h('span', { class: 'tag c' }, 'منتدب'),
+          t.leave ? h('span', { class: 'tag lv' }, '🟣 ' + lvText(t.leave)) : null, // v420
           t.pending ? h('span', { class: 'tag m' }, 'طلبك قيد المراجعة') : null,
           t.teacher_pending ? h('span', { class: 'tag c' }, 'طلب من المعلم') : null,
-          h('small', { style: 'display:block;color:var(--muted);font-weight:400' }, tot ? plural(t.classes.length, 'فصل واحد', 'فصلان', 'فصول') + ' · ' + perLabel(tot) + ' أسبوعيًا' : 'بدون فصول مسندة')));
+          h('small', { style: 'display:block;color:var(--muted);font-weight:400' }, tot ? plural(t.classes.length, 'فصل واحد', 'فصلان', 'فصول') + ' · ' + perLabel(tot) + ' أسبوعيًا' : t.leave ? 'في إجازة — لا تُسند له حصص' : 'بدون فصول مسندة')));
       });
     }
     q.addEventListener('input', function () { sup.q = q.value; draw(); });
@@ -1770,6 +1774,7 @@ body.is-login .wrap{max-width:none;padding:0}
     if (cl.length) rows.push(kvRow('إجمالي الحصص', h('span', { id: 'v-total' }, String(supTotal(t)))));
     return h('div', { class: 'card' },
       suptop('بيانات المعلم', '‹ المعلمون', function () { go('supschool'); }),
+      t.leave ? h('div', { class: 'note lv', id: 'leave-note' }, '🟣 ' + lvText(t.leave) + ' — لا تُسند له حصص أثناء الإجازة.') : null, // v420
       t.is_home ? null : h('div', { class: 'note', id: 'visitor-note' }, 'هذا المعلم منتدب إلى مدرستك؛ مدرسته الأصلية في مدرسة أخرى.'),
       cl.length ? h('div', { id: 'sup-tt-wrap', style: 'margin:8px 0 12px' }, mkBtn('btn', '📅 جدول المعلم', function (ev) { openTimetable(ev.currentTarget, true); }, { id: 'sup-tt-open' })) : null, // v339
       h('div', { class: 'kv' }, rows));
