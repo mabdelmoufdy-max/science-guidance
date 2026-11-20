@@ -6,7 +6,7 @@
 <meta name="robots" content="noindex,nofollow">
 <meta name="referrer" content="no-referrer">
 <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; connect-src https://xehjwzszhsaqdqmcatum.supabase.co; img-src data: 'self'; manifest-src 'self'; worker-src 'self'; base-uri 'none'; form-action 'none'">
-<title>بوابة المعلمين — v423</title>
+<title>بوابة المعلمين — v424</title>
 <link rel="manifest" href="/portal.webmanifest">
 <meta name="theme-color" content="#0f214d">
 <meta name="mobile-web-app-capable" content="yes">
@@ -2159,6 +2159,11 @@ body.has-tabs{padding-bottom:76px}
     for (; d <= e && n < 400; d.setUTCDate(d.getUTCDate() + 1)) if (d.getUTCDay() !== 5) n++;
     return n;
   }
+  function offDays(a, b, SD) { /* v424 */
+    var out = [], d = new Date(a + 'T00:00:00Z'), e = new Date(b + 'T00:00:00Z');
+    for (var n = 0; d <= e && n < 120; d.setUTCDate(d.getUTCDate() + 1), n++) { var w = d.getUTCDay(); if (w !== 5 && SD.indexOf(w) < 0 && out.indexOf(TT_NAMES[w]) < 0) out.push(TT_NAMES[w]); }
+    return out;
+  }
   function todayIso() { var n = new Date(); return n.getFullYear() + '-' + ('0' + (n.getMonth() + 1)).slice(-2) + '-' + ('0' + n.getDate()).slice(-2); }
 
   /* ---------- شريط التبويبات ---------- */
@@ -2445,6 +2450,10 @@ body.has-tabs{padding-bottom:76px}
       var out = [];
       if (!d.applies) out.push(h('div', { class: 'note' }, 'الإجازات القصيرة (عارضة واعتيادي) للمعلم الأساسي فقط.'));
       if (d.long) out.push(h('div', { class: 'note lv', id: 'lv-long' }, '🟣 ' + lvText({ type: d.long.type, to: d.long.to }) + ' — لا تُسجَّل إجازة قصيرة خلالها.'));
+      var SD = d.delegated ? (d.school_days || []) : null; /* v424: المنتدب — أيامه في مدرستك من جدوله */
+      if (SD) out.push(SD.length ? h('div', { class: 'note', id: 'lv-days-at' }, 'المعلم منتدب إلى مدرستك. أيامه فيها حسب جدوله: ' + [6, 0, 1, 2, 3, 4].filter(function (w) { return SD.indexOf(w) >= 0; }).map(function (w) { return TT_NAMES[w]; }).join('، ') + '. تُسجَّل الإجازة في هذه الأيام فقط.')
+        : h('div', { class: 'warn', id: 'lv-days-at' }, 'المعلم منتدب إلى مدرستك ولم يُدخل جدوله فيها بعد، فلا يمكن تسجيل إجازة له من هنا. أدخل جدوله أولًا.'));
+      S.lvSD = SD;
       if (d.applies) {
         var c = d.casual, a = d.annual;
         out.push(h('div', { class: 'lv-cards' },
@@ -2452,7 +2461,7 @@ body.has-tabs{padding-bottom:76px}
           h('div', { class: 'lv-c' + (a.over ? ' over' : ''), id: 'lv-annual' }, h('small', null, 'الاعتيادي (من 1/9)'), h('b', null, a.used + ' / ' + a.limit), h('span', null, a.over ? 'تجاوز الرصيد' : 'متبقٍ ' + a.remaining))));
         if (a.grade_missing) out.push(h('div', { class: 'warn', id: 'lv-grade' }, 'الدرجة الوظيفية غير مسجّلة، فحُسب رصيد الاعتيادي 35 يومًا. لتصحيحها تواصل مع موجهك.'));
         if (d.open === false) out.push(h('div', { class: 'warn' }, 'تسجيل الإجازات متوقف حاليًا.'));
-        else out.push(addForm());
+        else if (!SD || SD.length) out.push(addForm());
       }
       var L = d.short || [];
       out.push(h('h3', { class: 'ov-h' }, 'الإجازات القصيرة المسجّلة'));
@@ -2466,7 +2475,7 @@ body.has-tabs{padding-bottom:76px}
             catch (e) { showErr(box, lvMsg(e)); btnBusy(b, false); }
           }, { 'data-cancel': x.id }) : null);
       })) : h('div', { class: 'empty' }, 'لا توجد إجازات قصيرة مسجّلة.'));
-      out.push(longPart(d));
+      if (!d.delegated) out.push(longPart(d)); else out.push(h('div', { class: 'tt-hint' }, 'طلب الإجازة الطويلة يقدّمه المعلم أو مشرف مدرسته الأصلية.'));
       body.replaceChildren.apply(body, out);
     }
     function addForm() {
@@ -2479,6 +2488,7 @@ body.has-tabs{padding-bottom:76px}
         if (!a) { showErr(fb, 'اكتب تاريخ البداية يوم/شهر/سنة مثل 29/11/2026.'); return; }
         if (!b || b < a) { showErr(fb, 'تاريخ النهاية غير صحيح أو قبل البداية.'); return; }
         if (!workdays(a, b)) { showErr(fb, 'الفترة لا تحتوي يوم عمل (الجمعة لا تُحتسب).'); return; }
+        if (S.lvSD) { var bad = offDays(a, b, S.lvSD); if (bad.length) { showErr(fb, 'المعلم ليس له حصص في مدرستك يوم: ' + bad.join('، ') + ' (حسب جدوله).'); return; } }
         btnBusy(btn, true, 'جارٍ التسجيل...');
         try {
           var r = await rpc('teacher_portal_short_leave_add', Object.assign(lvAuth(tid), { p_type: typ.value, p_from: a, p_to: b, p_notes: clean(nt.value) || null }));
@@ -2534,7 +2544,7 @@ body.has-tabs{padding-bottom:76px}
   VIEWS.supleave = function () { return leavesView(S.sup.t.id); };
   function supTeacherExtras(t) {
     return h('div', { class: 'sup-x', id: 'sup-x' },
-      t.is_home && t.work_type === 'permanent' && !t.leave ? mkBtn('btn2', '🗓 إجازات المعلم', function () { go('supleave'); }, { id: 'sup-leaves' }) : null,
+      t.work_type === 'permanent' && !t.leave ? mkBtn('btn2', '🗓 إجازات المعلم', function () { go('supleave'); }, { id: 'sup-leaves' }) : null,
       t.is_home ? mkBtn('btn2', '🖨 طباعة بطاقة البيانات', function () { printCard(supCardData(t)); }, { id: 'sup-print' }) : null);
   }
   function supXRows(t, rows) {
