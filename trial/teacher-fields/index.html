@@ -16528,45 +16528,41 @@ async function v418Print(){
 }
 /* v415-end */
 
-/* v421-begin: «تعديل بيانات المعلم» — حقول بيان الحالة الإلكتروني مدمجة في أقسام «تعديل بيانات المعلم» نفسها (الميلاد والنوع والديانة والجنسية والحالة الاجتماعية وبيانات الدرجة والمؤهل). يحفظ مع «حفظ كل التعديلات» ولا يمس الهاتف ولا الإشراف. */
+/* v421-begin: «تعديل بيانات المعلم» — قسم ⑤ «بيانات الصحيفة» (الحقول الإضافية من بيان الحالة الإلكتروني: الميلاد والنوع والديانة والجنسية والحالة الاجتماعية وبيانات الدرجة والمؤهل). يحفظ مع «حفظ كل التعديلات» ولا يمس الهاتف ولا الإشراف. */
 const V421_FIELDS=[
- ['birth_date','تاريخ الميلاد','date','basic'],['birth_governorate','محافظة الميلاد','text','basic'],['gender','النوع','sel:ذكر,أنثى','basic'],
- ['religion','الديانة','text','basic'],['nationality','الجنسية','text','basic'],['marital_status','الحالة الاجتماعية','text','basic'],
- ['qualification_type','نوع المؤهل','text','qual'],['qualification_issuer','جهة الحصول على المؤهل','text','qual'],['qualification_grade','تقدير المؤهل','text','qual'],['qualification_date','تاريخ الحصول على المؤهل','date','qual'],
- ['employment_status','الموقف من العمل','text','job'],['contract_group','المجموعة النوعية','text','job'],
- ['notional_date','التاريخ الاعتباري','date','job'],['decision_number','رقم قرار الدرجة','text','job'],['decision_date','تاريخ قرار الدرجة','date','job'],['decision_effective_from','اعتبارًا من','date','job'],
- ['subject_taught','مادة التدريس','text','job']
+ ['birth_date','تاريخ الميلاد','date'],['birth_governorate','محافظة الميلاد','text'],['gender','النوع','sel:ذكر,أنثى'],
+ ['religion','الديانة','text'],['nationality','الجنسية','text'],['marital_status','الحالة الاجتماعية','text'],
+ ['employment_status','الموقف من العمل','text'],['contract_group','المجموعة النوعية','text'],
+ ['notional_date','التاريخ الاعتباري','date'],['decision_number','رقم قرار الدرجة','text'],['decision_date','تاريخ قرار الدرجة','date'],['decision_effective_from','اعتبارًا من','date'],
+ ['subject_taught','مادة التدريس','text'],
+ ['qualification_type','نوع المؤهل','text'],['qualification_issuer','جهة الحصول على المؤهل','text'],['qualification_grade','تقدير المؤهل','text'],['qualification_date','تاريخ الحصول على المؤهل','date']
 ];
 const V421_ROLES=['admin','stage_coordinator','supervisor','senior_teacher'];
 const __v421BaseEditTeacherForm=editTeacherForm;
 editTeacherForm=async function(id){
  await __v421BaseEditTeacherForm(id);
  if(!V421_ROLES.includes(profile?.role))return;
- const form=document.querySelector('#modal form');if(!form||form.querySelector('.v421-f'))return;
+ const form=document.querySelector('#modal form');if(!form||form.querySelector('.v421-sec'))return;
  let row=null;
  try{const r=await sb.from('teacher_records').select(V421_FIELDS.map(f=>f[0]).join(',')).eq('id',id).maybeSingle();row=r.data}catch(_){}
  if(!row||!document.body.contains(form))return;
- const grid=k=>form.querySelector(`.v344-sec[data-sec="${k}"] .form-grid`)||form.querySelector('.form-grid');
- const mk=([k,l,t])=>{
+ const sec=document.createElement('section');sec.className='card v344-sec v421-sec';sec.dataset.sec='statement';
+ const cells=V421_FIELDS.map(([k,l,t])=>{
   const v=row[k]??'';
   const inp=t.startsWith('sel:')?`<select name="sf_${k}"><option value=""></option>${t.slice(4).split(',').map(o=>`<option ${o===v?'selected':''}>${esc(o)}</option>`).join('')}</select>`
    :`<input name="sf_${k}" ${t==='date'?'type="date"':''} value="${esc(String(v))}" maxlength="160">`;
-  const d=document.createElement('div');d.className='field v421-f';d.innerHTML=`<label>${l}</label>${inp}`;return d};
- const qy=form.elements.namedItem('qualification_year');const qf=qy&&qy.closest?qy.closest('.field'):null;
- let last=qf;
- for(const f of V421_FIELDS){
-  const el=mk(f);
-  if(f[3]==='qual'&&qf&&qf.parentElement){last.insertAdjacentElement('afterend',el);last=el}
-  else (grid(f[3]==='qual'?'basic':f[3])).appendChild(el);
- }
+  return `<div class="field"><label>${l}</label>${inp}</div>`}).join('');
+ sec.innerHTML=`<div class="v344-sec-head"><h3>⑤ بيانات الصحيفة</h3><small class="muted">من «بيان الحالة الإلكتروني للسادة أعضاء هيئة التعليم». تُحفظ مع «حفظ كل التعديلات».</small></div><div class="form-grid">${cells}</div>`;
+ const acts=form.querySelector(':scope>.actions');
+ if(acts)form.insertBefore(sec,acts);else form.appendChild(sec);
  try{form.__v344Snap=v344Vals(form)}catch(_){}
 };
 const __v421BaseSaveTeacherEdit=saveTeacherEdit;
 saveTeacherEdit=async function(e,id,...rest){
  const form=e?.target;
- if(V421_ROLES.includes(profile?.role)&&form?.querySelector('.v421-f')){
+ if(V421_ROLES.includes(profile?.role)&&form?.querySelector('.v421-sec')){
   const upd={};
-  for(const [k] of V421_FIELDS){const el=form.elements.namedItem('sf_'+k);if(!el)continue;const v=String(el.value||'').trim();upd[k]=v||null}
+  for(const [k,,t] of V421_FIELDS){const el=form.elements.namedItem('sf_'+k);if(!el)continue;const v=String(el.value||'').trim();upd[k]=v||null}
   try{
    const {data,error}=await sb.from('teacher_records').update(upd).eq('id',id).select('id');
    if(error)toast('لم تُحفظ بيانات الصحيفة: '+(typeof v332ErrText==='function'?v332ErrText(error):(error.message||'')),true);
