@@ -6,7 +6,7 @@
 <meta name="robots" content="noindex,nofollow">
 <meta name="referrer" content="no-referrer">
 <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; connect-src https://xehjwzszhsaqdqmcatum.supabase.co; img-src data: 'self'; manifest-src 'self'; worker-src 'self'; base-uri 'none'; form-action 'none'">
-<title>بوابة المعلمين — v429</title>
+<title>بوابة المعلمين — v430</title>
 <link rel="manifest" href="/portal.webmanifest">
 <meta name="theme-color" content="#0f214d">
 <meta name="mobile-web-app-capable" content="yes">
@@ -332,6 +332,7 @@ body.has-tabs{padding-bottom:76px}
 .pr-foot{margin-top:16px;font-size:11px;text-align:left;direction:ltr}
 .pr-tt{font-size:11px}
 .pr-tt th,.pr-tt td{border:1px solid #000;padding:4px;height:34px}
+input.dpick{cursor:pointer;background-image:linear-gradient(transparent,transparent)}input.dpick::placeholder{color:#94a3b8}
 </style>
 </head>
 <body>
@@ -397,6 +398,31 @@ body.has-tabs{padding-bottom:76px}
     if (seg[1] || (i >= 1 && /[^0-9]$/.test(t))) o += '/' + seg[1];
     if (seg[2] || (i >= 2 && /[^0-9]$/.test(t))) o += '/' + seg[2];
     return o;
+  }
+  /* v430: خانة التاريخ تفتح التقويم بالضغط بدل الكتابة (القيمة تبقى يوم/شهر/سنة)؛ إن لم يدعم المتصفح التقويم تبقى الكتابة بالقناع */
+  function datePick(el) {
+    var t = document.createElement('input'); t.type = 'date';
+    if (t.type !== 'date' || typeof t.showPicker !== 'function') return el;
+    el.readOnly = true; el.setAttribute('inputmode', 'none'); el.classList.add('dpick'); if (el.placeholder === 'يوم/شهر/سنة') el.placeholder = '📅 اضغط لاختيار التاريخ';
+    function open() {
+      if (el.readOnly === false) return;
+      var r = el.getBoundingClientRect(), nat = document.createElement('input'), m = /^(\d{2})\/(\d{2})\/(\d{4})$/.exec(el.value || '');
+      nat.type = 'date'; nat.tabIndex = -1;
+      nat.style.cssText = 'position:fixed;opacity:0;pointer-events:none;border:0;padding:0;left:' + r.left + 'px;top:' + r.top + 'px;width:' + r.width + 'px;height:' + r.height + 'px';
+      if (m) nat.value = m[3] + '-' + m[2] + '-' + m[1];
+      document.body.appendChild(nat);
+      var done = function () { setTimeout(function () { if (nat.parentNode) nat.parentNode.removeChild(nat); }, 0); };
+      nat.addEventListener('change', function () {
+        var v = /^(\d{4})-(\d{2})-(\d{2})$/.exec(nat.value || '');
+        el.value = v ? v[3] + '/' + v[2] + '/' + v[1] : '';
+        el.dispatchEvent(new Event('input', { bubbles: true })); el.dispatchEvent(new Event('change', { bubbles: true })); done();
+      });
+      nat.addEventListener('blur', done);
+      try { nat.showPicker(); } catch (e) { done(); el.readOnly = false; el.setAttribute('inputmode', 'numeric'); el.classList.remove('dpick'); el.placeholder = 'يوم/شهر/سنة'; el.focus(); }
+    }
+    el.addEventListener('click', open);
+    el.addEventListener('keydown', function (e) { if (el.readOnly && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); open(); } });
+    return el;
   }
   function dateIso(v) {
     var m = /^(\d{2})\/(\d{2})\/(\d{4})$/.exec(v || ''); if (!m) return null;
@@ -1085,7 +1111,7 @@ body.has-tabs{padding-bottom:76px}
     function dateIn(k) {
       var el = fin(k, h('input', { type: 'text', inputmode: 'numeric', dir: 'ltr', maxlength: '10', autocomplete: 'off', placeholder: 'يوم/شهر/سنة', 'data-date': '1' }));
       el.addEventListener('input', function () { var o = maskDate(el.value); if (o !== el.value) el.value = o; });
-      return el;
+      return datePick(el);
     }
     function fillRow(label, k, value, el) {
       if (value) return kvRow(label, value, false, lk());
@@ -2170,7 +2196,7 @@ body.has-tabs{padding-bottom:76px}
     if (t.getUTCFullYear() !== y || t.getUTCMonth() !== mo - 1 || t.getUTCDate() !== d || y < 2020 || y > 2100) return null;
     return y + '-' + ('0' + mo).slice(-2) + '-' + ('0' + d).slice(-2);
   }
-  function dateMask(el) { el.addEventListener('input', function () { var o = maskDate(el.value); if (o !== el.value) el.value = o; }); return el; }
+  function dateMask(el) { el.addEventListener('input', function () { var o = maskDate(el.value); if (o !== el.value) el.value = o; }); return datePick(el); }
   function dateBox(id, ph) { return dateMask(h('input', { type: 'text', inputmode: 'numeric', dir: 'ltr', maxlength: '10', autocomplete: 'off', placeholder: ph || 'يوم/شهر/سنة', id: id })); }
   function workdays(a, b) { /* أيام العمل بلا الجمعة — نفس قاعدة الخادم v421 */
     var n = 0, d = new Date(a + 'T00:00:00Z'), e = new Date(b + 'T00:00:00Z');
