@@ -6,7 +6,7 @@
 <meta name="robots" content="noindex,nofollow">
 <meta name="referrer" content="no-referrer">
 <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; connect-src https://xehjwzszhsaqdqmcatum.supabase.co; img-src data: 'self'; manifest-src 'self'; worker-src 'self'; base-uri 'none'; form-action 'none'">
-<title>بوابة المعلمين — v428</title>
+<title>بوابة المعلمين — v429</title>
 <link rel="manifest" href="/portal.webmanifest">
 <meta name="theme-color" content="#0f214d">
 <meta name="mobile-web-app-capable" content="yes">
@@ -382,6 +382,22 @@ body.has-tabs{padding-bottom:76px}
     return toLatin(s).replace(DIAC, '').replace(/[أإآٱ]/g, 'ا').replace(/ى/g, 'ي').replace(/ة/g, 'ه').replace(/\s+/g, ' ').trim().toLowerCase();
   }
   /* v388: كتابة التاريخ يوم/شهر/سنة (حقل التاريخ الأصلي يعرض شهر/يوم/سنة على الأجهزة الإنجليزية ويُقصّ على الهاتف) */
+  /* v429: قناع التاريخ يقبل اليوم/الشهر برقم واحد: «/» أو أي فاصل بعد رقم واحد يُكمل صفرًا، والشهر ≥2 أو اليوم ≥4 كرقم أول يُكمل صفرًا تلقائيًا (كان 22/7/2023 يُكتب 22/72/023) */
+  function maskDate(v) {
+    var t = toLatin(v || ''), seg = ['', '', ''], i = 0, k, c;
+    for (k = 0; k < t.length && i < 3; k++) {
+      c = t[k];
+      if (c >= '0' && c <= '9') {
+        if (i < 2 && seg[i] === '' && c > (i === 0 ? '3' : '1')) { seg[i] = '0' + c; i++; continue; }
+        seg[i] += c;
+        if (seg[i].length === (i < 2 ? 2 : 4)) i++;
+      } else if (i < 2 && seg[i].length === 1) { seg[i] = '0' + seg[i]; i++; }
+    }
+    var o = seg[0];
+    if (seg[1] || (i >= 1 && /[^0-9]$/.test(t))) o += '/' + seg[1];
+    if (seg[2] || (i >= 2 && /[^0-9]$/.test(t))) o += '/' + seg[2];
+    return o;
+  }
   function dateIso(v) {
     var m = /^(\d{2})\/(\d{2})\/(\d{4})$/.exec(v || ''); if (!m) return null;
     var y = +m[3], mo = +m[2], d = +m[1], t = new Date(Date.UTC(y, mo - 1, d));
@@ -1068,7 +1084,7 @@ body.has-tabs{padding-bottom:76px}
     }
     function dateIn(k) {
       var el = fin(k, h('input', { type: 'text', inputmode: 'numeric', dir: 'ltr', maxlength: '10', autocomplete: 'off', placeholder: 'يوم/شهر/سنة', 'data-date': '1' }));
-      el.addEventListener('input', function () { var d = digits(el.value).slice(0, 8), o = d.slice(0, 2); if (d.length > 2) o += '/' + d.slice(2, 4); if (d.length > 4) o += '/' + d.slice(4); if (o !== el.value) el.value = o; });
+      el.addEventListener('input', function () { var o = maskDate(el.value); if (o !== el.value) el.value = o; });
       return el;
     }
     function fillRow(label, k, value, el) {
@@ -2154,7 +2170,7 @@ body.has-tabs{padding-bottom:76px}
     if (t.getUTCFullYear() !== y || t.getUTCMonth() !== mo - 1 || t.getUTCDate() !== d || y < 2020 || y > 2100) return null;
     return y + '-' + ('0' + mo).slice(-2) + '-' + ('0' + d).slice(-2);
   }
-  function dateMask(el) { el.addEventListener('input', function () { var d = digits(el.value).slice(0, 8), o = d.slice(0, 2); if (d.length > 2) o += '/' + d.slice(2, 4); if (d.length > 4) o += '/' + d.slice(4); if (o !== el.value) el.value = o; }); return el; }
+  function dateMask(el) { el.addEventListener('input', function () { var o = maskDate(el.value); if (o !== el.value) el.value = o; }); return el; }
   function dateBox(id, ph) { return dateMask(h('input', { type: 'text', inputmode: 'numeric', dir: 'ltr', maxlength: '10', autocomplete: 'off', placeholder: ph || 'يوم/شهر/سنة', id: id })); }
   function workdays(a, b) { /* أيام العمل بلا الجمعة — نفس قاعدة الخادم v421 */
     var n = 0, d = new Date(a + 'T00:00:00Z'), e = new Date(b + 'T00:00:00Z');
