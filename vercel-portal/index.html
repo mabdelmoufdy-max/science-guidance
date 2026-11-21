@@ -6,7 +6,7 @@
 <meta name="robots" content="noindex,nofollow">
 <meta name="referrer" content="no-referrer">
 <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; connect-src https://xehjwzszhsaqdqmcatum.supabase.co; img-src data: 'self'; manifest-src 'self'; worker-src 'self'; base-uri 'none'; form-action 'none'">
-<title>بوابة المعلمين — v432</title>
+<title>بوابة المعلمين — v433</title>
 <link rel="manifest" href="/portal.webmanifest">
 <meta name="theme-color" content="#0f214d">
 <meta name="mobile-web-app-capable" content="yes">
@@ -459,7 +459,37 @@ input.dpick{cursor:pointer;background-image:linear-gradient(transparent,transpar
     return e;
   }
 
+  /* ===== v433: مفاتيح البوابة (تُدار من مركز التحكم) ===== */
+  var FEAT_MAP = {
+    teacher_portal_fill_missing: ['fill', 'teacher'], teacher_portal_sup_fill_missing: ['fill', 'supervisor'], teacher_portal_paid_ws_set: ['paid_ws', 'teacher'],
+    teacher_portal_timetable_save: ['timetable', 'teacher'], teacher_portal_sup_timetable_save: ['timetable', 'supervisor'],
+    teacher_portal_short_leave_add: ['leaves_short', null], teacher_portal_short_leave_cancel: ['leaves_short', null], teacher_portal_long_leave_request: ['leaves_long', null],
+    teacher_portal_sup_assign: ['assign', 'supervisor'], teacher_portal_sup_unassign: ['assign', 'supervisor'],
+    teacher_portal_sup_add_class: ['classes', 'supervisor'], teacher_portal_sup_remove_class: ['classes', 'supervisor'],
+    teacher_portal_sup_school_update: ['school_edit', 'supervisor'], teacher_portal_submit: ['editing', 'teacher'], teacher_portal_sup_submit: ['editing', 'supervisor']
+  };
+  function featStage() { return stageTitle(S.stageKey) || (S.sup && S.sup.school ? stageTitle(S.sup.school.stage_key) : ''); }
+  /* null = مفتوح، وإلا رسالة الإغلاق (الأخص أولًا: مرحلة+دور ثم مرحلة أو دور ثم العام) */
+  function featMsg(feature, role) {
+    var st = featStage(), best = null, found = false;
+    (S.feat || []).forEach(function (r) {
+      if (r.feature !== feature || !(r.role === 'all' || r.role === role) || !(r.stage === 'all' || r.stage === st)) return;
+      found = true; var sc = (r.stage !== 'all' ? 2 : 0) + (r.role !== 'all' ? 1 : 0);
+      if (r.message && (!best || sc > best.sc)) best = { m: r.message, sc: sc };
+    });
+    return found ? (best ? best.m : 'هذه الخدمة مغلقة حاليًا.') : null;
+  }
+  async function featLoad() { try { var r = await rpcRaw('teacher_portal_features', {}); if (r && r.closed) S.feat = r.closed; } catch (e) { /* الخادم يمنع الكتابة على أي حال */ } }
   async function rpc(fn, args) {
+    var j = await rpcRaw(fn, args), m = FEAT_MAP[fn];
+    if (m && j && j.ok === false && j.reason === 'closed') {
+      await featLoad();
+      var fm = featMsg(m[0], m[1] || ((args && args.p_teacher_id) ? 'supervisor' : 'teacher'));
+      if (fm) { if (!j.note) j.note = fm; if (!j.message) j.message = fm; }
+    }
+    return j;
+  }
+  async function rpcRaw(fn, args) {
     var ctl = new AbortController(), t = setTimeout(function () { ctl.abort(); }, 25000), r, j = null;
     try {
       r = await fetch(CFG.url + '/rest/v1/rpc/' + fn, {
@@ -510,7 +540,7 @@ input.dpick{cursor:pointer;background-image:linear-gradient(transparent,transpar
   }
 
   /* ---------- الحالة ---------- */
-  var S = {};
+  var S = { feat: [] };
   var WHO = null; /* v363: من سجّل الدخول {civil, phone, is_sup, role} */
   function reset() {
     S = { view: 'login', status: S.status || null, schools: S.schools || null, cache: S.cache || {}, auth: null, lookup: null,
@@ -919,6 +949,7 @@ input.dpick{cursor:pointer;background-image:linear-gradient(transparent,transpar
   }
 
   async function enterRegistered(r, c, p) {
+    await featLoad();
     S.auth = { civil: c, phone: p }; S.lookup = r; S.mode = 'registered'; S.limited = !!r.limited;
     S.closed = r.editing_open === false; S.closedNote = r.closed_note || '';
     S.classesLocked = !!r.classes_locked; S.classesNote = r.classes_note || ''; // v2.1
@@ -977,7 +1008,7 @@ input.dpick{cursor:pointer;background-image:linear-gradient(transparent,transpar
   function fillSave(FI, box) {
     var keys = Object.keys(FI);
     if (S.limited) return h('div', { class: 'warn', id: 'fill-nophone' }, 'هاتفك غير مسجّل في البرنامج، فلا يمكن إكمال البيانات من هنا. تواصل مع موجهك لتسجيل هاتفك.');
-    if (!keys.length) return S.fillMsg ? h('div', { class: 'note ok-note', id: 'fill-msg' }, S.fillMsg) : null;
+    if (!keys.length || featMsg('fill', 'teacher')) return S.fillMsg ? h('div', { class: 'note ok-note', id: 'fill-msg' }, S.fillMsg) : null; /* v433 */
     var btn = mkBtn('btn-ok', '💾 حفظ البيانات الناقصة', async function () {
       hideErr(box); var f = {}, n = 0, bad = '';
       keys.forEach(function (k) {
@@ -991,7 +1022,7 @@ input.dpick{cursor:pointer;background-image:linear-gradient(transparent,transpar
       btnBusy(btn, true, 'جارٍ الحفظ...');
       try {
         var r = await rpc('teacher_portal_fill_missing', { p_civil: S.auth.civil, p_phone: S.auth.phone, p_fields: f });
-        if (!r || r.ok !== true) { btnBusy(btn, false); showErr(box, r && r.reason === 'closed' ? 'إكمال البيانات متوقف حاليًا.' : r && r.reason === 'no_change' ? 'لا توجد بيانات جديدة للحفظ (ربما سُجّلت من قبل).' : reasonMsg(r || {})); return; }
+        if (!r || r.ok !== true) { btnBusy(btn, false); showErr(box, r && r.reason === 'closed' ? (r.note || 'إكمال البيانات متوقف حاليًا.') : r && r.reason === 'no_change' ? 'لا توجد بيانات جديدة للحفظ (ربما سُجّلت من قبل).' : reasonMsg(r || {})); return; }
         var t = await rpc('teacher_portal_lookup', { p_civil: S.auth.civil, p_phone: S.auth.phone });
         S.fillMsg = '✓ تم حفظ ' + plural((r.saved || []).length, 'بيان واحد', 'بيانين', 'بيانات') + ' في البرنامج.';
         if (t && t.ok) await enterRegistered(t, S.auth.civil, S.auth.phone); else go('confirm');
@@ -1099,7 +1130,7 @@ input.dpick{cursor:pointer;background-image:linear-gradient(transparent,transpar
     var rows = [kvRow('الاسم', pv('full_name')), kvRow('الرقم القومي', null)];
     rows[1] = h('div', null, h('span', { class: 'k' }, 'الرقم القومي'), h('span', { class: 'v' }, h('span', { class: 'ltr' }, '••••••••••' + S.auth.civil.slice(-4))));
     /* v372: البيان الناقص حقل إدخال، والمسجّل للعرض فقط 🔒 */
-    var FI = {}, canFill = !S.limited;
+    var FI = {}, fillMsgT = featMsg('fill', 'teacher'), canFill = !S.limited && !fillMsgT;
     var lock = h('span', { class: 'tag lk', title: 'مسجّل — للتعديل تواصل مع موجهك أو منسق المرحلة' }, '🔒');
     function lk() { return lock.cloneNode(true); }
     function fin(k, el) { FI[k] = el; el.id = 'fill-' + k; el.classList.add('fill-in'); return el; }
@@ -1155,7 +1186,7 @@ input.dpick{cursor:pointer;background-image:linear-gradient(transparent,transpar
             var r = await rpc('teacher_portal_paid_ws_set', { p_civil: S.auth.civil, p_phone: S.auth.phone, p_date: iso });
             if (!r || r.ok !== true) {
               btnBusy(sv, false);
-              showErr(eb, r && r.reason === 'closed' ? 'تعديل هذا التاريخ متوقف حاليًا.' : r && r.reason === 'no_change' ? 'التاريخ كما هو.' : r && r.reason === 'invalid' ? 'تاريخ غير صحيح (ولا يكون بعد اليوم).' : r && r.reason === 'not_paid' ? 'هذا التعديل لمعلمي الأجر فقط.' : reasonMsg(r || {}));
+              showErr(eb, r && r.reason === 'closed' ? (r.note || 'تعديل هذا التاريخ متوقف حاليًا.') : r && r.reason === 'no_change' ? 'التاريخ كما هو.' : r && r.reason === 'invalid' ? 'تاريخ غير صحيح (ولا يكون بعد اليوم).' : r && r.reason === 'not_paid' ? 'هذا التعديل لمعلمي الأجر فقط.' : reasonMsg(r || {}));
               return;
             }
             var t = await rpc('teacher_portal_lookup', { p_civil: S.auth.civil, p_phone: S.auth.phone });
@@ -1169,7 +1200,7 @@ input.dpick{cursor:pointer;background-image:linear-gradient(transparent,transpar
     }
     ['appointment_date', 'grade_acquired_date', 'work_start_date'].forEach(function (k) {
       if (!(perm || pv(k) || k === 'work_start_date')) return;
-      if (k === 'work_start_date' && pv(k) && canFill && S.lookup && S.lookup.teacher && S.lookup.teacher.work_type === 'paid') { rows.push(wsEditRow()); return; }
+      if (k === 'work_start_date' && pv(k) && canFill && !featMsg('paid_ws', 'teacher') && S.lookup && S.lookup.teacher && S.lookup.teacher.work_type === 'paid') { rows.push(wsEditRow()); return; }
       rows.push(fillRow(LBL[k], k, pv(k) ? h('span', { class: 'ltr nw', id: 'v-' + k }, fmtDate(pv(k))) : '',
         pv(k) ? null : dateIn(k)));
     });
@@ -1212,6 +1243,7 @@ input.dpick{cursor:pointer;background-image:linear-gradient(transparent,transpar
       h('p', { class: 'sub', style: 'text-align:right' }, 'البيانات المسجّلة 🔒 لا تُعدَّل من هنا؛ لتعديلها تواصل مع موجهك أو منسق المرحلة. أما البيانات الناقصة فأضفها واضغط «حفظ».'),
       contactBar(),
 
+      fillMsgT ? h('div', { class: 'warn', id: 'feat-fill' }, '🔒 ' + fillMsgT + ' (يمكنك المراجعة فقط)') : null,
       otherN > 0 ? h('div', { class: 'note' }, 'لديك ' + otherN + ' فصل في مدرسة أخرى (انتداب/إعارة)؛ تُدار من المشرف ولا تتغير من هنا.') : null,
       h('div', { class: 'kv' }, rows),
       fillSave(FI, box),
@@ -1235,7 +1267,7 @@ input.dpick{cursor:pointer;background-image:linear-gradient(transparent,transpar
   }
   function ttMsg(r) {
     switch (r && r.reason) {
-      case 'closed': return 'إدخال الجدول مغلق حاليًا.';
+      case 'closed': return (r && r.note) || 'إدخال الجدول مغلق حاليًا.';
       case 'no_phone': return 'لا يوجد هاتف مسجّل لك في النظام، تواصل مع المنسق.';
       case 'conflict': return 'أحد فصولك مشغول بمعلم آخر في حصة من اختيارك. حدّث الصفحة وأعد المحاولة.';
       case 'teacher_busy': return 'المعلم لديه حصة في مدرسة أخرى في أحد الأوقات المختارة. اختر خانة أخرى.'; // v339
@@ -1265,6 +1297,7 @@ input.dpick{cursor:pointer;background-image:linear-gradient(transparent,transpar
   }
   VIEWS.timetable = function () {
     var T = S.tt, d = T.data, box = errbox(), note = h('div', { class: 'tt-hint' });
+    var ttFm = featMsg('timetable', T.sup ? 'supervisor' : 'teacher'); if (ttFm) d.open = false; /* v433 */
     var edit = function () { return T.mode === 'edit' && d.open; };
     var chips = h('div', { class: 'tt-chips', id: 'tt-chips' }), tbody = h('tbody'), count = h('div', { class: 'tt-count', id: 'tt-count' }), actions = h('div', { id: 'tt-actions' });
     var assigns = d.assignments || [];
@@ -1341,7 +1374,7 @@ input.dpick{cursor:pointer;background-image:linear-gradient(transparent,transpar
     function same() { if (T.grid.size !== T.base.size) return false; var ok = true; T.grid.forEach(function (v, k) { if (T.base.get(k) !== v) ok = false; }); return ok; }
     function drawActions() {
       actions.replaceChildren();
-      if (!d.open) { actions.appendChild(h('div', { class: 'warn' }, 'إدخال الجدول مغلق حاليًا، يمكنك المراجعة فقط.')); return; }
+      if (!d.open) { actions.appendChild(h('div', { class: 'warn' }, ttFm ? '🔒 ' + ttFm + ' (يمكنك المراجعة فقط)' : 'إدخال الجدول مغلق حاليًا، يمكنك المراجعة فقط.')); return; }
       if (!edit()) { actions.appendChild(mkBtn('btn2', 'تعديل الجدول', function () { T.mode = 'edit'; pickNext(); drawChips(); drawGrid(); }, { id: 'tt-edit' })); return; }
       actions.appendChild(mkBtn('btn', 'حفظ الجدول', async function (ev) {
         hideErr(box); var b = ev.currentTarget, slots = [];
@@ -1846,6 +1879,7 @@ input.dpick{cursor:pointer;background-image:linear-gradient(transparent,transpar
   function supTotal(t) { var n = 0; (t.classes || []).forEach(function (c) { n += c.periods; }); return n; }
 
   async function openSchool(id) {
+    await featLoad();
     var r = await rpc('teacher_portal_sup_school', { p_civil: S.sup.auth.civil, p_phone: S.sup.auth.phone, p_school_id: id, p_code: S.sup.auth.code });
     if (!r || r.ok !== true) throw (r || { reason: 'x' });
     S.sup.school = r.school; S.sup.classes = r.classes || []; S.sup.teachers = r.teachers || []; S.sup.q = ''; S.sup.t = null;
@@ -2053,7 +2087,7 @@ input.dpick{cursor:pointer;background-image:linear-gradient(transparent,transpar
     return r;
   }
   function asgMsg(r) {
-    if (r && r.reason === 'closed') return 'إدارة الفصول مغلقة حاليًا.';
+    if (r && r.reason === 'closed') return r.note || 'إدارة الفصول مغلقة حاليًا.';
     if (r && r.reason === 'gone') return 'الفصل لم يعد موجودًا. تم تحديث القائمة.';
     if (r && r.reason === 'taken') return 'هذا الفصل أُسند بالفعل لمعلم آخر. تم تحديث القائمة.';
     if (r && typeof r.reason === 'string' && /[؀-ۿ]/.test(r.reason)) return r.reason;
@@ -2158,11 +2192,11 @@ input.dpick{cursor:pointer;background-image:linear-gradient(transparent,transpar
           if (!r || r.ok !== true) { showErr(sb, asgMsg(r || {})); btnBusy(b, false); return; }
           closeSheet(); await reload();
         } catch (e) { showErr(sb, asgMsg(e)); btnBusy(b, false); }
-      }, { id: 'add-go', disabled: O.open === false });
+      }, { id: 'add-go', disabled: O.open === false || !!featMsg('classes', 'supervisor') });
       sheet.replaceChildren(h('div', { class: 'asg-ov', onclick: closeSheet }),
         h('div', { class: 'asg-sheet', id: 'asg-panel' },
           h('h3', null, O.secondary ? 'إضافة مجموعة' : 'إضافة فصل'),
-          O.open === false ? h('div', { class: 'warn' }, 'إضافة الفصول مغلقة حاليًا.') : null,
+          (O.open === false || featMsg('classes', 'supervisor')) ? h('div', { class: 'warn' }, '🔒 ' + (featMsg('classes', 'supervisor') || 'إضافة الفصول مغلقة حاليًا.')) : null,
           h('label', { class: 'sub', style: 'display:block;text-align:right' }, 'الصف'), gsel,
           O.secondary ? h('label', { class: 'sub', style: 'display:block;text-align:right;margin-top:8px' }, 'نوع المجموعة (بحصصها المقررة)') : null,
           O.secondary ? ksel : null,
@@ -2196,7 +2230,7 @@ input.dpick{cursor:pointer;background-image:linear-gradient(transparent,transpar
     return h('div', { class: 'card' },
       suptop('الفصول والمجموعات', '‹ المعلمون', async function () { try { await openSchool(S.sup.school.id); } catch (e) { go('supschool'); } }),
       h('h2', null, S.sup.school.name),
-      A.data.assign_open === false ? h('div', { class: 'warn', id: 'asg-closed' }, 'إسناد الفصول مغلق حاليًا، يمكنك المراجعة فقط.') : null,
+      (A.data.assign_open === false || featMsg('assign', 'supervisor')) ? h('div', { class: 'warn', id: 'asg-closed' }, featMsg('assign', 'supervisor') ? '🔒 ' + featMsg('assign', 'supervisor') + ' (يمكنك المراجعة فقط)' : 'إسناد الفصول مغلق حاليًا، يمكنك المراجعة فقط.') : null,
       h('p', { class: 'sub', style: 'text-align:right' }, 'اضغط فصلًا مسندًا لإلغاء إسناده، أو فصلًا غير مسند لإسناده لمعلم أو حذفه.'),
       mkBtn('btn', '+ إضافة فصل / مجموعة', showAdd, { id: 'asg-add' }),
       h('div', { style: 'height:8px' }),
@@ -2524,7 +2558,7 @@ input.dpick{cursor:pointer;background-image:linear-gradient(transparent,transpar
     var head = tid ? suptop('إجازات المعلم', '‹ بيانات المعلم', function () { go('supteacher'); }) : null;
     var card = h('div', { class: 'card', id: tid ? 'supleave' : 'tleaves' }, head, h('h2', null, tid ? 'إجازات ' + (S.sup.t && S.sup.t.full_name || '') : 'إجازاتي'), box, body);
     function draw(d) {
-      var out = [];
+      var out = [], lvRole = tid ? 'supervisor' : 'teacher', fmS = featMsg('leaves_short', lvRole), openS = d.open !== false && !fmS; /* v433 */
       if (!d.applies) out.push(h('div', { class: 'note' }, 'الإجازات القصيرة (عارضة واعتيادي) للمعلم الأساسي فقط.'));
       if (d.long) out.push(h('div', { class: 'note lv', id: 'lv-long' }, '🟣 ' + lvText({ type: d.long.type, to: d.long.to }) + ' — لا تُسجَّل إجازة قصيرة خلالها.'));
       var SD = d.delegated ? (d.school_days || []) : null; /* v424: المنتدب — أيامه في مدرستك من جدوله */
@@ -2537,7 +2571,7 @@ input.dpick{cursor:pointer;background-image:linear-gradient(transparent,transpar
           h('div', { class: 'lv-c' + (c.remaining === 0 ? ' full' : ''), id: 'lv-casual' }, h('small', null, 'العارضة (من 1/7)'), h('b', null, c.used + ' / 7'), h('span', null, 'متبقٍ ' + c.remaining)),
           h('div', { class: 'lv-c' + (a.over ? ' over' : ''), id: 'lv-annual' }, h('small', null, 'الاعتيادي (من 1/9)'), h('b', null, a.used + ' / ' + a.limit), h('span', null, a.over ? 'تجاوز الرصيد' : 'متبقٍ ' + a.remaining))));
         if (a.grade_missing) out.push(h('div', { class: 'warn', id: 'lv-grade' }, 'الدرجة الوظيفية غير مسجّلة، فحُسب رصيد الاعتيادي 35 يومًا. لتصحيحها تواصل مع موجهك.'));
-        if (d.open === false) out.push(h('div', { class: 'warn' }, 'تسجيل الإجازات متوقف حاليًا.'));
+        if (!openS) out.push(h('div', { class: 'warn' }, '🔒 ' + (fmS || 'تسجيل الإجازات متوقف حاليًا.')));
         else if (!SD || SD.length) out.push(addForm());
       }
       var L = d.short || [];
@@ -2546,7 +2580,7 @@ input.dpick{cursor:pointer;background-image:linear-gradient(transparent,transpar
         return h('div', { class: 'lv-i' + (x.cancelled ? ' x' : ''), 'data-leave': x.id },
           h('div', null, h('b', null, x.type + ' · ' + plural(x.days, 'يوم واحد', 'يومان', 'أيام')), h('small', null, fmtDate(x.from) + (x.to !== x.from ? ' ← ' + fmtDate(x.to) : '') + ' · ' + (SRC[x.source] || '') + (x.cancelled ? ' · ملغاة' : '')),
             x.notes ? h('small', null, x.notes) : null),
-          x.can_cancel && d.open !== false ? mkBtn('btn2', 'إلغاء', async function (ev) {
+          x.can_cancel && openS ? mkBtn('btn2', 'إلغاء', async function (ev) {
             if (!window.confirm('إلغاء هذه الإجازة؟')) return; var b = ev.currentTarget; btnBusy(b, true, '...'); hideErr(box);
             try { var r = await rpc('teacher_portal_short_leave_cancel', Object.assign(lvAuth(tid), { p_leave_id: x.id })); if (!r || r.ok !== true) { showErr(box, lvMsg(r)); btnBusy(b, false); return; } await reload(); }
             catch (e) { showErr(box, lvMsg(e)); btnBusy(b, false); }
@@ -2581,7 +2615,7 @@ input.dpick{cursor:pointer;background-image:linear-gradient(transparent,transpar
         info, h('div', { class: 'fg' }, h('label', { for: 'lv-notes' }, 'ملاحظة'), nt), fb, btn);
     }
     function longPart(d) {
-      var R = d.requests || [], pend = R.some(function (r) { return r.status === 'pending'; });
+      var R = d.requests || [], pend = R.some(function (r) { return r.status === 'pending'; }), fmL = featMsg('leaves_long', tid ? 'supervisor' : 'teacher'); /* v433 */
       var wrap = h('details', { class: 'lv-add', id: 'lv-long-req' }, h('summary', null, 'طلب إجازة طويلة (يعتمده الموجه)'));
       R.forEach(function (r) {
         wrap.appendChild(h('div', { class: 'lv-i', 'data-req': r.id }, h('div', null, h('b', null, r.type), h('small', null, fmtDate(r.from) + (r.to ? ' ← ' + fmtDate(r.to) : '') + ' · ' + (RST[r.status] || r.status)), r.review_note ? h('small', null, r.review_note) : null),
@@ -2591,7 +2625,7 @@ input.dpick{cursor:pointer;background-image:linear-gradient(transparent,transpar
             catch (e) { window.alert(lvMsg(e)); btnBusy(b, false); }
           }) : null));
       });
-      if (!pend && d.open !== false) {
+      if (!pend && d.open !== false && !fmL) {
         var fb = errbox(), typ = h('select', { id: 'lr-type' }, LONG_TYPES.map(function (x) { return h('option', { value: x }, x); }));
         var f1 = dateBox('lr-from'), f2 = dateBox('lr-to', 'اختياري'), nt = h('input', { type: 'text', id: 'lr-notes', maxlength: '500', autocomplete: 'off', placeholder: 'رقم القرار أو أي توضيح' });
         var btn = mkBtn('btn', 'إرسال الطلب للموجه', async function () {
@@ -2610,6 +2644,7 @@ input.dpick{cursor:pointer;background-image:linear-gradient(transparent,transpar
           h('div', { class: 'lv-2' }, h('div', { class: 'fg' }, h('label', { for: 'lr-from' }, 'من'), f1), h('div', { class: 'fg' }, h('label', { for: 'lr-to' }, 'إلى'), f2)),
           h('div', { class: 'fg' }, h('label', { for: 'lr-notes' }, 'ملاحظة'), nt), fb, btn);
       }
+      if (!pend && d.open !== false && fmL) { wrap.appendChild(h('div', { class: 'warn' }, '🔒 ' + fmL)); wrap.open = true; }
       if (pend) wrap.open = true;
       return wrap;
     }
@@ -2653,7 +2688,7 @@ input.dpick{cursor:pointer;background-image:linear-gradient(transparent,transpar
       el.id = 'sf-' + k; FI[k] = el;
       return h('label', { class: 'sf-row' }, h('span', null, LBL[k]), el);
     });
-    var btn = keys.length ? mkBtn('btn-ok', '💾 حفظ', async function () {
+    var fmF = featMsg('fill', 'supervisor'), btn = keys.length && !fmF ? mkBtn('btn-ok', '💾 حفظ', async function () {
       hideErr(box); var f = {}, n = 0, bad = '';
       keys.forEach(function (k) {
         var v = clean(FI[k].value); if (!v) return;
@@ -2668,7 +2703,7 @@ input.dpick{cursor:pointer;background-image:linear-gradient(transparent,transpar
         var a = S.sup.auth, r = await rpc('teacher_portal_sup_fill_missing', { p_civil: a.civil, p_phone: a.phone, p_teacher_id: t.id, p_fields: f });
         if (!r || r.ok !== true) {
           btnBusy(btn, false);
-          showErr(box, r && r.reason === 'closed' ? 'إكمال البيانات متوقف حاليًا.' : r && r.reason === 'no_change' ? 'لا توجد بيانات جديدة للحفظ (ربما سُجّلت من قبل).'
+          showErr(box, r && r.reason === 'closed' ? (r.note || 'إكمال البيانات متوقف حاليًا.') : r && r.reason === 'no_change' ? 'لا توجد بيانات جديدة للحفظ (ربما سُجّلت من قبل).'
             : r && r.reason === 'code_taken' ? 'كود المعلم مسجّل لمعلم آخر.' : r && r.reason === 'invalid' && r.field ? 'قيمة غير صحيحة في «' + (LBL[r.field] || r.field) + '».'
             : r && r.reason === 'forbidden' ? 'هذا المعلم ليس من معلمي مدرستك الأصليين.' : reasonMsg(r || {}));
           return;
@@ -2683,6 +2718,7 @@ input.dpick{cursor:pointer;background-image:linear-gradient(transparent,transpar
       h('h2', null, t.full_name),
       keys.length ? h('div', { class: 'note' }, 'تظهر هنا البيانات غير المسجّلة فقط. ما تكتبه يُحفظ مباشرة ولا يمكن تعديله من هنا بعد الحفظ؛ لتصحيح بيان مسجّل تواصل مع الموجه.')
         : h('div', { class: 'note ok-note' }, '✓ كل بيانات هذا المعلم مسجّلة.'),
+      fmF ? h('div', { class: 'warn', id: 'feat-fill' }, '🔒 ' + fmF + ' (يمكنك المراجعة فقط)') : null,
       h('div', { class: 'sf-list' }, rows), box, btn);
   };
   VIEWS.supinfo = function () {
@@ -2691,7 +2727,7 @@ input.dpick{cursor:pointer;background-image:linear-gradient(transparent,transpar
     var a = S.sup.auth;
     rpc('teacher_portal_sup_school_details', { p_civil: a.civil, p_phone: a.phone }).then(function (r) {
       if (!r || r.ok !== true) { body.replaceChildren(); showErr(box, reasonMsg(r || {})); return; }
-      var sc = r.school, open = r.open !== false;
+      var sc = r.school, fmI = featMsg('school_edit', 'supervisor'), open = r.open !== false && !fmI; /* v433 */
       var g = h('select', { id: 'si-gender' }, h('option', { value: '' }, '— اختر —'), ['بنين', 'بنات', 'مشترك'].map(function (x) { var o = h('option', { value: x }, x); if (sc.gender_type === x) o.selected = true; return o; }));
       function inp(id, v, ltr, max) { var e = h('input', { type: ltr ? 'tel' : 'text', id: id, autocomplete: 'off', dir: ltr ? 'ltr' : null, inputmode: ltr ? 'numeric' : null, maxlength: max || '200' }); e.value = v || ''; return e; }
       var ph = inp('si-phone', sc.phone, true, '20'), ad = inp('si-address', sc.address), mn = inp('si-mname', sc.manager_name, false, '150'), mp = inp('si-mphone', sc.manager_phone, true, '20');
@@ -2706,7 +2742,7 @@ input.dpick{cursor:pointer;background-image:linear-gradient(transparent,transpar
           btnBusy(btn, false);
           if (!x || x.ok !== true) {
             var L = { gender_type: 'بنين/بنات', phone: 'هاتف المدرسة', address: 'العنوان', manager_name: 'اسم المدير', manager_phone: 'هاتف المدير' };
-            showErr(box, x && x.reason === 'no_change' ? 'لم تغيّر شيئًا.' : x && x.reason === 'closed' ? 'تعديل بيانات المدرسة متوقف حاليًا.'
+            showErr(box, x && x.reason === 'no_change' ? 'لم تغيّر شيئًا.' : x && x.reason === 'closed' ? (x.note || 'تعديل بيانات المدرسة متوقف حاليًا.')
               : x && x.reason === 'invalid' && x.field ? 'قيمة غير صحيحة في «' + (L[x.field] || x.field) + '».' : reasonMsg(x || {}));
             return;
           }
@@ -2715,7 +2751,7 @@ input.dpick{cursor:pointer;background-image:linear-gradient(transparent,transpar
       }, { id: 'si-save' }) : null;
       body.replaceChildren(
         h('div', { class: 'kv' }, kvRow('اسم المدرسة', sc.name), kvRow('المرحلة', sc.stage), sc.school_type ? kvRow('نوع المدرسة', sc.school_type) : null),
-        open ? h('div', { class: 'note' }, 'الاسم والمرحلة والنوع والموجه تُعدَّل من البرنامج الرئيسي فقط.') : h('div', { class: 'warn' }, 'تعديل بيانات المدرسة متوقف حاليًا؛ العرض فقط.'),
+        open ? h('div', { class: 'note' }, 'الاسم والمرحلة والنوع والموجه تُعدَّل من البرنامج الرئيسي فقط.') : h('div', { class: 'warn' }, (fmI ? '🔒 ' + fmI + ' — ' : '') + 'تعديل بيانات المدرسة متوقف حاليًا؛ العرض فقط.'),
         h('div', { class: 'sf-list' },
           h('label', { class: 'sf-row' }, h('span', null, 'بنين / بنات'), g),
           h('label', { class: 'sf-row' }, h('span', null, 'هاتف المدرسة'), ph),
@@ -2732,6 +2768,7 @@ input.dpick{cursor:pointer;background-image:linear-gradient(transparent,transpar
   async function boot() {
     S.statusErr = false;
     try { S.status = await rpc('teacher_portal_status'); } catch (e) { S.statusErr = true; }
+    featLoad(); setInterval(featLoad, 120000);
     if (S.view === 'login') render();
   }
   if (CFG.trial) document.getElementById('ribbon').appendChild(h('div', { class: 'ribbon' }, 'نسخة تجريبية — لا تُعتمد البيانات إلا بعد مراجعة الإدارة'));

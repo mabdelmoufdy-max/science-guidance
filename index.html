@@ -1,4 +1,5 @@
 <!doctype html>
+<!-- v433: مركز التحكم ← تبويب «مفاتيح البوابة»: فتح/قفل كل وظائف بوابة المعلمين (معلم/مشرف × وظيفة × مرحلة) برسالة إغلاق وجدولة وأوضاع جاهزة وتراجع ومفاتيح الصحائف؛ قاعدة البيانات v433. -->
 <!-- v431: فحص شاشة الموجّه «ربط المدارس بالموجهين» لا يعدّ مدارس الثانوي (موجهوها بالمادة) غير مسندة؛ واجهة فقط. -->
 <!-- v430: خانات التاريخ (كل الشاشات، ومنها الإجازات) تفتح التقويم بالضغط بدل الكتابة (بطلب المستخدم 2026-11-21) — في كتلة v337: الحقل النصي للقراءة ويستدعي showPicker، وإن لم يدعمه المتصفح تبقى الكتابة. -->
 <!-- v428: إزالة التنقل بين البرنامج والبوابة (بطلب المستخدم 2026-11-21 «كل أزرار التنقل بلا استثناء»): زر «🔗» v225 في الشريط العلوي ورابط «بوابة المعلمين» v379 في شاشة اختيار الدور؛ دوال v225 باقية بلا استدعاء. -->
@@ -8,7 +9,6 @@
 <!-- v419: الإجازة الطويلة حالة واضحة (2026-11-20): شارة بنفسجية، كارت ملف المدرسة بلا إسناد/انتداب، قسم «في إجازة» في توزيع الفصول، المجاز في نهاية التقارير بدل إخفائه؛ والمنع في القاعدة trg_v419_leave_assign_guard. -->
 <!-- v418: «الإجازات» (بطلب المستخدم 2026-11-19، المرحلة 2 من الحل الأسبوعي): زر «طباعة الأسبوع» ← تقرير A4 leaveWeek «إجازات الأسبوع» (المعلم/المدرسة + أيام السبت–الخميس بنوع الإجازة) من حالة التقويم __v415. -->
 <!-- v417: «الإجازات» على الهاتف (بطلب المستخدم 2026-11-19): أزرار الصفحة داخل شبكة التبويبات بجوار «إجازات المعلم» (نسخ .v417-act، والأصل .v417-orig مخفي ≤760px). -->
-<!-- v416: «الإجازات» (بطلب المستخدم 2026-11-19 «الجزء العلوي فوق الجدول كبير»): الفلاتر وأسهم الأسبوع في سطر واحد، والأرقام الثلاثة سطر نصي، وبطاقات التبويبات أقصر في صفحة الإجازات فقط. -->
 <html lang="ar" dir="rtl">
 <head>
 <!-- إعداد: أ/ محمود عبدالمفدي محمد أبوالنجا | الصفة: معلم -->
@@ -16,7 +16,7 @@
 <script>/* v226: العنوان الموحد — انظر التعليق أعلى الملف */(function(){try{if(/\.github\.io$/.test(location.hostname)&&/^\/science-guidance\/?(index\.html)?$/.test(location.pathname)&&!/[?&]stay\b/.test(location.search))location.replace('https://teachers-data-portal.vercel.app/app/'+location.hash)}catch(e){}})();</script>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#152c43">
-<title>نظام توجيه العلوم — v431</title>
+<title>نظام توجيه العلوم — v433</title>
 <link rel="manifest" href="./manifest.webmanifest">
 <link rel="icon" type="image/png" sizes="192x192" href="./app-icon-192.png">
 <link rel="apple-touch-icon" href="./app-icon-192.png">
@@ -2396,6 +2396,33 @@ span.v415-L{border-radius:10px;padding:2px 8px}
 .v425-f label{display:flex;flex-direction:column;gap:4px;margin:0 0 8px;width:100%}.v425-f input,.v425-f textarea{width:100%;box-sizing:border-box}
 @media(max-width:560px){.v425-d{grid-template-columns:1fr}.v425-r{flex-wrap:wrap}.v425-r .btn{width:100%}}
 .v337-text.v430-pick{cursor:pointer}
+
+/* v433: «مفاتيح البوابة» في مركز التحكم */
+.v433-top{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between}
+.v433-pre{display:flex;gap:8px;flex-wrap:wrap}
+.v433-card{border:1px solid var(--line);border-radius:10px;padding:12px;display:grid;gap:8px;margin-top:10px;min-width:0}
+.v433-card.closed{border-color:var(--danger,#b42318)}
+.v433-head{display:flex;gap:10px;justify-content:space-between;align-items:flex-start;flex-wrap:wrap}
+.v433-t{flex:1 1 220px;min-width:0}
+.v433-chips{display:flex;gap:6px;flex-wrap:wrap}
+.v433-act{display:flex;gap:8px;flex-wrap:wrap}
+.v433-matrix{display:grid;gap:6px}
+.v433-rowl{font-weight:700;margin-top:4px}
+.v433-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px}
+.v433-cell{display:grid;gap:2px;justify-items:center;border:1px solid var(--line);border-radius:8px;background:transparent;color:inherit;padding:6px 2px;font:inherit;cursor:pointer;min-width:0}
+.v433-cell b{font-size:16px;line-height:1}
+.v433-cell .v433-lbl,.v433-cell span{font-size:11px;text-align:center;overflow-wrap:anywhere}
+.v433-cell.on{border-color:#2e7d32;color:#2e7d32}
+.v433-cell.off{border-color:var(--danger,#b42318);color:var(--danger,#b42318);background:rgba(180,35,24,.06)}
+.v433-cell.inh{opacity:.55}
+.v433-log{display:flex;gap:8px;flex-wrap:wrap;align-items:center;border-top:1px solid var(--line);padding:6px 0}
+.v433-log>span:nth-child(2){flex:1 1 200px;min-width:0}
+.v433-rv{padding:2px 10px}
+.v433-st{display:grid;gap:6px}
+.v433-str{display:grid;grid-template-columns:1fr auto auto auto auto;gap:6px;align-items:center}
+.v433-sbtn{padding:2px 10px}
+.v433-form{display:grid;gap:6px}
+@media (max-width:760px){.v433-str{grid-template-columns:1fr 1fr 1fr}.v433-str b{grid-column:1/-1}.v433-master{width:100%}}
 </style>
 </head>
 <body>
@@ -2766,6 +2793,7 @@ window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();window.v152
 window.addEventListener('appinstalled',()=>{window.v152InstallPrompt=null;v152SyncInstallBtn()});
 if('serviceWorker' in navigator&&location.protocol!=='file:')window.addEventListener('load',()=>navigator.serviceWorker.register('./service-worker.js').catch(()=>{}));
 const V145_NEWS=[
+ ['v433','مركز التحكم: تبويب «مفاتيح البوابة» — فتح وقفل كل وظائف بوابة المعلمين والمشرف من مكان واحد، لكل دور ولكل مرحلة، مع رسالة إغلاق وجدولة وتراجع.'],
  ['v431','فحص شاشة الموجّه: لم تعد مدارس الثانوي (المسندة لموجهين بالمادة) تُحسب «غير مسندة» في «ربط المدارس بالموجهين».'],
  ['v430','خانات التاريخ تفتح التقويم بمجرد الضغط عليها بدل الكتابة (ومنها تواريخ الإجازات).'],
  ['v428','أُزيل زر «🔗» (التنقل بين البرنامج والبوابات) ورابط «بوابة المعلمين» من شاشة اختيار الدور.'],
@@ -14361,10 +14389,10 @@ function v355Users(){return (V355.data&&V355.data.users)||[]}
 function v355User(id){return v355Users().find(u=>u.id===id)}
 async function v355Load(){const r=await sb.rpc('admin_control_center');if(r.error)throw r.error;V355.data=r.data||{};return V355.data}
 function v355Render(){const w=document.getElementById('v355Wrap');if(w)w.innerHTML=v355Inner()}
-function v355Tab(t){V355.tab=t;V355.sel=null;v355Render();if(t==='audit'&&!V355.audit.loaded)v355AuditLoad()}
+function v355Tab(t){V355.tab=t;V355.sel=null;v355Render();if(t==='audit'&&!V355.audit.loaded)v355AuditLoad();if(t==='portal')v433Load()}
 async function v355Refresh(){const w=document.getElementById('v355Wrap');try{await v355Load();V355.err=''}catch(e){V355.err=e.message||String(e)}if(V355.tab==='audit')await v355AuditLoad(true);else v355Render();if(w)toast('تم التحديث')}
 function v355Inner(){
- const tabs=[['over','نظرة عامة ومخاطر'],['users','المستخدمون'],['scope','خريطة النطاق'],['perm','الصلاحيات'],['access','الوصول المؤقت والمراجعة'],['sched','الجدولة والتجميد'],['audit','التدقيق']];
+ const tabs=[['over','نظرة عامة ومخاطر'],['users','المستخدمون'],['scope','خريطة النطاق'],['perm','الصلاحيات'],['access','الوصول المؤقت والمراجعة'],['sched','الجدولة والتجميد'],['portal','مفاتيح البوابة'],['audit','التدقيق']];
  const head=`<div class="v355-tabs" role="tablist">${tabs.map(([k,l])=>`<button type="button" role="tab" class="v355-tab${V355.tab===k?' on':''}" aria-selected="${V355.tab===k}" onclick="v355Tab('${k}')">${l}</button>`).join('')}</div>`;
  const err=V355.err?`<div class="notice danger">تعذّر التحميل: ${esc(V355.err)}</div>`:'';
  let body='';
@@ -14374,6 +14402,7 @@ function v355Inner(){
  else if(V355.tab==='perm')body=v357Perm();
  else if(V355.tab==='access')body=v358Access();
  else if(V355.tab==='sched')body=v362Sched();
+ else if(V355.tab==='portal')body=v433Portal();
  else body=v355Audit();
  return head+err+`<div class="v355-body">${body}</div>`;
 }
@@ -15268,6 +15297,115 @@ dashboardPage=async function(options={}){
  return `<div class="v362-dash">${v362DigCard().replace('عرض التفاصيل</button>','عرض التفاصيل</button><button type="button" class="btn secondary" onclick="go(\'controlCenter\')">مركز التحكم</button>')}</div>`+base;
 };
 /* v362-end */
+/* v433-begin: مركز التحكم — تبويب «مفاتيح البوابة»: كل وظائف بوابة المعلمين (معلم/مشرف × وظيفة × مرحلة) بفتح/قفل ورسالة إغلاق وجدولة وأوضاع جاهزة وتراجع. قاعدة البيانات v433: admin_portal_features، admin_set_portal_feature، admin_set_portal_preset، admin_portal_schedule_add/cancel (مدير النظام فقط، وكل فعل في audit_log) */
+const V433={d:null,err:'',loading:false,open:{}};
+Object.assign(V355_ACTIONS,{cc_portal_feature:'تغيير مفتاح وظيفة بالبوابة',cc_portal_preset:'وضع جاهز لمفاتيح البوابة',cc_portal_feature_scheduled:'تنفيذ موعد مفتاح بالبوابة',cc_portal_schedule_add:'جدولة مفتاح بالبوابة',cc_portal_schedule_cancel:'إلغاء موعد مفتاح بالبوابة'});
+const V433_ROLE={teacher:'المعلم',supervisor:'المشرف',all:'المعلم والمشرف'};
+const V433_ST=[['ابتدائي','ابتدائي'],['إعدادي','إعدادي'],['ثانوي عام','ثانوي عام'],['ثانوي صناعي','ثانوي صناعي']];
+function v433Cat(){return ((V433.d&&V433.d.catalog)||[])}
+function v433Feat(f){return v433Cat().find(c=>c.feature===f)}
+function v433Row(f,role,st){return ((V433.d&&V433.d.flags)||[]).find(a=>a.feature===f&&a.role===role&&a.stage===st)}
+function v433On(f,role,st){const x=v433Row(f,role,st);return x?x.open!==false:true}
+/* مفعّل فعليًا لدور+مرحلة: لا يغلقه أي صف أعلى منه (نفس منطق الخادم) */
+function v433Eff(f,role,st){
+ if(!v433On(f,'all','all')||!v433On(f,role,'all'))return false;
+ if(st==='all')return true;
+ return v433On(f,'all',st)&&v433On(f,role,st)}
+function v433Load(){
+ V433.loading=true;V433.err='';
+ return sb.rpc('admin_portal_features').then(r=>{if(r.error)throw r.error;V433.d=r.data||{}}).catch(e=>{V433.err=v356Err(e)}).then(()=>{V433.loading=false;if(V355.tab==='portal')v355Render()})}
+function v433Closed(){return ((V433.d&&V433.d.flags)||[]).filter(f=>f.open===false&&!(v433Feat(f.feature)||{}).external).length}
+function v433Impact(role,st){
+ const imp=(V433.d&&V433.d.impact)||{};let t=0,s=0;
+ Object.entries(imp).forEach(([k,v])=>{if(st==='all'||k===st){t+=Number(v.teachers||0);s+=Number(v.supervisors||0)}});
+ return role==='teacher'?{t:t,s:0}:role==='supervisor'?{t:0,s:s}:{t:t,s:s}}
+function v433ImpactTxt(role,st){const i=v433Impact(role,st);const p=[];if(i.t)p.push(v355N(i.t)+' معلم');if(i.s)p.push(v355N(i.s)+' مشرف');return p.length?'سيتأثر نحو '+p.join(' و'):''}
+function v433Msg(f){const m=v433Row(f,'all','all');return m&&m.message?m.message:''}
+function v433Toggle(f,role,st){
+ const c=v433Feat(f);if(!c)return;const to=!v433On(f,role,st);
+ const who=V433_ROLE[role]+' — '+(st==='all'?'كل المراحل':st);
+ v356Confirm({title:(to?'فتح: ':'إغلاق: ')+c.label,danger:!to,ok:to?'فتح':'إغلاق',
+  body:`<p><b>${esc(c.label)}</b><br>${esc(who)}</p>${to?'':`<label class="v356-lbl" for="v433Msg">رسالة تظهر في البوابة (اختياري)</label><input id="v433Msg" type="text" maxlength="200" placeholder="مثال: انتهت فترة إدخال الجداول" value="${esc(role==='all'&&st==='all'?v433Msg(f):'')}">`}<p class="cell-sub">${esc(v433ImpactTxt(role,st))}${to?'':' — يبقى العرض والاستعلام متاحًا لهم.'}</p>`,
+  onOk:async reason=>{
+   const msg=to?null:((document.getElementById('v433Msg')?.value||'').trim()||null);
+   const r=await sb.rpc('admin_set_portal_feature',{p_feature:f,p_role:role,p_stage:st,p_open:to,p_message:msg,p_reason:reason||null});if(r.error)throw r.error;
+   closeModal();await v433Load();toast(to?'تم الفتح':'تم الإغلاق')}})}
+function v433Preset(p){
+ const view=p==='view_only';
+ v356Confirm({title:view?'وضع «عرض فقط» لكل الوظائف':'فتح كل مفاتيح البوابة',danger:view,word:view?'عرض':'فتح',ok:view?'تطبيق عرض فقط':'فتح الكل',
+  body:view?'<p>تُغلق <b>كل</b> وظائف الكتابة في البوابة للمعلم والمشرف (الدخول والعرض والاستعلام يبقى).</p><p class="cell-sub">لا يشمل رفع صحائف الأحوال (يُدار لكل مرحلة أدناه). يمكنك التراجع من «آخر التغييرات».</p>':'<p>تُفتح <b>كل</b> المفاتيح بما فيها المقفلة بدور أو مرحلة.</p><p class="cell-sub">يمكنك التراجع من «آخر التغييرات».</p>',
+  onOk:async reason=>{const r=await sb.rpc('admin_set_portal_preset',{p_preset:p,p_reason:reason||null});if(r.error)throw r.error;closeModal();await v433Load();toast(view?'تم: عرض فقط':'تم فتح الكل')}})}
+function v433Sched(f){
+ const c=v433Feat(f);if(!c)return;
+ const roles=['all'].concat((c.roles||[]).length>1?c.roles:[]).concat((c.roles||[]).length===1?c.roles:[]);
+ const d=new Date(Date.now()+86400000);d.setMinutes(0,0,0);
+ v356Confirm({title:'جدولة: '+c.label,ok:'جدولة',
+  body:`<div class="v433-form"><label class="v356-lbl" for="v433SR">الدور</label><select id="v433SR">${roles.map(r=>`<option value="${r}">${esc(V433_ROLE[r])}</option>`).join('')}</select>
+  <label class="v356-lbl" for="v433SS">المرحلة</label><select id="v433SS"><option value="all">كل المراحل</option>${V433_ST.map(s=>`<option>${esc(s[0])}</option>`).join('')}</select>
+  <label class="v356-lbl" for="v433SV">الإجراء</label><select id="v433SV"><option value="0">إغلاق</option><option value="1">فتح</option></select>
+  <label class="v356-lbl" for="v433SW">الموعد</label><input id="v433SW" type="datetime-local" value="${v362Local(d)}"></div>`,
+  onOk:async reason=>{
+   const iso=v362Iso(document.getElementById('v433SW').value);if(!iso)throw new Error('حدّد الموعد');
+   const r=await sb.rpc('admin_portal_schedule_add',{p_feature:f,p_role:document.getElementById('v433SR').value,p_stage:document.getElementById('v433SS').value,p_value:document.getElementById('v433SV').value==='1',p_run_at:iso,p_reason:reason||null});
+   if(r.error)throw r.error;closeModal();await v433Load();toast('تمت الجدولة')}})}
+async function v433SchedCancel(id){
+ if(!confirm('إلغاء هذا الموعد؟'))return;
+ const r=await sb.rpc('admin_portal_schedule_cancel',{p_id:id});if(r.error){toast(v356Err(r.error));return}
+ await v433Load();toast('أُلغي الموعد')}
+function v433Stmt(stage,party,to){
+ const who=party==='teacher'?'رفع المعلم (البوابة)':'رفع المنسق';
+ v356Confirm({title:(to?'فتح ':'إغلاق ')+who,danger:!to,ok:to?'فتح':'إغلاق',body:`<p>${esc(stage)} — ${esc(who)}</p>`,
+  onOk:async()=>{const r=await sb.rpc('admin_set_statement_party',{p_stage:stage,p_party:party,p_open:to});if(r.error)throw r.error;closeModal();await v433Load();toast(to?'تم الفتح':'تم الإغلاق')}})}
+async function v433Revert(id){
+ if(!confirm('التراجع عن هذا التغيير؟'))return;
+ const r=await sb.rpc('admin_revert_action',{p_audit_id:id,p_reason:'تراجع'});if(r.error){toast(v356Err(r.error));return}
+ await v433Load();toast('تم التراجع')}
+function v433Exp(f){V433.open[f]=!V433.open[f];v355Render()}
+function v433Cell(f,role,st,lbl){
+ const own=v433On(f,role,st),eff=v433Eff(f,role,st);
+ const cls=own?(eff?'on':'inh'):'off';
+ const sub=own?(eff?'':' (من أعلى)'):'';
+ return `<button type="button" class="v433-cell ${cls}" onclick="v433Toggle('${f}','${role}','${st}')" title="${esc(V433_ROLE[role]+' — '+(st==='all'?'كل المراحل':st)+(own?(eff?' — مفتوح':' — مغلق من مستوى أعلى'):' — مغلق'))}"><b>${own&&eff?'✓':'✕'}</b><span>${esc(lbl)}${sub}</span></button>`}
+function v433Card(c){
+ const f=c.feature,roles=(c.roles||[]),master=v433On(f,'all','all'),open=!!V433.open[f];
+ const roleChips=roles.map(r=>{const stOff=V433_ST.filter(s=>!v433Eff(f,r,s[0])).length;const allOff=!v433Eff(f,r,'all');
+  return `<span class="badge ${allOff?'danger':stOff?'warn':'ok'}">${esc(V433_ROLE[r])}: ${allOff?'مغلق':stOff?'مغلق في '+stOff+' مراحل':'مفتوح'}</span>`}).join(' ');
+ const rowsRoles=(roles.length>1?['all']:[]).concat(roles);
+ const grid=rowsRoles.map(r=>`<div class="v433-rowl">${esc(V433_ROLE[r])}</div><div class="v433-grid">${v433Cell(f,r,'all','كل المراحل')}${V433_ST.map(s=>v433Cell(f,r,s[0],s[1])).join('')}</div>`).join('');
+ const msg=v433Msg(f);
+ return `<div class="v433-card${master?'':' closed'}"><div class="v433-head"><div class="v433-t"><b>${esc(c.label)}</b><div class="cell-sub">${esc(c.descr||'')}</div></div>
+  <button type="button" class="btn ${master?'secondary':'danger'} v433-master" onclick="v433Toggle('${f}','all','all')">${master?'مفتوح — إغلاق':'مغلق — فتح'}</button></div>
+  <div class="v433-chips">${roleChips}</div>${master||!msg?'':`<div class="cell-sub">رسالة الإغلاق: «${esc(msg)}»</div>`}
+  <div class="v433-act"><button type="button" class="btn secondary" onclick="v433Exp('${f}')">${open?'إخفاء التفصيل':'تفصيل (دور × مرحلة)'}</button><button type="button" class="btn secondary" onclick="v433Sched('${f}')">⏱ جدولة</button></div>
+  ${open?`<div class="v433-matrix">${grid}<div class="cell-sub">الإغلاق بدور أو مرحلة يمنع الكتابة هناك فقط. «مغلق بأعلى» = مفتوح هنا لكن أُغلق من مستوى أعلى.</div></div>`:''}</div>`}
+function v433Stmts(){
+ const st=(V433.d&&V433.d.statements)||[];if(!st.length)return '';
+ const tg=(s,p,on)=>`<button type="button" class="btn ${on?'secondary':'danger'} v433-sbtn" onclick="v433Stmt('${esc(s)}','${p}',${on?'false':'true'})">${on?'مفتوح':'مغلق'}</button>`;
+ return `<div class="v355-box"><h3 class="v355-h">رفع صحيفة الأحوال الإلكترونية <small class="cell-sub">— لكل مرحلة، مفتاحان: المعلم (البوابة) والمنسق</small></h3>
+  <div class="v433-st">${st.map(s=>`<div class="v433-str"><b>${esc(s.stage)}</b><span class="cell-sub">المعلم</span>${tg(s.stage,'teacher',!!s.teacher_open)}<span class="cell-sub">المنسق</span>${tg(s.stage,'coordinator',!!s.coordinator_open)}</div>`).join('')}</div></div>`}
+function v433Recent(){
+ const rc=(V433.d&&V433.d.recent)||[];
+ const lines=rc.map(a=>{
+  const n=a.new||{},o=a.old||{};const f=n.feature||o.feature;const c=f?v433Feat(f):null;
+  let txt=v355Act(a.action);
+  if(a.action==='cc_portal_feature'||a.action==='cc_portal_feature_scheduled')txt+=`: ${esc(c?c.label:f||'')} — ${esc(V433_ROLE[n.role]||'')} / ${esc(n.stage==='all'?'كل المراحل':n.stage||'')} ← ${n.open?'فتح':'إغلاق'}`;
+  if(a.action==='cc_portal_preset')txt+=`: ${n.preset==='view_only'?'عرض فقط':'فتح الكل'}`;
+  const rv=(a.action==='cc_portal_feature'||a.action==='cc_portal_preset')?`<button type="button" class="btn secondary v433-rv" onclick="v433Revert(${Number(a.id)})">تراجع</button>`:'';
+  return `<div class="v433-log"><span class="cell-sub">${esc(v362DT(a.at))} · ${esc(a.by||'—')}</span><span>${txt}</span>${rv}</div>`}).join('');
+ return `<div class="v355-box"><h3 class="v355-h">آخر التغييرات</h3>${lines||'<div class="cell-sub">لا تغييرات بعد.</div>'}</div>`}
+function v433Portal(){
+ if(!V433.d&&!V433.loading&&!V433.err)v433Load();
+ if(V433.err)return `<div class="notice danger">تعذّر التحميل: ${esc(V433.err)}</div><button type="button" class="btn secondary" onclick="V433.err='';v433Load()">إعادة المحاولة</button>`;
+ if(!V433.d)return '<div class="loading">جارٍ التحميل…</div>';
+ const cat=v433Cat().filter(c=>!c.external),n=v433Closed();
+ const sch=(V433.d.schedule||[]).map(s=>{const c=v433Feat(s.feature);return `<div class="v433-log"><span class="cell-sub">${esc(v362DT(s.run_at))}</span><span>${esc(c?c.label:s.feature)} — ${esc(V433_ROLE[s.role]||'')} / ${esc(s.stage==='all'?'كل المراحل':s.stage)} ← ${s.value?'فتح':'إغلاق'}</span><button type="button" class="btn secondary v433-rv" onclick="v433SchedCancel('${s.id}')">إلغاء</button></div>`}).join('');
+ return `<div class="v355-box v433-top"><div><b>${n?'مغلق الآن: '+v355N(n)+' مفتاح':'كل الوظائف مفتوحة'}</b><div class="cell-sub">الدخول والعرض والاستعلام لا يُقفلان. الإغلاق يمنع الكتابة داخل القاعدة نفسها لا الواجهة فقط.</div></div>
+  <div class="v433-pre"><button type="button" class="btn danger" onclick="v433Preset('view_only')">🔒 عرض فقط</button><button type="button" class="btn secondary" onclick="v433Preset('open_all')">🔓 فتح الكل</button></div></div>
+  ${cat.map(v433Card).join('')}
+  ${v433Stmts()}
+  ${sch?`<div class="v355-box"><h3 class="v355-h">مواعيد مجدولة</h3>${sch}</div>`:''}
+  ${v433Recent()}`}
+/* v433-end */
 /* v374-begin: المعلم في إجازة مجددة (on_renewed_leave) لا يظهر في التقارير — بقرار المستخدم «ب» 2026-11-13.
    تُستثنى: تقارير الإجازات، والتوجيه المالي، وتقرير المعلم نفسه، وتقارير مركز التحكم. يظهر إن اختير «حالة المعلم: إجازة» في صفحة المعلمين.
    الطريقة: (1) أثناء تحميل أي تقرير تُحذف صفوف المجازين من بيانات get_reports_dataset (teachers/teacher_records/school_teacher_rosters) فتُحسب الأرقام بدونهم؛
