@@ -6,7 +6,7 @@
 <meta name="robots" content="noindex,nofollow">
 <meta name="referrer" content="no-referrer">
 <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; connect-src https://xehjwzszhsaqdqmcatum.supabase.co; img-src data: 'self'; manifest-src 'self'; worker-src 'self'; base-uri 'none'; form-action 'none'">
-<title>بوابة المعلمين — v430</title>
+<title>بوابة المعلمين — v432</title>
 <link rel="manifest" href="/portal.webmanifest">
 <meta name="theme-color" content="#0f214d">
 <meta name="mobile-web-app-capable" content="yes">
@@ -1135,8 +1135,41 @@ input.dpick{cursor:pointer;background-image:linear-gradient(transparent,transpar
     rows.push(fillRow('محل الإقامة', 'residence', pv('residence'), pv('residence') ? null : txt('residence', { placeholder: 'القرية / المدينة' })));
     var perm = isPermanent();
     if (perm || pv('job_title')) rows.push(kvRow('الدرجة الوظيفية', pv('job_title') || 'غير مسجّل'));
+    /* v432: معلم الأجر يعدّل «تاريخ استلام العمل» المسجّل بنفسه (له هو فقط) */
+    function wsEditRow() {
+      var cur = pv('work_start_date'), vh = h('span', { class: 'v' }), eb = errbox(), row = h('div', null, h('span', { class: 'k' }, LBL.work_start_date), vh);
+      function show() {
+        vh.textContent = ''; vh.appendChild(h('span', { class: 'ltr nw', id: 'v-work_start_date' }, fmtDate(cur)));
+        vh.appendChild(mkBtn('btn2', '✏️ تعديل', edit, { id: 'ws-edit' }));
+      }
+      function edit() {
+        var el = h('input', { type: 'text', inputmode: 'numeric', dir: 'ltr', maxlength: '10', autocomplete: 'off', placeholder: 'يوم/شهر/سنة', 'data-date': '1', id: 'ws-input', value: fmtDate(cur) });
+        el.addEventListener('input', function () { var o = maskDate(el.value); if (o !== el.value) el.value = o; });
+        datePick(el);
+        var sv = mkBtn('btn-ok', '💾 حفظ', async function () {
+          hideErr(eb); var iso = dateIso(clean(el.value));
+          if (!iso) { showErr(eb, 'تاريخ غير صحيح. اكتبه يوم/شهر/سنة مثل 01/09/2024 (ولا يكون بعد اليوم).'); return; }
+          if (iso === cur) { show(); return; }
+          btnBusy(sv, true, 'جارٍ الحفظ...');
+          try {
+            var r = await rpc('teacher_portal_paid_ws_set', { p_civil: S.auth.civil, p_phone: S.auth.phone, p_date: iso });
+            if (!r || r.ok !== true) {
+              btnBusy(sv, false);
+              showErr(eb, r && r.reason === 'closed' ? 'تعديل هذا التاريخ متوقف حاليًا.' : r && r.reason === 'no_change' ? 'التاريخ كما هو.' : r && r.reason === 'invalid' ? 'تاريخ غير صحيح (ولا يكون بعد اليوم).' : r && r.reason === 'not_paid' ? 'هذا التعديل لمعلمي الأجر فقط.' : reasonMsg(r || {}));
+              return;
+            }
+            var t = await rpc('teacher_portal_lookup', { p_civil: S.auth.civil, p_phone: S.auth.phone });
+            S.fillMsg = '✓ تم تعديل تاريخ استلام العمل.';
+            if (t && t.ok) await enterRegistered(t, S.auth.civil, S.auth.phone); else go('confirm');
+          } catch (e) { btnBusy(sv, false); showErr(eb, errMsg(e)); }
+        }, { id: 'ws-save' });
+        vh.textContent = ''; vh.appendChild(el); vh.appendChild(sv); vh.appendChild(mkBtn('btn2', 'إلغاء', show, { id: 'ws-cancel' })); vh.appendChild(eb);
+      }
+      show(); return row;
+    }
     ['appointment_date', 'grade_acquired_date', 'work_start_date'].forEach(function (k) {
       if (!(perm || pv(k) || k === 'work_start_date')) return;
+      if (k === 'work_start_date' && pv(k) && canFill && S.lookup && S.lookup.teacher && S.lookup.teacher.work_type === 'paid') { rows.push(wsEditRow()); return; }
       rows.push(fillRow(LBL[k], k, pv(k) ? h('span', { class: 'ltr nw', id: 'v-' + k }, fmtDate(pv(k))) : '',
         pv(k) ? null : dateIn(k)));
     });
