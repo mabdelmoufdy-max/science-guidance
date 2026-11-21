@@ -1,4 +1,5 @@
 <!doctype html>
+<!-- v430: خانات التاريخ (كل الشاشات، ومنها الإجازات) تفتح التقويم بالضغط بدل الكتابة (بطلب المستخدم 2026-11-21) — في كتلة v337: الحقل النصي للقراءة ويستدعي showPicker، وإن لم يدعمه المتصفح تبقى الكتابة. -->
 <!-- v428: إزالة التنقل بين البرنامج والبوابة (بطلب المستخدم 2026-11-21 «كل أزرار التنقل بلا استثناء»): زر «🔗» v225 في الشريط العلوي ورابط «بوابة المعلمين» v379 في شاشة اختيار الدور؛ دوال v225 باقية بلا استدعاء. -->
 <!-- v427: مدير النظام يرفع/يستبدل صحيفة أي معلم (بلا قيد المفتاح)؛ المنسق يرى زر الاستبدال دائمًا ويعمل متى فُتح رفع مرحلته. -->
 <!-- v426: الرئيسية للموجه والمنسق (بطلب المستخدم 2026-11-20): «إجازات بانتظار اعتمادك» — طلبات الإجازة الطويلة من البوابة ونافذة اعتماد/رفض (long_leave_requests_pending / long_leave_request_review؛ الاعتماد يلغي إسنادات الفصل الحالي). كتلة v425. -->
@@ -8,7 +9,6 @@
 <!-- v417: «الإجازات» على الهاتف (بطلب المستخدم 2026-11-19): أزرار الصفحة داخل شبكة التبويبات بجوار «إجازات المعلم» (نسخ .v417-act، والأصل .v417-orig مخفي ≤760px). -->
 <!-- v416: «الإجازات» (بطلب المستخدم 2026-11-19 «الجزء العلوي فوق الجدول كبير»): الفلاتر وأسهم الأسبوع في سطر واحد، والأرقام الثلاثة سطر نصي، وبطاقات التبويبات أقصر في صفحة الإجازات فقط. -->
 <!-- v415: «الإجازات» (بطلب المستخدم 2026-11-19، الحل 2 أسبوعي، أ): تبويب «الأسبوع» أول وافتراضي — تقويم السبت–الخميس من teacher_long_leaves لمعلمي المدرسة (أو الغائبين فقط عند «كل المدارس»). كتلة v415. -->
-<!-- v414: التقارير (بطلب المستخدم 2026-11-19): اسم ملف «حفظ PDF» كلمات عربية بحروف إنجليزية — reportPdfFileName عبر v414Translit (قاموس كلمات + تحويل حرفي). -->
 <html lang="ar" dir="rtl">
 <head>
 <!-- إعداد: أ/ محمود عبدالمفدي محمد أبوالنجا | الصفة: معلم -->
@@ -16,7 +16,7 @@
 <script>/* v226: العنوان الموحد — انظر التعليق أعلى الملف */(function(){try{if(/\.github\.io$/.test(location.hostname)&&/^\/science-guidance\/?(index\.html)?$/.test(location.pathname)&&!/[?&]stay\b/.test(location.search))location.replace('https://teachers-data-portal.vercel.app/app/'+location.hash)}catch(e){}})();</script>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#152c43">
-<title>نظام توجيه العلوم — v428</title>
+<title>نظام توجيه العلوم — v430</title>
 <link rel="manifest" href="./manifest.webmanifest">
 <link rel="icon" type="image/png" sizes="192x192" href="./app-icon-192.png">
 <link rel="apple-touch-icon" href="./app-icon-192.png">
@@ -2395,6 +2395,7 @@ span.v415-L{border-radius:10px;padding:2px 8px}
 .v425-d{display:grid;grid-template-columns:1fr 1fr;gap:6px 14px;margin:8px 0 10px}.v425-d span{display:block;color:#55657a;font-size:.85em}.v425-d .w{grid-column:1/-1}
 .v425-f label{display:flex;flex-direction:column;gap:4px;margin:0 0 8px;width:100%}.v425-f input,.v425-f textarea{width:100%;box-sizing:border-box}
 @media(max-width:560px){.v425-d{grid-template-columns:1fr}.v425-r{flex-wrap:wrap}.v425-r .btn{width:100%}}
+.v337-text.v430-pick{cursor:pointer}
 </style>
 </head>
 <body>
@@ -2765,6 +2766,7 @@ window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();window.v152
 window.addEventListener('appinstalled',()=>{window.v152InstallPrompt=null;v152SyncInstallBtn()});
 if('serviceWorker' in navigator&&location.protocol!=='file:')window.addEventListener('load',()=>navigator.serviceWorker.register('./service-worker.js').catch(()=>{}));
 const V145_NEWS=[
+ ['v430','خانات التاريخ تفتح التقويم بمجرد الضغط عليها بدل الكتابة (ومنها تواريخ الإجازات).'],
  ['v428','أُزيل زر «🔗» (التنقل بين البرنامج والبوابات) ورابط «بوابة المعلمين» من شاشة اختيار الدور.'],
  ['v427','مدير النظام والمنسق يستبدلان صحيفة الأحوال من شاشة «صحائف الأحوال».'],
  ['v426','طلبات الإجازة الطويلة من بوابة المعلمين تظهر في الرئيسية للموجه والمنسق للاعتماد أو الرفض؛ الاعتماد يلغي إسناد فصول المعلم ويسجّل الإجازة.'],
@@ -13887,7 +13889,12 @@ function v337DateText(v){const m=/^(\d{4})-(\d{2})-(\d{2})/.exec(String(v||''));
   if(inp.title)txt.title=inp.title;
   const ico=document.createElement('span');ico.className='v337-ico';ico.textContent='📅';ico.setAttribute('aria-hidden','true');
   inp.parentNode.insertBefore(wrap,inp);wrap.append(txt,ico,inp);inp.classList.add('v337-native');inp.tabIndex=-1;
-  const mirror=()=>{txt.required=inp.required;txt.disabled=inp.disabled;txt.readOnly=inp.readOnly;wrap.classList.toggle('v337-off',inp.disabled||inp.readOnly)};
+  /* v430: الضغط على خانة التاريخ يفتح التقويم بدل الكتابة؛ إن لم يدعمه المتصفح تبقى الكتابة */
+  let pick=typeof inp.showPicker==='function';
+  if(pick){txt.setAttribute('inputmode','none');txt.placeholder='اضغط لاختيار التاريخ';txt.classList.add('v430-pick');
+   const openPick=()=>{if(!pick||inp.disabled||inp.readOnly)return;try{inp.showPicker()}catch(e){pick=false;txt.setAttribute('inputmode','numeric');txt.placeholder='يوم/شهر/سنة';txt.classList.remove('v430-pick');mirror();txt.focus()}};
+   txt.addEventListener('click',openPick);txt.addEventListener('keydown',e=>{if(pick&&(e.key==='Enter'||e.key===' ')){e.preventDefault();openPick()}})}
+  const mirror=()=>{txt.required=inp.required;txt.disabled=inp.disabled;txt.readOnly=inp.readOnly||pick;wrap.classList.toggle('v337-off',inp.disabled||inp.readOnly)};
   const show=()=>{txt.value=v337DateText(D.get.call(inp));txt.setCustomValidity('')};
   const put=iso=>{if(D.get.call(inp)===iso)return;D.set.call(inp,iso);inp.dispatchEvent(new Event('input',{bubbles:true}));inp.dispatchEvent(new Event('change',{bubbles:true}))};
   Object.defineProperty(inp,'value',{configurable:true,get(){return D.get.call(this)},set(v){D.set.call(this,v);show()}});
