@@ -1,4 +1,5 @@
 <!doctype html>
+<!-- v431: فحص شاشة الموجّه «ربط المدارس بالموجهين» لا يعدّ مدارس الثانوي (موجهوها بالمادة) غير مسندة؛ واجهة فقط. -->
 <!-- v430: خانات التاريخ (كل الشاشات، ومنها الإجازات) تفتح التقويم بالضغط بدل الكتابة (بطلب المستخدم 2026-11-21) — في كتلة v337: الحقل النصي للقراءة ويستدعي showPicker، وإن لم يدعمه المتصفح تبقى الكتابة. -->
 <!-- v428: إزالة التنقل بين البرنامج والبوابة (بطلب المستخدم 2026-11-21 «كل أزرار التنقل بلا استثناء»): زر «🔗» v225 في الشريط العلوي ورابط «بوابة المعلمين» v379 في شاشة اختيار الدور؛ دوال v225 باقية بلا استدعاء. -->
 <!-- v427: مدير النظام يرفع/يستبدل صحيفة أي معلم (بلا قيد المفتاح)؛ المنسق يرى زر الاستبدال دائمًا ويعمل متى فُتح رفع مرحلته. -->
@@ -8,7 +9,6 @@
 <!-- v418: «الإجازات» (بطلب المستخدم 2026-11-19، المرحلة 2 من الحل الأسبوعي): زر «طباعة الأسبوع» ← تقرير A4 leaveWeek «إجازات الأسبوع» (المعلم/المدرسة + أيام السبت–الخميس بنوع الإجازة) من حالة التقويم __v415. -->
 <!-- v417: «الإجازات» على الهاتف (بطلب المستخدم 2026-11-19): أزرار الصفحة داخل شبكة التبويبات بجوار «إجازات المعلم» (نسخ .v417-act، والأصل .v417-orig مخفي ≤760px). -->
 <!-- v416: «الإجازات» (بطلب المستخدم 2026-11-19 «الجزء العلوي فوق الجدول كبير»): الفلاتر وأسهم الأسبوع في سطر واحد، والأرقام الثلاثة سطر نصي، وبطاقات التبويبات أقصر في صفحة الإجازات فقط. -->
-<!-- v415: «الإجازات» (بطلب المستخدم 2026-11-19، الحل 2 أسبوعي، أ): تبويب «الأسبوع» أول وافتراضي — تقويم السبت–الخميس من teacher_long_leaves لمعلمي المدرسة (أو الغائبين فقط عند «كل المدارس»). كتلة v415. -->
 <html lang="ar" dir="rtl">
 <head>
 <!-- إعداد: أ/ محمود عبدالمفدي محمد أبوالنجا | الصفة: معلم -->
@@ -16,7 +16,7 @@
 <script>/* v226: العنوان الموحد — انظر التعليق أعلى الملف */(function(){try{if(/\.github\.io$/.test(location.hostname)&&/^\/science-guidance\/?(index\.html)?$/.test(location.pathname)&&!/[?&]stay\b/.test(location.search))location.replace('https://teachers-data-portal.vercel.app/app/'+location.hash)}catch(e){}})();</script>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#152c43">
-<title>نظام توجيه العلوم — v430</title>
+<title>نظام توجيه العلوم — v431</title>
 <link rel="manifest" href="./manifest.webmanifest">
 <link rel="icon" type="image/png" sizes="192x192" href="./app-icon-192.png">
 <link rel="apple-touch-icon" href="./app-icon-192.png">
@@ -2766,6 +2766,7 @@ window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();window.v152
 window.addEventListener('appinstalled',()=>{window.v152InstallPrompt=null;v152SyncInstallBtn()});
 if('serviceWorker' in navigator&&location.protocol!=='file:')window.addEventListener('load',()=>navigator.serviceWorker.register('./service-worker.js').catch(()=>{}));
 const V145_NEWS=[
+ ['v431','فحص شاشة الموجّه: لم تعد مدارس الثانوي (المسندة لموجهين بالمادة) تُحسب «غير مسندة» في «ربط المدارس بالموجهين».'],
  ['v430','خانات التاريخ تفتح التقويم بمجرد الضغط عليها بدل الكتابة (ومنها تواريخ الإجازات).'],
  ['v428','أُزيل زر «🔗» (التنقل بين البرنامج والبوابات) ورابط «بوابة المعلمين» من شاشة اختيار الدور.'],
  ['v427','مدير النظام والمنسق يستبدلان صحيفة الأحوال من شاشة «صحائف الأحوال».'],
@@ -3083,7 +3084,7 @@ async function supervisorHealthPage(){
  if(profile.role!=='admin')return '<div class="error">هذه الشاشة متاحة لمدير النظام فقط.</div>';
  const checks=[];const add=(name,ok,detail)=>checks.push({name,ok,detail});
  try{const {data,error}=await sb.rpc('get_reports_dataset',{p_term_id:activeTerm.id});add('قاعدة البيانات والتقارير',!error,error?.message||`تم تحميل ${data?.hierarchy?.schools?.length||0} مدرسة.`)}catch(e){add('قاعدة البيانات والتقارير',false,e.message)}
- try{const {data,error}=await sb.from('schools').select('id,name,supervisor_id,status').order('name');const unassigned=(data||[]).filter(s=>!s.supervisor_id).length;add('ربط المدارس بالموجهين',!error,error?.message||`${(data||[]).length} مدرسة — غير مسندة: ${unassigned}`)}catch(e){add('ربط المدارس بالموجهين',false,e.message)}
+ try{const {data,error}=await sb.from('schools').select('id,name,supervisor_id,status').order('name');let subjSet=new Set();try{const ssr=await sb.from('supervisor_school_subjects').select('school_id').eq('active',true);if(!ssr.error)subjSet=new Set((ssr.data||[]).map(r=>r.school_id))}catch(e){}const unassigned=(data||[]).filter(s=>!s.supervisor_id&&!subjSet.has(s.id)).length;add('ربط المدارس بالموجهين',!error,error?.message||`${(data||[]).length} مدرسة — غير مسندة: ${unassigned}`)}catch(e){add('ربط المدارس بالموجهين',false,e.message)}
  try{const {data,error}=await sb.from('school_submissions').select('id,school_id,status,row_version').eq('term_id',activeTerm.id);add('دورة الاعتماد',!error,error?.message||`${(data||[]).length} عملية اعتماد للفصل الحالي.`)}catch(e){add('دورة الاعتماد',false,e.message)}
  const reportFns=['openReportById','openSchoolReport','openSchoolsSummaryPlanReport','openReportPreview'];add('محرك التقارير',reportFns.every(n=>typeof window[n]==='function'),reportFns.map(n=>`${n}:${typeof window[n]==='function'?'✓':'✗'}`).join(' '));
  const linkFns=['go','supervisorSchoolQuickView','previewApprovalDistribution','approveSchool','returnSchool'];add('الروابط والإجراءات',linkFns.every(n=>typeof window[n]==='function'),linkFns.map(n=>`${n}:${typeof window[n]==='function'?'✓':'✗'}`).join(' '));
