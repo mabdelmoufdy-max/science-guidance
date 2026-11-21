@@ -6,7 +6,7 @@
 <meta name="robots" content="noindex,nofollow">
 <meta name="referrer" content="no-referrer">
 <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; connect-src https://xehjwzszhsaqdqmcatum.supabase.co; img-src data: 'self'; manifest-src 'self'; worker-src 'self'; base-uri 'none'; form-action 'none'">
-<title>بوابة المعلمين — v427</title>
+<title>بوابة المعلمين — v428</title>
 <link rel="manifest" href="/portal.webmanifest">
 <meta name="theme-color" content="#0f214d">
 <meta name="mobile-web-app-capable" content="yes">
@@ -715,10 +715,8 @@ body.has-tabs{padding-bottom:76px}
           h('div', { class: 'lg-rule' }, 'ادخل بالرقم القومي ورقم الهاتف المسجّل لك في سجل المعلمين. إن كنت مشرف مدرسة أو مسؤول بيانات ستختار الدور بعد الدخول.')),
         h('div', { class: 'lg-extra' },
           extra('📝', 'تقديم طلب معلم بالأجر (لمعلمي العلوم فقط)', paidConfirm, 'paid-open'),
-          isStandalone() ? null : extra('📲', 'تثبيت البوابة على هاتفك', installApp, 'install-open'),
-          ownerMode() ? extra('📋', 'طلبات معلمي الأجر', function () { window.location.href = '/app/#/paidRequests'; }, 'owner-paid') : null,
-          ownerMode() ? extra('🖥', 'البرنامج الرئيسي', function () { window.location.href = '/app/'; }, 'owner-app') : null,
-          ownerMode() ? extra('✅', 'الاعتماد', function () { window.location.href = 'https://teacher-portal-admin.vercel.app/'; }, 'owner-approve') : null)));
+          isStandalone() ? null : extra('📲', 'تثبيت البوابة على هاتفك', installApp, 'install-open'))));
+          /* v428: أُزيلت أزرار المالك (طلبات معلمي الأجر، البرنامج الرئيسي، الاعتماد) بطلب المستخدم — لا تنقل بين البوابة والبرنامج */
   };
   VIEWS.rolepick = function () {
     var box = errbox();
