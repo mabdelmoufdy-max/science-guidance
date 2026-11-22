@@ -1,4 +1,5 @@
 <!doctype html>
+<!-- v444: معاينة صحيفة الموجه للطباعة أو المشاركة كصورة أو PDF بقالب المعلم. -->
 <!-- v443: نسخة تجربة جديدة لقائمة الهاتف، وإخفاء معاينة التقرير من بياناتي، وتوحيد طباعة صحيفة الموجه مع قالب المعلم. -->
 <!-- v442: تبويب «بيانات الموجهين» للعرض والطباعة، وفصل المدارس عن صحيفة الأحوال. -->
 <!-- v441: صحيفة أحوال الموجه في بياناتي ودليل الموجهين، مع الحفظ الذاتي والطباعة وحقول المدير. -->
@@ -8,7 +9,6 @@
 <!-- v437: «بيان الحالة» يُفتح كتقرير بمحرك التقارير نفسه (معاينة ثم طباعة / إرسال صورة / PDF) بدل نافذة الطباعة المباشرة، وفي البوابة معاينة بأزرار طباعة وصورة وPDF. -->
 <!-- v436: زر «🖨 بيان الحالة» في صفحة «تعديل بيانات المعلم» (للمدير والمنسق والموجه وحساب المدرسة) يطبع بيان المعلم على هيئة «بيان حالة إلكتروني» في صفحة A4 واحدة. -->
 <!-- v435: تقرير «بيانات المعلم» (دور المعلم) على هيئة «بيان حالة إلكتروني» وفي صفحة A4 واحدة (نافذة طباعة مستقلة عن أنماط الطباعة العامة)، وبطاقة البوابة مضغوطة لصفحة واحدة. -->
-<!-- v434: إلغاء حقل «تاريخ الحصول على المؤهل» المضاف من «تعديل بيانات المعلم» (مكرر مع «سنة المؤهل» القديم؛ بقرار المستخدم)؛ الأعمدة والبيانات باقية في القاعدة بلا تغيير. -->
 <html lang="ar" dir="rtl">
 <head>
 <!-- إعداد: أ/ محمود عبدالمفدي محمد أبوالنجا | الصفة: معلم -->
@@ -16,7 +16,7 @@
 <script>/* v226: العنوان الموحد — انظر التعليق أعلى الملف */(function(){try{if(/\.github\.io$/.test(location.hostname)&&/^\/science-guidance\/?(index\.html)?$/.test(location.pathname)&&!/[?&]stay\b/.test(location.search))location.replace('https://teachers-data-portal.vercel.app/app/'+location.hash)}catch(e){}})();</script>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#152c43">
-<title>نظام توجيه العلوم — v443</title>
+<title>نظام توجيه العلوم — v444</title>
 <link rel="manifest" href="./manifest.webmanifest">
 <link rel="icon" type="image/png" sizes="192x192" href="./app-icon-192.png">
 <link rel="apple-touch-icon" href="./app-icon-192.png">
@@ -2825,6 +2825,7 @@ window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();window.v152
 window.addEventListener('appinstalled',()=>{window.v152InstallPrompt=null;v152SyncInstallBtn()});
 if('serviceWorker' in navigator&&location.protocol!=='file:')window.addEventListener('load',()=>navigator.serviceWorker.register('./service-worker.js').catch(()=>{}));
 const V145_NEWS=[
+ ['v444','«طباعة صحيفة الأحوال» للموجه تفتح معاينة تتيح الطباعة والمشاركة كصورة أو PDF.'],
  ['v443','قائمة الهاتف تعرض «بياناتي» باسمها، وطباعة صحيفة الموجه تستخدم قالب بيان الحالة الإلكتروني.'],
  ['v442','تبويب «بيانات الموجهين» للعرض والطباعة، والمدارس في تبويبات التوزيع.'],
  ['v441','صحيفة أحوال الموجه في «بياناتي» و«الموجهون»، مع استكمال البيانات وطباعة الصحيفة.'],
@@ -3936,7 +3937,7 @@ async function v270ChangePassword(e){
 function v270PrintCard(m=v270Me){
  if(!m)return;
  const values=v270Fields(m);
- v438Print({
+ return v438Preview({
   title:'بيان حالة إلكتروني لـ (موجه علوم)',
   subtitle:'بيان بيانات الموجه',
   printTitle:'Bayan_Al_Mowageh_'+v414Translit(m.full_name),
@@ -16984,7 +16985,7 @@ function v438Canvas(m){
   const draw=logo=>{
    if(logo)x.drawImage(logo,R-84,y,84,84);
    x.fillStyle='#000';x.textAlign='right';x.font='bold 28px '+FONT;x.fillText('نظام توجيه العلوم — إدارة قوص التعليمية',R-100,y+28);
-   x.font='22px '+FONT;x.fillStyle='#444';x.fillText('بيان بيانات المعلم',R-100,y+62);
+   x.font='22px '+FONT;x.fillStyle='#444';x.fillText(m.subtitle||'بيان بيانات المعلم',R-100,y+62);
    y+=96;x.fillStyle='#000';x.fillRect(M,y,W-2*M,3);y+=28;
    x.textAlign='center';x.font='bold 40px '+FONT;x.fillText(m.title,W/2,y+22);y+=70;
    const colW=(W-2*M-20)/3;
@@ -17003,7 +17004,7 @@ function v438Canvas(m){
     if(col>0)y+=48;y+=6;
    });
    y+=90;const sw=(W-2*M)/4;
-   m.sign.forEach((t,i)=>{const cx=R-sw*i-sw/2;x.textAlign='center';x.font='bold 24px '+FONT;x.fillStyle='#000';x.fillText(t,cx,y);x.strokeStyle='#555';x.lineWidth=2;x.setLineDash([3,5]);x.beginPath();x.moveTo(cx-sw/2+14,y+70);x.lineTo(cx+sw/2-14,y+70);x.stroke();x.setLineDash([])});
+   m.sign.forEach((t,i)=>{if(!t)return;const cx=R-sw*i-sw/2;x.textAlign='center';x.font='bold 24px '+FONT;x.fillStyle='#000';x.fillText(t,cx,y);x.strokeStyle='#555';x.lineWidth=2;x.setLineDash([3,5]);x.beginPath();x.moveTo(cx-sw/2+14,y+70);x.lineTo(cx+sw/2-14,y+70);x.stroke();x.setLineDash([])});
    x.textAlign='left';x.direction='ltr';x.font='20px '+FONT;x.fillStyle='#000';x.fillText('تاريخ الطباعة: '+m.date,M,H-M);
    resolve(c);
   };
@@ -17043,6 +17044,10 @@ function v438Print(m){
 }
 async function v435Print(teacherId){
  let m;try{m=v438Model(await v437Load(teacherId==null?null:teacherId))}catch(e){alert(e?.message||'تعذر تجهيز البيان');return}
+ return v438Preview(m);
+}
+async function v438Preview(m){
+ const fileName=m.printTitle||'Bayan_Hala_Electroni';
  document.getElementById('v438Prev')?.remove();
  const box=document.createElement('div');box.className='v438-body';box.textContent='جارٍ تجهيز المعاينة...';
  const ov=document.createElement('div');ov.id='v438Prev';ov.className='v438-ov';
@@ -17053,9 +17058,17 @@ async function v435Print(teacherId){
  ov.querySelector('#v438Close').onclick=close;
  ov.querySelector('#v438Print').onclick=()=>v438Print(m);
  let cv=null;
- ov.querySelector('#v438Img').onclick=()=>{if(cv)cv.toBlob(b=>v438Send(b,'Bayan_Hala_Electroni.jpg','image/jpeg'),'image/jpeg',0.92)};
- ov.querySelector('#v438Pdf').onclick=()=>{if(cv)v438Send(v438Pdf(cv),'Bayan_Hala_Electroni.pdf','application/pdf')};
- cv=await v438Canvas(m);box.textContent='';const img=document.createElement('img');img.src=cv.toDataURL('image/jpeg',0.9);img.alt='بيان الحالة';box.appendChild(img);
+ const sendImage=ov.querySelector('#v438Img');
+ sendImage.onclick=()=>{if(cv)cv.toBlob(b=>{if(b)v438Send(b,fileName+'.jpg','image/jpeg')},'image/jpeg',0.92)};
+ ov.querySelector('#v438Pdf').onclick=()=>{if(cv)v438Send(v438Pdf(cv),fileName+'.pdf','application/pdf')};
+ cv=await v438Canvas(m);
+ if(m.printTitle){
+  // جهّز الصورة قبل النقر حتى تبدأ المشاركة خلال تفاعل المستخدم نفسه.
+  const jpeg=await new Promise(resolve=>cv.toBlob(resolve,'image/jpeg',0.92));
+  if(jpeg)sendImage.onclick=()=>v438Send(jpeg,fileName+'.jpg','image/jpeg');
+ }
+ if(!ov.isConnected)return;
+ box.textContent='';const img=document.createElement('img');img.src=cv.toDataURL('image/jpeg',0.9);img.alt='بيان الحالة';box.appendChild(img);
 }
 function v436Build(id,c){
  const bar=document.querySelector('#modal .v339-bar');
