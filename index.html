@@ -1,4 +1,5 @@
 <!doctype html>
+<!-- v446: حسابات المعلمين ومشرفي المدارس تستخدم بوابة المعلمين، مع إبقاء الأدوار الأخرى في البرنامج الرئيسي. -->
 <!-- v445: منع تداخل الحقول الطويلة في معاينة صحيفة الموجه والصورة وملف PDF. -->
 <!-- v444: معاينة صحيفة الموجه للطباعة أو المشاركة كصورة أو PDF بقالب المعلم. -->
 <!-- v443: نسخة تجربة جديدة لقائمة الهاتف، وإخفاء معاينة التقرير من بياناتي، وتوحيد طباعة صحيفة الموجه مع قالب المعلم. -->
@@ -8,7 +9,6 @@
 <!-- v439: زر «🖨 بيان الحالة» بجوار «إضافة انتداب» في قائمة المعلمين (السطر المختصر والتفاصيل). -->
 <!-- v438: «بيان الحالة» بالتنسيق السابق (هيئة الصحيفة) داخل معاينة بأزرار: طباعة، إرسال كصورة، PDF (بدل جدول محرك التقارير). -->
 <!-- v437: «بيان الحالة» يُفتح كتقرير بمحرك التقارير نفسه (معاينة ثم طباعة / إرسال صورة / PDF) بدل نافذة الطباعة المباشرة، وفي البوابة معاينة بأزرار طباعة وصورة وPDF. -->
-<!-- v436: زر «🖨 بيان الحالة» في صفحة «تعديل بيانات المعلم» (للمدير والمنسق والموجه وحساب المدرسة) يطبع بيان المعلم على هيئة «بيان حالة إلكتروني» في صفحة A4 واحدة. -->
 <html lang="ar" dir="rtl">
 <head>
 <!-- إعداد: أ/ محمود عبدالمفدي محمد أبوالنجا | الصفة: معلم -->
@@ -16,7 +16,7 @@
 <script>/* v226: العنوان الموحد — انظر التعليق أعلى الملف */(function(){try{if(/\.github\.io$/.test(location.hostname)&&/^\/science-guidance\/?(index\.html)?$/.test(location.pathname)&&!/[?&]stay\b/.test(location.search))location.replace('https://teachers-data-portal.vercel.app/app/'+location.hash)}catch(e){}})();</script>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#152c43">
-<title>نظام توجيه العلوم — v445</title>
+<title>نظام توجيه العلوم — v446</title>
 <link rel="manifest" href="./manifest.webmanifest">
 <link rel="icon" type="image/png" sizes="192x192" href="./app-icon-192.png">
 <link rel="apple-touch-icon" href="./app-icon-192.png">
@@ -2611,8 +2611,18 @@ async function init(){
  const {data:{session}}=await sb.auth.getSession();
  if(!session){renderLogin();return}
  const state=await loadContext();
- if(state==='password'||state==='role')return;
+ if(state==='password'||state==='role'||state==='portal')return;
  renderShell();
+}
+
+function v446LockedRole(role){
+ return role==='teacher'||role==='senior_teacher';
+}
+function v446PortalScreen(){
+ app.innerHTML=`<main class="login-panel"><section class="login-card" aria-labelledby="v446PortalTitle">
+  <h1 id="v446PortalTitle">حسابات المعلمين ومشرفي المدارس تعمل الآن من بوابة المعلمين</h1>
+  <div class="actions"><a class="btn primary" href="https://teachers-data-portal.vercel.app/">فتح بوابة المعلمين</a><button class="btn secondary" type="button" onclick="logout()">تسجيل خروج</button></div>
+ </section></main>`;
 }
 
 async function loadContext(){
@@ -2625,7 +2635,14 @@ async function loadContext(){
   sb.from('academic_years').select('id,label,is_active').eq('is_active',true).maybeSingle()]);
  if(error)throw error;
  profile={...p,primary_role:p.role};
- if(re)throw re;userRoles=(r||[]).map(x=>x.role);if(!userRoles.length)userRoles=[p.role];
+ if(re)throw re;
+ const reportedRoles=(r||[]).map(x=>x.role);
+ userRoles=(reportedRoles.length?reportedRoles:[p.role]).filter(role=>!v446LockedRole(role));
+ if(!userRoles.length){
+  activeRole='';sessionStorage.removeItem('science_guidance_active_role');
+  v446PortalScreen();
+  return 'portal';
+ }
  if(activeRole&&!userRoles.includes(activeRole)){activeRole='';sessionStorage.removeItem('science_guidance_active_role')}
  activeYear=y;
  if(y){const {data:t}=await sb.from('terms').select('id,academic_year_id,name,is_active').eq('academic_year_id',y.id).eq('is_active',true).maybeSingle();activeTerm=t}
@@ -2716,7 +2733,7 @@ async function login(e){
  activeRole='';sessionStorage.removeItem('science_guidance_active_role');userRoles=[];
  const {error}=await sb.auth.signInWithPassword({email:`${civil}@science-guidance.local`,password});
  if(error){if(err){err.textContent='الرقم القومي أو كلمة المرور غير صحيحة';err.classList.remove('hidden')}v352LogFail(civil,error,'bad_credentials');return}
- const state=await loadContext();if(profile&&profile.is_active===false)v352LogFail(civil,null,'inactive');if(state==='password'||state==='role')return;renderShell();
+ const state=await loadContext();if(profile&&profile.is_active===false)v352LogFail(civil,null,'inactive');if(state==='password'||state==='role'||state==='portal')return;renderShell();
 }
 
 function toggleLoginPassword(btn){const input=document.getElementById('loginPassword');if(!input)return;input.type=input.type==='password'?'text':'password';btn.textContent=input.type==='password'?'إظهار':'إخفاء'}
@@ -2778,6 +2795,7 @@ function renderRolePicker(){
 }
 
 function selectRole(role){
+ if(profile&&v446LockedRole(role))return v446PortalScreen();
  if(!userRoles.includes(role))return toast('هذا الدور غير متاح للحساب');
  AppDataStore.clear();activeRole=role;sessionStorage.setItem('science_guidance_active_role',role);if(profile)profile.role=role;
  currentPage='dashboard';sidebarOpen=false;history.replaceState({scienceGuidance:true,page:'dashboard'},'',appNavRoute('dashboard'));renderShell();
@@ -2825,6 +2843,7 @@ window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();window.v152
 window.addEventListener('appinstalled',()=>{window.v152InstallPrompt=null;v152SyncInstallBtn()});
 if('serviceWorker' in navigator&&location.protocol!=='file:')window.addEventListener('load',()=>navigator.serviceWorker.register('./service-worker.js').catch(()=>{}));
 const V145_NEWS=[
+ ['v446','حسابات المعلمين ومشرفي المدارس تعمل الآن من بوابة المعلمين.'],
  ['v445','صحيفة الموجه: عمودان والتفاف القيم الطويلة في المعاينة والصورة وPDF.'],
  ['v444','«طباعة صحيفة الأحوال» للموجه تفتح معاينة تتيح الطباعة والمشاركة كصورة أو PDF.'],
  ['v443','قائمة الهاتف تعرض «بياناتي» باسمها، وطباعة صحيفة الموجه تستخدم قالب بيان الحالة الإلكتروني.'],
@@ -3037,6 +3056,7 @@ function v145OpenHelp(){
 function renderShell(){
  sidebarOpen=false;
  if(!profile)return renderLogin();
+ if(v446LockedRole(activeRole||profile.role))return v446PortalScreen();
  profile.role=activeRole||profile.role;
  const nav=v307Order(profile.role,NAV[profile.role]||NAV.teacher);if(!nav.some(x=>x[0]===currentPage))currentPage='dashboard';
  appNavApplyInitial();
@@ -9415,7 +9435,7 @@ async function v288QuickAdd(id,btn){
 let __v294Last=0,__v294LastRole='',__v294Timer=null;
 function v294Ping(force){
  try{
-  if(!profile||!profile.id)return;
+  if(!profile||!profile.id||document.getElementById('v446PortalTitle'))return;
   const now=Date.now();
   if(!force&&now-__v294Last<50000&&String(activeRole||'')===__v294LastRole)return;
   __v294Last=now;__v294LastRole=String(activeRole||'');
@@ -15124,7 +15144,7 @@ async function v360Load(){
  V360.loaded=true;v360Mark(document);v360Banner();if(V360.blocked.length)v360Watch();
 }
 const __v360BaseLoadContext=loadContext;
-loadContext=async function(){const st=await __v360BaseLoadContext.apply(this,arguments);try{await v360Load()}catch(e){}return st};
+loadContext=async function(){const st=await __v360BaseLoadContext.apply(this,arguments);if(st!=='portal')try{await v360Load()}catch(e){}return st};
 if(typeof selectRole==='function'){const __v360BaseSelectRole=selectRole;selectRole=async function(){const r=await __v360BaseSelectRole.apply(this,arguments);try{await v360Load()}catch(e){}return r}}
 const __v360BaseLoadPage=loadPage;
 loadPage=async function(){const r=await __v360BaseLoadPage.apply(this,arguments);try{v360Banner();if(V360.blocked.length)v360Mark(document)}catch(e){}return r};
