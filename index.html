@@ -1,4 +1,7 @@
 <!doctype html>
+<!-- v443: نسخة تجربة جديدة لقائمة الهاتف، وإخفاء معاينة التقرير من بياناتي، وتوحيد طباعة صحيفة الموجه مع قالب المعلم. -->
+<!-- v442: تبويب «بيانات الموجهين» للعرض والطباعة، وفصل المدارس عن صحيفة الأحوال. -->
+<!-- v441: صحيفة أحوال الموجه في بياناتي ودليل الموجهين، مع الحفظ الذاتي والطباعة وحقول المدير. -->
 <!-- v440: صفحة «تعديل بيانات المعلم» تُحمَّل مرة واحدة: كل البيانات بطلبات متوازية (جولتان بدل 9–10 انتظارات متتالية) ثم تُرسم بشكلها النهائي بعد «جارٍ تحميل بيانات المعلم…»؛ طبقات البناء v295 v184 v224 v339 v344 v381 v421 v436 صارت دوال رسم متزامنة vNNNBuild بالترتيب نفسه؛ الحقول والحفظ والصلاحيات بلا تغيير (بطلب المستخدم 2026-11-22 «ج»). + إصلاح: «حفظ» بعد تعديل حقل من «بيان الحالة» كان يعيد تحميل البرنامج ويكتب القيم في العنوان (preventDefault أول غلاف الحفظ v421). -->
 <!-- v439: زر «🖨 بيان الحالة» بجوار «إضافة انتداب» في قائمة المعلمين (السطر المختصر والتفاصيل). -->
 <!-- v438: «بيان الحالة» بالتنسيق السابق (هيئة الصحيفة) داخل معاينة بأزرار: طباعة، إرسال كصورة، PDF (بدل جدول محرك التقارير). -->
@@ -6,9 +9,6 @@
 <!-- v436: زر «🖨 بيان الحالة» في صفحة «تعديل بيانات المعلم» (للمدير والمنسق والموجه وحساب المدرسة) يطبع بيان المعلم على هيئة «بيان حالة إلكتروني» في صفحة A4 واحدة. -->
 <!-- v435: تقرير «بيانات المعلم» (دور المعلم) على هيئة «بيان حالة إلكتروني» وفي صفحة A4 واحدة (نافذة طباعة مستقلة عن أنماط الطباعة العامة)، وبطاقة البوابة مضغوطة لصفحة واحدة. -->
 <!-- v434: إلغاء حقل «تاريخ الحصول على المؤهل» المضاف من «تعديل بيانات المعلم» (مكرر مع «سنة المؤهل» القديم؛ بقرار المستخدم)؛ الأعمدة والبيانات باقية في القاعدة بلا تغيير. -->
-<!-- v433: مركز التحكم ← تبويب «مفاتيح البوابة»: فتح/قفل كل وظائف بوابة المعلمين (معلم/مشرف × وظيفة × مرحلة) برسالة إغلاق وجدولة وأوضاع جاهزة وتراجع ومفاتيح الصحائف؛ قاعدة البيانات v433. -->
-<!-- v431: فحص شاشة الموجّه «ربط المدارس بالموجهين» لا يعدّ مدارس الثانوي (موجهوها بالمادة) غير مسندة؛ واجهة فقط. -->
-<!-- v430: خانات التاريخ (كل الشاشات، ومنها الإجازات) تفتح التقويم بالضغط بدل الكتابة (بطلب المستخدم 2026-11-21) — في كتلة v337: الحقل النصي للقراءة ويستدعي showPicker، وإن لم يدعمه المتصفح تبقى الكتابة. -->
 <html lang="ar" dir="rtl">
 <head>
 <!-- إعداد: أ/ محمود عبدالمفدي محمد أبوالنجا | الصفة: معلم -->
@@ -16,7 +16,7 @@
 <script>/* v226: العنوان الموحد — انظر التعليق أعلى الملف */(function(){try{if(/\.github\.io$/.test(location.hostname)&&/^\/science-guidance\/?(index\.html)?$/.test(location.pathname)&&!/[?&]stay\b/.test(location.search))location.replace('https://teachers-data-portal.vercel.app/app/'+location.hash)}catch(e){}})();</script>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#152c43">
-<title>نظام توجيه العلوم — v440</title>
+<title>نظام توجيه العلوم — v443</title>
 <link rel="manifest" href="./manifest.webmanifest">
 <link rel="icon" type="image/png" sizes="192x192" href="./app-icon-192.png">
 <link rel="apple-touch-icon" href="./app-icon-192.png">
@@ -2428,6 +2428,33 @@ span.v415-L{border-radius:10px;padding:2px 8px}
 #modal .v440-load{display:flex;align-items:center;justify-content:center;gap:10px;min-height:40vh;color:#64748b;font-size:16px}
 #modal .v440-spin{width:22px;height:22px;border:3px solid #cbd5e1;border-top-color:var(--primary);border-radius:50%;animation:v440spin .8s linear infinite}
 @keyframes v440spin{to{transform:rotate(360deg)}}
+/* v441: صحيفة أحوال الموجه */
+.v441-sheet{min-width:0;color:var(--text,#162338)}
+.v441-sheet section{margin:0 0 12px;min-width:0;border:1px solid #bfc5cd;border-radius:8px;overflow:hidden;background:#fff}
+.v441-sheet h3{margin:0;padding:7px 12px;background:#e7e9ec;color:#222;font-size:1rem}
+.v441-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0;margin:0;padding:0}
+.v441-field{min-width:0;padding:7px 12px;border-bottom:1px solid #e1e4e8;overflow-wrap:anywhere}
+.v441-field dt{font-size:.86em;color:#495365}
+.v441-field dd{margin:1px 0 0;text-align:start;font-weight:600}
+.v441-field dd[dir=ltr]{text-align:right}
+.v441-form .v441-grid{gap:10px}
+.v441-form .field{min-width:0}
+.v441-form .field :is(input,select){width:100%;min-width:0}
+@media screen and (max-width:600px){
+ .v441-grid{grid-template-columns:minmax(0,1fr)}
+}
+/* v442: قائمة بيانات الموجهين */
+#v252Root[data-view="data"] > :is(.v252-filters,#v252Stats,#supervisorDirectoryDetails,#v252Body),
+#v252Root[data-view="data"] > .page-head .actions{display:none!important}
+#v442SupervisorData{min-width:0}
+#v442SupervisorData > input{width:100%}
+.v442-list{list-style:none;margin:var(--card-pad) 0 0;padding:0}
+.v442-list > li{border-bottom:1px solid var(--line)}
+.v442-row{display:flex;align-items:center;justify-content:space-between;gap:var(--radius);width:100%;min-height:var(--ctl-h);padding-inline:var(--card-pad);border:0;background:var(--card);color:var(--ink);text-align:start;cursor:pointer;overflow-wrap:anywhere}
+.v442-row[aria-expanded="true"]{background:var(--head)}
+.v442-row:focus-visible{outline:0;box-shadow:inset var(--ring)}
+.v442-arrow{flex:none;color:var(--primary);font-weight:700}
+.v442-card{padding:var(--card-pad);min-width:0}
 </style>
 </head>
 <body>
@@ -2760,7 +2787,7 @@ function switchRole(){if(userRoles.length<2)return;renderRolePicker()}
 
 function mobileNavShort(label){
  const exact={
-  'لوحة النظام':'الرئيسية','لوحة الإدارة':'الرئيسية','لوحة منسق المرحلة':'الرئيسية','لوحة الموجه':'الرئيسية','لوحة المدرسة':'الرئيسية','لوحة مشرف المادة':'الرئيسية','بياناتي':'الرئيسية',
+  'لوحة النظام':'الرئيسية','لوحة الإدارة':'الرئيسية','لوحة منسق المرحلة':'الرئيسية','لوحة الموجه':'الرئيسية','لوحة المدرسة':'الرئيسية','لوحة مشرف المادة':'الرئيسية',
   'إضافة وإدارة المعلمين':'المعلمون','توزيع المعلمين على الفصول':'التوزيع','الإرسال للاعتماد':'الاعتماد','اعتماد البيانات':'الاعتماد','التقارير العامة':'التقارير','تقارير المرحلة':'التقارير','تقارير المدرسة':'التقارير','تقاريري':'التقارير',
   'إدخال بيانات المدارس':'إدخال بيانات المدارس','التنبيهات':'التنبيهات','الإحصائيات':'الإحصائيات','الميزانية المرجعية':'الميزانية','الخطط الدراسية':'الخطط','فحص شاشة الموجه':'فحص الموجه','الموجهون ومدارسهم':'التوزيع','توزيع المرحلة':'التوزيع','مدارسي ومعلميها':'المدارس','المدرسة والمعلمون':'الكادر','قسم العلوم':'القسم','مدارسي':'المدارس','مدرستي':'الزملاء','حصصي وفصولي':'حصصي'
  };
@@ -2798,6 +2825,9 @@ window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();window.v152
 window.addEventListener('appinstalled',()=>{window.v152InstallPrompt=null;v152SyncInstallBtn()});
 if('serviceWorker' in navigator&&location.protocol!=='file:')window.addEventListener('load',()=>navigator.serviceWorker.register('./service-worker.js').catch(()=>{}));
 const V145_NEWS=[
+ ['v443','قائمة الهاتف تعرض «بياناتي» باسمها، وطباعة صحيفة الموجه تستخدم قالب بيان الحالة الإلكتروني.'],
+ ['v442','تبويب «بيانات الموجهين» للعرض والطباعة، والمدارس في تبويبات التوزيع.'],
+ ['v441','صحيفة أحوال الموجه في «بياناتي» و«الموجهون»، مع استكمال البيانات وطباعة الصحيفة.'],
  ['v440','«تعديل بيانات المعلم» تفتح أسرع وبشكلها النهائي مباشرة بدل أن تتغير أمامك عدة مرات أثناء التحميل.'],
  ['v439','قائمة المعلمين: زر «🖨 بيان الحالة» بجوار «إضافة انتداب» لطباعة بيان الحالة أو إرساله صورة أو PDF.'],
  ['v438','«بيان الحالة»: عودة تنسيق الصحيفة السابق، داخل معاينة فيها طباعة وإرسال كصورة وملف PDF.'],
@@ -3211,7 +3241,7 @@ async function schoolsPage(){
          <tr>
            <th>المدرسة</th>
            <th>المرحلة</th>
-           
+
            <th>عدد الفصول</th>
            <th>الموجه</th>
            <th>جهة الاعتماد</th>
@@ -3229,7 +3259,7 @@ async function schoolsPage(){
            return `<tr>
              <td><b>${esc(sc.name)}</b>${v268MgrLine(sc)}</td>
              <td>${esc(sc.stage)}</td>
-             
+
              <td><b>${visibleClassCount(sc)}</b></td>
              <td>${supervisorCell}</td>
              <td>
@@ -3768,40 +3798,26 @@ function supervisorDirectoryDetailsMarkup(s){
    <div class="supervisor-detail-item"><span>رقم الهاتف</span><b style="direction:ltr;text-align:right">${esc(phone||'—')}</b></div>
   </div>`;
  }
- const civil=supervisorDirectoryCivil(s),stages=supervisorDirectoryStages(s);
- const coordinator=supervisorDirectoryIsCoordinator(s),active=s.active!==false&&s.profile?.is_active!==false;
- const initial=(name.trim()[0]||'م').toUpperCase();
- const actions=[];
- if(supervisorDirectoryPermissions.canEdit)actions.push(`<button class="btn primary" onclick="editSupervisorForm('${s.id}')">تعديل بيانات الموجه</button>`);
- if(!s.profile_id&&supervisorDirectoryPermissions.canCreate)actions.push('<button class="btn secondary" onclick="openCreateUser()">إنشاء حساب دخول</button>');
- return `<div class="supervisor-details-head">
-   <div class="supervisor-details-person">
-    <span class="supervisor-details-avatar" aria-hidden="true">${esc(initial)}</span>
-    <div><h3>${esc(name)}</h3><div class="supervisor-details-badges">${coordinator?'<span class="badge ok">منسق مرحلة</span>':'<span class="badge info">موجه</span>'}${active?'<span class="badge ok">نشط</span>':'<span class="badge danger">غير نشط</span>'}${supervisorDirectoryAccountPill(s,false)}</div></div>
-   </div>
-   <button class="btn secondary" type="button" onclick="closeSupervisorDirectoryDetails()">إغلاق</button>
-  </div>
-  <div class="supervisor-detail-grid">
-   <div class="supervisor-detail-item"><span>الرقم القومي</span><b style="direction:ltr;text-align:right">${esc(civil||'—')}</b></div>
-   <div class="supervisor-detail-item"><span>المرحلة / المراحل</span><b>${esc(stages||'—')}</b></div>
-   <div class="supervisor-detail-item"><span>الهاتف</span><b style="direction:ltr;text-align:right">${esc(phone||'—')}</b></div>
-   <div class="supervisor-detail-item"><span>الصفة</span><b>${coordinator?'منسق مرحلة':'موجه علوم'}</b></div>
-   <div class="supervisor-detail-item"><span>المسمى الوظيفي</span><b>${esc(s.job_title||'—')}</b></div>
-   <div class="supervisor-detail-item"><span>الدرجة الوظيفية</span><b>${esc(s.employment_grade||'—')}</b></div>
-   <div class="supervisor-detail-item"><span>تاريخ التعيين</span><b>${esc(supervisorDirectoryDate(s.appointment_date))}</b></div>
-   <div class="supervisor-detail-item"><span>تاريخ استلام العمل</span><b>${esc(supervisorDirectoryDate(s.work_start_date))}</b></div>
-   <div class="supervisor-detail-item"><span>الموقف الوظيفي</span><b>${esc(s.assignment_status||'—')}</b></div>
-  </div>
-  ${actions.length?`<div class="supervisor-details-actions">${actions.join('')}</div>`:''}`;
+ return `<div class="supervisor-details-head"><h3>صحيفة أحوال الموجه</h3><button class="btn secondary" type="button" onclick="closeSupervisorDirectoryDetails()">إغلاق</button></div><div class="loading" role="status">جارٍ تحميل الصحيفة…</div>`;
 }
 
-function openSupervisorDirectoryDetails(id,{scroll=true}={}){
+async function openSupervisorDirectoryDetails(id,{scroll=true}={}){
  const row=supervisorDirectoryRows.find(x=>String(x.id)===String(id));if(!row)return;
  supervisorDirectoryActiveId=String(id);
  document.querySelectorAll('.supervisor-compact-row').forEach(x=>x.classList.toggle('selected',String(x.dataset.supervisorId)===supervisorDirectoryActiveId));
  const details=document.getElementById('supervisorDirectoryDetails');if(!details)return;
  details.innerHTML=supervisorDirectoryDetailsMarkup(row);details.classList.remove('hidden');
  if(scroll&&window.matchMedia('(max-width:850px)').matches)requestAnimationFrame(()=>details.scrollIntoView({behavior:'smooth',block:'nearest'}));
+ if(!supervisorDirectoryCanViewFull())return;
+ const loading=details.querySelector('.loading');
+ let response;
+ try{response=await v441Get(row.id)}catch(error){response={error}}
+ if(!loading.isConnected||supervisorDirectoryActiveId!==String(id))return;
+ if(response.error){loading.className='error';loading.textContent=response.error.message;return}
+ const admin=supervisorDirectoryPermissions.canEdit;
+ details.innerHTML=`<div class="supervisor-details-head"><div><h3>صحيفة أحوال الموجه</h3>${supervisorDirectoryAccountPill(row)}</div><div class="actions"><button class="btn secondary" type="button" data-v441-print>🖨 طباعة صحيفة الأحوال</button><button class="btn secondary" type="button" onclick="closeSupervisorDirectoryDetails()">إغلاق</button></div></div>${v441Card(response.data)}
+ ${admin?`<div class="actions"><button class="btn primary" type="button" onclick="editSupervisorForm('${esc(row.id)}')">تعديل بيانات الموجه</button>${!row.profile_id&&supervisorDirectoryPermissions.canCreate?'<button class="btn secondary" type="button" onclick="openCreateUser()">إنشاء حساب دخول</button>':''}</div>`:''}`;
+ details.querySelector('[data-v441-print]').addEventListener('click',()=>v270PrintCard(response.data));
 }
 
 function closeSupervisorDirectoryDetails(){
@@ -3825,32 +3841,83 @@ function filterSupervisorDirectory(){
 
 /* v270-begin: «بياناتي» للموجه */
 let v270Me=null;
-function v270Date(d){return d?supervisorDirectoryDate(d):'—'}
+const V441_SECTIONS=[
+ ['البيانات الشخصية',[
+  ['civil_id','الرقم القومي','id'],['birth','تاريخ الميلاد','id'],['full_name','الاسم'],
+  ['marital_status','الحالة الاجتماعية',['أعزب','متزوج','مطلق','أرمل']],
+  ['government','محافظة الميلاد'],['gender','النوع'],['religion','الديانة',['مسلم','مسيحي']],
+  ['nationality','الجنسية','text',40],['phone','الهاتف','tel'],['residence','محل الإقامة','text',250]
+ ]],
+ ['البيانات الوظيفية',[
+  ['position','الصفة'],['stages_label','المرحلة / المراحل'],['assignment_status','الموقف الوظيفي'],
+  ['appointment_date','تاريخ التعيين','date'],['work_start_date','تاريخ استلام العمل','date'],
+  ['grade_date','تاريخ الحصول على الدرجة','date'],['job_title','المسمى الوظيفي','text',150],
+  ['employment_grade','الدرجة الوظيفية','text',150],['specialty','التخصص','text',150]
+ ]],
+ ['بيانات مؤهل التعيين أول مرة',[
+  ['qualification_type','نوع المؤهل',['عليا','فوق المتوسط','متوسط']],['qualification_issuer','جهة الإصدار','text',150],
+  ['qualification_grade','التقدير',['امتياز','جيد جدا','جيد','مقبول']],['qualification','اسم المؤهل','text',150],
+  ['qualification_date','تاريخ الحصول على المؤهل','date']
+ ]]
+];
 function v270Fields(m){
- const stages=supervisorDirectoryStages(m)||'—';
- return [['الاسم',m.full_name||m.profile?.full_name],['الرقم القومي',m.civil_id||m.profile?.civil_id,1],['الهاتف',m.phone||m.profile?.phone,1],['المرحلة / المراحل',stages],['الصفة','موجه علوم'],['المسمى الوظيفي',m.job_title],['الدرجة الوظيفية',m.employment_grade],['تاريخ الحصول على الدرجة',v270Date(m.grade_date)],['تاريخ التعيين',v270Date(m.appointment_date)],['تاريخ استلام العمل',v270Date(m.work_start_date)],['الموقف الوظيفي',m.assignment_status]];
+ const {birth,gov,gender}=v435Civil(v156Digits(m.civil_id));
+ return {...m,...m.personal,birth,government:gov,gender,position:'موجه علوم',stages_label:[...new Set(m.stages||[])].join('، ')};
+}
+function v441Card(m){
+ const values=v270Fields(m);
+ const sections=V441_SECTIONS.map(([title,fields])=>`<section><h3>${title}</h3><dl class="v441-grid">${fields.map(([key,label,type])=>{
+  const value=type==='date'?v435Date(values[key]):values[key];
+  return `<div class="v441-field"><dt>${label}</dt><dd${['id','tel','date'].includes(type)?' dir="ltr"':''}>${esc(value||'—')}</dd></div>`;
+ }).join('')}</dl></section>`).join('');
+ return `<article class="v441-sheet">${sections}</article>`;
+}
+async function v441Get(id){
+ return sb.rpc('get_supervisor_profile',{p_supervisor_id:id});
 }
 async function v270MyProfilePage(){
- const {data,error}=await sb.from('supervisors').select('id,profile_id,civil_id,full_name,phone,job_title,employment_grade,grade_date,appointment_date,work_start_date,assignment_status,active,profile:profiles!supervisors_profile_id_fkey(full_name,civil_id,phone),supervisor_stage_assignments(stage,active),stage_coordinator_assignments(stage,active)').eq('profile_id',profile.id).limit(1);
+ v270Me=null;
+ const profileId=profile.id;
+ const {data:row,error:lookupError}=await sb.from('supervisors').select('id').eq('profile_id',profileId).eq('active',true).limit(1).maybeSingle();
+ if(lookupError)return `<div class="error">${esc(lookupError.message)}</div>`;
+ if(!row)return '<div class="page-head"><h2>بياناتي</h2></div><div class="notice">لا يوجد سجل موجه مرتبط بحسابك. تواصل مع مدير النظام.</div>';
+ const {data:m,error}=await v441Get(row.id);
  if(error)return `<div class="error">${esc(error.message)}</div>`;
- const m=v270Me=(data||[])[0];
- if(!m)return `<div class="page-head"><div><h2>بياناتي</h2></div></div><div class="notice">لا يوجد سجل موجه مرتبط بحسابك. تواصل مع مدير النظام.</div>`;
- const name=supervisorDirectoryName(m);
- return `<div class="page-head"><div><h2>بياناتي</h2><p>بطاقة بياناتك الوظيفية. الاسم والرقم القومي والمراحل والموقف الوظيفي يعدّلها مدير النظام فقط.</p></div><div class="actions"><button class="btn primary" type="button" onclick="v270EditForm()">تعديل بياناتي</button><button class="btn secondary" type="button" onclick="v270PrintCard()">طباعة البطاقة</button></div></div>
- <div class="card"><div class="supervisor-details-head"><div class="supervisor-details-person"><span class="supervisor-details-avatar" aria-hidden="true">${esc((name.trim()[0]||'م'))}</span><div><h3>${esc(name)}</h3><div class="muted">موجه علوم</div></div></div></div>
- <div class="supervisor-detail-grid">${v270Fields(m).map(([k,v,ltr])=>`<div class="supervisor-detail-item"><span>${k}</span><b${ltr?' style="direction:ltr;text-align:right"':''}>${esc(v||'—')}</b></div>`).join('')}</div></div>
+ if(profile?.id!==profileId||profile.role!=='supervisor')return '';
+ v270Me=m;
+ return `<div class="page-head"><div><h2>بياناتي</h2><p>صحيفة أحوال الموجه</p></div><div class="actions"><button class="btn primary" type="button" onclick="v270EditForm()">تعديل بياناتي</button><button class="btn secondary" type="button" onclick="v270PrintCard()">🖨 طباعة صحيفة الأحوال</button></div></div>
+ ${v441Card(m)}
  <div class="card" style="margin-top:14px"><h3>تغيير كلمة المرور</h3><form id="v270PwForm" onsubmit="v270ChangePassword(event)" autocomplete="off"><div class="form-grid"><div class="field"><label>كلمة المرور الحالية</label><input name="current" type="password" autocomplete="current-password" required></div><div class="field"><label>كلمة المرور الجديدة</label><input name="password" type="password" minlength="8" autocomplete="new-password" required></div><div class="field"><label>تأكيد كلمة المرور الجديدة</label><input name="confirm" type="password" minlength="8" autocomplete="new-password" required></div></div><div class="actions"><button class="btn primary">تغيير كلمة المرور</button></div></form></div>`;
 }
-function v270EditForm(){
- const m=v270Me;if(!m)return;
- const f=(n,l,v,t='text')=>`<div class="field"><label>${l}</label><input name="${n}" type="${t}" value="${esc(v||'')}"${t==='tel'?' dir="ltr" inputmode="tel"':''}></div>`;
- modal(`<h3>تعديل بياناتي</h3><form onsubmit="v270Save(event)"><div class="form-grid">${f('phone','الهاتف',m.phone||m.profile?.phone,'tel')}${f('job_title','المسمى الوظيفي',m.job_title)}${f('employment_grade','الدرجة الوظيفية',m.employment_grade)}${f('grade_date','تاريخ الحصول على الدرجة',m.grade_date,'date')}${f('appointment_date','تاريخ التعيين',m.appointment_date,'date')}${f('work_start_date','تاريخ استلام العمل',m.work_start_date,'date')}</div><div class="actions"><button class="btn primary">حفظ</button><button class="btn secondary" type="button" onclick="closeModal()">إلغاء</button></div></form>`);
+function v441ProfileForm(m,admin=false){
+ const values=v270Fields(m);
+ const fields=V441_SECTIONS.map(([title,defs])=>{
+  const inputs=defs.map(([key,label,type,max])=>{
+   const value=values[key]||'';
+   if(type==='id'||!type&&!(admin&&['full_name','assignment_status'].includes(key)))return '';
+   const input=Array.isArray(type)?`<select name="${key}"><option value="">—</option>${type.map(o=>`<option${value===o?' selected':''}>${esc(o)}</option>`).join('')}</select>`:
+    `<input name="${key}" type="${type||'text'}" value="${esc(value)}"${max?` maxlength="${max}"`:''}${type==='tel'?' dir="ltr" inputmode="tel"':''}${key==='full_name'?' required':''}>`;
+   return `<label class="field"><span>${label}</span>${input}</label>`;
+  }).join('');
+  return `<section><h4>${title}</h4><div class="v441-grid">${inputs}</div></section>`;
+ }).join('');
+ return `<h3>${admin?'تعديل بيانات الموجه':'تعديل بياناتي'}</h3><form class="v441-form" autocomplete="off" onsubmit="v270Save(event)" data-id="${esc(m.id)}">${fields}
+ <div class="actions"><button class="btn primary">حفظ</button><button class="btn secondary" type="button" onclick="closeModal()">إلغاء</button></div></form>`;
 }
+function v270EditForm(){if(profile?.role==='supervisor'&&v270Me)modal(v441ProfileForm(v270Me))}
 async function v270Save(e){
- e.preventDefault();const f=Object.fromEntries(new FormData(e.target).entries());
- const {error}=await sb.rpc('update_my_supervisor_profile',{p_phone:f.phone||null,p_job_title:f.job_title||null,p_employment_grade:f.employment_grade||null,p_grade_date:f.grade_date||null,p_appointment_date:f.appointment_date||null,p_work_start_date:f.work_start_date||null});
- if(error)return moneySafeError(error);
- closeModal();toast('تم حفظ بياناتك');refreshCurrentPage({invalidate:['supervisors','page:reports']}).catch(moneySafeError);
+ e.preventDefault();
+ const form=e.currentTarget,button=form.querySelector('button[type="submit"],button:not([type])');
+ if(button.disabled)return;
+ button.disabled=true;
+ try{
+  const fields=Object.fromEntries(new FormData(form));
+  const {error}=await sb.rpc('save_supervisor_full_profile',{p_supervisor_id:form.dataset.id,p_fields:fields});
+  if(error)return moneySafeError(error);
+  closeModal();
+  toast(profile.role==='admin'?'تم تحديث بيانات الموجه':'تم حفظ بياناتك');
+  await refreshCurrentPage({invalidate:['supervisors','hierarchy','dashboard','page:reports']});
+ }catch(error){moneySafeError(error)}finally{button.disabled=false}
 }
 async function v270ChangePassword(e){
  e.preventDefault();const form=e.target,fd=new FormData(form),cur=String(fd.get('current')||''),p=String(fd.get('password')||'');
@@ -3866,14 +3933,19 @@ async function v270ChangePassword(e){
   form.reset();toast('تم تغيير كلمة المرور');
  }catch(err){moneySafeError(err)}finally{if(btn)btn.disabled=false}
 }
-function v270PrintCard(){
- const m=v270Me;if(!m)return;
- const w=window.open('about:blank','_blank');if(!w)return toast('اسمح بفتح نافذة الطباعة من المتصفح.');
- const rows=v270Fields(m).map(([k,v,ltr])=>`<tr><th>${k}</th><td${ltr?' dir="ltr" style="text-align:right"':''}>${esc(v||'—')}</td></tr>`).join('');
- const today=new Date().toLocaleDateString('ar-EG');
- w.document.open();w.document.write(`<!doctype html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><title>بطاقة الموجه — ${esc(supervisorDirectoryName(m))}</title><style>@page{size:A4;margin:16mm}*{box-sizing:border-box}body{font-family:Tahoma,Arial,sans-serif;color:#0f214d;margin:0}.card{border:2px solid #0f214d;border-radius:14px;padding:22px}.head{display:flex;align-items:center;gap:16px;border-bottom:3px solid #c9a227;padding-bottom:14px;margin-bottom:18px}.head img{width:90px;height:90px}.head h1{margin:0;font-size:24px}.head p{margin:4px 0 0;color:#55657a}table{width:100%;border-collapse:collapse;font-size:16px}th,td{border:1px solid #c8d2de;padding:10px 12px;text-align:right}th{background:#eef3f8;width:34%}.foot{margin-top:18px;font-size:12px;color:#55657a;display:flex;justify-content:space-between}</style></head><body><div class="card"><div class="head"><img src="${BRAND_LOGO_SRC}" alt=""><div><h1>بطاقة بيانات موجه</h1><p>توجيه العلوم — إدارة قوص التعليمية</p></div></div><table>${rows}</table><div class="foot"><span>تاريخ الطباعة: ${esc(today)}</span><span>نظام توجيه العلوم</span></div></div></body></html>`);w.document.close();
- const go=()=>setTimeout(()=>{try{w.focus();w.print()}catch(_){}},150);
- if(w.document.readyState==='complete')go();else w.addEventListener('load',go,{once:true});
+function v270PrintCard(m=v270Me){
+ if(!m)return;
+ const values=v270Fields(m);
+ v438Print({
+  title:'بيان حالة إلكتروني لـ (موجه علوم)',
+  subtitle:'بيان بيانات الموجه',
+  printTitle:'Bayan_Al_Mowageh_'+v414Translit(m.full_name),
+  secs:V441_SECTIONS.map(([t,fields])=>({t,f:fields.map(([key,label,type])=>[
+   label,type==='date'?v435Date(values[key]):values[key],['full_name','qualification'].includes(key)?2:1
+  ])})),
+  sign:['توقيع الموجه',null,null,'يعتمد، مدير النظام'],
+  date:v435Date(new Date().toISOString())
+ });
 }
 /* v270-end */
 
@@ -3935,15 +4007,12 @@ async function supervisorsPage(){
 
 async function editSupervisorForm(id){
  if(profile?.role!=='admin')return toast('تعديل بيانات الموجه لمدير النظام فقط.');
- const {data:s,error}=await sb.from('supervisors').select(SUPERVISOR_FIELDS).eq('id',id).single();if(error)return moneySafeError(error);
- modal(`<h3>تعديل بيانات الموجه</h3><div class="notice info">الرقم القومي ثابت ولا يمكن تغييره.</div><form onsubmit="saveSupervisorEdit(event,'${id}')"><div class="form-grid"><div class="field"><label>الاسم الكامل</label><input name="full_name" value="${esc(s.full_name||'')}" required></div><div class="field"><label>الرقم القومي</label><input value="${esc(s.civil_id||'')}" disabled></div><div class="field"><label>الهاتف</label><input name="phone" value="${esc(s.phone||'')}"></div><div class="field"><label>المسمى الوظيفي</label><input name="job_title" value="${esc(s.job_title||'')}"></div><div class="field"><label>الدرجة الوظيفية</label><input name="employment_grade" value="${esc(s.employment_grade||'')}"></div><div class="field"><label>تاريخ التعيين</label><input type="date" name="appointment_date" value="${esc(s.appointment_date||'')}"></div><div class="field"><label>تاريخ استلام العمل</label><input type="date" name="work_start_date" value="${esc(s.work_start_date||'')}"></div><div class="field"><label>الموقف</label><input name="assignment_status" value="${esc(s.assignment_status||'')}"></div></div><div class="actions"><button class="btn primary">حفظ</button><button type="button" class="btn secondary" onclick="closeModal()">إلغاء</button></div></form>`)
+ const actor=profile.id;
+ const {data,error}=await v441Get(id);
+ if(profile?.id!==actor||profile.role!=='admin')return;
+ if(error)return moneySafeError(error);
+ modal(v441ProfileForm(data,true));
 }
-
-async function saveSupervisorEdit(e,id){e.preventDefault();const f=Object.fromEntries(new FormData(e.target).entries());for(const k of ['appointment_date','work_start_date'])if(!f[k])f[k]=null;const {error}=await sb.from('supervisors').update(f).eq('id',id);if(error)return moneySafeError(error);closeModal();toast('تم تحديث بيانات الموجه');refreshCurrentPage({invalidate:['supervisors','hierarchy','dashboard','page:reports']}).catch(moneySafeError)}
-
-
-
-
 
 function exportSupervisorMapCSV(){
  const rows=[['الموجه','الرقم القومي للموجه','المدرسة','المرحلة','عدد الفصول','المعلم','الرقم القومي للمعلم','الدرجة الوظيفية','نوع العمل','إجمالي الحصص','الحالة'],...(window.__supervisorMapRows||[])];
@@ -5306,8 +5375,8 @@ function enhanceReportsGlobalFilter(){
      </div>
    </div>
    <div class="auto-filter-options-row">
-     
-     
+
+
      ${supervisorValues.length?`<div class="auto-filter-field"><select id="reportsGlobalSupervisor" aria-label="الموجه" onchange="applyReportsGlobalFilter()"><option value="">الموجه: الكل</option>${supervisorValues.map(v=>`<option value="${esc(v)}">${esc(v)}</option>`).join('')}</select></div>`:''}
      <button class="btn secondary auto-filter-reset" onclick="resetReportsGlobalFilter()">مسح</button>
      <span class="auto-filter-count" id="reportsGlobalCount">0/0</span>
@@ -5734,6 +5803,7 @@ function mobileDefaultActions(){
 }
 
 function collectMobilePageActions(root){
+ if(root?.querySelector('#v252Root[data-view="data"]'))return [];
  const selectors=['.page-head > .actions button[onclick]','.page-head > button.btn[onclick]','.supervisor-tools-grid button[onclick]'];
  const nodes=[];
  selectors.forEach(sel=>root?.querySelectorAll(sel).forEach(el=>{if(!nodes.includes(el))nodes.push(el)}));
@@ -5812,7 +5882,6 @@ const sb=supabase.createClient(SUPABASE_URL,SUPABASE_KEY,{global:{fetch:roleAwar
 /* === v29 Performance Core: cache + dedup + cancellation + partial refresh === */
 const TEACHER_WORKLOAD_FIELDS='teacher_id,profile_id,civil_id,full_name,work_type,job_title,home_school_id,home_school_name,home_school_stage,is_senior_teacher,teaching_periods,supervision_periods,total_counted_periods,weekly_target,workload_rule_type,deficit_periods,surplus_periods,remaining_periods,workload_status';
 const SCHOOL_FIELDS='id,name,stage,school_type,gender_type,address,phone,class_count,supervisor_id,manager_profile_id,status,approval_authority,created_at,updated_at,row_version';
-const SUPERVISOR_FIELDS='id,profile_id,created_by,active,created_at,civil_id,full_name,phone,job_title,employment_grade,appointment_date,work_start_date,assignment_status';
 const TEACHER_RECORD_FIELDS='id,profile_id,civil_id,full_name,phone,email,job_title,grade_acquired_date,work_start_date,appointment_date,work_type,home_school_id,is_senior_teacher,active,created_at,updated_at,row_version,source_reference,source_validation_status,specialty,cadre_specialty,qualification,qualification_year,teacher_code,residence';
 const SCHOOL_SUBMISSION_FIELDS='id,school_id,academic_year_id,term_id,status,submitted_by,submitted_at,approved_by,approved_at,return_reason,entry_source,intervention_reason,last_changed_by,reopened_by,reopened_at,row_version,updated_at';
 const WORKLOAD_RULE_FIELDS='id,job_title,stage,weekly_norm,effective_from,effective_to,source_reference,active';
@@ -6719,7 +6788,7 @@ async function openReportById(reportId,options={}){
 }
 function openReportPreview(){const id=REPORT_PAGE_ADAPTER_MAP[currentPage];if(!id)return toast('لا يوجد تقرير مستقل لهذه الشاشة.');return openReportById(id);}
 function openSchoolsSummaryPlanReport(){return openReportById('summaryPlan');}
-function ensurePreviewButton(){const root=document.getElementById('content');if(!root||!REPORT_PAGE_ADAPTER_MAP[currentPage])return;const head=root.querySelector('.page-head');if(!head)return;normalizePageHeadActions();const actions=head.querySelector(':scope > .actions');if(!actions)return;actions.querySelectorAll('button').forEach(btn=>{const txt=(btn.textContent||'').trim();if(['طباعة عادية','طباعة','طباعة النتائج'].includes(txt))btn.remove()});if(actions.querySelector('.report-preview-open-btn'))return;const btn=document.createElement('button');btn.type='button';btn.className='btn secondary report-preview-open-btn';btn.textContent=reportHasActiveUiFilters()?'معاينة النتائج المفلترة':'معاينة التقرير';btn.onclick=openReportPreview;actions.appendChild(btn);}
+function ensurePreviewButton(){if(currentPage==='supervisors'&&profile?.role==='supervisor')return;const root=document.getElementById('content');if(!root||!REPORT_PAGE_ADAPTER_MAP[currentPage])return;const head=root.querySelector('.page-head');if(!head)return;normalizePageHeadActions();const actions=head.querySelector(':scope > .actions');if(!actions)return;actions.querySelectorAll('button').forEach(btn=>{const txt=(btn.textContent||'').trim();if(['طباعة عادية','طباعة','طباعة النتائج'].includes(txt))btn.remove()});if(actions.querySelector('.report-preview-open-btn'))return;const btn=document.createElement('button');btn.type='button';btn.className='btn secondary report-preview-open-btn';btn.textContent=reportHasActiveUiFilters()?'معاينة النتائج المفلترة':'معاينة التقرير';btn.onclick=openReportPreview;actions.appendChild(btn);}
 function ensureFilteredPrintButton(){ensurePreviewButton();}
 function ensureReportPagesReady(){return !!(__activeReportSchema&&document.querySelector('#reportPreviewSheet .report-a4-page'));}
 function reportCaptureScale(pageCount=1){const android=/Android/i.test(navigator.userAgent||'');const mem=Number(navigator.deviceMemory||4);pageCount=Math.max(1,Number(pageCount)||1);if(android){if(pageCount>=8)return 1;if(pageCount>=4)return mem<=4?1:1.1;return mem<=4?1.15:1.3}return pageCount>=10?1.15:(mem<=4?1.3:1.5);}
@@ -6865,12 +6934,10 @@ const __uxBaseEditSchoolForm=editSchoolForm;
 editSchoolForm=async function(id){await __uxBaseEditSchoolForm(id);requestAnimationFrame(()=>uxSmartifyForm(document.querySelector('#modal form'),{draftKey:`school:edit:${id}`}))};
 const __uxBaseEditTeacherForm=editTeacherForm;
 editTeacherForm=async function(id){await __uxBaseEditTeacherForm(id);requestAnimationFrame(()=>uxSmartifyForm(document.querySelector('#modal form'),{draftKey:`teacher:edit:${id}`}))};
-const __uxBaseEditSupervisorForm=editSupervisorForm;
-editSupervisorForm=async function(id){await __uxBaseEditSupervisorForm(id);requestAnimationFrame(()=>uxSmartifyForm(document.querySelector('#modal form'),{draftKey:`supervisor:edit:${id}`}))};
 const __uxBaseOpenCreateUser=openCreateUser;
 openCreateUser=async function(source){await __uxBaseOpenCreateUser(source);requestAnimationFrame(()=>{const form=document.querySelector('#modal form');if(!form)return;const role=form.elements.namedItem('role')?.value;uxSmartifyForm(form,{draftKey:`account:new:${profile.role}`,civilMode:['teacher','senior_teacher'].includes(role)?'teacher':['supervisor','stage_coordinator'].includes(role)?'supervisor':'account'});const roleSel=form.elements.namedItem('role');roleSel?.addEventListener('change',()=>{const input=form.elements.namedItem('civil_id');if(input){input.dataset.civilLookup='';const m=['teacher','senior_teacher'].includes(roleSel.value)?'teacher':['supervisor','stage_coordinator'].includes(roleSel.value)?'supervisor':'account';uxInitCivilLookup(input,{mode:m,form})}})})};
 
-uxWrapSmartSave('saveSchool');uxWrapSmartSave('saveSchoolEdit');uxWrapSmartSave('saveTeacherEdit');uxWrapSmartSave('saveSupervisorEdit');uxWrapSmartSave('createUser');
+uxWrapSmartSave('saveSchool');uxWrapSmartSave('saveSchoolEdit');uxWrapSmartSave('saveTeacherEdit');uxWrapSmartSave('createUser');
 
 seniorTeacherAddTeacherForm=async function(){
  const s=await mySchool();if(!s)return toast('لا توجد مدرسة مرتبطة بحساب مشرف المادة');
@@ -7953,7 +8020,7 @@ function clearSensitiveSessionState(){
  window.__assignmentWorkspace=null;window.__reportRows=[];window.__budgetRows=[];window.__secondaryBudgetRowsV95=[];
  window.__supervisorWorkspace=null;window.__supervisorMapRows=[];window.__incomingData=null;window.__statisticsFilterData=null;
  window.__paidShortageTeachers=[];window.__financialLeaveRows=[];__approvalCenter=null;__approvalSafetyLast=null;
- supervisorDirectoryRows=[];supervisorDirectoryActiveId='';
+ supervisorDirectoryRows=[];supervisorDirectoryActiveId='';v270Me=null;
  const overlay=document.getElementById('reportPreviewOverlay');overlay?.classList.remove('open');overlay?.setAttribute('aria-hidden','true');
  const sheet=document.getElementById('reportPreviewSheet');if(sheet)sheet.innerHTML='';
  document.body.style.overflow='';document.getElementById('modal')?.remove();
@@ -13453,11 +13520,79 @@ supervisorsPage=async function(){
  const stageOpts=(stages.length>1?['<option value="">كل المراحل</option>']:[]).concat(stages.map(x=>`<option value="${esc(x)}"${x===v252S.stage?' selected':''}>${esc(x)}</option>`)).join('')||'<option value="">—</option>';
  return `<div id="v252Root"><div class="page-head"><div><h2>${title}</h2><p>اختر المرحلة، ثم اعرض حسب الموجه أو حسب المدرسة.</p></div><div class="actions">${profile.role==='admin'?'<button class="btn primary" onclick="openCreateUser()">+ إضافة حساب موجه</button>':''}<button type="button" class="btn secondary report-preview-open-btn" onclick="openReportById('v252Sup',{filterState:{active:false}})">معاينة التقرير</button><button type="button" class="btn secondary" onclick="v179ExportReport('v252Sup','الموجهون')">تصدير Excel</button></div></div>
  <div class="card v252-filters"><select id="v252Stage" aria-label="المرحلة" onchange="v252Set('stage',this.value)">${stageOpts}</select><select id="v252Sup" aria-label="الموجه" onchange="v252Set('sup',this.value)"></select><input id="v252Q" type="search" autocomplete="off" placeholder="🔎 ابحث باسم المدرسة…" value="${esc(v252S.q)}" oninput="v252Set('q',this.value)"></div>
- <div class="v252-seg" role="tablist"><button type="button" role="tab" data-v="sup" onclick="v252Set('view','sup')">حسب الموجه</button><button type="button" role="tab" data-v="dist" onclick="v252Set('view','dist')">حسب المدرسة (التوزيع)</button></div>
+ <div class="v252-seg" role="tablist"><button type="button" role="tab" data-v="sup" onclick="v252Set('view','sup')">حسب الموجه</button><button type="button" role="tab" data-v="dist" onclick="v252Set('view','dist')">حسب المدرسة (التوزيع)</button><button type="button" role="tab" id="v442Tab" aria-controls="v442SupervisorData" data-v="data" onclick="v252Set('view','data')">بيانات الموجهين</button></div>
  <div id="v252Stats" class="v252-stats"></div>
  <div class="supervisor-directory-details hidden" id="supervisorDirectoryDetails"></div>
- <div id="v252Body"></div></div>`;
+ <div id="v252Body"></div><section id="v442SupervisorData" role="tabpanel" aria-labelledby="v442Tab" hidden></section></div>`;
 };
+/* v442: بيانات الموجهين للعرض والطباعة */
+function v442InitSupervisorData(panel){
+ const role=profile.role,account=profile.id;
+ const rows=v252S.dir.filter(row=>row.active===true&&(role!=='stage_coordinator'||
+  (row.supervisor_stage_assignments||[]).some(a=>a.active&&v252S.stages.includes(a.stage))))
+  .map(row=>({id:row.id,name:supervisorDirectoryName(row)}))
+  .sort((a,b)=>a.name.localeCompare(b.name,'ar'));
+ panel.innerHTML=`<label class="field" for="v442Search">البحث باسم الموجه</label>
+  <input id="v442Search" type="search" autocomplete="off">
+  <ul class="v442-list">${rows.map(({name},index)=>`<li>
+   <button class="v442-row" id="v442Row${index}" type="button" aria-expanded="false" aria-controls="v442Card${index}">
+    <span>${esc(name)}</span><span aria-hidden="true" class="v442-arrow">▾</span>
+   </button>
+   <div class="v442-card" id="v442Card${index}" aria-labelledby="v442Row${index}" hidden></div>
+  </li>`).join('')}</ul>
+  <div class="notice warn" role="status"${rows.length?' hidden':''}>لا يوجد موجهون مطابقون للبحث.</div>`;
+ const items=[...panel.querySelectorAll('.v442-list > li')];
+ const cache=new Map();
+ let open=null;
+ function collapse(){
+  if(!open)return;
+  open.button.setAttribute('aria-expanded','false');
+  open.button.querySelector('.v442-arrow').textContent='▾';
+  open.card.hidden=true;
+  open.card.replaceChildren();
+  open=null;
+ }
+ items.forEach((item,index)=>{
+  const button=item.querySelector('button'),card=item.querySelector('.v442-card'),{id}=rows[index];
+  button.addEventListener('click',async()=>{
+   const wasOpen=open?.button===button;
+   collapse();
+   if(wasOpen)return;
+   const current=open={button,card};
+   button.setAttribute('aria-expanded','true');
+   button.querySelector('.v442-arrow').textContent='▴';
+   card.hidden=false;
+   card.innerHTML='<p class="loading" role="status">جارٍ التحميل…</p>';
+   if(!cache.has(id)){
+    cache.set(id,v441Get(id).then(({data,error})=>{
+     if(error||!data)throw error||new Error();
+     return data;
+    }).catch(error=>{cache.delete(id);throw error}));
+   }
+   const stillOpen=()=>panel.isConnected&&open===current&&profile?.id===account&&profile.role===role;
+   try{
+    const data=await cache.get(id);
+    if(!stillOpen())return;
+    card.innerHTML=`${v441Card(data)}<button class="btn secondary" type="button">🖨 طباعة صحيفة الأحوال</button>`;
+    card.querySelector('button').addEventListener('click',()=>v270PrintCard(data));
+   }catch{
+    if(stillOpen())card.innerHTML='<p class="notice danger" role="alert">تعذّر تحميل بيانات الموجه. أغلق الصحيفة وافتحها للمحاولة مجددًا.</p>';
+   }
+  });
+ });
+ const search=panel.querySelector('#v442Search'),empty=panel.querySelector('.notice');
+ search.addEventListener('input',()=>{
+  const query=v288Norm(search.value);
+  let found=false;
+  items.forEach((item,index)=>{
+   item.hidden=!v288Norm(rows[index].name).includes(query);
+   if(item.hidden&&item.contains(open?.button))collapse();
+   if(!item.hidden)found=true;
+  });
+  empty.hidden=found;
+ });
+}
+
 function v252Set(k,v){v252S[k]=v;if(k==='stage'){v252S.sup='';v202State.stage=v}if(k==='sup')v202State.sup=v;if(k==='q')v202State.q=v;v252Render()}
 function v252StageList(){return v252S.stage?[v252S.stage]:v252S.stages}
 function v252StageSups(){const st=v252StageList();return v252S.dir.filter(x=>x.active!==false&&(x.supervisor_stage_assignments||[]).some(a=>a.active&&st.includes(a.stage)))}
@@ -13484,6 +13619,17 @@ function v252Chips(list,key,supId){const lim=12,open=v252S.open.has(key),shown=o
 function v252Render(){
  const body=document.getElementById('v252Body');if(!body)return;
  document.querySelectorAll('.v252-seg [data-v]').forEach(b=>{const on=b.dataset.v===v252S.view;b.classList.toggle('on',on);b.setAttribute('aria-selected',on?'true':'false')});
+ const dataPanel=document.getElementById('v442SupervisorData');
+ const showData=v252S.view==='data';
+ const root=document.getElementById('v252Root');
+ const viewChanged=root.dataset.view!==v252S.view;
+ root.dataset.view=v252S.view;
+ dataPanel.hidden=!showData;
+ if(viewChanged)refreshMobileActionBar(document.getElementById('content'));
+ if(showData){
+  if(!dataPanel.firstElementChild)v442InitSupervisorData(dataPanel);
+  return;
+ }
  const supSel=document.getElementById('v252Sup');
  if(supSel){const sups=v252StageSups();supSel.innerHTML=`<option value="">الموجه: الكل</option><option value="__none__">بلا موجه</option>`+sups.map(x=>`<option value="${esc(x.id)}">${esc(supervisorDirectoryName(x))}</option>`).join('');if(![...supSel.options].some(o=>o.value===v252S.sup))v252S.sup='';supSel.value=v252S.sup;v202State.sup=v252S.sup}
  const M=v252Model(),assigned=M.schools.length-M.noneAll.length;
@@ -16823,10 +16969,10 @@ function v438Model(D){
 }
 function v438Html(m){
  const css='@page{size:A4 portrait;margin:10mm}*{box-sizing:border-box}body{margin:0;font:12px Tahoma,Arial,sans-serif;color:#000;direction:rtl;-webkit-print-color-adjust:exact;print-color-adjust:exact}.page{break-inside:avoid;page-break-inside:avoid}.head{display:flex;align-items:center;gap:10px;border-bottom:2px solid #000;padding-bottom:5px;margin-bottom:6px}.head img{width:44px;height:44px}.head b{display:block;font-size:13px}.head small{color:#444}h1{font-size:18px;text-align:center;margin:4px 0 8px}.sec{background:#d9d9d9;text-align:center;font-weight:800;font-size:14px;padding:3px;margin:8px 0 5px}.g{display:grid;grid-template-columns:repeat(3,1fr);gap:4px 14px;padding:0 6px}.f{min-height:18px}.f.s2{grid-column:span 2}.f.s3{grid-column:1/-1}.f b{font-weight:800}.box{border:1px solid #000;display:inline-block;padding:1px 10px;font-weight:800;margin:0 6px 5px}.pen{padding:0 6px}.pen i{display:block;border-bottom:1px solid #999;height:20px}.sign{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:56px;text-align:center}.sign b{display:block}.sign span{display:block;border-bottom:1px dotted #555;height:30px}.foot{margin-top:14px;font-size:11px;direction:rtl;text-align:left}';
- const body=`<div class="page"><div class="head"><img src="${REPORT_LOGO_SRC}" alt=""><div><b>نظام توجيه العلوم — إدارة قوص التعليمية</b><small>بيان بيانات المعلم</small></div></div><h1>${esc(m.title)}</h1>`+
+ const body=`<div class="page"><div class="head"><img src="${REPORT_LOGO_SRC}" alt=""><div><b>نظام توجيه العلوم — إدارة قوص التعليمية</b><small>${esc(m.subtitle||'بيان بيانات المعلم')}</small></div></div><h1>${esc(m.title)}</h1>`+
   m.secs.map(sec=>`<div class="sec">${esc(sec.t)}</div>`+(sec.box?`<div class="box">${esc(sec.box)}</div>`:'')+(sec.pen?'<div class="pen"><i></i><i></i><i></i></div>':`<div class="g">${sec.f.map(f=>`<div class="f${f[2]?' s'+f[2]:''}"><b>${esc(f[0])}:</b> <span>${esc(f[1]||'')}</span></div>`).join('')}</div>`)).join('')+
-  `<div class="sign">${m.sign.map(k=>`<div><b>${esc(k)}</b><span></span></div>`).join('')}</div><div class="foot">تاريخ الطباعة: ${esc(m.date)}</div></div>`;
- return `<!doctype html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><title>بيان حالة إلكتروني — ${esc(m.name)}</title><style>${css}</style></head><body>${body}</body></html>`;
+  `<div class="sign">${m.sign.map(k=>k?`<div><b>${esc(k)}</b><span></span></div>`:'<div aria-hidden="true"></div>').join('')}</div><div class="foot">تاريخ الطباعة: ${esc(m.date)}</div></div>`;
+ return `<!doctype html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><title>${esc(m.printTitle||('بيان حالة إلكتروني — '+m.name))}</title><style>${css}</style></head><body>${body}</body></html>`;
 }
 function v438Canvas(m){
  return new Promise(resolve=>{
@@ -16886,7 +17032,14 @@ function v438Send(blob,name,type){
 function v438Print(m){
  const f=document.createElement('iframe');f.style.cssText='position:fixed;right:0;bottom:0;width:0;height:0;border:0';
  f.srcdoc=v438Html(m);document.body.appendChild(f);
- f.onload=()=>setTimeout(()=>{try{f.contentWindow.focus();f.contentWindow.print()}catch(_){}setTimeout(()=>f.remove(),60000)},200);
+ f.onload=()=>setTimeout(()=>{
+  const title=document.title;
+  try{
+   if(m.printTitle)document.title=m.printTitle;
+   f.contentWindow.focus();f.contentWindow.print();
+  }catch(_){}finally{if(m.printTitle)document.title=title}
+  setTimeout(()=>f.remove(),60000);
+ },200);
 }
 async function v435Print(teacherId){
  let m;try{m=v438Model(await v437Load(teacherId==null?null:teacherId))}catch(e){alert(e?.message||'تعذر تجهيز البيان');return}
