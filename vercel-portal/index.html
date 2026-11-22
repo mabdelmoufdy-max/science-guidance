@@ -6,7 +6,7 @@
 <meta name="robots" content="noindex,nofollow">
 <meta name="referrer" content="no-referrer">
 <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; connect-src https://xehjwzszhsaqdqmcatum.supabase.co; img-src data: 'self'; manifest-src 'self'; worker-src 'self'; base-uri 'none'; form-action 'none'">
-<title>بوابة المعلمين — v433</title>
+<title>بوابة المعلمين — v434</title>
 <link rel="manifest" href="/portal.webmanifest">
 <meta name="theme-color" content="#0f214d">
 <meta name="mobile-web-app-capable" content="yes">
@@ -329,6 +329,10 @@ body.has-tabs{padding-bottom:76px}
 .pr-blank{display:inline-block;min-width:120px;border-bottom:1px dotted #555;height:14px;vertical-align:bottom}
 .pr-sign{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:40px;text-align:center}
 .pr-sign span{display:block;border-bottom:1px dotted #555;height:34px}
+.pr-g3{grid-template-columns:repeat(3,1fr)}.pr-f.s2{grid-column:span 2}.pr-f.s3{grid-column:1/-1}
+.pr-box{border:1px solid #000;display:inline-block;padding:2px 10px;font-weight:800;margin:0 6px 6px}
+.pr-pen{padding:0 6px}.pr-pen i{display:block;border-bottom:1px solid #999;height:22px}
+.pr-sign.pr-s4{grid-template-columns:repeat(4,1fr);gap:10px;margin-top:150px;font-size:12px}
 .pr-foot{margin-top:16px;font-size:11px;text-align:left;direction:ltr}
 .pr-tt{font-size:11px}
 .pr-tt th,.pr-tt td{border:1px solid #000;padding:4px;height:34px}
@@ -2239,9 +2243,9 @@ input.dpick{cursor:pointer;background-image:linear-gradient(transparent,transpar
 
   /* ---------- التشغيل ---------- */
   /* ===== v423-begin: تبويبات البوابة (مثل البرنامج الرئيسي) + بياناتي الكاملة + بطاقة بيانات المعلم + جداول المعلمين + الإجازات ===== */
-  var XKEYS = ['religion', 'nationality', 'marital_status', 'qualification_type', 'qualification_issuer', 'qualification_grade', 'qualification_date'];
+  var XKEYS = ['religion', 'nationality', 'marital_status', 'qualification_type', 'qualification_issuer', 'qualification_grade'];
   Object.assign(LBL, { religion: 'الديانة', nationality: 'الجنسية', marital_status: 'الحالة الاجتماعية', qualification_type: 'نوع المؤهل',
-    qualification_issuer: 'جهة الحصول على المؤهل', qualification_grade: 'تقدير المؤهل', qualification_date: 'تاريخ الحصول على المؤهل' });
+    qualification_issuer: 'جهة الحصول على المؤهل', qualification_grade: 'تقدير المؤهل' });
   var XOPTS = { religion: ['مسلم', 'مسيحي'], marital_status: ['أعزب', 'متزوج', 'مطلق', 'أرمل'], qualification_type: ['عليا', 'فوق المتوسط', 'متوسط'],
     qualification_grade: ['امتياز', 'جيد جدا', 'جيد', 'مقبول'] };
   var LONG_TYPES = ['إجازة وضع', 'رعاية طفل', 'مرافقة زوج أو زوجة', 'إجازة مرضية طويلة', 'إصابة عمل', 'رعاية أحد أفراد الأسرة', 'إجازة بدون مرتب', 'إجازة طويلة أخرى'];
@@ -2373,10 +2377,9 @@ input.dpick{cursor:pointer;background-image:linear-gradient(transparent,transpar
       var v = pv(k), el = null;
       if (!v) {
         if (XOPTS[k]) el = fin(k, h('select', null, h('option', { value: '' }, '— اختر —'), XOPTS[k].map(function (x) { return h('option', { value: x }, x); })));
-        else if (k === 'qualification_date') el = dateInFn(k);
         else el = fin(k, h('input', { type: 'text', autocomplete: 'off', maxlength: k === 'nationality' ? '40' : '150', placeholder: k === 'nationality' ? 'مثال: مصري' : 'مثال: جامعة جنوب الوادي' }));
       }
-      rows.push(fillRow(LBL[k], k, v ? (k === 'qualification_date' ? h('span', { class: 'ltr nw' }, fmtDate(v)) : v) : '', el));
+      rows.push(fillRow(LBL[k], k, v || '', el));
     });
   }
 
@@ -2389,8 +2392,8 @@ input.dpick{cursor:pointer;background-image:linear-gradient(transparent,transpar
       religion: pv('religion'), nationality: pv('nationality'), marital: pv('marital_status'), phone: pv('phone'), address: pv('residence'),
       stage: sch && sch.stage, school: S.school && S.school.name, deleg: deleg, job: pv('job_title'), group: t.work_type === 'permanent' ? 'ثابت (معيّن)' : t.work_type === 'paid' ? 'بالأجر' : '',
       appt: pv('appointment_date'), ws: pv('work_start_date'), grade: pv('grade_acquired_date'), spec: pv('specialty'), cadre: t.cadre_specialty,
-      qtype: pv('qualification_type'), qname: pv('qualification'), qiss: pv('qualification_issuer'), qgr: pv('qualification_grade'), qdate: pv('qualification_date'), qyear: pv('qualification_year'),
-      senior: !!t.is_senior_teacher, classes: lines, total: totalPeriods() + (hasDeleg() ? dTotal() : 0) };
+      qtype: pv('qualification_type'), qname: pv('qualification'), qiss: pv('qualification_issuer'), qgr: pv('qualification_grade'), qyear: pv('qualification_year'),
+      status: ((S.lvCache && S.lvCache.self && S.lvCache.self.d && S.lvCache.self.d.long) ? 'في إجازة' : 'على رأس عمله'), senior: !!t.is_senior_teacher, classes: lines, total: totalPeriods() + (hasDeleg() ? dTotal() : 0) };
   }
   function supCardData(t) {
     var sch = S.sup.school, lines = (t.classes || []).map(function (c) { var k = S.sup.classes.filter(function (z) { return z.id === c.class_id; })[0]; return (k ? k.label : 'فصل') + ' · ' + perLabel(c.periods); });
@@ -2399,8 +2402,8 @@ input.dpick{cursor:pointer;background-image:linear-gradient(transparent,transpar
       stage: sch.stage, school: t.is_home ? sch.name : '', deleg: t.is_home ? '' : sch.name + ' (منتدب إليها)', job: t.job_title,
       group: t.work_type === 'permanent' ? 'ثابت (معيّن)' : t.work_type === 'paid' ? 'بالأجر' : '',
       appt: t.appointment_date, ws: t.work_start_date, grade: t.grade_acquired_date, spec: t.specialty, cadre: t.cadre_specialty,
-      qtype: t.qualification_type, qname: t.qualification, qiss: t.qualification_issuer, qgr: t.qualification_grade, qdate: t.qualification_date, qyear: t.qualification_year,
-      senior: null, classes: lines, total: supTotal(t) };
+      qtype: t.qualification_type, qname: t.qualification, qiss: t.qualification_issuer, qgr: t.qualification_grade, qyear: t.qualification_year,
+      status: t.leave ? 'في إجازة' : 'على رأس عمله', senior: null, classes: lines, total: supTotal(t) };
   }
   function prField(label, v, wide) {
     return h('div', { class: 'pr-f' + (wide ? ' w' : '') }, h('b', null, label + ': '), v ? h('span', null, String(v)) : h('span', { class: 'pr-blank' }, ''));
@@ -2420,19 +2423,28 @@ input.dpick{cursor:pointer;background-image:linear-gradient(transparent,transpar
     setTimeout(function () { try { window.print(); } catch (e) { } setTimeout(clean2, 60000); }, 60);
   }
   function printCard(d) {
-    var q = d.qdate ? fmtDate(d.qdate) : (d.qyear ? String(d.qyear) : '');
-    var page = h('div', { class: 'pr-page' }, prHead(d.title, null),
-      prSec('البيانات الشخصية', [prField('الكود', d.code), prField('الرقم القومي', d.civil), prField('الاسم رباعي', d.name, true),
-        prField('تاريخ الميلاد', d.birth), prField('محافظة الميلاد', d.gov), prField('النوع', d.gender), prField('الديانة', d.religion),
-        prField('الجنسية', d.nationality), prField('الحالة الاجتماعية', d.marital), prField('التليفون', d.phone), prField('العنوان', d.address, true)]),
-      prSec('بيانات جهة العمل', [prField('المديرية', 'قنا'), prField('الإدارة', 'قوص'), prField('المرحلة', d.stage), prField('جهة العمل', d.school, true),
-        d.deleg ? prField('الانتداب', d.deleg, true) : null]),
-      prSec('البيانات الوظيفية', [prField('الوظيفة الحالية', d.job), prField('المجموعة', d.group), prField('تاريخ التعيين', fmtDate(d.appt || '')),
-        prField('تاريخ استلام العمل', fmtDate(d.ws || '')), prField('التاريخ الاعتباري', fmtDate(d.grade || '')), prField('مادة التدريس', d.spec), prField('التخصص على الكادر', d.cadre)]),
-      prSec('بيانات المؤهل', [prField('نوع المؤهل', d.qtype), prField('اسم المؤهل', d.qname, true), prField('جهة الحصول عليه', d.qiss), prField('تقدير المؤهل', d.qgr), prField('تاريخ الحصول عليه', q)]),
-      prSec('الإشراف والإسناد', [d.senior === null ? null : prField('مشرف المادة', d.senior ? 'نعم' : 'لا'), prField('إجمالي الحصص الأسبوعية', d.total ? String(d.total) : ''),
-        h('div', { class: 'pr-f w' }, h('b', null, 'الفصول المسندة: '), d.classes && d.classes.length ? h('span', null, d.classes.join(' — ')) : h('span', null, 'لا فصول مسندة'))]),
-      h('div', { class: 'pr-sign' }, ['توقيع المعلم', 'مشرف المدرسة / مسؤول البيانات', 'الموجه'].map(function (x) { return h('div', null, h('b', null, x), h('span', null, '')); })),
+    /* v434: على هيئة «بيان حالة إلكتروني» (نفس الأقسام والترتيب؛ بلا الإشراف والإسناد) */
+    var G3 = function (kids) { return h('div', { class: 'pr-grid pr-g3' }, kids); };
+    var f = function (label, v, span) { var e = prField(label, v, false); if (span) e.className += ' s' + span; return e; };
+    var page = h('div', { class: 'pr-page' }, prHead('بيان حالة إلكتروني لـ (' + (d.job || (d.group === 'بالأجر' ? 'معلم بالأجر' : 'معلم')) + ')', null),
+      h('div', { class: 'pr-sec' }, 'البيانات الشخصية'),
+      G3([f('الكود', d.code), f('الرقم القومي', d.civil), f('تاريخ الميلاد', d.birth),
+        f('الاسم رباعي', d.name, 2), f('الحالة الاجتماعية', d.marital),
+        f('محافظة الميلاد', d.gov), f('النوع', d.gender), f('الديانة', d.religion),
+        f('الجنسية', d.nationality), f('التليفون', d.phone), f('العنوان', d.address)]),
+      h('div', { class: 'pr-sec' }, 'بيانات جهة العمل'),
+      h('div', { class: 'pr-box' }, 'الجهة الأصلية:'),
+      G3([f('المديرية', 'قنا'), f('المرحلة', d.stage), f('الإدارة', 'قوص'), f('جهة العمل', d.school, 3), d.deleg ? f('الانتداب', d.deleg, 3) : null]),
+      h('div', { class: 'pr-sec' }, 'البيانات الوظيفية'),
+      G3([f('المجموعة النوعية', d.group), f('الموقف من العمل', d.status), f('تاريخ التعيين', fmtDate(d.appt || '')),
+        f('تاريخ إستلام العمل', fmtDate(d.ws || '')), f('التاريخ الإعتباري', fmtDate(d.grade || '')), f('الوظيفة الحالية', d.job),
+        f('مادة التدريس', d.cadre || d.spec)]),
+      h('div', { class: 'pr-sec' }, 'بيانات مؤهل التعيين أول مرة'),
+      G3([f('نوع المؤهل', d.qtype), f('جهة الحصول عليه', d.qiss), f('تقدير المؤهل', d.qgr),
+        f('اسم المؤهل', d.qname, 2), f('تاريخ الحصول عليه', d.qyear ? String(d.qyear) : '')]),
+      h('div', { class: 'pr-sec' }, 'الجزاءات'),
+      h('div', { class: 'pr-pen' }, h('i'), h('i'), h('i')),
+      h('div', { class: 'pr-sign pr-s4' }, ['توقيع الموظف', 'مسئول الملفات', 'مدير الموارد البشرية', 'مسئول قواعد البيانات'].map(function (x) { return h('div', null, h('b', null, x), h('span', null, '')); })),
       h('div', { class: 'pr-foot' }, 'تاريخ الطباعة: ' + prDate()));
     doPrint(page, false);
   }
@@ -2662,14 +2674,14 @@ input.dpick{cursor:pointer;background-image:linear-gradient(transparent,transpar
   }
   function supXRows(t, rows) {
     if (!t.is_home) return;
-    XKEYS.forEach(function (k) { rows.push(kvRow(LBL[k], t[k] ? (k === 'qualification_date' ? fmtDate(t[k]) : t[k]) : '')); });
+    XKEYS.forEach(function (k) { rows.push(kvRow(LBL[k], t[k] || '')); });
     if (t.cadre_specialty) rows.push(kvRow('التخصص على الكادر', t.cadre_specialty));
     ['appointment_date', 'grade_acquired_date', 'work_start_date'].forEach(function (k) { if (t[k]) rows.push(kvRow(LBL[k], h('span', { class: 'ltr nw' }, fmtDate(t[k])))); });
   }
 
   /* ===== v427: مشرف المدرسة — بيانات المدرسة + إكمال البيانات الناقصة لمعلمي مدرسته ===== */
   var FKEYS = ['email', 'residence', 'qualification', 'qualification_year', 'specialty', 'appointment_date', 'grade_acquired_date', 'work_start_date', 'teacher_code'].concat(XKEYS);
-  var FDATES = { appointment_date: 1, grade_acquired_date: 1, work_start_date: 1, qualification_date: 1 };
+  var FDATES = { appointment_date: 1, grade_acquired_date: 1, work_start_date: 1 };
   function supMissing(t) {
     return FKEYS.filter(function (k) {
       if ((k === 'appointment_date' || k === 'grade_acquired_date') && t.work_type !== 'permanent') return false;
