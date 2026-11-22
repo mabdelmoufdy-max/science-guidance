@@ -1,4 +1,5 @@
 <!doctype html>
+<!-- v445: منع تداخل الحقول الطويلة في معاينة صحيفة الموجه والصورة وملف PDF. -->
 <!-- v444: معاينة صحيفة الموجه للطباعة أو المشاركة كصورة أو PDF بقالب المعلم. -->
 <!-- v443: نسخة تجربة جديدة لقائمة الهاتف، وإخفاء معاينة التقرير من بياناتي، وتوحيد طباعة صحيفة الموجه مع قالب المعلم. -->
 <!-- v442: تبويب «بيانات الموجهين» للعرض والطباعة، وفصل المدارس عن صحيفة الأحوال. -->
@@ -8,7 +9,6 @@
 <!-- v438: «بيان الحالة» بالتنسيق السابق (هيئة الصحيفة) داخل معاينة بأزرار: طباعة، إرسال كصورة، PDF (بدل جدول محرك التقارير). -->
 <!-- v437: «بيان الحالة» يُفتح كتقرير بمحرك التقارير نفسه (معاينة ثم طباعة / إرسال صورة / PDF) بدل نافذة الطباعة المباشرة، وفي البوابة معاينة بأزرار طباعة وصورة وPDF. -->
 <!-- v436: زر «🖨 بيان الحالة» في صفحة «تعديل بيانات المعلم» (للمدير والمنسق والموجه وحساب المدرسة) يطبع بيان المعلم على هيئة «بيان حالة إلكتروني» في صفحة A4 واحدة. -->
-<!-- v435: تقرير «بيانات المعلم» (دور المعلم) على هيئة «بيان حالة إلكتروني» وفي صفحة A4 واحدة (نافذة طباعة مستقلة عن أنماط الطباعة العامة)، وبطاقة البوابة مضغوطة لصفحة واحدة. -->
 <html lang="ar" dir="rtl">
 <head>
 <!-- إعداد: أ/ محمود عبدالمفدي محمد أبوالنجا | الصفة: معلم -->
@@ -16,7 +16,7 @@
 <script>/* v226: العنوان الموحد — انظر التعليق أعلى الملف */(function(){try{if(/\.github\.io$/.test(location.hostname)&&/^\/science-guidance\/?(index\.html)?$/.test(location.pathname)&&!/[?&]stay\b/.test(location.search))location.replace('https://teachers-data-portal.vercel.app/app/'+location.hash)}catch(e){}})();</script>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#152c43">
-<title>نظام توجيه العلوم — v444</title>
+<title>نظام توجيه العلوم — v445</title>
 <link rel="manifest" href="./manifest.webmanifest">
 <link rel="icon" type="image/png" sizes="192x192" href="./app-icon-192.png">
 <link rel="apple-touch-icon" href="./app-icon-192.png">
@@ -2825,6 +2825,7 @@ window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();window.v152
 window.addEventListener('appinstalled',()=>{window.v152InstallPrompt=null;v152SyncInstallBtn()});
 if('serviceWorker' in navigator&&location.protocol!=='file:')window.addEventListener('load',()=>navigator.serviceWorker.register('./service-worker.js').catch(()=>{}));
 const V145_NEWS=[
+ ['v445','صحيفة الموجه: عمودان والتفاف القيم الطويلة في المعاينة والصورة وPDF.'],
  ['v444','«طباعة صحيفة الأحوال» للموجه تفتح معاينة تتيح الطباعة والمشاركة كصورة أو PDF.'],
  ['v443','قائمة الهاتف تعرض «بياناتي» باسمها، وطباعة صحيفة الموجه تستخدم قالب بيان الحالة الإلكتروني.'],
  ['v442','تبويب «بيانات الموجهين» للعرض والطباعة، والمدارس في تبويبات التوزيع.'],
@@ -16989,7 +16990,55 @@ function v438Canvas(m){
    y+=96;x.fillStyle='#000';x.fillRect(M,y,W-2*M,3);y+=28;
    x.textAlign='center';x.font='bold 40px '+FONT;x.fillText(m.title,W/2,y+22);y+=70;
    const colW=(W-2*M-20)/3;
-   m.secs.forEach(sec=>{
+   if(m.printTitle){
+    const width=(R-M)/2-30,lineHeight=31;
+    const makeCell=([label,value])=>{
+     const lines=[];
+     let line='';
+     x.font='26px '+FONT;
+     for(const word of String(value||'—').trim().split(/\s+/)){
+      const next=line?line+' '+word:word;
+      if(line&&x.measureText(next).width>width){lines.push(line);line=word}
+      else line=next;
+     }
+     lines.push(line||'—');
+     return {label,lines};
+    };
+    const sections=m.secs.map(sec=>{
+     const rows=[];
+     for(let i=0;i<sec.f.length;i+=2){
+      const cells=sec.f.slice(i,i+2).map(makeCell);
+      rows.push({cells,height:Math.max(...cells.map(cell=>cell.lines.length))*lineHeight+46});
+     }
+     return {title:sec.t,rows,height:62+rows.reduce((sum,row)=>sum+row.height,0)+6};
+    });
+    const height=sections.reduce((sum,sec)=>sum+sec.height,0);
+    const scale=Math.min(1,(H-y-240)/height);
+    const top=y;
+    x.save();
+    x.translate(0,top);
+    x.scale(1,scale);
+    y=0;
+    for(const sec of sections){
+     x.fillStyle='#d9d9d9';x.fillRect(M,y,R-M,46);
+     x.fillStyle='#000';x.textAlign='center';x.font='bold 28px '+FONT;
+     x.fillText(sec.title,W/2,y+24);
+     y+=62;
+     for(const row of sec.rows){
+      row.cells.forEach(({label,lines},i)=>{
+       const right=R-10-i*(R-M)/2;
+       x.textAlign='right';x.font='bold 26px '+FONT;
+       x.fillText(label,right,y+14,width);
+       x.font='26px '+FONT;
+       lines.forEach((line,j)=>x.fillText(wrapNum(line),right,y+45+j*lineHeight,width));
+      });
+      y+=row.height;
+     }
+     y+=6;
+    }
+    x.restore();
+    y=top+y*scale;
+   }else m.secs.forEach(sec=>{
     x.fillStyle='#d9d9d9';x.fillRect(M,y,W-2*M,46);x.fillStyle='#000';x.textAlign='center';x.font='bold 28px '+FONT;x.fillText(sec.t,W/2,y+24);y+=62;
     if(sec.box){x.font='bold 26px '+FONT;const bw=x.measureText(sec.box).width+36;x.strokeStyle='#000';x.lineWidth=2;x.strokeRect(R-10-bw,y-4,bw,40);x.textAlign='right';x.fillText(sec.box,R-28,y+17);y+=52}
     if(sec.pen){x.strokeStyle='#999';x.lineWidth=2;for(let i=0;i<3;i++){y+=44;x.beginPath();x.moveTo(M+10,y);x.lineTo(R-10,y);x.stroke()}y+=24;return}
