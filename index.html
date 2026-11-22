@@ -1,4 +1,5 @@
 <!doctype html>
+<!-- v437: «بيان الحالة» يُفتح كتقرير بمحرك التقارير نفسه (معاينة ثم طباعة / إرسال صورة / PDF) بدل نافذة الطباعة المباشرة، وفي البوابة معاينة بأزرار طباعة وصورة وPDF. -->
 <!-- v436: زر «🖨 بيان الحالة» في صفحة «تعديل بيانات المعلم» (للمدير والمنسق والموجه وحساب المدرسة) يطبع بيان المعلم على هيئة «بيان حالة إلكتروني» في صفحة A4 واحدة. -->
 <!-- v435: تقرير «بيانات المعلم» (دور المعلم) على هيئة «بيان حالة إلكتروني» وفي صفحة A4 واحدة (نافذة طباعة مستقلة عن أنماط الطباعة العامة)، وبطاقة البوابة مضغوطة لصفحة واحدة. -->
 <!-- v434: إلغاء حقل «تاريخ الحصول على المؤهل» المضاف من «تعديل بيانات المعلم» (مكرر مع «سنة المؤهل» القديم؛ بقرار المستخدم)؛ الأعمدة والبيانات باقية في القاعدة بلا تغيير. -->
@@ -8,7 +9,6 @@
 <!-- v428: إزالة التنقل بين البرنامج والبوابة (بطلب المستخدم 2026-11-21 «كل أزرار التنقل بلا استثناء»): زر «🔗» v225 في الشريط العلوي ورابط «بوابة المعلمين» v379 في شاشة اختيار الدور؛ دوال v225 باقية بلا استدعاء. -->
 <!-- v427: مدير النظام يرفع/يستبدل صحيفة أي معلم (بلا قيد المفتاح)؛ المنسق يرى زر الاستبدال دائمًا ويعمل متى فُتح رفع مرحلته. -->
 <!-- v426: الرئيسية للموجه والمنسق (بطلب المستخدم 2026-11-20): «إجازات بانتظار اعتمادك» — طلبات الإجازة الطويلة من البوابة ونافذة اعتماد/رفض (long_leave_requests_pending / long_leave_request_review؛ الاعتماد يلغي إسنادات الفصل الحالي). كتلة v425. -->
-<!-- v421: «تعديل بيانات المعلم» — حقول بيان الحالة الإلكتروني مدمجة في أقسامه (الميلاد والنوع والديانة والجنسية والحالة الاجتماعية وبيانات المؤهل في ①، والموقف والمجموعة والتاريخ الاعتباري وقرار الدرجة ومادة التدريس في ②) بطلب المستخدم 2026-11-20؛ تحتاج grant update على الأعمدة (v421). -->
 <html lang="ar" dir="rtl">
 <head>
 <!-- إعداد: أ/ محمود عبدالمفدي محمد أبوالنجا | الصفة: معلم -->
@@ -16,7 +16,7 @@
 <script>/* v226: العنوان الموحد — انظر التعليق أعلى الملف */(function(){try{if(/\.github\.io$/.test(location.hostname)&&/^\/science-guidance\/?(index\.html)?$/.test(location.pathname)&&!/[?&]stay\b/.test(location.search))location.replace('https://teachers-data-portal.vercel.app/app/'+location.hash)}catch(e){}})();</script>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#152c43">
-<title>نظام توجيه العلوم — v436</title>
+<title>نظام توجيه العلوم — v437</title>
 <link rel="manifest" href="./manifest.webmanifest">
 <link rel="icon" type="image/png" sizes="192x192" href="./app-icon-192.png">
 <link rel="apple-touch-icon" href="./app-icon-192.png">
@@ -2793,6 +2793,7 @@ window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();window.v152
 window.addEventListener('appinstalled',()=>{window.v152InstallPrompt=null;v152SyncInstallBtn()});
 if('serviceWorker' in navigator&&location.protocol!=='file:')window.addEventListener('load',()=>navigator.serviceWorker.register('./service-worker.js').catch(()=>{}));
 const V145_NEWS=[
+ ['v437','«بيان الحالة» يُفتح أولًا كتقرير (معاينة) ثم الطباعة أو الإرسال كصورة أو PDF، في البرنامج والبوابة.'],
  ['v436','صفحة «تعديل بيانات المعلم»: زر «🖨 بيان الحالة» يطبع بيانات المعلم على هيئة بيان الحالة الإلكتروني في صفحة واحدة.'],
  ['v435','تقرير «بيانات المعلم» على هيئة «بيان حالة إلكتروني» وفي صفحة واحدة.'],
  ['v433','مركز التحكم: تبويب «مفاتيح البوابة» — فتح وقفل كل وظائف بوابة المعلمين والمشرف من مكان واحد، لكل دور ولكل مرحلة، مع رسالة إغلاق وجدولة وتراجع.'],
@@ -12679,7 +12680,7 @@ v103RebuildMetrics=function(schema){return V238_IDS.includes(schema?.reportId)?v
    على صفوفه فيُكتب مرة واحدة؛ ومثلها كيان ثانٍ داخل المجموعة (مثل المعلم داخل المدرسة) وصفاته النصية الثابتة. الأرقام لا تُدمج.
    لا تُدمج خانتان إلا إذا تطابق نصهما. عند انتقال المجموعة لصفحة جديدة يتكرر الكيان مرة واحدة بـ«(تابع)». الجداول الأسبوعية مستثناة.
    إن تعذّر العرض يُعرض التقرير بشكله السابق تلقائيًا. الحسابات والمربعات والإجماليات بلا تغيير. */
-const V239_KEY_RE=/^(المدرسة|اسم المدرسة|المعلم|اسم المعلم|الموجه|القسم)(\s|\/|$)/,V239_SKIP_RE=/timetable|secSpecialty|shortageAfterPaid|teachersGrouped/i,V239_IK='__v239i';
+const V239_KEY_RE=/^(المدرسة|اسم المدرسة|المعلم|اسم المعلم|الموجه|القسم)(\s|\/|$)/,V239_SKIP_RE=/timetable|teacherStatement|secSpecialty|shortageAfterPaid|teachersGrouped/i,V239_IK='__v239i';
 const v239Val=v=>String(reportCellValue(v)).replace(/\s+/g,' ').trim();
 const v239Empty=s=>!s||s==='—'||s==='-'||/^(لا|لم|كل)\s/.test(s); // عبارات مثل «لا توجد…» ليست كيانًا فلا تُدمج
 const v239IsIndex=c=>c.key==='index'||String(c.label||'').trim()==='م';
@@ -13120,7 +13121,7 @@ renderReportSchema=function(schema,sheet){
 /* v256: صف «المجموع» — آخر غلاف لـapplyCurrentFiltersToReportSchema. */
 {
  const prev256=applyCurrentFiltersToReportSchema;
- const V256_SKIP_ID=/timetable|teacherSelf/i,V256_SKIP_COL=/ترتيب|نسبة|%|متوسط|عمر|سنة|رقم|كود|هاتف/;
+ const V256_SKIP_ID=/timetable|teacherSelf|teacherStatement/i,V256_SKIP_COL=/ترتيب|نسبة|%|متوسط|عمر|سنة|رقم|كود|هاتف/;
  function v256Total(src,cols){
   const rows=(src.rows||[]).filter(r=>r&&!r._group&&!r._total);
   if(rows.length<2)return null;
@@ -16788,49 +16789,65 @@ function v435Civil(c){c=String(c||'').replace(/\D/g,'');if(c.length!==14)return 
  const cen=c[0]==='2'?'19':c[0]==='3'?'20':'';if(!cen)return {};
  return {birth:`${c.slice(5,7)}/${c.slice(3,5)}/${cen}${c.slice(1,3)}`,gov:G[c.slice(7,9)]||'',gender:(+c[12])%2?'ذكر':'أنثى'}}
 function v435Date(v){const m=String(v||'').match(/^(\d{4})-(\d{2})-(\d{2})/);return m?`${m[3]}/${m[2]}/${m[1]}`:''}
-async function v435PrintSelf(){return v435Print(null)}
-async function v435Print(teacherId){
- const w=window.open('about:blank','_blank');
- if(!w){toast('اسمح بفتح نافذة الطباعة من المتصفح.');return}
- try{
-  w.document.open();w.document.write('<!doctype html><meta charset="utf-8"><body style="font:16px Tahoma;direction:rtl;padding:30px">جارٍ تجهيز البيان...</body>');w.document.close();
-  let t,rows=[],home={},x={},sch={},lv=false;
-  if(teacherId==null){
-   const res=await v160LoadSelf(),d=res?.data;if(!d?.t)throw new Error('لا يوجد سجل معلم مرتبط بحسابك.');
-   t=d.t;rows=d.rows||[];home=rows.find(r=>r.is_home_school)||rows[0]||{};lv=!!(home.on_renewed_leave||home.workload_status==='إجازة');
-   try{const r=await sb.from('teacher_records').select('residence,religion,nationality,marital_status,qualification_type,qualification_issuer,qualification_grade').eq('id',t.id).maybeSingle();x=r.data||{}}catch(_){}
-  }else{
-   const base='id,full_name,civil_id,teacher_code,phone,job_title,grade_acquired_date,appointment_date,work_start_date,qualification,qualification_year,specialty,cadre_specialty,work_type,home_school_id';
-   let r=await sb.from('teacher_records').select(base+',residence,religion,nationality,marital_status,qualification_type,qualification_issuer,qualification_grade').eq('id',teacherId).maybeSingle();
-   if(r.error)r=await sb.from('teacher_records').select(base+',residence').eq('id',teacherId).maybeSingle();
-   if(r.error||!r.data)throw new Error('تعذر قراءة بيانات المعلم.');
-   t=r.data;x=t;try{await v419Load()}catch(_){}lv=!!v419Get(teacherId);
-  }
-  try{if(t.home_school_id){const r=await sb.from('schools').select('name,stage').eq('id',t.home_school_id).maybeSingle();sch=r.data||{}}}catch(_){}
-  const paid=String(t.work_type||home.work_type||'')==='paid',ci=v435Civil(t.civil_id);
-  const job=paid?'معلم بالأجر':(t.job_title||'معلم'),deleg=rows.filter(r=>!r.is_home_school).map(r=>r.scope_school_name).filter(Boolean).join('، ');
-  const onLeave=lv;
-  const f=(k,v,c)=>`<div class="f${c?' s'+c:''}"><b>${esc(k)}:</b> <span>${esc(v||'')}</span></div>`;
-  const sec=(t2,inner)=>`<div class="sec">${t2}</div><div class="g">${inner}</div>`;
-  const body=`<div class="page"><div class="head"><img src="${REPORT_LOGO_SRC}" alt=""><div><b>نظام توجيه العلوم — إدارة قوص التعليمية</b><small>بيان بيانات المعلم</small></div></div>
-<h1>بيان حالة إلكتروني لـ (${esc(job)})</h1>
-${sec('البيانات الشخصية',f('الكود',t.teacher_code)+f('الرقم القومي',t.civil_id)+f('تاريخ الميلاد',ci.birth)+f('الاسم رباعي',t.full_name,2)+f('الحالة الاجتماعية',x.marital_status)+f('محافظة الميلاد',ci.gov)+f('النوع',ci.gender)+f('الديانة',x.religion)+f('الجنسية',x.nationality)+f('التليفون',t.phone)+f('العنوان',x.residence))}
-<div class="sec">بيانات جهة العمل</div><div class="box">الجهة الأصلية:</div><div class="g">${f('المديرية','قنا')+f('المرحلة',sch.stage)+f('الإدارة','قوص')+f('جهة العمل',sch.name||home.home_school_name||home.scope_school_name,3)+(deleg?f('الانتداب',deleg,3):'')}</div>
-${sec('البيانات الوظيفية',f('المجموعة النوعية',paid?'بالأجر':'ثابت (معيّن)')+f('الموقف من العمل',onLeave?'في إجازة':'على رأس عمله')+f('تاريخ التعيين',v435Date(t.appointment_date))+f('تاريخ إستلام العمل',v435Date(t.work_start_date))+f('التاريخ الإعتباري',v435Date(t.grade_acquired_date))+f('الوظيفة الحالية',job)+f('مادة التدريس',t.cadre_specialty||t.specialty))}
-${sec('بيانات مؤهل التعيين أول مرة',f('نوع المؤهل',x.qualification_type)+f('جهة الحصول عليه',x.qualification_issuer)+f('تقدير المؤهل',x.qualification_grade)+f('اسم المؤهل',t.qualification,2)+f('تاريخ الحصول عليه',t.qualification_year))}
-<div class="sec">الجزاءات</div><div class="pen"><i></i><i></i><i></i></div>
-<div class="sign">${['توقيع الموظف','مسئول الملفات','مدير الموارد البشرية','مسئول قواعد البيانات'].map(k=>`<div><b>${k}</b><span></span></div>`).join('')}</div>
-<div class="foot">تاريخ الطباعة: ${v435Date(new Date().toISOString())}</div></div>`;
-  const css='@page{size:A4 portrait;margin:10mm}*{box-sizing:border-box}body{margin:0;font:12px Tahoma,Arial,sans-serif;color:#000;direction:rtl;-webkit-print-color-adjust:exact;print-color-adjust:exact}.page{break-inside:avoid;page-break-inside:avoid}.head{display:flex;align-items:center;gap:10px;border-bottom:2px solid #000;padding-bottom:5px;margin-bottom:6px}.head img{width:44px;height:44px}.head b{display:block;font-size:13px}.head small{color:#444}h1{font-size:18px;text-align:center;margin:4px 0 8px}.sec{background:#d9d9d9;text-align:center;font-weight:800;font-size:14px;padding:3px;margin:8px 0 5px}.g{display:grid;grid-template-columns:repeat(3,1fr);gap:4px 14px;padding:0 6px}.f{min-height:18px}.f.s2{grid-column:span 2}.f.s3{grid-column:1/-1}.f b{font-weight:800}.box{border:1px solid #000;display:inline-block;padding:1px 10px;font-weight:800;margin:0 6px 5px}.pen{padding:0 6px}.pen i{display:block;border-bottom:1px solid #999;height:20px}.sign{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:56px;text-align:center}.sign b{display:block}.sign span{display:block;border-bottom:1px dotted #555;height:30px}.foot{margin-top:14px;font-size:11px;direction:rtl;text-align:left}';
-  w.document.open();w.document.write(`<!doctype html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><title>بيان حالة إلكتروني — ${esc(t.full_name)}</title><style>${css}</style></head><body>${body}</body></html>`);w.document.close();
-  setTimeout(()=>{try{w.focus();w.print()}catch(_){}},300);
- }catch(e){try{w.close()}catch(_){}toast(e?.message||'تعذر تجهيز البيان')}
+let __v437Id=null;
+async function v437Load(teacherId){
+ let t,rows=[],home={},x={},sch={},lv=false;
+ if(teacherId==null){
+  const res=await v160LoadSelf(),d=res?.data;if(!d?.t)throw new Error('لا يوجد سجل معلم مرتبط بحسابك.');
+  t=d.t;rows=d.rows||[];home=rows.find(r=>r.is_home_school)||rows[0]||{};lv=!!(home.on_renewed_leave||home.workload_status==='إجازة');
+  try{const r=await sb.from('teacher_records').select('residence,religion,nationality,marital_status,qualification_type,qualification_issuer,qualification_grade').eq('id',t.id).maybeSingle();x=r.data||{}}catch(_){}
+ }else{
+  const base='id,full_name,civil_id,teacher_code,phone,job_title,grade_acquired_date,appointment_date,work_start_date,qualification,qualification_year,specialty,cadre_specialty,work_type,home_school_id';
+  let r=await sb.from('teacher_records').select(base+',residence,religion,nationality,marital_status,qualification_type,qualification_issuer,qualification_grade').eq('id',teacherId).maybeSingle();
+  if(r.error)r=await sb.from('teacher_records').select(base+',residence').eq('id',teacherId).maybeSingle();
+  if(r.error||!r.data)throw new Error('تعذر قراءة بيانات المعلم.');
+  t=r.data;x=t;try{await v419Load()}catch(_){}lv=!!v419Get(teacherId);
+ }
+ try{if(t.home_school_id){const r=await sb.from('schools').select('name,stage').eq('id',t.home_school_id).maybeSingle();sch=r.data||{}}}catch(_){}
+ const paid=String(t.work_type||home.work_type||'')==='paid';
+ return {t,x,sch,home,paid,lv,ci:v435Civil(t.civil_id),job:paid?'معلم بالأجر':(t.job_title||'معلم'),deleg:rows.filter(r=>!r.is_home_school).map(r=>r.scope_school_name).filter(Boolean).join('، ')};
 }
-const __v435OpenReport=openReportById;
-openReportById=async function(reportId,options={}){
- if(reportId==='teacherSelf'&&profile?.role==='teacher')return v435PrintSelf();
- return __v435OpenReport.apply(this,arguments);
-};
+/* بيان الحالة كتقرير بمحرك التقارير (جدول من 4 أعمدة: بيان | قيمة | بيان | قيمة، وأقسام كعناوين مجموعات) */
+ReportAdapters.teacherStatement={async load(ctx){
+ const D=await v437Load(__v437Id),{t,x,sch,home,paid,lv,ci,job,deleg}=D;
+ const rows=[],blank={l1:'',v1:'',l2:'',v2:''};
+ const grp=title=>rows.push({...blank,_group:true,_groupTitle:title});
+ const NB='\u00a0',pair=(a,b)=>rows.push({l1:a?a[0]:NB,v1:a?(a[1]||'—'):NB,l2:b?b[0]:NB,v2:b?(b[1]||'—'):NB});
+ grp('البيانات الشخصية');
+ pair(['الكود',t.teacher_code],['الرقم القومي',t.civil_id]);
+ pair(['الاسم رباعي',t.full_name],['الحالة الاجتماعية',x.marital_status]);
+ pair(['تاريخ الميلاد',ci.birth],['محافظة الميلاد',ci.gov]);
+ pair(['النوع',ci.gender],['الديانة',x.religion]);
+ pair(['الجنسية',x.nationality],['التليفون',t.phone]);
+ pair(['العنوان',x.residence],null);
+ grp('بيانات جهة العمل');
+ pair(['المديرية','قنا'],['الإدارة','قوص']);
+ pair(['المرحلة',sch.stage],['جهة العمل',sch.name||home.home_school_name||home.scope_school_name]);
+ if(deleg)pair(['الانتداب',deleg],null);
+ grp('البيانات الوظيفية');
+ pair(['المجموعة النوعية',paid?'بالأجر':'ثابت (معيّن)'],['الموقف من العمل',lv?'في إجازة':'على رأس عمله']);
+ pair(['تاريخ التعيين',v435Date(t.appointment_date)],['تاريخ إستلام العمل',v435Date(t.work_start_date)]);
+ pair(['التاريخ الإعتباري',v435Date(t.grade_acquired_date)],['الوظيفة الحالية',job]);
+ pair(['مادة التدريس',t.cadre_specialty||t.specialty],null);
+ grp('بيانات مؤهل التعيين أول مرة');
+ pair(['نوع المؤهل',x.qualification_type],['جهة الحصول عليه',x.qualification_issuer]);
+ pair(['اسم المؤهل',t.qualification],['تقدير المؤهل',x.qualification_grade]);
+ pair(['تاريخ الحصول عليه',t.qualification_year?String(t.qualification_year):''],null);
+ grp('الجزاءات');
+ rows.push({...blank,l1:' ',v1:' ',l2:' ',v2:' '});
+ return makeReportSchema({reportId:'teacherStatement',title:'بيان حالة إلكتروني لـ ('+job+')',subtitle:v160Val(t.full_name),period:ctx.period,issuer:ctx.issuer,
+  columns:[reportColumn('l1','البيان',1.1),reportColumn('v1','القيمة',1.9),reportColumn('l2','البيان',1.1),reportColumn('v2','القيمة',1.9)],
+  rows,summary:[],totals:[],approval:{enabled:false}});
+}};
+const __v437BaseApply=applyCurrentFiltersToReportSchema;
+applyCurrentFiltersToReportSchema=function(schema,state){if(schema&&schema.reportId==='teacherStatement')return __v437BaseApply.call(this,schema,{active:false});return __v437BaseApply.apply(this,arguments)};
+async function v435Print(teacherId){
+ __v437Id=teacherId==null?null:teacherId;
+ const msgs=[],bt=toast;toast=function(m){msgs.push(String(m??''));return bt.apply(this,arguments)};
+ let err='';try{await openReportById('teacherStatement')}catch(e){err=e?.message||String(e)}finally{toast=bt}
+ const ov=document.getElementById('reportPreviewOverlay');
+ if(!(ov&&ov.classList.contains('open')))alert(err||msgs.join(' — ')||'لم تُفتح معاينة البيان.');
+}
 const __v436BaseEdit=editTeacherForm;
 editTeacherForm=async function(id){
  await __v436BaseEdit.apply(this,arguments);

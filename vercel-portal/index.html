@@ -6,7 +6,7 @@
 <meta name="robots" content="noindex,nofollow">
 <meta name="referrer" content="no-referrer">
 <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; connect-src https://xehjwzszhsaqdqmcatum.supabase.co; img-src data: 'self'; manifest-src 'self'; worker-src 'self'; base-uri 'none'; form-action 'none'">
-<title>بوابة المعلمين — v435</title>
+<title>بوابة المعلمين — v437</title>
 <link rel="manifest" href="/portal.webmanifest">
 <meta name="theme-color" content="#0f214d">
 <meta name="mobile-web-app-capable" content="yes">
@@ -329,7 +329,7 @@ body.has-tabs{padding-bottom:76px}
 .pr-blank{display:inline-block;min-width:120px;border-bottom:1px dotted #555;height:14px;vertical-align:bottom}
 .pr-sign{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:40px;text-align:center}
 .pr-sign span{display:block;border-bottom:1px dotted #555;height:34px}
-.pr-page{break-inside:avoid;page-break-inside:avoid}.pr-g3{grid-template-columns:repeat(3,1fr);gap:4px 14px}.pr-g3~.pr-sec,.pr-sec{margin:7px 0 4px;padding:3px}.pr-f.s2{grid-column:span 2}.pr-f.s3{grid-column:1/-1}
+.pr-page{break-inside:avoid;page-break-inside:avoid}.mdl.stp{align-items:flex-start;overflow:auto}.stp-c{background:#fff;border-radius:12px;max-width:900px;width:100%;margin:auto}.stp-bar{position:sticky;top:0;z-index:2;display:flex;flex-wrap:wrap;gap:8px;padding:10px;background:#fff;border-bottom:1px solid #e2e8f0;border-radius:12px 12px 0 0}.stp-bar .btn,.stp-bar .btn2{flex:1 1 40%;margin:0}.stp-body{padding:10px}img.stp-img{width:100%;height:auto;display:block;border:1px solid #e2e8f0}.pr-g3{grid-template-columns:repeat(3,1fr);gap:4px 14px}.pr-g3~.pr-sec,.pr-sec{margin:7px 0 4px;padding:3px}.pr-f.s2{grid-column:span 2}.pr-f.s3{grid-column:1/-1}
 .pr-box{border:1px solid #000;display:inline-block;padding:2px 10px;font-weight:800;margin:0 6px 6px}
 .pr-pen{padding:0 6px}.pr-pen i{display:block;border-bottom:1px solid #999;height:22px}
 .pr-sign.pr-s4{grid-template-columns:repeat(4,1fr);gap:10px;margin-top:56px;font-size:12px}
@@ -2422,31 +2422,113 @@ input.dpick{cursor:pointer;background-image:linear-gradient(transparent,transpar
     window.addEventListener('afterprint', clean2, { once: true });
     setTimeout(function () { try { window.print(); } catch (e) { } setTimeout(clean2, 60000); }, 60);
   }
-  function printCard(d) {
-    /* v434: على هيئة «بيان حالة إلكتروني» (نفس الأقسام والترتيب؛ بلا الإشراف والإسناد) */
+  /* v437: بيان الحالة يُفتح أولًا كمعاينة (مثل التقارير) ثم: طباعة / إرسال كصورة / ملف PDF.
+     نموذج واحد (cardModel) يرسمه المتصفح للطباعة ويرسمه canvas للصورة والـPDF. */
+  function cardModel(d) {
+    var job = d.job || (d.group === 'بالأجر' ? 'معلم بالأجر' : 'معلم');
+    return { name: d.name, title: 'بيان حالة إلكتروني لـ (' + job + ')', secs: [
+      { t: 'البيانات الشخصية', f: [['الكود', d.code], ['الرقم القومي', d.civil], ['تاريخ الميلاد', d.birth], ['الاسم رباعي', d.name, 2], ['الحالة الاجتماعية', d.marital],
+        ['محافظة الميلاد', d.gov], ['النوع', d.gender], ['الديانة', d.religion], ['الجنسية', d.nationality], ['التليفون', d.phone], ['العنوان', d.address]] },
+      { t: 'بيانات جهة العمل', box: 'الجهة الأصلية:', f: [['المديرية', 'قنا'], ['المرحلة', d.stage], ['الإدارة', 'قوص'], ['جهة العمل', d.school, 3]].concat(d.deleg ? [['الانتداب', d.deleg, 3]] : []) },
+      { t: 'البيانات الوظيفية', f: [['المجموعة النوعية', d.group], ['الموقف من العمل', d.status], ['تاريخ التعيين', fmtDate(d.appt || '')], ['تاريخ إستلام العمل', fmtDate(d.ws || '')],
+        ['التاريخ الإعتباري', fmtDate(d.grade || '')], ['الوظيفة الحالية', d.job], ['مادة التدريس', d.cadre || d.spec]] },
+      { t: 'بيانات مؤهل التعيين أول مرة', f: [['نوع المؤهل', d.qtype], ['جهة الحصول عليه', d.qiss], ['تقدير المؤهل', d.qgr], ['اسم المؤهل', d.qname, 2], ['تاريخ الحصول عليه', d.qyear ? String(d.qyear) : '']] },
+      { t: 'الجزاءات', pen: true }],
+      sign: ['توقيع الموظف', 'مسئول الملفات', 'مدير الموارد البشرية', 'مسئول قواعد البيانات'] };
+  }
+  function printCardDom(d) {
+    var m = cardModel(d);
     var G3 = function (kids) { return h('div', { class: 'pr-grid pr-g3' }, kids); };
-    var f = function (label, v, span) { var e = prField(label, v, false); if (span) e.className += ' s' + span; return e; };
-    var page = h('div', { class: 'pr-page' }, prHead('بيان حالة إلكتروني لـ (' + (d.job || (d.group === 'بالأجر' ? 'معلم بالأجر' : 'معلم')) + ')', null),
-      h('div', { class: 'pr-sec' }, 'البيانات الشخصية'),
-      G3([f('الكود', d.code), f('الرقم القومي', d.civil), f('تاريخ الميلاد', d.birth),
-        f('الاسم رباعي', d.name, 2), f('الحالة الاجتماعية', d.marital),
-        f('محافظة الميلاد', d.gov), f('النوع', d.gender), f('الديانة', d.religion),
-        f('الجنسية', d.nationality), f('التليفون', d.phone), f('العنوان', d.address)]),
-      h('div', { class: 'pr-sec' }, 'بيانات جهة العمل'),
-      h('div', { class: 'pr-box' }, 'الجهة الأصلية:'),
-      G3([f('المديرية', 'قنا'), f('المرحلة', d.stage), f('الإدارة', 'قوص'), f('جهة العمل', d.school, 3), d.deleg ? f('الانتداب', d.deleg, 3) : null]),
-      h('div', { class: 'pr-sec' }, 'البيانات الوظيفية'),
-      G3([f('المجموعة النوعية', d.group), f('الموقف من العمل', d.status), f('تاريخ التعيين', fmtDate(d.appt || '')),
-        f('تاريخ إستلام العمل', fmtDate(d.ws || '')), f('التاريخ الإعتباري', fmtDate(d.grade || '')), f('الوظيفة الحالية', d.job),
-        f('مادة التدريس', d.cadre || d.spec)]),
-      h('div', { class: 'pr-sec' }, 'بيانات مؤهل التعيين أول مرة'),
-      G3([f('نوع المؤهل', d.qtype), f('جهة الحصول عليه', d.qiss), f('تقدير المؤهل', d.qgr),
-        f('اسم المؤهل', d.qname, 2), f('تاريخ الحصول عليه', d.qyear ? String(d.qyear) : '')]),
-      h('div', { class: 'pr-sec' }, 'الجزاءات'),
-      h('div', { class: 'pr-pen' }, h('i'), h('i'), h('i')),
-      h('div', { class: 'pr-sign pr-s4' }, ['توقيع الموظف', 'مسئول الملفات', 'مدير الموارد البشرية', 'مسئول قواعد البيانات'].map(function (x) { return h('div', null, h('b', null, x), h('span', null, '')); })),
-      h('div', { class: 'pr-foot' }, 'تاريخ الطباعة: ' + prDate()));
-    doPrint(page, false);
+    var body = [prHead(m.title, null)];
+    m.secs.forEach(function (sec) {
+      body.push(h('div', { class: 'pr-sec' }, sec.t));
+      if (sec.box) body.push(h('div', { class: 'pr-box' }, sec.box));
+      if (sec.pen) { body.push(h('div', { class: 'pr-pen' }, h('i'), h('i'), h('i'))); return; }
+      body.push(G3(sec.f.map(function (x) { var e = prField(x[0], x[1], false); if (x[2]) e.className += ' s' + x[2]; return e; })));
+    });
+    body.push(h('div', { class: 'pr-sign pr-s4' }, m.sign.map(function (x) { return h('div', null, h('b', null, x), h('span', null, '')); })));
+    body.push(h('div', { class: 'pr-foot' }, 'تاريخ الطباعة: ' + prDate()));
+    doPrint(h('div', { class: 'pr-page' }, body), false);
+  }
+  function cardCanvas(m) {
+    return new Promise(function (resolve) {
+      var W = 1240, H = 1754, M = 60, c = document.createElement('canvas'); c.width = W; c.height = H;
+      var x = c.getContext('2d'); x.fillStyle = '#fff'; x.fillRect(0, 0, W, H); x.direction = 'rtl'; x.textBaseline = 'middle';
+      var FONT = 'Tahoma, Arial, sans-serif', R = W - M, y = M;
+      var wrapNum = function (v) { v = String(v == null ? '' : v); return /^[0-9\/\-.+ ]+$/.test(v) ? '⁦' + v + '⁩' : v; };
+      var fit = function (txt, px, bold, maxW) { while (px > 16) { x.font = (bold ? 'bold ' : '') + px + 'px ' + FONT; if (x.measureText(txt).width <= maxW) break; px -= 1; } return px; };
+      var draw = function (logo) {
+        if (logo) x.drawImage(logo, R - 84, y, 84, 84);
+        x.fillStyle = '#000'; x.textAlign = 'right'; x.font = 'bold 28px ' + FONT; x.fillText('نظام توجيه العلوم — إدارة قوص التعليمية', R - 100, y + 28);
+        x.font = '22px ' + FONT; x.fillStyle = '#444'; x.fillText('بوابة المعلمين — نسخة للاطلاع والمراجعة', R - 100, y + 62);
+        y += 96; x.fillStyle = '#000'; x.fillRect(M, y, W - 2 * M, 3); y += 28;
+        x.textAlign = 'center'; x.font = 'bold 40px ' + FONT; x.fillStyle = '#000'; x.fillText(m.title, W / 2, y + 22); y += 70;
+        var colW = (W - 2 * M - 20) / 3;
+        m.secs.forEach(function (sec) {
+          x.fillStyle = '#d9d9d9'; x.fillRect(M, y, W - 2 * M, 46); x.fillStyle = '#000'; x.textAlign = 'center'; x.font = 'bold 28px ' + FONT; x.fillText(sec.t, W / 2, y + 24); y += 62;
+          if (sec.box) { x.font = 'bold 26px ' + FONT; var bw = x.measureText(sec.box).width + 36; x.strokeStyle = '#000'; x.lineWidth = 2; x.strokeRect(R - 10 - bw, y - 4, bw, 40); x.textAlign = 'right'; x.fillText(sec.box, R - 28, y + 17); y += 52; }
+          if (sec.pen) { x.strokeStyle = '#999'; x.lineWidth = 2; for (var i = 0; i < 3; i++) { y += 44; x.beginPath(); x.moveTo(M + 10, y); x.lineTo(R - 10, y); x.stroke(); } y += 24; return; }
+          var col = 0;
+          sec.f.forEach(function (f) {
+            var span = f[2] || 1; if (col + span > 3) { col = 0; y += 48; }
+            var right = R - 10 - col * colW, avail = span * colW - 24;
+            x.textAlign = 'right'; x.fillStyle = '#000'; x.font = 'bold 26px ' + FONT; var lab = f[0] + ': ', lw = x.measureText(lab).width; x.fillText(lab, right, y + 18);
+            var val = wrapNum(f[1]), px = fit(val, 26, false, Math.max(60, avail - lw)); x.font = px + 'px ' + FONT; x.fillText(val, right - lw, y + 18);
+            col += span; if (col >= 3) { col = 0; y += 48; }
+          });
+          if (col > 0) y += 48; y += 6;
+        });
+        y += 90; var sw = (W - 2 * M) / 4;
+        m.sign.forEach(function (t, i) {
+          var cx = R - sw * i - sw / 2; x.textAlign = 'center'; x.font = 'bold 24px ' + FONT; x.fillStyle = '#000'; x.fillText(t, cx, y);
+          x.strokeStyle = '#555'; x.lineWidth = 2; x.setLineDash([3, 5]); x.beginPath(); x.moveTo(cx - sw / 2 + 14, y + 70); x.lineTo(cx + sw / 2 - 14, y + 70); x.stroke(); x.setLineDash([]);
+        });
+        x.textAlign = 'left'; x.direction = 'ltr'; x.font = '20px ' + FONT; x.fillStyle = '#000'; x.fillText('تاريخ الطباعة: ' + prDate(), M, H - M);
+        resolve(c);
+      };
+      var im = new Image(); im.onload = function () { draw(im); }; im.onerror = function () { draw(null); }; im.src = LOGO_SRC;
+    });
+  }
+  function jpegBytes(c) {
+    var b64 = c.toDataURL('image/jpeg', 0.92).split(',')[1], bin = atob(b64), u = new Uint8Array(bin.length);
+    for (var i = 0; i < bin.length; i++) u[i] = bin.charCodeAt(i); return u;
+  }
+  function pdfFromJpeg(jpg, w, hh) {
+    var parts = [], offs = [], len = 0;
+    var tb = function (str) { var u = new Uint8Array(str.length); for (var i = 0; i < str.length; i++) u[i] = str.charCodeAt(i) & 255; return u; };
+    var add = function (u) { parts.push(u); len += u.length; };
+    var obj = function (n, str) { offs[n] = len; add(tb(n + ' 0 obj\n' + str + '\nendobj\n')); };
+    add(tb('%PDF-1.4\n'));
+    obj(1, '<</Type/Catalog/Pages 2 0 R>>'); obj(2, '<</Type/Pages/Kids[3 0 R]/Count 1>>');
+    obj(3, '<</Type/Page/Parent 2 0 R/MediaBox[0 0 595 842]/Resources<</XObject<</Im0 5 0 R>>>>/Contents 4 0 R>>');
+    var ct = 'q 595 0 0 842 0 0 cm /Im0 Do Q'; obj(4, '<</Length ' + ct.length + '>>\nstream\n' + ct + '\nendstream');
+    offs[5] = len; add(tb('5 0 obj\n<</Type/XObject/Subtype/Image/Width ' + w + '/Height ' + hh + '/ColorSpace/DeviceRGB/BitsPerComponent 8/Filter/DCTDecode/Length ' + jpg.length + '>>\nstream\n'));
+    add(jpg); add(tb('\nendstream\nendobj\n'));
+    var xr = len, t = 'xref\n0 6\n0000000000 65535 f \n';
+    for (var i = 1; i <= 5; i++) t += ('0000000000' + offs[i]).slice(-10) + ' 00000 n \n';
+    add(tb(t + 'trailer\n<</Size 6/Root 1 0 R>>\nstartxref\n' + xr + '\n%%EOF'));
+    return new Blob(parts, { type: 'application/pdf' });
+  }
+  function sendFile(blob, name, type) {
+    var file = null; try { file = new File([blob], name, { type: type }); } catch (e) { }
+    if (file && navigator.canShare && navigator.canShare({ files: [file] })) { navigator.share({ files: [file], title: 'بيان الحالة الإلكتروني' }).catch(function () { }); return; }
+    var a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = name; document.body.appendChild(a); a.click();
+    setTimeout(function () { a.remove(); }, 1000);
+  }
+  function printCard(d) {
+    var m = cardModel(d), old = document.getElementById('stmt-prev'); if (old) old.remove();
+    var box = h('div', { class: 'stp-body' }, h('div', { class: 'note' }, 'جارٍ تجهيز المعاينة...'));
+    var ov = h('div', { class: 'mdl stp', id: 'stmt-prev', role: 'dialog', 'aria-modal': 'true' },
+      h('div', { class: 'stp-c' }, h('div', { class: 'stp-bar' },
+        mkBtn('btn', '🖨 طباعة', function () { printCardDom(d); }, { id: 'stp-print' }),
+        mkBtn('btn2', '📷 إرسال كصورة', function () { ov.__c && ov.__c.toBlob(function (b) { sendFile(b, 'Bayan_Hala_Electroni.jpg', 'image/jpeg'); }, 'image/jpeg', 0.92); }, { id: 'stp-img' }),
+        mkBtn('btn2', '📄 ملف PDF', function () { if (ov.__c) sendFile(pdfFromJpeg(jpegBytes(ov.__c), ov.__c.width, ov.__c.height), 'Bayan_Hala_Electroni.pdf', 'application/pdf'); }, { id: 'stp-pdf' }),
+        mkBtn('btn2', 'إغلاق', function () { ov.remove(); syncNav(); }, { id: 'stp-close' })), box));
+    ov.addEventListener('click', function (e) { if (e.target === ov) { ov.remove(); syncNav(); } });
+    document.body.appendChild(ov); syncNav();
+    cardCanvas(m).then(function (c) {
+      ov.__c = c; box.innerHTML = ''; box.appendChild(h('img', { src: c.toDataURL('image/jpeg', 0.9), alt: 'بيان الحالة', class: 'stp-img' }));
+    });
   }
 
   /* ---------- جداول المعلمين (المشرف) ---------- */
