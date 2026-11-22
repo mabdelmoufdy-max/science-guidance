@@ -1,4 +1,5 @@
 <!doctype html>
+<!-- v439: زر «🖨 بيان الحالة» بجوار «إضافة انتداب» في قائمة المعلمين (السطر المختصر والتفاصيل). -->
 <!-- v438: «بيان الحالة» بالتنسيق السابق (هيئة الصحيفة) داخل معاينة بأزرار: طباعة، إرسال كصورة، PDF (بدل جدول محرك التقارير). -->
 <!-- v437: «بيان الحالة» يُفتح كتقرير بمحرك التقارير نفسه (معاينة ثم طباعة / إرسال صورة / PDF) بدل نافذة الطباعة المباشرة، وفي البوابة معاينة بأزرار طباعة وصورة وPDF. -->
 <!-- v436: زر «🖨 بيان الحالة» في صفحة «تعديل بيانات المعلم» (للمدير والمنسق والموجه وحساب المدرسة) يطبع بيان المعلم على هيئة «بيان حالة إلكتروني» في صفحة A4 واحدة. -->
@@ -8,7 +9,6 @@
 <!-- v431: فحص شاشة الموجّه «ربط المدارس بالموجهين» لا يعدّ مدارس الثانوي (موجهوها بالمادة) غير مسندة؛ واجهة فقط. -->
 <!-- v430: خانات التاريخ (كل الشاشات، ومنها الإجازات) تفتح التقويم بالضغط بدل الكتابة (بطلب المستخدم 2026-11-21) — في كتلة v337: الحقل النصي للقراءة ويستدعي showPicker، وإن لم يدعمه المتصفح تبقى الكتابة. -->
 <!-- v428: إزالة التنقل بين البرنامج والبوابة (بطلب المستخدم 2026-11-21 «كل أزرار التنقل بلا استثناء»): زر «🔗» v225 في الشريط العلوي ورابط «بوابة المعلمين» v379 في شاشة اختيار الدور؛ دوال v225 باقية بلا استدعاء. -->
-<!-- v427: مدير النظام يرفع/يستبدل صحيفة أي معلم (بلا قيد المفتاح)؛ المنسق يرى زر الاستبدال دائمًا ويعمل متى فُتح رفع مرحلته. -->
 <html lang="ar" dir="rtl">
 <head>
 <!-- إعداد: أ/ محمود عبدالمفدي محمد أبوالنجا | الصفة: معلم -->
@@ -16,7 +16,7 @@
 <script>/* v226: العنوان الموحد — انظر التعليق أعلى الملف */(function(){try{if(/\.github\.io$/.test(location.hostname)&&/^\/science-guidance\/?(index\.html)?$/.test(location.pathname)&&!/[?&]stay\b/.test(location.search))location.replace('https://teachers-data-portal.vercel.app/app/'+location.hash)}catch(e){}})();</script>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#152c43">
-<title>نظام توجيه العلوم — v438</title>
+<title>نظام توجيه العلوم — v439</title>
 <link rel="manifest" href="./manifest.webmanifest">
 <link rel="icon" type="image/png" sizes="192x192" href="./app-icon-192.png">
 <link rel="apple-touch-icon" href="./app-icon-192.png">
@@ -2794,6 +2794,7 @@ window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();window.v152
 window.addEventListener('appinstalled',()=>{window.v152InstallPrompt=null;v152SyncInstallBtn()});
 if('serviceWorker' in navigator&&location.protocol!=='file:')window.addEventListener('load',()=>navigator.serviceWorker.register('./service-worker.js').catch(()=>{}));
 const V145_NEWS=[
+ ['v439','قائمة المعلمين: زر «🖨 بيان الحالة» بجوار «إضافة انتداب» لطباعة بيان الحالة أو إرساله صورة أو PDF.'],
  ['v438','«بيان الحالة»: عودة تنسيق الصحيفة السابق، داخل معاينة فيها طباعة وإرسال كصورة وملف PDF.'],
  ['v437','«بيان الحالة» يُفتح أولًا كتقرير (معاينة) ثم الطباعة أو الإرسال كصورة أو PDF، في البرنامج والبوابة.'],
  ['v436','صفحة «تعديل بيانات المعلم»: زر «🖨 بيان الحالة» يطبع بيانات المعلم على هيئة بيان الحالة الإلكتروني في صفحة واحدة.'],
@@ -3503,15 +3504,16 @@ async function teachersPage({force=false}={}){
    return esc(sc?.name||t.home_school_name||'—');
  };
  const rowActions=t=>{
-   if(v419Get(t.teacher_id))return `<td><div class="actions" style="gap:5px;flex-wrap:wrap">${v419Badge(t.teacher_id)}${canEdit?`<button class="btn secondary" onclick="editTeacherForm('${t.teacher_id}')">تعديل</button>`:''}<button class="btn secondary" onclick="v419OpenLeave('${t.teacher_id}')">تفاصيل الإجازة</button></div></td>`; // v419
+   if(v419Get(t.teacher_id))return `<td><div class="actions" style="gap:5px;flex-wrap:wrap">${v419Badge(t.teacher_id)}${canEdit?`<button class="btn secondary" onclick="editTeacherForm('${t.teacher_id}')">تعديل</button>`:''}<button class="btn secondary" onclick="v419OpenLeave('${t.teacher_id}')">تفاصيل الإجازة</button><button class="btn secondary" title="بيان الحالة الإلكتروني" onclick="v435Print('${t.teacher_id}')">🖨 بيان الحالة</button></div></td>`; // v419
    if(!canEdit)return '';
    const ownTeacher=profile.role!=='senior_teacher'||t.is_home_school!==false;
    const editBtn=ownTeacher?`<button class="btn secondary" onclick="editTeacherForm('${t.teacher_id}')">تعديل</button>`:'';
    const delegateBtn=canDelegate&&ownTeacher?`<button class="btn primary" title="فتح نموذج إضافة انتداب للمعلم" onclick="openTeacherDelegationForm('${t.teacher_id}')">إضافة انتداب</button>`:'';
+   const stmtBtn=`<button class="btn secondary" title="بيان الحالة الإلكتروني (طباعة / صورة / PDF)" onclick="v435Print('${t.teacher_id}')">🖨 بيان الحالة</button>`; // v439
    const delegatedBadge=!ownTeacher?`<span class="badge info">منتدب للمدرسة</span>`:'';
    const cancelDelegBtn=TEACHER_ACTION_ROLES.cancelDelegation.includes(profile.role)&&String(t.school_relation||'').startsWith('delegated_')?`<button class="btn secondary" title="إنهاء الانتداب النشط وإعادة ربط المعلم بمدرسته الأصلية" onclick="adminCancelDelegationForm('${t.teacher_id}')">إلغاء الانتداب</button>`:'';
    const stopPaidBtn=TEACHER_ACTION_ROLES.stopPaid.includes(profile.role)&&ownTeacher&&isPaidTeacher(t)?`<button class="btn danger" title="إيقاف معلم الأجر (لا يُحذف سجله)" onclick="v205StopPaidTeacher('${t.teacher_id}')">إيقاف معلم الأجر</button>`:''; // v205
-   return `<td><div class="actions" style="gap:5px;flex-wrap:wrap">${editBtn}${delegateBtn}${cancelDelegBtn}${stopPaidBtn}${delegatedBadge}</div></td>`;
+   return `<td><div class="actions" style="gap:5px;flex-wrap:wrap">${editBtn}${delegateBtn}${stmtBtn}${cancelDelegBtn}${stopPaidBtn}${delegatedBadge}</div></td>`;
  };
  let specMap=new Map(),cadreMap=new Map();
  try{const sp=await cachedRead(`page:teachers:specialty:${profile.id}:${profile.role}:${activeTerm?.id||'no-term'}`,async()=>({data:await v103ReadAll(()=>sb.from('teacher_records').select('id,specialty,cadre_specialty').eq('active',true).order('id')),error:null}),{ttl:30000,force});specMap=new Map((sp?.data||[]).filter(r=>r.specialty).map(r=>[String(r.id),r.specialty]));cadreMap=new Map((sp?.data||[]).filter(r=>r.cadre_specialty).map(r=>[String(r.id),r.cadre_specialty]));}catch(_e){}
@@ -5606,6 +5608,17 @@ function enhanceCompactDirectories(scope){
          delegationSourceButton.click();
        });
        summaryShell.appendChild(delegationQuickButton);
+     }
+     const stmtSourceButton=[...row.querySelectorAll('button')].find(btn=>(btn.getAttribute('onclick')||'').includes('v435Print'));
+     if(stmtSourceButton){
+       const stmtQuick=document.createElement('button');
+       stmtQuick.type='button';
+       stmtQuick.className='btn secondary compact-record-direct-action';
+       stmtQuick.textContent='🖨 بيان الحالة';
+       stmtQuick.title='بيان الحالة الإلكتروني (طباعة / صورة / PDF)';
+       stmtQuick.setAttribute('aria-label',`بيان الحالة للمعلم ${primaryText}`);
+       stmtQuick.addEventListener('click',event=>{event.preventDefault();event.stopPropagation();stmtSourceButton.click()});
+       summaryShell.appendChild(stmtQuick);
      }
      summaryCell.appendChild(summaryShell);
      row.prepend(summaryCell);
