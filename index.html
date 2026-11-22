@@ -1,4 +1,5 @@
 <!doctype html>
+<!-- v440: صفحة «تعديل بيانات المعلم» تُحمَّل مرة واحدة: كل البيانات بطلبات متوازية (جولتان بدل 9–10 انتظارات متتالية) ثم تُرسم بشكلها النهائي بعد «جارٍ تحميل بيانات المعلم…»؛ طبقات البناء v295 v184 v224 v339 v344 v381 v421 v436 صارت دوال رسم متزامنة vNNNBuild بالترتيب نفسه؛ الحقول والحفظ والصلاحيات بلا تغيير (بطلب المستخدم 2026-11-22 «ج»). + إصلاح: «حفظ» بعد تعديل حقل من «بيان الحالة» كان يعيد تحميل البرنامج ويكتب القيم في العنوان (preventDefault أول غلاف الحفظ v421). -->
 <!-- v439: زر «🖨 بيان الحالة» بجوار «إضافة انتداب» في قائمة المعلمين (السطر المختصر والتفاصيل). -->
 <!-- v438: «بيان الحالة» بالتنسيق السابق (هيئة الصحيفة) داخل معاينة بأزرار: طباعة، إرسال كصورة، PDF (بدل جدول محرك التقارير). -->
 <!-- v437: «بيان الحالة» يُفتح كتقرير بمحرك التقارير نفسه (معاينة ثم طباعة / إرسال صورة / PDF) بدل نافذة الطباعة المباشرة، وفي البوابة معاينة بأزرار طباعة وصورة وPDF. -->
@@ -8,7 +9,6 @@
 <!-- v433: مركز التحكم ← تبويب «مفاتيح البوابة»: فتح/قفل كل وظائف بوابة المعلمين (معلم/مشرف × وظيفة × مرحلة) برسالة إغلاق وجدولة وأوضاع جاهزة وتراجع ومفاتيح الصحائف؛ قاعدة البيانات v433. -->
 <!-- v431: فحص شاشة الموجّه «ربط المدارس بالموجهين» لا يعدّ مدارس الثانوي (موجهوها بالمادة) غير مسندة؛ واجهة فقط. -->
 <!-- v430: خانات التاريخ (كل الشاشات، ومنها الإجازات) تفتح التقويم بالضغط بدل الكتابة (بطلب المستخدم 2026-11-21) — في كتلة v337: الحقل النصي للقراءة ويستدعي showPicker، وإن لم يدعمه المتصفح تبقى الكتابة. -->
-<!-- v428: إزالة التنقل بين البرنامج والبوابة (بطلب المستخدم 2026-11-21 «كل أزرار التنقل بلا استثناء»): زر «🔗» v225 في الشريط العلوي ورابط «بوابة المعلمين» v379 في شاشة اختيار الدور؛ دوال v225 باقية بلا استدعاء. -->
 <html lang="ar" dir="rtl">
 <head>
 <!-- إعداد: أ/ محمود عبدالمفدي محمد أبوالنجا | الصفة: معلم -->
@@ -16,7 +16,7 @@
 <script>/* v226: العنوان الموحد — انظر التعليق أعلى الملف */(function(){try{if(/\.github\.io$/.test(location.hostname)&&/^\/science-guidance\/?(index\.html)?$/.test(location.pathname)&&!/[?&]stay\b/.test(location.search))location.replace('https://teachers-data-portal.vercel.app/app/'+location.hash)}catch(e){}})();</script>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#152c43">
-<title>نظام توجيه العلوم — v439</title>
+<title>نظام توجيه العلوم — v440</title>
 <link rel="manifest" href="./manifest.webmanifest">
 <link rel="icon" type="image/png" sizes="192x192" href="./app-icon-192.png">
 <link rel="apple-touch-icon" href="./app-icon-192.png">
@@ -2424,6 +2424,10 @@ span.v415-L{border-radius:10px;padding:2px 8px}
 .v433-form{display:grid;gap:6px}
 @media (max-width:760px){.v433-str{grid-template-columns:1fr 1fr 1fr}.v433-str b{grid-column:1/-1}.v433-master{width:100%}}
 .v438-ov{position:fixed;inset:0;z-index:9800;background:rgba(8,28,73,.55);overflow:auto;padding:16px;display:flex;align-items:flex-start}.v438-c{background:#fff;border-radius:12px;max-width:900px;width:100%;margin:auto}.v438-bar{position:sticky;top:0;z-index:2;display:flex;flex-wrap:wrap;gap:8px;padding:10px;background:#fff;border-bottom:1px solid #e2e8f0;border-radius:12px 12px 0 0}.v438-bar .btn{flex:1 1 22%;min-width:120px}.v438-body{padding:10px;text-align:center}.v438-body img{width:100%;height:auto;display:block;border:1px solid #e2e8f0}
+/* v440: تحميل صفحة «تعديل بيانات المعلم» مرة واحدة */
+#modal .v440-load{display:flex;align-items:center;justify-content:center;gap:10px;min-height:40vh;color:#64748b;font-size:16px}
+#modal .v440-spin{width:22px;height:22px;border:3px solid #cbd5e1;border-top-color:var(--primary);border-radius:50%;animation:v440spin .8s linear infinite}
+@keyframes v440spin{to{transform:rotate(360deg)}}
 </style>
 </head>
 <body>
@@ -2794,6 +2798,7 @@ window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();window.v152
 window.addEventListener('appinstalled',()=>{window.v152InstallPrompt=null;v152SyncInstallBtn()});
 if('serviceWorker' in navigator&&location.protocol!=='file:')window.addEventListener('load',()=>navigator.serviceWorker.register('./service-worker.js').catch(()=>{}));
 const V145_NEWS=[
+ ['v440','«تعديل بيانات المعلم» تفتح أسرع وبشكلها النهائي مباشرة بدل أن تتغير أمامك عدة مرات أثناء التحميل.'],
  ['v439','قائمة المعلمين: زر «🖨 بيان الحالة» بجوار «إضافة انتداب» لطباعة بيان الحالة أو إرساله صورة أو PDF.'],
  ['v438','«بيان الحالة»: عودة تنسيق الصحيفة السابق، داخل معاينة فيها طباعة وإرسال كصورة وملف PDF.'],
  ['v437','«بيان الحالة» يُفتح أولًا كتقرير (معاينة) ثم الطباعة أو الإرسال كصورة أو PDF، في البرنامج والبوابة.'],
@@ -3537,8 +3542,9 @@ async function editTeacherForm(id){
    const r=await sb.from('schools').select('id,name,stage').order('name');schools=r.data||[];
    schoolField=`<select name="home_school_id" onchange="v264CadreSync(this)">${schools.map(s=>`<option value="${s.id}" data-stage="${esc(s.stage||'')}" ${t.home_school_id===s.id?'selected':''}>${esc(s.name)}</option>`).join('')}</select>`;
  }
- modal(`<h3>تعديل بيانات المعلم</h3><div class="notice info">الرقم القومي هو مفتاح المعلم ولا يمكن تغييره.</div><form onsubmit="saveTeacherEdit(event,'${id}','${t.home_school_id||''}',${Number(t.row_version||1)})"><div class="form-grid"><div class="field"><label>الاسم الكامل</label><input name="full_name" value="${esc(t.full_name||'')}" required></div><div class="field"><label>الرقم القومي</label><input value="${esc(t.civil_id||'')}" disabled></div><div class="field"><label>المدرسة</label>${schoolField}</div><div class="field"><label>الهاتف</label><input name="phone" value="${esc(t.phone||'')}"></div><div class="field"><label>البريد الإلكتروني</label><input name="email" value="${esc(t.email||'')}"></div><div class="field"><label>الدرجة الوظيفية</label><select name="job_title">${['معلم','معلم أول','معلم أول (أ)','معلم خبير','كبير معلمين'].map(x=>`<option ${t.job_title===x?'selected':''}>${x}</option>`).join('')}</select><small>تحدد النصاب، ومنها يُعاد حساب العجز أو الزيادة.</small></div><div class="field"><label>نوع العمل</label><select name="work_type"><option value="permanent" ${t.work_type==='permanent'?'selected':''}>ثابت</option><option value="paid" ${t.work_type==='paid'?'selected':''}>بالأجر</option></select></div><div class="field"><label>تاريخ الحصول على الدرجة</label><input type="date" name="grade_acquired_date" value="${esc(t.grade_acquired_date||'')}"></div><div class="field"><label>تاريخ استلام العمل</label><input type="date" name="work_start_date" value="${esc(t.work_start_date||'')}"></div><div class="field"><label>تاريخ التعيين</label><input type="date" name="appointment_date" value="${esc(t.appointment_date||'')}"></div><div class="field"><label>التخصص</label><input name="specialty" value="${esc(t.specialty||'')}" maxlength="120"></div>${v264CadreFieldHtml(t,(schools.find(x=>x.id===t.home_school_id)||{}).stage||'')}<div class="field"><label>المؤهل</label><input name="qualification" value="${esc(t.qualification||(typeof v123SourceQual==='function'?v123SourceQual(t).q:''))}" maxlength="160"></div><div class="field"><label>سنة المؤهل</label><input type="number" name="qualification_year" min="1950" max="2100" step="1" inputmode="numeric" value="${esc(t.qualification_year||'')}"></div><div class="field"><label>كود المعلم</label><input name="teacher_code" value="${esc(t.teacher_code||'')}" maxlength="40"></div><div class="field"><label>محل الإقامة</label><input name="residence" value="${esc(t.residence||'')}" maxlength="160"></div></div><div class="actions"><button class="btn primary">حفظ</button><button type="button" class="btn secondary" onclick="closeModal()">إلغاء</button></div></form>`)
+ modal(v440BaseHtml(id,t,schools,schoolField))
 }
+function v440BaseHtml(id,t,schools,schoolField){return `<h3>تعديل بيانات المعلم</h3><div class="notice info">الرقم القومي هو مفتاح المعلم ولا يمكن تغييره.</div><form onsubmit="saveTeacherEdit(event,'${id}','${t.home_school_id||''}',${Number(t.row_version||1)})"><div class="form-grid"><div class="field"><label>الاسم الكامل</label><input name="full_name" value="${esc(t.full_name||'')}" required></div><div class="field"><label>الرقم القومي</label><input value="${esc(t.civil_id||'')}" disabled></div><div class="field"><label>المدرسة</label>${schoolField}</div><div class="field"><label>الهاتف</label><input name="phone" value="${esc(t.phone||'')}"></div><div class="field"><label>البريد الإلكتروني</label><input name="email" value="${esc(t.email||'')}"></div><div class="field"><label>الدرجة الوظيفية</label><select name="job_title">${['معلم','معلم أول','معلم أول (أ)','معلم خبير','كبير معلمين'].map(x=>`<option ${t.job_title===x?'selected':''}>${x}</option>`).join('')}</select><small>تحدد النصاب، ومنها يُعاد حساب العجز أو الزيادة.</small></div><div class="field"><label>نوع العمل</label><select name="work_type"><option value="permanent" ${t.work_type==='permanent'?'selected':''}>ثابت</option><option value="paid" ${t.work_type==='paid'?'selected':''}>بالأجر</option></select></div><div class="field"><label>تاريخ الحصول على الدرجة</label><input type="date" name="grade_acquired_date" value="${esc(t.grade_acquired_date||'')}"></div><div class="field"><label>تاريخ استلام العمل</label><input type="date" name="work_start_date" value="${esc(t.work_start_date||'')}"></div><div class="field"><label>تاريخ التعيين</label><input type="date" name="appointment_date" value="${esc(t.appointment_date||'')}"></div><div class="field"><label>التخصص</label><input name="specialty" value="${esc(t.specialty||'')}" maxlength="120"></div>${v264CadreFieldHtml(t,(schools.find(x=>x.id===t.home_school_id)||{}).stage||'')}<div class="field"><label>المؤهل</label><input name="qualification" value="${esc(t.qualification||(typeof v123SourceQual==='function'?v123SourceQual(t).q:''))}" maxlength="160"></div><div class="field"><label>سنة المؤهل</label><input type="number" name="qualification_year" min="1950" max="2100" step="1" inputmode="numeric" value="${esc(t.qualification_year||'')}"></div><div class="field"><label>كود المعلم</label><input name="teacher_code" value="${esc(t.teacher_code||'')}" maxlength="40"></div><div class="field"><label>محل الإقامة</label><input name="residence" value="${esc(t.residence||'')}" maxlength="160"></div></div><div class="actions"><button class="btn primary">حفظ</button><button type="button" class="btn secondary" onclick="closeModal()">إلغاء</button></div></form>`}
 
 async function saveTeacherEdit(e,id,oldSchoolId,expectedVersion){
  e.preventDefault();const form=e.target;const f=Object.fromEntries(new FormData(form).entries());for(const k of ['grade_acquired_date','work_start_date','appointment_date'])if(!f[k])f[k]=null;const newSchool=f.home_school_id||null;
@@ -9508,17 +9514,12 @@ async function v352Refresh(){if(V352.tab==='online')return v294Refresh();await v
 const V295={schools:[],byLabel:new Map()};
 function v295Label(s){return `${s.name} — ${s.stage||''}`}
 function v295SchoolName(id){const s=V295.schools.find(x=>String(x.id)===String(id));return s?`${esc(s.name)} <span class="badge">${esc(s.stage||'')}</span>`:'—'}
-const __v295BaseEditTeacherForm=editTeacherForm;
-editTeacherForm=async function(id){
- await __v295BaseEditTeacherForm(id);
+function v295Build(id,c){
  if(!v344Can())return;
  const form=document.querySelector('#modal form');if(!form||form.querySelector('.v295-box'))return;
  const sel=form.elements.namedItem('home_school_id');if(!sel)return;const v344Sel=sel.tagName==='SELECT';
  try{
-  const [tr,dr,sr]=await Promise.all([
-   sb.from('teacher_records').select('id,full_name,home_school_id').eq('id',id).maybeSingle(),
-   sb.from('delegations').select('id,delegation_type,to_school_id,start_date,end_date').eq('teacher_id',id).eq('active',true).order('start_date'),
-   sb.from('schools').select('id,name,stage').order('name')]);
+  const [tr,dr,sr]=[{data:c.t,error:null},c.dels,c.schools];
   for(const x of [tr,dr,sr])if(x.error)throw x.error;
   const t=tr.data;if(!t)return;
   V295.schools=sr.data||[];V295.byLabel=new Map(V295.schools.map(s=>[v295Label(s),String(s.id)]));
@@ -10752,26 +10753,21 @@ saveLongLeaveStatus=async function(event){
 
 /* v184: «تعديل بيانات المعلم» للموجه ومنسق المرحلة ومدير النظام: حقل «مشرف المادة» (لا يشرف / مدرسته الأصلية / مدرسة منتدب إليها). الحفظ عبر set_school_supervisor (v184): مشرف واحد لكل مدرسة، والمعلم يشرف على مدرسة واحدة؛ نقل الإشراف يترك المدرسة السابقة بلا مشرف حتى يُختار غيره. */
 const V184_SUP_ROLES=['admin','stage_coordinator','supervisor'];
-const __v184BaseEditTeacherForm=editTeacherForm;
-editTeacherForm=async function(id){
- await __v184BaseEditTeacherForm(id);
+function v184Build(id,c){
  if(!V184_SUP_ROLES.includes(profile?.role))return;
  const form=document.querySelector('#modal form');if(!form||form.elements.namedItem('v184_supervision'))return;
  try{
-  const [tr,dr,cr]=await Promise.all([
-   sb.from('teacher_records').select('id,work_type,home_school_id,is_senior_teacher').eq('id',id).maybeSingle(),
-   sb.from('delegations').select('to_school_id,start_date,end_date').eq('teacher_id',id).eq('active',true),
-   sb.from('school_supervisor_choice').select('school_id').eq('teacher_id',id).maybeSingle()]);
+  const [tr,dr,cr]=[{data:c.t,error:null},c.dels,c.choice];
   for(const x of [tr,dr,cr])if(x.error)throw x.error;
   const t=tr.data;if(!t||t.work_type!=='permanent')return;
   const today=new Date().toISOString().slice(0,10);
   const ids=[...new Set([t.home_school_id,...(dr.data||[]).filter(d=>d.to_school_id&&(!d.start_date||d.start_date<=today)&&(!d.end_date||d.end_date>=today)).map(d=>d.to_school_id)].filter(Boolean))];
   if(!ids.length)return;
-  const sr=await sb.from('schools').select('id,name').in('id',ids);if(sr.error)throw sr.error;
+  const sr=c.v184Names;if(sr.error)throw sr.error;
   const names=Object.fromEntries((sr.data||[]).map(s=>[s.id,s.name]));
   // v185: الحالة الحالية = المشرف الظاهر فعلًا في كشف المدرسة (الكشف هو المرجع)، وإلا اختيار الموجه/العلامة
   let current='';
-  for(const sid of ids){try{const r=await schoolTeacherRosterFor(sid);if(!r.error&&(r.data||[]).some(x=>String(x.teacher_id||x.id)===String(id)&&x.is_senior_teacher)){current=sid;break}}catch(_){}}
+  for(const sid of ids){try{const r=c.rosters[sid];if(r&&!r.error&&(r.data||[]).some(x=>String(x.teacher_id||x.id)===String(id)&&x.is_senior_teacher)){current=sid;break}}catch(_){}}
   if(!current)current=cr.data?.school_id||'';
   const opts=ids.map(sid=>`<option value="${sid}" ${sid===current?'selected':''}>مشرف المادة في ${esc(names[sid]||'مدرسة')}${sid===t.home_school_id?' (الأصلية)':' (منتدب إليها)'}</option>`).join('');
   const box=document.createElement('div');box.className='field v184-sup-field';
@@ -11237,13 +11233,11 @@ v202Render=function(){
  }).join('')}</div>`;
 };
 /* v224: أدوات مدير النظام — النصاب المخفض، وإعادة تفعيل المعلم الموقوف (بدل طلبات SQL) */
-const __v224BaseEditTeacherForm=editTeacherForm;
-editTeacherForm=async function(id){
- await __v224BaseEditTeacherForm(id);
+function v224Build(id,c){
  if(profile?.role!=='admin')return;
  const form=document.querySelector('#modal form');if(!form||form.elements.namedItem('v224_target'))return;
  try{
-  const {data:t,error}=await sb.from('teacher_records').select('weekly_target_override,work_type').eq('id',id).maybeSingle();if(error)throw error;
+  const {data:t,error}=c.target;if(error)throw error;
   const v=t?.weekly_target_override??'';
   const box=document.createElement('div');box.className='field v224-target-field';
   box.innerHTML=`<label for="v224Target">النصاب المخفض (لمدير النظام)</label><input id="v224Target" name="v224_target" type="number" min="0" max="40" step="1" inputmode="numeric" value="${esc(String(v))}" data-initial="${esc(String(v))}" placeholder="فارغ = نصاب الدرجة"><small class="muted">يُستخدم لحالات مثل إجازة نصف الأجر. اتركه فارغًا ليُحسب النصاب القانوني حسب الدرجة والمرحلة.</small>`;
@@ -13970,9 +13964,7 @@ function v337DateText(v){const m=/^(\d{4})-(\d{2})-(\d{2})/.exec(String(v||''));
 /* v337-end */
 /* v339-begin: «تعديل بيانات المعلم» صفحة كاملة لمدير النظام (المرحلة 1): ملء الشاشة + الرقم القومي (admin_change_teacher_civil_id) + اعتماد تعديل التاريخين مباشرة */
 function v339Digits(v){return String(v??'').replace(/[٠-٩]/g,d=>String('٠١٢٣٤٥٦٧٨٩'.indexOf(d))).replace(/[۰-۹]/g,d=>String('۰۱۲۳۴۵۶۷۸۹'.indexOf(d))).replace(/\D/g,'')}
-const __v339BaseEditTeacherForm=editTeacherForm;
-editTeacherForm=async function(id){
- await __v339BaseEditTeacherForm(id);
+function v339Build(id,c){
  if(!v344Can())return;
  const m=document.getElementById('modal'),card=m?.querySelector('.modal-card'),form=card?.querySelector('form');if(!form||form.dataset.v339)return;
  form.dataset.v339='1';m.classList.add('v339-page');
@@ -13985,7 +13977,7 @@ editTeacherForm=async function(id){
  card.querySelectorAll(':scope>.notice.info').forEach(n=>{if(/الرقم القومي هو مفتاح المعلم/.test(n.textContent))n.remove()});
  const h3=card.querySelector(':scope>h3');
  if(h3){const name=form.elements.namedItem('full_name')?.value||'';const bar=document.createElement('div');bar.className='v339-bar';bar.innerHTML=`<button type="button" class="btn secondary" onclick="closeModal()">← رجوع</button><div><h3>تعديل بيانات المعلم</h3><div class="muted">${esc(name)}</div></div>`;h3.replaceWith(bar)}
- v339Pw=null;const ex=document.createElement('div');ex.className='v339-extra';form.before(ex);v339Extras(id);
+ v339Pw=null;const ex=document.createElement('div');ex.className='v339-extra';form.before(ex);v339Extras(id,c.extras);
  card.scrollTop=0;
 };
 const __v339BaseSaveTeacherEdit=saveTeacherEdit;
@@ -14018,14 +14010,15 @@ saveTeacherEdit=async function(e,id,oldSchoolId,expectedVersion,...rest){
 };
 /* v339 المرحلتان 2 و3: «مسؤول بيانات المدرسة» و«حساب الدخول» داخل الصفحة (set_school_data_officer، create-system-user v12 بـno_force_change، admin-reset-user-password v5 بـforce_change:false) + «تغيير كلمة المرور» في «بياناتي» للمعلم */
 let V339X=null,v339Pw=null;
-async function v339Extras(id){
+async function v339Extras(id,pre){
  const host=document.querySelector('#modal.v339-page .v339-extra');if(!host)return;
- host.innerHTML='<div class="muted">جارٍ تحميل مسؤول البيانات وحساب الدخول…</div>';
+ if(!pre)host.innerHTML='<div class="muted">جارٍ تحميل مسؤول البيانات وحساب الدخول…</div>';
  try{
-  const {data:t,error}=await sb.from('teacher_records').select('id,civil_id,full_name,phone,email,job_title,appointment_date,work_type,home_school_id,is_senior_teacher,profile_id,grade_acquired_date,work_start_date').eq('id',id).maybeSingle();
+  /* v440: pre = بيانات محمّلة مسبقًا مع الصفحة (بلا طلبات جديدة) */
+  const {data:t,error}=pre?{data:pre.t,error:null}:await sb.from('teacher_records').select('id,civil_id,full_name,phone,email,job_title,appointment_date,work_type,home_school_id,is_senior_teacher,profile_id,grade_acquired_date,work_start_date').eq('id',id).maybeSingle();
   if(error)throw error;if(!t){host.innerHTML='';return}
   const none=Promise.resolve({data:null});
-  const [info,prof,roles,sch]=await Promise.all([
+  const [info,prof,roles,sch]=pre?[pre.info,pre.prof,pre.roles,pre.sch]:await Promise.all([
    t.home_school_id?sb.rpc('school_data_officer_info',{p_school:t.home_school_id}):none,
    t.profile_id?sb.from('profiles').select('id,is_active').eq('id',t.profile_id).maybeSingle():none,
    t.profile_id?sb.from('user_roles').select('role,is_active').eq('profile_id',t.profile_id):none,
@@ -14135,9 +14128,7 @@ async function v344Reopen(id){
  const c=v344Card(),y=V344.scroll||0;if(c){c.scrollTop=y;requestAnimationFrame(()=>requestAnimationFrame(()=>{const k=v344Card();if(k)k.scrollTop=y}))}
 }
 function v344Keep(){const c=v344Card();V344.scroll=c?c.scrollTop:0}
-const __v344BaseEditTeacherForm=editTeacherForm;
-editTeacherForm=async function(id){
- await __v344BaseEditTeacherForm(id);
+function v344Build(id,c){
  if(!v344Can())return;
  const m=document.getElementById('modal'),card=m?.querySelector('.modal-card'),form=card?.querySelector('form');
  if(!form||form.dataset.v344)return;
@@ -14177,15 +14168,15 @@ editTeacherForm=async function(id){
  if(acts){const b=acts.querySelector('button.btn.primary');if(b)b.textContent='حفظ كل التعديلات';const c=acts.querySelector('button.secondary');if(c){c.removeAttribute('onclick');c.textContent='رجوع';c.onclick=()=>v344Leave()}}
  card.querySelectorAll(':scope>.notice.info').forEach(n=>{if(/الرقم القومي هو مفتاح المعلم/.test(n.textContent))n.remove()});
  form.__v344Snap=v344Vals(form);
- if(box)v344RenderDeleg(id);
+ if(box)v344RenderDeleg(id,c.deleg);
 };
-async function v344RenderDeleg(id){
+async function v344RenderDeleg(id,pre){
  const host=document.getElementById('v344Deleg');if(!host)return;
  try{
-  const {data,error}=await sb.from('delegations').select('id,delegation_type,to_school_id,start_date,end_date').eq('teacher_id',id).eq('active',true).order('start_date');if(error)throw error;
+  const {data,error}=pre?pre.dels:await sb.from('delegations').select('id,delegation_type,to_school_id,start_date,end_date').eq('teacher_id',id).eq('active',true).order('start_date');if(error)throw error;
   const ds=data||[];
   const miss=ds.map(d=>d.to_school_id).filter(x=>x&&!V295.schools.some(s=>String(s.id)===String(x)));
-  if(miss.length){const {data:sc}=await sb.from('schools').select('id,name,stage').in('id',miss);(sc||[]).forEach(s=>V295.schools.push(s))}
+  if(miss.length){const {data:sc}=pre?pre.miss:await sb.from('schools').select('id,name,stage').in('id',miss);(sc||[]).forEach(s=>V295.schools.push(s))}
   if(!document.body.contains(host))return;
   host.innerHTML=ds.length?ds.map(d=>`<div class="card v295-line" data-sid="${d.to_school_id}"><div><div class="muted">المدرسة المنتدب إليها</div><b>${v295SchoolName(d.to_school_id)} <span class="badge">${d.delegation_type==='full'?'انتداب كلي':'انتداب جزئي'}</span></b>${d.start_date?`<div class="muted">من ${esc(typeof v337DateText==='function'?v337DateText(d.start_date):d.start_date)}${d.end_date?` إلى ${esc(typeof v337DateText==='function'?v337DateText(d.end_date):d.end_date)}`:''}</div>`:''}</div><div class="v344-acts"><button type="button" class="btn secondary" onclick="v344DelegChange('${id}','${ds.length===1?d.id:''}',${ds.length})">تغيير المدرسة المنتدب إليها</button><button type="button" class="btn danger" onclick="v344CancelDeleg('${d.id}','${id}')">إلغاء الانتداب</button></div></div>`).join('')
    :`<div class="card v295-line"><div><div class="muted">المدرسة المنتدب إليها</div><b>لا يوجد انتداب</b></div><button type="button" class="btn secondary" onclick="v344DelegChange('${id}','',0)">+ انتداب</button></div>`;
@@ -15657,9 +15648,7 @@ async function v381Do(){
   modal(`<h3>تم الدمج ✅</h3><div class="notice ok">بقي سجل <b>${esc(keep.full_name)}</b> وحُذف السجل المكرر <b>${esc(rem.full_name)}</b> ${v381L4(rem)}.<br>نُقل: ${data?.moved_assignments||0} إسناد • ${data?.moved_delegations||0} انتداب${data?.civil?.changed?'<br>الرقم القومي بعد الدمج: <b dir="ltr">'+esc(data.civil.civil_id)+'</b>':''}</div><div class="actions"><button type="button" class="btn primary" onclick="v344Reopen('${keep.id}')">فتح سجل المعلم</button><button type="button" class="btn secondary" onclick="closeModal()">إغلاق</button></div>`);
  }catch(error){go.disabled=false;go.textContent='تنفيذ الدمج';show('لم يتم الدمج: '+(typeof v332ErrText==='function'?v332ErrText(error):(error?.message||'خطأ غير متوقع')))}
 }
-const __v381BaseEditTeacherForm=editTeacherForm;
-editTeacherForm=async function(id){
- await __v381BaseEditTeacherForm(id);
+function v381Build(id,c){
  if(profile?.role!=='admin')return;
  const m=document.getElementById('modal'),box=m?.querySelector('.v295-box');
  if(!box||box.querySelector('.v381-row'))return;
@@ -16756,13 +16745,11 @@ const V421_FIELDS=[
  ['subject_taught','مادة التدريس','text','job']
 ];
 const V421_ROLES=['admin','stage_coordinator','supervisor','senior_teacher'];
-const __v421BaseEditTeacherForm=editTeacherForm;
-editTeacherForm=async function(id){
- await __v421BaseEditTeacherForm(id);
+function v421Build(id,c){
  if(!V421_ROLES.includes(profile?.role))return;
  const form=document.querySelector('#modal form');if(!form||form.querySelector('.v421-f'))return;
  let row=null;
- try{const r=await sb.from('teacher_records').select(V421_FIELDS.map(f=>f[0]).join(',')).eq('id',id).maybeSingle();row=r.data}catch(_){}
+ row=c.v421?.data||null;
  if(!row||!document.body.contains(form))return;
  const grid=k=>form.querySelector(`.v344-sec[data-sec="${k}"] .form-grid`)||form.querySelector('.form-grid');
  const mk=([k,l,t])=>{
@@ -16782,6 +16769,8 @@ editTeacherForm=async function(id){
 };
 const __v421BaseSaveTeacherEdit=saveTeacherEdit;
 saveTeacherEdit=async function(e,id,...rest){
+ /* v440: منع إرسال النموذج الافتراضي قبل أي انتظار (كان يعيد تحميل البرنامج ويكتب القيم في العنوان عند تعديل حقول بيان الحالة) */
+ e?.preventDefault?.();
  const form=e?.target;
  if(V421_ROLES.includes(profile?.role)&&form?.querySelector('.v421-f')){
   const upd={},orig=form.__v421Orig||{};
@@ -16915,13 +16904,71 @@ async function v435Print(teacherId){
  ov.querySelector('#v438Pdf').onclick=()=>{if(cv)v438Send(v438Pdf(cv),'Bayan_Hala_Electroni.pdf','application/pdf')};
  cv=await v438Canvas(m);box.textContent='';const img=document.createElement('img');img.src=cv.toDataURL('image/jpeg',0.9);img.alt='بيان الحالة';box.appendChild(img);
 }
-const __v436BaseEdit=editTeacherForm;
-editTeacherForm=async function(id){
- await __v436BaseEdit.apply(this,arguments);
+function v436Build(id,c){
  const bar=document.querySelector('#modal .v339-bar');
  if(bar&&!bar.querySelector('.v436-print')){const b=document.createElement('button');b.type='button';b.className='btn secondary v436-print';b.textContent='🖨 بيان الحالة';b.onclick=()=>v435Print(id);bar.appendChild(b)}
 };
 /* v435-end */
+/* v440-begin: صفحة «تعديل بيانات المعلم» بدالة واحدة (للأدوار v344Can): تحميل كل البيانات بطلبات متوازية (جولتان) ثم رسم الصفحة مرة واحدة بشكلها النهائي.
+   طبقات البناء السابقة (v295 v184 v224 v339 v344 v381 v421 v436) صارت دوال رسم متزامنة vNNNBuild(id,c) تُستدعى بالترتيب نفسه، فالحقول والأسماء وطبقات الحفظ بلا تغيير. الأدوار الأخرى بلا تغيير. */
+const __v440Plain=editTeacherForm;
+const V440={seq:0};
+function v440Wrap(p){return Promise.resolve(p).then(r=>r||{data:null,error:null},e=>({data:null,error:e}))}
+function v440SupIds(t,ds){const today=new Date().toISOString().slice(0,10);return [...new Set([t.home_school_id,...(ds||[]).filter(d=>d.to_school_id&&(!d.start_date||d.start_date<=today)&&(!d.end_date||d.end_date>=today)).map(d=>d.to_school_id)].filter(Boolean))]}
+editTeacherForm=async function(id){
+ if(!v344Can())return __v440Plain(id);
+ const seq=++V440.seq,role=profile?.role,admin=role==='admin',sup=V184_SUP_ROLES.includes(role),senior=role==='senior_teacher';
+ modal(`<div class="v339-bar"><button type="button" class="btn secondary" onclick="closeModal()">← رجوع</button><div><h3>تعديل بيانات المعلم</h3></div></div><div class="v440-load" role="status"><span class="v440-spin" aria-hidden="true"></span>جارٍ تحميل بيانات المعلم…</div>`);
+ const m=document.getElementById('modal');m.classList.add('v339-page','v344-page');
+ const live=()=>seq===V440.seq&&document.getElementById('modal')===m&&m.classList.contains('show')&&!!m.querySelector('.v440-load');
+ const none={data:null,error:null};
+ /* الجولة 1 */
+ const [tr,sr,dr,cr,gr,xr,own]=await Promise.all([
+  v440Wrap(sb.from('teacher_records').select(TEACHER_RECORD_FIELDS).eq('id',id).single()),
+  v440Wrap(sb.from('schools').select('id,name,stage').order('name')),
+  v440Wrap(sb.from('delegations').select('id,delegation_type,to_school_id,start_date,end_date').eq('teacher_id',id).eq('active',true).order('start_date')),
+  sup?v440Wrap(sb.from('school_supervisor_choice').select('school_id').eq('teacher_id',id).maybeSingle()):none,
+  admin?v440Wrap(sb.from('teacher_records').select('weekly_target_override,work_type').eq('id',id).maybeSingle()):none,
+  V421_ROLES.includes(role)?v440Wrap(sb.from('teacher_records').select(V421_FIELDS.map(f=>f[0]).join(',')).eq('id',id).maybeSingle()):none,
+  senior?mySchool().catch(()=>null):null]);
+ if(!live())return;
+ if(tr.error||!tr.data){closeModal();return tr.error?moneySafeError(tr.error):toast('تعذر العثور على سجل المعلم',true)}
+ const t=tr.data;
+ if(senior&&(!own||String(t.home_school_id||'')!==String(own.id||''))){closeModal();return toast('لا يمكنك تعديل معلم خارج مدرستك')}
+ /* الجولة 2 (تعتمد على سجل المعلم) */
+ const ds=dr.error?[]:(dr.data||[]),list=sr.error?[]:(sr.data||[]);
+ const ids=sup&&t.work_type==='permanent'&&!dr.error&&!cr.error?v440SupIds(t,ds):[];
+ const miss=[...new Set(ds.map(d=>d.to_school_id).filter(x=>x&&!list.some(s=>String(s.id)===String(x))))];
+ const ext=!senior;
+ const [stg,nm,ros,info,prof,roles,sch,ms]=await Promise.all([
+  senior?v440Wrap(sb.from('schools').select('stage').eq('id',own.id).maybeSingle()):none,
+  ids.length?v440Wrap(sb.from('schools').select('id,name').in('id',ids)):none,
+  Promise.all(ids.map(sid=>Promise.resolve().then(()=>schoolTeacherRosterFor(sid)).catch(e=>({data:null,error:e})))),
+  ext&&t.home_school_id?v440Wrap(sb.rpc('school_data_officer_info',{p_school:t.home_school_id})):none,
+  ext&&t.profile_id?v440Wrap(sb.from('profiles').select('id,is_active').eq('id',t.profile_id).maybeSingle()):none,
+  ext&&t.profile_id?v440Wrap(sb.from('user_roles').select('role,is_active').eq('profile_id',t.profile_id)):none,
+  ext&&t.home_school_id?v440Wrap(sb.from('schools').select('name').eq('id',t.home_school_id).maybeSingle()):none,
+  miss.length&&!sr.error&&!dr.error?v440Wrap(sb.from('schools').select('id,name,stage').in('id',miss)):{data:[],error:null}]);
+ if(!live())return;
+ /* الرسم مرة واحدة */
+ let schools,schoolField;
+ if(senior){
+  schools=[{...own,stage:stg.data?.stage||''}];
+  schoolField=`<input type="hidden" name="home_school_id" value="${own.id}"><input value="${esc(own.name)}" disabled>`;
+ }else{
+  schools=list;
+  schoolField=`<select name="home_school_id" onchange="v264CadreSync(this)">${schools.map(s=>`<option value="${s.id}" data-stage="${esc(s.stage||'')}" ${t.home_school_id===s.id?'selected':''}>${esc(s.name)}</option>`).join('')}</select>`;
+ }
+ m.classList.remove('v344-page');modal(v440BaseHtml(id,t,schools,schoolField));
+ uxSmartifyForm(document.querySelector('#modal form'),{draftKey:`teacher:edit:${id}`});
+ const c={t,dels:dr,schools:sr,choice:cr,target:gr,v421:xr,v184Names:nm,
+  rosters:Object.fromEntries(ids.map((sid,i)=>[sid,ros[i]])),
+  extras:ext?{t,info,prof,roles,sch}:{t:null},deleg:{dels:dr,miss:ms}};
+ for(const f of [v295Build,v184Build,v224Build,v339Build,v344Build,v381Build,v421Build,v436Build]){try{f(id,c)}catch(e){console.warn('v440 build',f.name,e)}}
+ /* السابق: التركيز على أول حقل ثم يزول عند نقل الحقول للأقسام؛ نُبقي النتيجة نفسها (بلا لوحة مفاتيح على الهاتف) */
+ requestAnimationFrame(()=>{const a=document.activeElement;if(a&&m.contains(a)&&a!==document.body)a.blur()});
+};
+/* v440-end */
 </script>
 
 <div id="reportPreviewOverlay" class="report-preview-overlay" role="dialog" aria-modal="true" aria-label="معاينة التقرير" aria-hidden="true">
