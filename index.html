@@ -1,4 +1,5 @@
 <!doctype html>
+<!-- v454: قائمة اختيار المدارس في تقرير العجز قبل الأجر تعرض المدارس ذات العجز الموجب فقط. -->
 <!-- v453: إصلاح قائمة اختيار المدارس في تقرير العجز قبل الأجر؛ تطبيق وإلغاء على الهاتف واستعادة المرحلة والمدارس بعد تحديث الصفحة. -->
 <!-- v452: تقرير «العجز قبل الأجر في المدارس» مع فلترَي المرحلة والمدارس وتصدير Excel وطباعة وPDF؛ قراءة مجمّعة لكل المراحل للمنسق. -->
 <!-- v451: تقرير «بيان خطة الإدارة»: منسق المرحلة يرى كل المراحل والتعليم المجتمعي والإجمالي بأرقام مجمّعة من دالة قراءة shortage_plan_stage_totals. -->
@@ -8,7 +9,6 @@
 <!-- v444: معاينة صحيفة الموجه للطباعة أو المشاركة كصورة أو PDF بقالب المعلم. -->
 <!-- v443: نسخة تجربة جديدة لقائمة الهاتف، وإخفاء معاينة التقرير من بياناتي، وتوحيد طباعة صحيفة الموجه مع قالب المعلم. -->
 <!-- v442: تبويب «بيانات الموجهين» للعرض والطباعة، وفصل المدارس عن صحيفة الأحوال. -->
-<!-- v441: صحيفة أحوال الموجه في بياناتي ودليل الموجهين، مع الحفظ الذاتي والطباعة وحقول المدير. -->
 <html lang="ar" dir="rtl">
 <head>
 <!-- إعداد: أ/ محمود عبدالمفدي محمد أبوالنجا | الصفة: معلم -->
@@ -16,7 +16,7 @@
 <script>/* v226: العنوان الموحد — انظر التعليق أعلى الملف */(function(){try{if(/\.github\.io$/.test(location.hostname)&&/^\/science-guidance\/?(index\.html)?$/.test(location.pathname)&&!/[?&]stay\b/.test(location.search))location.replace('https://teachers-data-portal.vercel.app/app/'+location.hash)}catch(e){}})();</script>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#152c43">
-<title>نظام توجيه العلوم — v453</title>
+<title>نظام توجيه العلوم — v454</title>
 <link rel="manifest" href="./manifest.webmanifest">
 <link rel="icon" type="image/png" sizes="192x192" href="./app-icon-192.png">
 <link rel="apple-touch-icon" href="./app-icon-192.png">
@@ -2863,6 +2863,7 @@ window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();window.v152
 window.addEventListener('appinstalled',()=>{window.v152InstallPrompt=null;v152SyncInstallBtn()});
 if('serviceWorker' in navigator&&location.protocol!=='file:')window.addEventListener('load',()=>navigator.serviceWorker.register('./service-worker.js').catch(()=>{}));
 const V145_NEWS=[
+ ['v454','اختيار المدارس في تقرير العجز قبل الأجر يعرض المدارس التي بها عجز فقط.'],
  ['v453','العجز قبل الأجر: تطبيق اختيار المدارس أو إلغاؤه، واستعادة التقرير والفلاتر بعد تحديث الصفحة.'],
  ['v452','تقرير العجز قبل الأجر في المدارس حسب المرحلة والمدارس المختارة، مع الطباعة وExcel وPDF.'],
  ['v451','تقرير بيان خطة الإدارة: منسق المرحلة يرى كل المراحل والإجمالي (أرقام مجمّعة فقط).'],
@@ -17486,12 +17487,13 @@ function v452SchoolInventory(){
  }
  return picker.v452Inventory;
 }
+function v452HasDeficit(school){return school.ready&&school.deficit>0}
 ReportAdapters[V452_ID]={async load(ctx){
  if(!v103CanViewReport(V452_ID))throw new Error('التقرير خارج صلاحية الدور الحالي.');
  const schools=(await v452SchoolInventory()).map(s=>({
   schoolId:String(s.school_id),school:s.name,stage:v452SchoolStage(s),deficit:Number(s.deficit),ready:s.calculation_ready
  }));
- const rows=schools.filter(s=>s.ready&&s.deficit>0)
+ const rows=schools.filter(v452HasDeficit)
   .map(({schoolId,school,stage,deficit})=>({index:0,schoolId,school,stage,deficit}))
   .sort((a,b)=>b.deficit-a.deficit||a.school.localeCompare(b.school,'ar'));
  const schema=makeReportSchema({
@@ -17557,7 +17559,7 @@ function v452FilterState(){
  const picker=v452SchoolPicker(), stage=v452StageValue();
  const filters=stage?[{label:'المرحلة',value:stage}]:[];
  const selected=picker?.v452Selected, total=picker?.v452Choices?.length||0;
- const ids=selected&&(!selected.size||selected.size<total)?[...selected]:null;
+ const ids=selected&&selected.size<total?[...selected]:null;
  if(ids&&ids.length!==total)filters.push({label:'مدارس محددة',value:ids.length+' من '+total});
  return {active:filters.length>0,sourcePage:currentPage,filters,displayFilters:filters,v452Stage:stage,v452SchoolIds:ids};
 }
@@ -17576,7 +17578,7 @@ applyCurrentFiltersToReportSchema=function(schema,state){
  // يمر إلى v103 فقط الصفوف المصفّاة، وتُستمد أوصاف الفلاتر من اختيارات هذا التقرير.
  const filters=stage?[{label:'المرحلة',value:stage}]:[];
  if(selected){
-  const scope=schools.filter(inStage);
+  const scope=schools.filter(school=>inStage(school)&&v452HasDeficit(school));
   const count=scope.filter(matches).length;
   if(count!==scope.length)filters.push({label:'مدارس محددة',value:count+' من '+scope.length});
  }
@@ -17688,15 +17690,14 @@ function v452ResetSchoolPicker(selected='all'){
  const picker=v452SchoolPicker();
  if(!picker?.v452Schools)return;
  const stage=v452StageValue();
- const choices=picker.v452Schools.filter(s=>!stage||s.stage===stage).sort((a,b)=>a.school.localeCompare(b.school,'ar'));
+ const choices=picker.v452Schools.filter(s=>v452HasDeficit(s)&&(!stage||s.stage===stage)).sort((a,b)=>a.school.localeCompare(b.school,'ar'));
  picker.v452Choices=choices;
  const allowed=new Set(choices.map(s=>s.schoolId));
  const saved=new Set(selected==='all'?allowed:selected.filter(id=>allowed.has(id)));
  picker.v452Selected=saved.size?saved:allowed;
- document.getElementById('v452SchoolOptions').innerHTML=choices.map(s=>{
-  const label=!s.ready?'بيانات غير مكتملة':s.deficit>0?s.deficit+' حصة':'لا عجز';
-  return `<label class="v452-school-option" data-name="${esc(v288Norm(s.school))}"><input type="checkbox" value="${esc(s.schoolId)}"><span>${esc(s.school)}</span><small>${esc(label)}</small></label>`;
- }).join('');
+ document.getElementById('v452SchoolOptions').innerHTML=choices.map(s=>
+  `<label class="v452-school-option" data-name="${esc(v288Norm(s.school))}"><input type="checkbox" value="${esc(s.schoolId)}"><span>${esc(s.school)}</span><small>${esc(s.deficit)} حصة</small></label>`
+ ).join('');
  v452UpdateSchoolButton();
 }
 function v453ChangeStage(){
@@ -17710,7 +17711,7 @@ function v453SyncPicker(){
  const apply=document.getElementById('v453ApplySchools');
  apply.textContent='عرض التقرير ('+draft.size+' مدرسة)';
  apply.disabled=draft.size===0;
- document.getElementById('v453PickerWarning').hidden=draft.size>0;
+ document.getElementById('v453PickerWarning').hidden=draft.size>0||!picker.v452Choices.length;
 }
 async function v453ApplyPicker(){
  const picker=v452SchoolPicker();
@@ -17733,7 +17734,9 @@ function v452SearchSchools(){
  const query=v288Norm(document.getElementById('v452SchoolSearch').value);
  const rows=[...document.getElementById('v452SchoolOptions').children];
  rows.forEach(row=>{row.hidden=!row.dataset.name.includes(query)});
- document.getElementById('v452SchoolSearchEmpty').hidden=rows.some(row=>!row.hidden);
+ const empty=document.getElementById('v452SchoolSearchEmpty');
+ empty.textContent=rows.length?'لا توجد مدارس مطابقة للبحث.':'لا توجد مدارس بها عجز في النطاق المحدد.';
+ empty.hidden=rows.some(row=>!row.hidden);
 }
 function v452SelectAllSchools(checked){
  const picker=v452SchoolPicker();
