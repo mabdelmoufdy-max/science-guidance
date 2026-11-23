@@ -1,4 +1,5 @@
 <!doctype html>
+<!-- v457: الرئيسية تُفتح فورًا من آخر نسخة محفوظة في الهاتف (IndexedDB، 24 ساعة، لكل مستخدم ودور وفصل) ثم تتحدث في الخلفية بشارة «جارٍ تحديث البيانات…»؛ أي حفظ أو خروج يمسح النسخة المحفوظة. -->
 <!-- v454: قائمة اختيار المدارس في تقرير العجز قبل الأجر تعرض المدارس ذات العجز الموجب فقط. -->
 <!-- v453: إصلاح قائمة اختيار المدارس في تقرير العجز قبل الأجر؛ تطبيق وإلغاء على الهاتف واستعادة المرحلة والمدارس بعد تحديث الصفحة. -->
 <!-- v452: تقرير «العجز قبل الأجر في المدارس» مع فلترَي المرحلة والمدارس وتصدير Excel وطباعة وPDF؛ قراءة مجمّعة لكل المراحل للمنسق. -->
@@ -8,7 +9,6 @@
 <!-- v445: منع تداخل الحقول الطويلة في معاينة صحيفة الموجه والصورة وملف PDF. -->
 <!-- v444: معاينة صحيفة الموجه للطباعة أو المشاركة كصورة أو PDF بقالب المعلم. -->
 <!-- v443: نسخة تجربة جديدة لقائمة الهاتف، وإخفاء معاينة التقرير من بياناتي، وتوحيد طباعة صحيفة الموجه مع قالب المعلم. -->
-<!-- v442: تبويب «بيانات الموجهين» للعرض والطباعة، وفصل المدارس عن صحيفة الأحوال. -->
 <html lang="ar" dir="rtl">
 <head>
 <!-- إعداد: أ/ محمود عبدالمفدي محمد أبوالنجا | الصفة: معلم -->
@@ -16,7 +16,7 @@
 <script>/* v226: العنوان الموحد — انظر التعليق أعلى الملف */(function(){try{if(/\.github\.io$/.test(location.hostname)&&/^\/science-guidance\/?(index\.html)?$/.test(location.pathname)&&!/[?&]stay\b/.test(location.search))location.replace('https://teachers-data-portal.vercel.app/app/'+location.hash)}catch(e){}})();</script>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#152c43">
-<title>نظام توجيه العلوم — v454</title>
+<title>نظام توجيه العلوم — v457</title>
 <link rel="manifest" href="./manifest.webmanifest">
 <link rel="icon" type="image/png" sizes="192x192" href="./app-icon-192.png">
 <link rel="apple-touch-icon" href="./app-icon-192.png">
@@ -2475,6 +2475,7 @@ span.v415-L{border-radius:10px;padding:2px 8px}
 .v452-school-option input[type="checkbox"]{inline-size:40px;block-size:40px;margin:0;cursor:pointer}
 .v452-school-option small{white-space:nowrap}
 @media(max-width:600px){.v452-school-popover{inset:0;inline-size:100%;block-size:100dvh;max-block-size:none;border:0;border-radius:0;padding-block:max(12px,env(safe-area-inset-top)) max(12px,env(safe-area-inset-bottom))}}
+.v457-pill{position:fixed;bottom:14px;inset-inline-start:14px;z-index:9800;background:var(--primary,#123);color:#fff;padding:6px 12px;border-radius:999px;font-size:13px;box-shadow:0 2px 8px rgba(0,0,0,.2);pointer-events:none}
 </style>
 </head>
 <body>
@@ -2541,8 +2542,9 @@ function v162ReportsDatasetRaw({force=false}={}){
  if(!activeTerm?.id)return Promise.resolve({data:null,error:new Error('لا توجد فترة دراسية نشطة.')});
  if(force&&Date.now()-__v162DatasetAt<5000)force=false;
  return AppDataStore.get(`v162:reports-dataset:${activeTerm.id}`,async signal=>{
+  const v457r=await v457Pre(force); if(v457r)return v457r; /* v457 */
   const r=await abortable(sb.rpc('get_reports_dataset',{p_term_id:activeTerm.id}),signal);
-  if(!r.error)__v162DatasetAt=Date.now();
+  if(!r.error){__v162DatasetAt=Date.now();v457Put(r.data)}
   return r;
  },{ttl:120000,force}); /* v336: دقيقتان بدل 30 ثانية؛ أي حفظ يمسحها فورًا */
 }
@@ -2863,6 +2865,7 @@ window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();window.v152
 window.addEventListener('appinstalled',()=>{window.v152InstallPrompt=null;v152SyncInstallBtn()});
 if('serviceWorker' in navigator&&location.protocol!=='file:')window.addEventListener('load',()=>navigator.serviceWorker.register('./service-worker.js').catch(()=>{}));
 const V145_NEWS=[
+ ['v457','الصفحة الرئيسية تفتح فورًا من آخر بيانات محفوظة على جهازك ثم تتحدث تلقائيًا خلال ثوانٍ.'],
  ['v454','اختيار المدارس في تقرير العجز قبل الأجر يعرض المدارس التي بها عجز فقط.'],
  ['v453','العجز قبل الأجر: تطبيق اختيار المدارس أو إلغاؤه، واستعادة التقرير والفلاتر بعد تحديث الصفحة.'],
  ['v452','تقرير العجز قبل الأجر في المدارس حسب المرحلة والمدارس المختارة، مع الطباعة وExcel وPDF.'],
@@ -17833,6 +17836,35 @@ reportPdfFileName=function(){
  return __activeReportSchema?.reportId===V452_ID?'Agz_Qabl_Al_Ogra_Fi_Al_Madares.pdf':v452PreviousPdfFileName();
 };
 
+
+/* v457-begin: الرئيسية من آخر نسخة محفوظة في الجهاز ثم تحديث في الخلفية */
+const V457={db:null,fresh:null,bg:false,self:false};
+function v457Key(){return [profile?.id||'',activeRole||'',activeTerm?.id||''].join('|')}
+function v457Db(){if(V457.db)return V457.db;V457.db=new Promise(res=>{try{const q=indexedDB.open('sg-cache',1);q.onupgradeneeded=()=>q.result.createObjectStore('kv');q.onsuccess=()=>res(q.result);q.onerror=()=>res(null)}catch(e){res(null)}});return V457.db}
+async function v457Get(k){const d=await v457Db();if(!d)return null;return new Promise(res=>{try{const q=d.transaction('kv').objectStore('kv').get(k);q.onsuccess=()=>res(q.result||null);q.onerror=()=>res(null)}catch(e){res(null)}})}
+async function v457Put(data){try{const k=v457Key();if(!profile?.id||!data)return;const d=await v457Db();if(!d)return;d.transaction('kv','readwrite').objectStore('kv').put({at:Date.now(),data},k)}catch(e){}}
+async function v457Wipe(){try{const d=await v457Db();if(d)d.transaction('kv','readwrite').objectStore('kv').clear()}catch(e){}}
+function v457Pill(on){let el=document.getElementById('v457Pill');if(!on){el&&el.remove();return}if(el)return;el=document.createElement('div');el.id='v457Pill';el.className='v457-pill';el.textContent='⟳ جارٍ تحديث البيانات…';document.body.appendChild(el)}
+async function v457Pre(force){
+ const k=v457Key();
+ if(V457.fresh&&V457.fresh.k===k){const r=V457.fresh.r;V457.fresh=null;return r}
+ if(force||currentPage!=='dashboard'||V457.bg||!profile?.id)return null;
+ const c=await v457Get(k);if(!c||!c.data||Date.now()-c.at>86400000)return null;
+ V457.bg=true;v457Pill(true);
+ (async()=>{try{
+  const r=await sb.rpc('get_reports_dataset',{p_term_id:activeTerm.id});
+  if(r.error||v457Key()!==k)return;
+  __v162DatasetAt=Date.now();v457Put(r.data);
+  if(JSON.stringify(r.data)===JSON.stringify(c.data))return;
+  V457.fresh={k,r};V457.self=true;try{AppDataStore.invalidate('reports:dataset','v162:reports-dataset')}finally{V457.self=false}
+  if(currentPage==='dashboard'&&typeof loadPage==='function')loadPage();
+ }catch(e){console.warn('v457 refresh',e)}finally{V457.bg=false;v457Pill(false)}})();
+ return {data:c.data,error:null};
+}
+{const inv=AppDataStore.invalidate,clr=AppDataStore.clear;
+ AppDataStore.invalidate=function(...a){if(!V457.self)v457Wipe();return inv.apply(this,a)};
+ AppDataStore.clear=function(){v457Wipe();return clr.apply(this,arguments)}}
+/* v457-end */
 </script>
 
 <style>
