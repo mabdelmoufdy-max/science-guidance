@@ -16,7 +16,7 @@
 <script>/* v226: العنوان الموحد — انظر التعليق أعلى الملف */(function(){try{if(/\.github\.io$/.test(location.hostname)&&/^\/science-guidance\/?(index\.html)?$/.test(location.pathname)&&!/[?&]stay\b/.test(location.search))location.replace('https://teachers-data-portal.vercel.app/app/'+location.hash)}catch(e){}})();</script>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#152c43">
-<title>نظام توجيه العلوم — v449</title>
+<title>نظام توجيه العلوم — v450</title>
 <link rel="manifest" href="./manifest.webmanifest">
 <link rel="icon" type="image/png" sizes="192x192" href="./app-icon-192.png">
 <link rel="apple-touch-icon" href="./app-icon-192.png">
@@ -2843,6 +2843,7 @@ window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();window.v152
 window.addEventListener('appinstalled',()=>{window.v152InstallPrompt=null;v152SyncInstallBtn()});
 if('serviceWorker' in navigator&&location.protocol!=='file:')window.addEventListener('load',()=>navigator.serviceWorker.register('./service-worker.js').catch(()=>{}));
 const V145_NEWS=[
+ ['v450','تقرير بيان خطة الإدارة لسد العجز في معلمي العلوم، مع حفظ صورة وPDF.'],
  ['v449','التدقيق في مركز التحكم: فصل إجراءات بوابة المعلمين عن البرنامج الرئيسي بقائمة «المصدر».'],
  ['v446','حسابات المعلمين ومشرفي المدارس تعمل الآن من بوابة المعلمين.'],
  ['v445','صحيفة الموجه: عمودان والتفاف القيم الطويلة في المعاينة والصورة وPDF.'],
@@ -6787,7 +6788,7 @@ function syncPreviewButtonFilterLabel(){
 
 async function openReportById(reportId,options={}){
  if(reportId==='financialGuidance'&&!canViewFinancialGuidanceReport())return toast('تقرير التوجيه المالي متاح من دور الموجّه فما فوق فقط.');
- const sessionEpoch=v96SessionEpoch,stageRevision=v97StageRevision,sourcePage=currentPage;const capturedFilters=v97MergeStageFilter(options.filterState||currentReportFilterState(reportId));const adapter=ReportAdapters[reportId];if(!adapter)return toast('لا يوجد Report Adapter لهذه الشاشة.');
+ const sessionEpoch=v96SessionEpoch,stageRevision=v97StageRevision,sourcePage=currentPage;const capturedFilters=reportId===ADMIN_SHORTAGE_PLAN_ID?{active:false}:v97MergeStageFilter(options.filterState||currentReportFilterState(reportId));const adapter=ReportAdapters[reportId];if(!adapter)return toast('لا يوجد Report Adapter لهذه الشاشة.');
  try{
   resetReportShareCache();reportPreviewReturnFocus=document.activeElement;
   const ctx={period:reportPeriod(),issuer:reportIssuer()},rawSchema=await adapter.load(ctx,options);
@@ -6796,6 +6797,7 @@ async function openReportById(reportId,options={}){
   const filterState=capturedFilters,schema=applyCurrentFiltersToReportSchema(rawSchema,filterState);
   __activeReportSchema=schema;__activeReportSignature=reportHash(schema);
   const overlay=document.getElementById('reportPreviewOverlay'),sheet=document.getElementById('reportPreviewSheet');
+  overlay.classList.toggle('admin-shortage-plan',reportId===ADMIN_SHORTAGE_PLAN_ID);
   overlay.classList.add('open');overlay.setAttribute('aria-hidden','false');document.body.style.overflow='hidden';
   __reportZoomMode='manual';applyReportZoom(1);
   renderReportSchema(schema,sheet);
@@ -13223,7 +13225,8 @@ renderReportSchema=function(schema,sheet){
  const V256_SKIP_ID=/timetable|teacherSelf|teacherStatement/i,V256_SKIP_COL=/ترتيب|نسبة|%|متوسط|عمر|سنة|رقم|كود|هاتف/;
  function v256Total(src,cols){
   const rows=(src.rows||[]).filter(r=>r&&!r._group&&!r._total);
-  if(rows.length<2)return null;
+  const adminPlan=src.reportId===ADMIN_SHORTAGE_PLAN_ID;
+  if(rows.length<(adminPlan?1:2))return null;
   const sums={};let any=false;
   cols.forEach(c=>{
    if(!c||!c.numeric||c.id||c.spanWith)return;
@@ -13231,12 +13234,12 @@ renderReportSchema=function(schema,sheet){
    if(/^(index|rank|no|seq)$/i.test(k)||lab==='م'||lab==='#'||V256_SKIP_COL.test(lab))return;
    let s=0,ok=true,has=false;
    for(const r of rows){const v=r[c.key];if(v===''||v==null||v==='—'||v==='-'||v==='\u00a0')continue;const n=typeof v==='number'?v:Number(String(v).replace(/[٠-٩]/g,d=>'٠١٢٣٤٥٦٧٨٩'.indexOf(d)).trim());if(!Number.isFinite(n)){ok=false;break}s+=n;has=true}
-   if(ok&&has){sums[c.key]=Math.round(s*100)/100;any=true}
+   if(ok&&(has||(adminPlan&&c.key==='surplus'))){sums[c.key]=adminPlan&&c.key==='surplus'&&s===0?'—':Math.round(s*100)/100;any=true}
   });
   if(!any)return null;
   const lc=cols.find(c=>c&&!c.numeric&&!c.id)||cols[0];
   const row={_total:true};cols.forEach(c=>{row[c.key]='\u00a0'});
-  row[lc.key]='المجموع';Object.assign(row,sums);return row;
+  row[lc.key]=adminPlan?'الإجمالي':'المجموع';Object.assign(row,sums);return row;
  }
  applyCurrentFiltersToReportSchema=function(schema,state){
   const out=prev256.apply(this,arguments);
@@ -14038,7 +14041,7 @@ async function v323Report(stage,kind){
 const V326_STAGE_REPORTS={meeting:'تقرير الاجتماع',proposals:'مقترح الانتداب من الفائض'};
 async function v326FirstSupHome(force){
  const html=await v323SupervisorHome(force);
- const bar=`<div class="v326-bar"><button type="button" class="btn primary" onclick="v326Pick('meeting')">تقرير الاجتماع</button><button type="button" class="btn secondary" onclick="openReportById('shortageAfterPaid')">عجز المدارس بعد الأجر</button><button type="button" class="btn secondary" onclick="v326Pick('proposals')">مقترح الانتداب من الفائض</button><button type="button" class="btn secondary" onclick="openReportById('timetableProgress')">إنجاز الجداول</button></div>`;
+ const bar=`<div class="v326-bar"><button type="button" class="btn primary" onclick="v326Pick('meeting')">تقرير الاجتماع</button><button type="button" class="btn secondary" onclick="openReportById('shortageAfterPaid')">عجز المدارس بعد الأجر</button><button type="button" class="btn secondary" onclick="openReportById('adminShortagePlan')">بيان خطة الإدارة لسد العجز في معلمي العلوم</button><button type="button" class="btn secondary" onclick="v326Pick('proposals')">مقترح الانتداب من الفائض</button><button type="button" class="btn secondary" onclick="openReportById('timetableProgress')">إنجاز الجداول</button></div>`;
  const tpl=document.createElement('template');tpl.innerHTML=html;
  const head=tpl.content.querySelector('.v168-head');
  if(head)head.insertAdjacentHTML('afterend',bar);else tpl.content.prepend(document.createRange().createContextualFragment(bar));
@@ -16814,7 +16817,7 @@ function v414Translit(s){
  const out=t.split(/\s+/).filter(Boolean).map(v414Word).filter(Boolean).join('_').replace(/_+/g,'_').slice(0,90);
  return out||'Taqrir_Nezam_Tawgeh_Al_Oloom';
 }
-reportPdfFileName=function(){return v414Translit(reportPreviewTitle())+'_'+new Date().toISOString().slice(0,10)+'.pdf'};
+reportPdfFileName=function(){if(__activeReportSchema?.reportId===ADMIN_SHORTAGE_PLAN_ID)return ADMIN_SHORTAGE_PLAN_FILE+'.pdf';return v414Translit(reportPreviewTitle())+'_'+new Date().toISOString().slice(0,10)+'.pdf'};
 /* v414-end */
 /* v415-begin: «الإجازات» — التقويم الأسبوعي (السبت–الخميس) أول ما يظهر في صفحة الإجازات (بطلب المستخدم 2026-11-19، الحل 2 أسبوعي، الخيار أ) */
 V180_LEAVE_TABS.unshift(['week','الأسبوع']);
@@ -17213,12 +17216,174 @@ editTeacherForm=async function(id){
  requestAnimationFrame(()=>{const a=document.activeElement;if(a&&m.contains(a)&&a!==document.body)a.blur()});
 };
 /* v440-end */
+
+/* بيان خطة الإدارة: عرض تجميعي من محرك الخطة ونطاق التقارير الحالي. */
+const ADMIN_SHORTAGE_PLAN_ID='adminShortagePlan';
+const ADMIN_SHORTAGE_PLAN_FILE='Bayan_Khotat_Al_Edara_Lisad_Al_Agz';
+const ADMIN_SHORTAGE_PLAN_TITLE='بيان خطة الإدارة لسد العجز في معلمي العلوم';
+const ADMIN_SHORTAGE_PLAN_STAGES=[
+ {key:'ابتدائي',label:'الابتدائية',quota:20},
+ {key:'تعليم مجتمعي',label:'التعليم المجتمعي'},
+ {key:'إعدادي',label:'الإعدادية',quota:18},
+ {key:'ثانوي عام',label:'الثانوية العامة',quota:16},
+ {key:'ثانوي صناعي',label:'التعليم الفني (الثانوي الصناعي)',quota:16}
+];
+STATISTICS_REPORTS[ADMIN_SHORTAGE_PLAN_ID]={
+ title:ADMIN_SHORTAGE_PLAN_TITLE,subtitle:'المدارس والفصول والحصص واحتياج المعلمين حسب المرحلة',
+ icon:'▤',adapter:ADMIN_SHORTAGE_PLAN_ID,filters:[],purpose:true
+};
+V103_PURPOSE_REPORTS.push(ADMIN_SHORTAGE_PLAN_ID);
+V196_ORDER.splice(V196_ORDER.indexOf('schoolShortage')+1,0,ADMIN_SHORTAGE_PLAN_ID);
+const previousCanViewAdminShortagePlan=v103CanViewReport;
+v103CanViewReport=function(id){
+ return id===ADMIN_SHORTAGE_PLAN_ID
+  ? ['admin','first_supervisor','stage_coordinator'].includes(profile?.role)
+  : previousCanViewAdminShortagePlan(id);
+};
+const previousOpenAdminShortagePlan=statisticsOpenReport;
+statisticsOpenReport=function(id){
+ if(id!==ADMIN_SHORTAGE_PLAN_ID)return previousOpenAdminShortagePlan(id);
+ if(!v103CanViewReport(id))return toast('التقرير خارج صلاحية الدور الحالي.');
+ return openReportById(id);
+};
+
+function buildAdminShortagePlanReport({data,classes,onLeave,stages,year,ctx}){
+ const allowed=new Set(stages.map(stage=>stage.key));
+ const schools=(data.hierarchy?.schools||[]).filter(s=>allowed.has(s.stage));
+ const schoolIds=new Set(schools.map(s=>String(s.id)));
+ const rosters=v103ScopeRows(data).filter(t=>schoolIds.has(v91ScopeSchoolId(t))&&!onLeave.has(v91TeacherId(t)));
+ // نمرر الفصول الفعلية وحصص المواد وحدها حتى لا يدخل العدد المعلن أو تقدير المرحلة عند غياب التفاصيل.
+ const plan=buildOperationalSchoolPlanData({
+  schools:schools.map(s=>({...s,class_count:0})),
+  classes:classes.filter(c=>schoolIds.has(String(c.school_id))).map(c=>({
+   id:c.id,school_id:c.school_id,class_subject_requirements:c.class_subject_requirements
+  })),
+  schoolTeacherRosters:rosters,rules:data.rules||[]
+ });
+ const teacherStages=new Map();
+ for(const school of plan.rows){
+  for(const {teacher,relation} of school.teacher_capacity_details){
+   if(!['home','delegated_out_partial','delegated_in_full'].includes(relation))continue;
+   const id=v91TeacherId(teacher);
+   if(!teacherStages.has(id)||relation==='delegated_in_full')teacherStages.set(id,school.school_stage);
+  }
+ }
+ const quotaNotes=[];
+ const rows=stages.map(stage=>{
+  if(!stage.quota)return {
+   stage:stage.label+' *',schools:14,classes:39,periods:117,needed:6,present:6,deficit:0,surplus:'—',paid:0,notes:' '
+  };
+  const schoolRows=plan.rows.filter(s=>s.school_stage===stage.key);
+  const periods=schoolRows.reduce((sum,s)=>sum+s.required_periods,0);
+  const ruleQuota=planRuleTarget({job_title:'معلم أول (أ)'},stage.key,data.rules||[]);
+  const quota=ruleQuota>0?ruleQuota:stage.quota;
+  if(quota!==stage.quota)quotaNotes.push(stage.label+' '+quota+' بدلًا من '+stage.quota);
+  const needed=Math.round(periods/quota),present=[...teacherStages.values()].filter(key=>key===stage.key).length,deficit=Math.max(needed-present,0);
+  return {
+   stage:stage.label,schools:schoolRows.length,classes:schoolRows.reduce((sum,s)=>sum+s.total_classes,0),
+   periods,needed,present,deficit,surplus:Math.max(present-needed,0)||'—',paid:deficit,notes:' '
+  };
+ });
+ const columns=[
+  reportColumn('stage','المرحلة',2),
+  ...[['schools','المدارس'],['classes','الفصول'],['periods','عدد الحصص'],['needed','اللازم'],
+   ['present','الموجود'],['deficit','العجز'],['surplus','الزيادة'],['paid','الأجر']]
+   .map(([key,label])=>reportColumn(key,label,1,{numeric:true})),
+  reportColumn('notes','ملاحظات',1.6)
+ ];
+ return {
+  ...makeReportSchema({
+   reportId:ADMIN_SHORTAGE_PLAN_ID,title:ADMIN_SHORTAGE_PLAN_TITLE+' للعام الدراسي '+year+'م',
+   subtitle:quotaNotes.length?'فرق النصاب وفق قاعدة معلم أول (أ) — '+quotaNotes.join('، '):'',
+   period:ctx.period,issuer:ctx.issuer,columns,rows,approval:{enabled:false}
+  }),
+  adminPlanManualNote:stages.some(stage=>!stage.quota)
+ };
+}
+ReportAdapters[ADMIN_SHORTAGE_PLAN_ID]={async load(ctx){
+ if(!v103CanViewReport(ADMIN_SHORTAGE_PLAN_ID))throw new Error('التقرير خارج صلاحية الدور الحالي.');
+ if(!activeYear?.id||!activeYear.label||!activeTerm?.id)throw new Error('لا يوجد عام أو فصل دراسي نشط.');
+ const year=String(activeYear.label).trim().replace(/\s*[/–-]\s*/g,' / ').replace(/\s*م$/,'');
+ const termId=activeTerm.id,coordinator=profile.role==='stage_coordinator';
+ const [result,assignedStages,classes,leaves]=await Promise.all([
+  v162ReportsDatasetRaw(),
+  coordinator?v202Stages():Promise.resolve(ADMIN_SHORTAGE_PLAN_STAGES.map(stage=>stage.key)),
+  v103ReadAll(()=>sb.from('school_classes').select('id,school_id,class_subject_requirements(weekly_periods)').eq('term_id',termId).order('id')),
+  v103ReadAll(()=>sb.from('teacher_workload_summary').select('teacher_id').eq('on_renewed_leave',true).order('teacher_id'))
+ ]);
+ if(result.error)throw result.error;
+ const stages=ADMIN_SHORTAGE_PLAN_STAGES.filter(stage=>assignedStages.includes(stage.key));
+ return buildAdminShortagePlanReport({
+  data:result.data||{},classes,onLeave:new Set(leaves.map(t=>String(t.teacher_id))),stages,year,ctx
+ });
+}};
+
+const previousAdminPlanTable=reportTableSkeleton;
+reportTableSkeleton=function(schema){
+ const result=previousAdminPlanTable(schema);
+ if(schema.reportId!==ADMIN_SHORTAGE_PLAN_ID)return result;
+ const head=result.table.tHead,labels=head.rows[0],groups=head.insertRow(0);
+ const stage=labels.firstElementChild,notes=labels.lastElementChild;
+ stage.rowSpan=2;stage.scope='col';groups.appendChild(stage);
+ for(const [text,span] of [['العدد',3],['المعلمون',5]]){
+  const th=document.createElement('th');
+  th.textContent=text;th.colSpan=span;th.scope='colgroup';groups.appendChild(th);
+ }
+ notes.rowSpan=2;notes.scope='col';groups.appendChild(notes);
+ for(const th of labels.cells)th.scope='col';
+ return result;
+};
+const previousAdminPlanHeader=reportHeader;
+reportHeader=function(schema){
+ const header=previousAdminPlanHeader(schema);
+ if(schema.reportId===ADMIN_SHORTAGE_PLAN_ID){
+  header.querySelector('.report-page-brand').textContent='إدارة قوص التعليمية — توجيه العلوم';
+  header.querySelector('.report-page-about').remove();
+ }
+ return header;
+};
+const previousAdminPlanFooter=reportFooter;
+reportFooter=function(schema,signature){
+ const footer=previousAdminPlanFooter(schema,signature);
+ if(schema.reportId===ADMIN_SHORTAGE_PLAN_ID&&schema.adminPlanManualNote){
+  const note=document.createElement('div');note.className='report-page-subtitle';note.style.gridColumn='1 / -1';note.textContent='* بأرقام يدوية';
+  footer.prepend(note);
+ }
+ return footer;
+};
+async function saveAdminShortagePlanImage(button){
+ const schema=__activeReportSchema,epoch=v96SessionEpoch;
+ if(schema?.reportId!==ADMIN_SHORTAGE_PLAN_ID)return;
+ const overlay=document.getElementById('reportPreviewOverlay');
+ button.disabled=true;
+ try{
+  if(__reportSharePreparingPromise)await __reportSharePreparingPromise;
+  if(epoch!==v96SessionEpoch||schema!==__activeReportSchema)return;
+  ensureReportApproved();
+  const page=document.querySelector('#reportPreviewSheet .report-a4-page');
+  overlay.classList.add('report-exporting');
+  const blob=await reportRenderSharePageBlob(page,'image/png');
+  if(epoch!==v96SessionEpoch||schema!==__activeReportSchema)return;
+  const url=URL.createObjectURL(blob),link=document.createElement('a');
+  link.href=url;
+  link.download=ADMIN_SHORTAGE_PLAN_FILE+'.png';
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+  setTimeout(()=>URL.revokeObjectURL(url),3000);
+ }catch(error){toast(error.message||'تعذر حفظ صورة التقرير.')}
+ finally{overlay.classList.remove('report-exporting');button.disabled=false}
+}
 </script>
 
+<style>
+.report-preview-overlay:not(.admin-shortage-plan) .admin-shortage-image{display:none}
+</style>
 <div id="reportPreviewOverlay" class="report-preview-overlay" role="dialog" aria-modal="true" aria-label="معاينة التقرير" aria-hidden="true">
   <div class="report-preview-window">
     <div class="report-preview-toolbar no-print">
       <button type="button" class="btn primary report-action-print" onclick="printReportPreview()">طباعة</button>
+      <button type="button" class="btn secondary admin-shortage-image" onclick="saveAdminShortagePlanImage(this)">صورة</button>
       <button type="button" class="btn secondary" onclick="saveReportPdf()">حفظ PDF</button>
       <button type="button" class="btn secondary report-action-whatsapp" onclick="shareReportWhatsApp()" title="مشاركة التقرير كاملًا كملف PDF واحد عبر واتساب">إرسال PDF واتس</button>
       <div class="report-zoom-group">
