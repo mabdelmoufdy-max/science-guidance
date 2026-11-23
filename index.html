@@ -1,4 +1,5 @@
 <!doctype html>
+<!-- v453: إصلاح قائمة اختيار المدارس في تقرير العجز قبل الأجر؛ تطبيق وإلغاء على الهاتف واستعادة المرحلة والمدارس بعد تحديث الصفحة. -->
 <!-- v452: تقرير «العجز قبل الأجر في المدارس» مع فلترَي المرحلة والمدارس وتصدير Excel وطباعة وPDF؛ قراءة مجمّعة لكل المراحل للمنسق. -->
 <!-- v451: تقرير «بيان خطة الإدارة»: منسق المرحلة يرى كل المراحل والتعليم المجتمعي والإجمالي بأرقام مجمّعة من دالة قراءة shortage_plan_stage_totals. -->
 <!-- v449: تبويب «التدقيق» في مركز التحكم: قائمة «المصدر» (البرنامج الرئيسي/بوابة المعلمين/تلقائي) وشارة المصدر في كل سطر وعمود «المصدر» في التقرير وExcel؛ admin_audit_search3/admin_audit_actions2 مع رجوع للدالتين السابقتين. -->
@@ -8,7 +9,6 @@
 <!-- v443: نسخة تجربة جديدة لقائمة الهاتف، وإخفاء معاينة التقرير من بياناتي، وتوحيد طباعة صحيفة الموجه مع قالب المعلم. -->
 <!-- v442: تبويب «بيانات الموجهين» للعرض والطباعة، وفصل المدارس عن صحيفة الأحوال. -->
 <!-- v441: صحيفة أحوال الموجه في بياناتي ودليل الموجهين، مع الحفظ الذاتي والطباعة وحقول المدير. -->
-<!-- v440: صفحة «تعديل بيانات المعلم» تُحمَّل مرة واحدة: كل البيانات بطلبات متوازية (جولتان بدل 9–10 انتظارات متتالية) ثم تُرسم بشكلها النهائي بعد «جارٍ تحميل بيانات المعلم…»؛ طبقات البناء v295 v184 v224 v339 v344 v381 v421 v436 صارت دوال رسم متزامنة vNNNBuild بالترتيب نفسه؛ الحقول والحفظ والصلاحيات بلا تغيير (بطلب المستخدم 2026-11-22 «ج»). + إصلاح: «حفظ» بعد تعديل حقل من «بيان الحالة» كان يعيد تحميل البرنامج ويكتب القيم في العنوان (preventDefault أول غلاف الحفظ v421). -->
 <html lang="ar" dir="rtl">
 <head>
 <!-- إعداد: أ/ محمود عبدالمفدي محمد أبوالنجا | الصفة: معلم -->
@@ -16,7 +16,7 @@
 <script>/* v226: العنوان الموحد — انظر التعليق أعلى الملف */(function(){try{if(/\.github\.io$/.test(location.hostname)&&/^\/science-guidance\/?(index\.html)?$/.test(location.pathname)&&!/[?&]stay\b/.test(location.search))location.replace('https://teachers-data-portal.vercel.app/app/'+location.hash)}catch(e){}})();</script>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#152c43">
-<title>نظام توجيه العلوم — v452</title>
+<title>نظام توجيه العلوم — v453</title>
 <link rel="manifest" href="./manifest.webmanifest">
 <link rel="icon" type="image/png" sizes="192x192" href="./app-icon-192.png">
 <link rel="apple-touch-icon" href="./app-icon-192.png">
@@ -2458,13 +2458,23 @@ span.v415-L{border-radius:10px;padding:2px 8px}
 
 .v452-school-popover{position:fixed;inset:auto;margin:0;inline-size:min(360px,calc(100% - 16px));max-block-size:min(400px,60dvh);top:clamp(8px,var(--v452-picker-top,8px),calc(100dvh - min(400px,60dvh) - 8px));right:clamp(8px,var(--v452-picker-right,8px),max(8px,calc(100vw - 368px)));box-sizing:border-box;background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:12px;box-shadow:0 8px 24px #0003}
 .v452-school-popover:popover-open{display:flex;flex-direction:column;gap:8px}
-.v452-school-popover>.actions{flex:none;margin:0}
+.v452-school-header,.v452-school-footer{position:sticky;flex:none;z-index:1;background:#fff;min-inline-size:0}
+.v452-school-header{top:0;display:grid;gap:6px}
+.v452-school-footer{bottom:0;border-block-start:1px solid var(--line);padding-block-start:8px}
+.v452-school-header-line,.v452-school-controls,.v452-school-footer-actions{display:flex;gap:6px;align-items:center}
+.v452-school-header-line strong{flex:1;min-width:0}
+.v452-school-header-line .btn{min-width:40px}
+.v452-school-controls input{flex:1;min-width:0;width:0}
+.v452-school-controls .btn{flex:none;white-space:nowrap;padding-inline:6px;font-size:.86em}
+.v452-school-footer-actions .btn.primary{flex:1}
+.v452-school-footer p{margin:4px 0}
+.v452-report-heading{scroll-margin-top:12px}
 .v452-school-options{min-block-size:0;overflow:auto;overscroll-behavior:contain}
 .v452-school-option{display:grid;grid-template-columns:auto minmax(0,1fr) auto;align-items:center;gap:8px;min-block-size:44px;border-block-end:1px solid var(--line);cursor:pointer}
 .v452-school-option[hidden]{display:none}
 .v452-school-option input[type="checkbox"]{inline-size:40px;block-size:40px;margin:0;cursor:pointer}
 .v452-school-option small{white-space:nowrap}
-@media(max-width:600px){.v452-school-popover{inset:auto 0 0;inline-size:100%;max-block-size:75dvh;border-radius:var(--radius) var(--radius) 0 0}}
+@media(max-width:600px){.v452-school-popover{inset:0;inline-size:100%;block-size:100dvh;max-block-size:none;border:0;border-radius:0;padding-block:max(12px,env(safe-area-inset-top)) max(12px,env(safe-area-inset-bottom))}}
 </style>
 </head>
 <body>
@@ -2853,6 +2863,7 @@ window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();window.v152
 window.addEventListener('appinstalled',()=>{window.v152InstallPrompt=null;v152SyncInstallBtn()});
 if('serviceWorker' in navigator&&location.protocol!=='file:')window.addEventListener('load',()=>navigator.serviceWorker.register('./service-worker.js').catch(()=>{}));
 const V145_NEWS=[
+ ['v453','العجز قبل الأجر: تطبيق اختيار المدارس أو إلغاؤه، واستعادة التقرير والفلاتر بعد تحديث الصفحة.'],
  ['v452','تقرير العجز قبل الأجر في المدارس حسب المرحلة والمدارس المختارة، مع الطباعة وExcel وPDF.'],
  ['v451','تقرير بيان خطة الإدارة: منسق المرحلة يرى كل المراحل والإجمالي (أرقام مجمّعة فقط).'],
  ['v450','تقرير بيان خطة الإدارة لسد العجز في معلمي العلوم، مع حفظ صورة وPDF.'],
@@ -17410,42 +17421,9 @@ async function saveAdminShortagePlanImage(button){
  }catch(error){toast(error.message||'تعذر حفظ صورة التقرير.')}
  finally{overlay.classList.remove('report-exporting');button.disabled=false}
 }
-</script>
-
-<style>
-.report-preview-overlay:not(.admin-shortage-plan) .admin-shortage-image{display:none}
-</style>
-<div id="reportPreviewOverlay" class="report-preview-overlay" role="dialog" aria-modal="true" aria-label="معاينة التقرير" aria-hidden="true">
-  <div class="report-preview-window">
-    <div class="report-preview-toolbar no-print">
-      <button type="button" class="btn primary report-action-print" onclick="printReportPreview()">طباعة</button>
-      <button type="button" class="btn secondary admin-shortage-image" onclick="saveAdminShortagePlanImage(this)">صورة</button>
-      <button type="button" class="btn secondary" onclick="saveReportPdf()">حفظ PDF</button>
-      <button type="button" class="btn secondary report-action-whatsapp" onclick="shareReportWhatsApp()" title="مشاركة التقرير كاملًا كملف PDF واحد عبر واتساب">إرسال PDF واتس</button>
-      <div class="report-zoom-group">
-        <button type="button" class="btn secondary" onclick="setReportZoom100()">100%</button>
-        <button type="button" class="btn secondary" onclick="setReportZoomFit()">ملاءمة للعرض</button>
-        <button type="button" class="btn secondary" onclick="changeReportZoom(-0.1)" aria-label="تصغير">−</button>
-        <span id="reportZoomValue" class="report-zoom-value">100%</span>
-        <button type="button" class="btn secondary" onclick="changeReportZoom(0.1)" aria-label="تكبير">+</button>
-      </div>
-      <span id="reportQualityStatus" class="report-quality-status">فحص الجودة</span>
-      <button type="button" class="btn danger report-action-close" data-report-preview-close onclick="closeReportPreview()">إغلاق المعاينة</button>
-    </div>
-    <div class="report-preview-scroll">
-      <section id="reportPreviewSheet" class="report-preview-sheet" dir="rtl"></section>
-    </div>
-    <div class="report-mobile-actions no-print" aria-label="إجراءات التقرير">
-      <button type="button" class="btn primary" onclick="printReportPreview()">طباعة</button>
-      <button type="button" class="btn secondary report-mobile-whatsapp" onclick="shareReportWhatsApp()">إرسال PDF واتس</button>
-      <button type="button" class="btn danger" onclick="closeReportPreview()">إغلاق</button>
-    </div>
-  </div>
-</div>
-
-<script>
 /* v452: تقرير العجز قبل الأجر في المدارس. */
 const V452_ID='deficitBeforePaid',V452_TITLE='العجز قبل الأجر في المدارس';
+const V453_ROUTE='#/reports/'+V452_ID,V453_REPORTS_ROUTE='#/reports',V453_STORAGE='science_guidance_deficit_before_paid';
 const V452_STAGES=['ابتدائي','إعدادي عام','إعدادي مهني','ثانوي عام','ثانوي صناعي'];
 STATISTICS_REPORTS[V452_ID]={title:V452_TITLE,subtitle:'المدارس التي بها عجز قبل احتساب حصص الأجر',icon:'▤',adapter:V452_ID,filters:['stage','school'],purpose:true};
 V103_PURPOSE_REPORTS.push(V452_ID);
@@ -17525,6 +17503,56 @@ ReportAdapters[V452_ID]={async load(ctx){
 }};
 
 function v452StageValue(){return document.getElementById('statisticsFilterDeficitStage')?.value||''}
+function v453ReadSelection(){
+ try{
+  const saved=JSON.parse(sessionStorage.getItem(V453_STORAGE)||'null');
+  if(saved?.report===V452_ID&&(saved.stage===''||V452_STAGES.includes(saved.stage))
+     &&(saved.schools==='all'||(Array.isArray(saved.schools)&&saved.schools.every(id=>typeof id==='string'))))return saved;
+ }catch{}
+ return {report:V452_ID,stage:'',schools:'all'};
+}
+function v453SaveSelection(state=v452FilterState()){
+ try{sessionStorage.setItem(V453_STORAGE,JSON.stringify({report:V452_ID,stage:state.v452Stage,schools:state.v452SchoolIds??'all'}))}catch{}
+ try{history.replaceState({...history.state,scienceGuidance:true,page:currentPage},'',V453_ROUTE)}catch{}
+}
+function v453ClearSelection(){
+ try{sessionStorage.removeItem(V453_STORAGE)}catch{}
+}
+const v453PreviousOpenReport=statisticsOpenReport;
+statisticsOpenReport=function(id){
+ const result=v453PreviousOpenReport(id);
+ if(id===V452_ID&&v117Cfg()?.adapter===V452_ID&&v103CanViewReport(id)){
+  v453SaveSelection({v452Stage:'',v452SchoolIds:null});
+ }
+ return result;
+};
+const v453PreviousInitialRoute=appNavApplyInitial;
+appNavApplyInitial=function(){
+ const detail=location.hash===V453_ROUTE;
+ if(!detail&&!(location.hash===V453_REPORTS_ROUTE&&history.state?.v453ReportsCenter))return v453PreviousInitialRoute();
+ currentPage=appNavAllowed('statistics')?'statistics':appNavAllowed('reports')?'reports':'dashboard';
+ const permitted=detail&&currentPage!=='dashboard'&&v103CanViewReport(V452_ID);
+ statisticsSelectedReport=permitted&&currentPage==='statistics'?V452_ID:'';
+ v103SelectedReport=permitted&&currentPage==='reports'?V452_ID:'';
+ if(!permitted)v453ClearSelection();
+ const state={scienceGuidance:true,page:currentPage};
+ if(permitted&&currentPage==='statistics')Object.assign(state,{v187Inner:true,v187Key:V452_ID});
+ if(!permitted&&currentPage!=='dashboard')state.v453ReportsCenter=true;
+ try{history.replaceState(state,'',permitted?V453_ROUTE:currentPage==='dashboard'?appNavRoute(currentPage):V453_REPORTS_ROUTE)}catch{}
+ if(detail&&!permitted)setTimeout(()=>toast('هذا التقرير خارج نطاق صلاحية حسابك.'),0);
+};
+const v453PreviousBackToReports=statisticsBackToCenter;
+statisticsBackToCenter=function(){
+ if(v117Cfg()?.adapter!==V452_ID)return v453PreviousBackToReports();
+ const popover=document.getElementById('v452SchoolPopover');
+ if(popover?.matches(':popover-open'))return popover.hidePopover();
+ v453ClearSelection();
+ statisticsSelectedReport='';
+ v103SelectedReport='';
+ try{history.replaceState({scienceGuidance:true,page:currentPage,v453ReportsCenter:true},'',V453_REPORTS_ROUTE)}catch{}
+ return loadPage().catch(moneySafeError);
+};
+
 function v452FilterState(){
  const picker=v452SchoolPicker(), stage=v452StageValue();
  const filters=stage?[{label:'المرحلة',value:stage}]:[];
@@ -17566,20 +17594,34 @@ function v452Detail(owned){
   .map(stage=>`<option value="${esc(stage)}">${esc(stage)}</option>`).join('');
  v117AutoRun();
  return `<div class="statistics-filter-page v103-purpose-detail">
-  <div class="statistics-filter-head"><h2>${V452_TITLE}</h2><button type="button" class="btn secondary statistics-back-btn" onclick="statisticsBackToCenter()">← رجوع للتقارير</button></div>
+  <div class="statistics-filter-head"><h2 id="v453ReportHeading" class="v452-report-heading">${V452_TITLE}</h2><button type="button" class="btn secondary statistics-back-btn" onclick="statisticsBackToCenter()">← رجوع للتقارير</button></div>
   <div class="card statistics-filter-card"><div class="statistics-filter-field">
    <label for="statisticsFilterDeficitStage">المرحلة</label>
-   <select id="statisticsFilterDeficitStage" onchange="v452ResetSchoolPicker()"><option value="">الكل</option>${options}</select>
+   <select id="statisticsFilterDeficitStage" onchange="v453ChangeStage()"><option value="">الكل</option>${options}</select>
    <div id="v452SchoolPicker">
     <button id="v452SchoolPickerButton" type="button" class="btn secondary" popovertarget="v452SchoolPopover" disabled>المدارس: الكل</button>
-    <div id="v452SchoolPopover" class="v452-school-popover" popover role="group" aria-label="اختيار المدارس" onbeforetoggle="v452PositionSchoolPopover(event)">
-     <input id="v452SchoolSearch" type="search" aria-label="بحث باسم المدرسة" placeholder="بحث باسم المدرسة" oninput="v452SearchSchools()" autofocus>
-     <div class="actions">
-      <button type="button" class="btn secondary" onclick="v452SelectAllSchools(true)">تحديد الكل</button>
-      <button type="button" class="btn secondary" onclick="v452SelectAllSchools(false)">إلغاء الكل</button>
-     </div>
+    <div id="v452SchoolPopover" class="v452-school-popover" popover role="dialog" aria-labelledby="v453PickerTitle" onbeforetoggle="v453TogglePicker(event)">
+     <header class="v452-school-header">
+      <div class="v452-school-header-line">
+       <strong id="v453PickerTitle">اختيار المدارس</strong>
+       <button type="button" class="btn secondary" aria-label="إغلاق اختيار المدارس" onclick="v453ClosePicker()">✕</button>
+      </div>
+      <span id="v453PickerCount" role="status"></span>
+      <div class="v452-school-controls">
+       <input id="v452SchoolSearch" type="search" aria-label="بحث باسم المدرسة" placeholder="بحث باسم المدرسة" oninput="v452SearchSchools()">
+       <button type="button" class="btn secondary" onclick="v452SelectAllSchools(true)">تحديد الكل</button>
+       <button type="button" class="btn secondary" onclick="v452SelectAllSchools(false)">إلغاء الكل</button>
+      </div>
+     </header>
      <div id="v452SchoolOptions" class="v452-school-options" onchange="v452ToggleSchool(event)"></div>
      <p id="v452SchoolSearchEmpty" class="muted" hidden>لا توجد مدارس مطابقة للبحث.</p>
+     <footer class="v452-school-footer">
+      <p id="v453PickerWarning" class="muted" hidden>اختر مدرسة واحدة على الأقل</p>
+      <div class="v452-school-footer-actions">
+       <button id="v453ApplySchools" type="button" class="btn primary" onclick="v453ApplyPicker()">عرض التقرير</button>
+       <button type="button" class="btn secondary" onclick="v453ClosePicker()">إلغاء</button>
+      </div>
+     </footer>
     </div>
    </div>
   </div></div>
@@ -17608,26 +17650,78 @@ statisticsPage=async function(...args){
  return v452PreviousStatisticsPage.apply(this,args);
 };
 
-function v452PositionSchoolPopover(event){
- if(event.newState!=='open')return;
+function v453TogglePicker(event){
+ const panel=event.target,picker=panel.closest('#v452SchoolPicker');
+ if(event.newState!=='open'){
+  picker.v453Draft=null;
+  if(history.state?.v453Picker&&location.hash===V453_ROUTE){
+   const index=history.state.v188Idx;
+   setTimeout(()=>{
+    if(history.state?.v453Picker&&history.state.v188Idx===index&&location.hash===V453_ROUTE&&!panel.matches(':popover-open'))history.back();
+   },0);
+  }
+  return;
+ }
  const button=document.getElementById('v452SchoolPickerButton').getBoundingClientRect();
- event.target.style.setProperty('--v452-picker-top',button.bottom+6+'px');
- event.target.style.setProperty('--v452-picker-right',innerWidth-button.right+'px');
+ panel.style.setProperty('--v452-picker-top',button.bottom+6+'px');
+ panel.style.setProperty('--v452-picker-right',innerWidth-button.right+'px');
+ picker.v453Draft=new Set(picker.v452Selected);
+ document.getElementById('v453PickerTitle').textContent='اختيار المدارس — '+(v452StageValue()||'الكل');
+ document.getElementById('v452SchoolSearch').value='';
+ v452SearchSchools();
+ v453SyncPicker();
+ document.getElementById('v452SchoolOptions').scrollTop=0;
+ if(!history.state?.v453Picker){
+  try{history.pushState({...history.state,scienceGuidance:true,page:currentPage,v453Picker:true},'',V453_ROUTE)}catch{}
+ }
 }
-function v452ResetSchoolPicker(){
+function v453ClosePicker(){document.getElementById('v452SchoolPopover').hidePopover()}
+window.addEventListener('popstate',()=>{
+ if(location.hash!==V453_ROUTE||v117Cfg()?.adapter!==V452_ID)return;
+ const panel=document.getElementById('v452SchoolPopover');
+ if(!panel)return;
+ const isOpen=panel.matches(':popover-open');
+ if(isOpen&&!history.state?.v453Picker)panel.hidePopover();
+ else if(!isOpen&&history.state?.v453Picker&&!document.getElementById('v452SchoolPickerButton').disabled)panel.showPopover();
+});
+function v452ResetSchoolPicker(selected='all'){
  const picker=v452SchoolPicker();
  if(!picker?.v452Schools)return;
  const stage=v452StageValue();
  const choices=picker.v452Schools.filter(s=>!stage||s.stage===stage).sort((a,b)=>a.school.localeCompare(b.school,'ar'));
  picker.v452Choices=choices;
- picker.v452Selected=new Set(choices.map(s=>s.schoolId));
- document.getElementById('v452SchoolSearch').value='';
+ const allowed=new Set(choices.map(s=>s.schoolId));
+ const saved=new Set(selected==='all'?allowed:selected.filter(id=>allowed.has(id)));
+ picker.v452Selected=saved.size?saved:allowed;
  document.getElementById('v452SchoolOptions').innerHTML=choices.map(s=>{
   const label=!s.ready?'بيانات غير مكتملة':s.deficit>0?s.deficit+' حصة':'لا عجز';
-  return `<label class="v452-school-option" data-name="${esc(v288Norm(s.school))}"><input type="checkbox" value="${esc(s.schoolId)}" checked><span>${esc(s.school)}</span><small>${esc(label)}</small></label>`;
+  return `<label class="v452-school-option" data-name="${esc(v288Norm(s.school))}"><input type="checkbox" value="${esc(s.schoolId)}"><span>${esc(s.school)}</span><small>${esc(label)}</small></label>`;
  }).join('');
- v452SearchSchools();
  v452UpdateSchoolButton();
+}
+function v453ChangeStage(){
+ v452ResetSchoolPicker();
+ v453SaveSelection();
+}
+function v453SyncPicker(){
+ const picker=v452SchoolPicker(), draft=picker.v453Draft;
+ document.querySelectorAll('#v452SchoolOptions input').forEach(input=>{input.checked=draft.has(input.value)});
+ document.getElementById('v453PickerCount').textContent='محدد '+draft.size+' من '+picker.v452Choices.length;
+ const apply=document.getElementById('v453ApplySchools');
+ apply.textContent='عرض التقرير ('+draft.size+' مدرسة)';
+ apply.disabled=draft.size===0;
+ document.getElementById('v453PickerWarning').hidden=draft.size>0;
+}
+async function v453ApplyPicker(){
+ const picker=v452SchoolPicker();
+ if(!picker?.v453Draft?.size)return;
+ picker.v452Selected=picker.v453Draft;
+ v452UpdateSchoolButton();
+ v453SaveSelection();
+ v453ClosePicker();
+ await v117RenderInlineResults();
+ const heading=document.getElementById('v453ReportHeading');
+ if(picker.isConnected)heading?.scrollIntoView({block:'start'});
 }
 function v452UpdateSchoolButton(){
  const picker=v452SchoolPicker(), button=document.getElementById('v452SchoolPickerButton');
@@ -17642,20 +17736,17 @@ function v452SearchSchools(){
  document.getElementById('v452SchoolSearchEmpty').hidden=rows.some(row=>!row.hidden);
 }
 function v452SelectAllSchools(checked){
- const picker=v452SchoolPicker(), list=document.getElementById('v452SchoolOptions');
- picker.v452Selected=new Set(checked?picker.v452Choices.map(s=>s.schoolId):[]);
- list.querySelectorAll('input').forEach(input=>{input.checked=checked});
- v452UpdateSchoolButton();
- v117RenderInlineResults();
+ const picker=v452SchoolPicker();
+ picker.v453Draft=new Set(checked?picker.v452Choices.map(s=>s.schoolId):[]);
+ v453SyncPicker();
 }
 function v452ToggleSchool(event){
  const input=event.target;
  if(input.type!=='checkbox')return;
- const selected=v452SchoolPicker().v452Selected;
- if(input.checked)selected.add(input.value);
- else selected.delete(input.value);
- v452UpdateSchoolButton();
- v117RenderInlineResults();
+ const draft=v452SchoolPicker().v453Draft;
+ if(input.checked)draft.add(input.value);
+ else draft.delete(input.value);
+ v453SyncPicker();
 }
 const V452_SELECT_SCHOOL_MESSAGE='اختر مدرسة واحدة على الأقل';
 function v452OpenPreview(){
@@ -17669,16 +17760,23 @@ async function v452FilteredReport(state){
 const v452PreviousInline=v117RenderInlineResults;
 v117RenderInlineResults=async function(){
  if(v117Cfg()?.adapter!==V452_ID)return v452PreviousInline();
- const box=document.getElementById('v117Results');
- if(!box)return;
- const seq=++v117RunSeq,picker=v452SchoolPicker();
+ const box=document.getElementById('v117Results'),picker=v452SchoolPicker();
+ if(!box||!picker)return;
+ const seq=++v117RunSeq;
  box.textContent='جارٍ تحميل البيانات…';
  try{
   const raw=await ReportAdapters[V452_ID].load({period:reportPeriod(),issuer:reportIssuer()});
   if(seq!==v117RunSeq||!box.isConnected)return;
   if(!picker.v452Schools){
    picker.v452Schools=raw.v452Schools;
-   v452ResetSchoolPicker();
+   const saved=v453ReadSelection(), stage=document.getElementById('statisticsFilterDeficitStage');
+   if([...stage.options].some(option=>option.value===saved.stage)){
+    stage.value=saved.stage;
+    v452ResetSchoolPicker(saved.schools);
+   }else{
+    v452ResetSchoolPicker();
+   }
+   v453SaveSelection();
   }
   const state=v452FilterState();
   if(state.v452SchoolIds?.length===0){
@@ -17731,7 +17829,39 @@ const v452PreviousPdfFileName=reportPdfFileName;
 reportPdfFileName=function(){
  return __activeReportSchema?.reportId===V452_ID?'Agz_Qabl_Al_Ogra_Fi_Al_Madares.pdf':v452PreviousPdfFileName();
 };
+
 </script>
+
+<style>
+.report-preview-overlay:not(.admin-shortage-plan) .admin-shortage-image{display:none}
+</style>
+<div id="reportPreviewOverlay" class="report-preview-overlay" role="dialog" aria-modal="true" aria-label="معاينة التقرير" aria-hidden="true">
+  <div class="report-preview-window">
+    <div class="report-preview-toolbar no-print">
+      <button type="button" class="btn primary report-action-print" onclick="printReportPreview()">طباعة</button>
+      <button type="button" class="btn secondary admin-shortage-image" onclick="saveAdminShortagePlanImage(this)">صورة</button>
+      <button type="button" class="btn secondary" onclick="saveReportPdf()">حفظ PDF</button>
+      <button type="button" class="btn secondary report-action-whatsapp" onclick="shareReportWhatsApp()" title="مشاركة التقرير كاملًا كملف PDF واحد عبر واتساب">إرسال PDF واتس</button>
+      <div class="report-zoom-group">
+        <button type="button" class="btn secondary" onclick="setReportZoom100()">100%</button>
+        <button type="button" class="btn secondary" onclick="setReportZoomFit()">ملاءمة للعرض</button>
+        <button type="button" class="btn secondary" onclick="changeReportZoom(-0.1)" aria-label="تصغير">−</button>
+        <span id="reportZoomValue" class="report-zoom-value">100%</span>
+        <button type="button" class="btn secondary" onclick="changeReportZoom(0.1)" aria-label="تكبير">+</button>
+      </div>
+      <span id="reportQualityStatus" class="report-quality-status">فحص الجودة</span>
+      <button type="button" class="btn danger report-action-close" data-report-preview-close onclick="closeReportPreview()">إغلاق المعاينة</button>
+    </div>
+    <div class="report-preview-scroll">
+      <section id="reportPreviewSheet" class="report-preview-sheet" dir="rtl"></section>
+    </div>
+    <div class="report-mobile-actions no-print" aria-label="إجراءات التقرير">
+      <button type="button" class="btn primary" onclick="printReportPreview()">طباعة</button>
+      <button type="button" class="btn secondary report-mobile-whatsapp" onclick="shareReportWhatsApp()">إرسال PDF واتس</button>
+      <button type="button" class="btn danger" onclick="closeReportPreview()">إغلاق</button>
+    </div>
+  </div>
+</div>
 
 </body>
 </html>
