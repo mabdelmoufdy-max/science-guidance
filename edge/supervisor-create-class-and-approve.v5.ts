@@ -21,8 +21,8 @@ function text(value: unknown, max = 160) {
 function normalizeArabic(value: unknown) {
   return text(value, 240)
     .normalize("NFKC")
-    .replace(/[ً-ٰٟۖ-ۭ]/g, "")
-    .replace(/ـ/g, "")
+    .replace(/[\u064B-\u065F\u0670\u06D6-\u06ED]/g, "")
+    .replace(/\u0640/g, "")
     .replace(/\s+/g, " ")
     .trim()
     .toLocaleLowerCase("ar");
