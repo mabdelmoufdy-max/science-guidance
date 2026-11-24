@@ -1,4 +1,5 @@
 <!doctype html>
+<!-- v465: سطر «تصميم وتطوير: أ/ محمود عبدالمفدي محمد أبوالنجا» أسفل الشعار في شاشات الدخول واختيار الدور. واجهة فقط. -->
 <!-- v464: الشعار الجديد (توجيه العلوم — إدارة قوص التعليمية) في شاشتي الدخول واختيار الدور وفي ترويسة كل التقارير A4 وصورة المشاركة؛ الشعار الصغير في القائمة الجانبية بلا تغيير. واجهة فقط. -->
 <!-- v462: «صحائف الأحوال» على الهاتف بالتنسيق المعتمد (مهارة mobile-cards): بطاقة لكل معلم — الاسم والحالة، المدرسة، شارات التاريخ والحجم والمراجعة، وشريط أزرار سفلي؛ شريط جانبي بلون الحالة. CSS للهاتف فقط. -->
 <!-- v461: شاشة «اختر الدور» تُظهر «المنسق العام» بدل «منسق المرحلة» لمن عُيّن منسقًا عامًا (is_gc من my_coordinator_scope). -->
@@ -8,7 +9,6 @@
 <!-- v454: قائمة اختيار المدارس في تقرير العجز قبل الأجر تعرض المدارس ذات العجز الموجب فقط. -->
 <!-- v453: إصلاح قائمة اختيار المدارس في تقرير العجز قبل الأجر؛ تطبيق وإلغاء على الهاتف واستعادة المرحلة والمدارس بعد تحديث الصفحة. -->
 <!-- v452: تقرير «العجز قبل الأجر في المدارس» مع فلترَي المرحلة والمدارس وتصدير Excel وطباعة وPDF؛ قراءة مجمّعة لكل المراحل للمنسق. -->
-<!-- v451: تقرير «بيان خطة الإدارة»: منسق المرحلة يرى كل المراحل والتعليم المجتمعي والإجمالي بأرقام مجمّعة من دالة قراءة shortage_plan_stage_totals. -->
 <html lang="ar" dir="rtl">
 <head>
 <!-- إعداد: أ/ محمود عبدالمفدي محمد أبوالنجا | الصفة: معلم -->
@@ -16,7 +16,7 @@
 <script>/* v226: العنوان الموحد — انظر التعليق أعلى الملف */(function(){try{if(/\.github\.io$/.test(location.hostname)&&/^\/science-guidance\/?(index\.html)?$/.test(location.pathname)&&!/[?&]stay\b/.test(location.search))location.replace('https://teachers-data-portal.vercel.app/app/'+location.hash)}catch(e){}})();</script>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#152c43">
-<title>نظام توجيه العلوم — v464</title>
+<title>نظام توجيه العلوم — v465</title>
 <link rel="manifest" href="./manifest.webmanifest">
 <link rel="icon" type="image/png" sizes="192x192" href="./app-icon-192.png">
 <link rel="apple-touch-icon" href="./app-icon-192.png">
@@ -2520,6 +2520,7 @@ span.v415-L{border-radius:10px;padding:2px 8px}
  .v392-tbl tr.st-no td.v392-ca .btn.primary{background:#15803d;border-color:#15803d;color:#fff;box-shadow:none}
 }
 @media(max-width:360px){.v392-tbl tr.v392-r td.v392-ca .btn{font-size:13px;padding:0 4px}}
+.brand-credit{margin-top:22px;font-size:13px;color:rgba(255,255,255,.72);text-align:center;letter-spacing:.2px}.brand-credit::before{content:"";display:block;width:56px;height:2px;margin:0 auto 10px;background:var(--gold,#d4a73a);border-radius:2px;opacity:.8}
 </style>
 </head>
 <body>
@@ -2755,7 +2756,7 @@ function showAdminResetHelp(){
 }
 
 function renderPasswordChange(){
- app.innerHTML=`<div class="login-shell"><section class="login-brand"><div class="brand-box"><img class="brand-logo brand-logo-sm" src="${LOGIN_LOGO_SRC}" width="260" height="260" alt="شعار توجيه العلوم — إدارة قوص التعليمية"><h1>تغيير كلمة المرور</h1><p>هذه هي أول مرة تدخل فيها إلى النظام. يجب إنشاء كلمة مرور شخصية جديدة.</p></div></section><section class="login-panel"><div class="login-card"><h2>كلمة مرور جديدة</h2><form onsubmit="changePassword(event)"><div class="field"><label>كلمة المرور الجديدة</label><input name="password" type="password" minlength="8" required></div><div class="field"><label>تأكيد كلمة المرور</label><input name="confirm" type="password" minlength="8" required></div><button class="btn primary block">حفظ والمتابعة</button></form></div></section></div>`
+ app.innerHTML=`<div class="login-shell"><section class="login-brand"><div class="brand-box"><img class="brand-logo brand-logo-sm" src="${LOGIN_LOGO_SRC}" width="260" height="260" alt="شعار توجيه العلوم — إدارة قوص التعليمية"><h1>تغيير كلمة المرور</h1><p>هذه هي أول مرة تدخل فيها إلى النظام. يجب إنشاء كلمة مرور شخصية جديدة.</p><div class="brand-credit">تصميم وتطوير: أ/ محمود عبدالمفدي محمد أبوالنجا</div></div></section><section class="login-panel"><div class="login-card"><h2>كلمة مرور جديدة</h2><form onsubmit="changePassword(event)"><div class="field"><label>كلمة المرور الجديدة</label><input name="password" type="password" minlength="8" required></div><div class="field"><label>تأكيد كلمة المرور</label><input name="confirm" type="password" minlength="8" required></div><button class="btn primary block">حفظ والمتابعة</button></form></div></section></div>`
 }
 
 async function changePassword(e){e.preventDefault();const fd=new FormData(e.target),p=fd.get('password');if(p!==fd.get('confirm'))return toast('كلمتا المرور غير متطابقتين');const {error}=await sb.auth.updateUser({password:p});if(error)return moneySafeError(error);const r=await sb.rpc('complete_password_change');if(r.error)return moneySafeError(r.error);profile.must_change_password=false;toast('تم تغيير كلمة المرور');if(userRoles.length>1&&!activeRole)return renderRolePicker();if(!activeRole){activeRole=userRoles[0]||profile.primary_role;sessionStorage.setItem('science_guidance_active_role',activeRole)}profile.role=activeRole;renderShell()}
@@ -2858,7 +2859,7 @@ function go(p,options={}){
 function renderRolePicker(){
  const roleOrder=Object.keys(ROLE_LABELS),rank=r=>{const i=roleOrder.indexOf(r);return i<0?99:i};
  const rows=[...userRoles].sort((a,b)=>rank(a)-rank(b)).map(role=>`<button class="role-option ${role===activeRole?'selected':''}" onclick="selectRole('${role}')"><span class="role-option-icon">${role==='admin'?'⚙':role==='teacher'?'◉':'◆'}</span><span><b>${esc(ROLE_LABELS[role]||role)}</b><small>${role==='admin'?'إدارة النظام والصلاحيات والإعدادات':role==='teacher'?'بياناتك المهنية والحصص والفصول':'الدخول بصلاحيات هذا الدور'}</small></span><span class="role-arrow">‹</span></button>`).join('');
- app.innerHTML=`<div class="login-shell"><section class="login-brand"><div class="brand-box"><img class="brand-logo" src="${LOGIN_LOGO_SRC}" width="340" height="340" alt="شعار توجيه العلوم — إدارة قوص التعليمية"><p>نظام واحد يربط المدرسة بالموجّه بالإدارة، ويضع كل مسؤول أمام نطاقه ومسؤولياته فقط.</p><div class="brand-placeholder"><span class="brand-placeholder-icon">⇄</span><strong>بيانات موثوقة… وصلاحيات منضبطة</strong><small>اعتماد رسمي <i>•</i> تقارير A4 جاهزة <i>•</i> بيانات حيّة</small></div></div></section><section class="login-panel"><div class="login-card role-picker-card"><h2>اختر طريقة الدخول</h2><p class="subtitle">مرحبًا ${esc(profile?.full_name||'')}. ستطبق الصلاحيات حسب الدور المختار فقط.</p><div class="role-picker-list">${rows}</div><button class="login-help" onclick="logout()">تسجيل الخروج</button></div></section></div>`;
+ app.innerHTML=`<div class="login-shell"><section class="login-brand"><div class="brand-box"><img class="brand-logo" src="${LOGIN_LOGO_SRC}" width="340" height="340" alt="شعار توجيه العلوم — إدارة قوص التعليمية"><p>نظام واحد يربط المدرسة بالموجّه بالإدارة، ويضع كل مسؤول أمام نطاقه ومسؤولياته فقط.</p><div class="brand-placeholder"><span class="brand-placeholder-icon">⇄</span><strong>بيانات موثوقة… وصلاحيات منضبطة</strong><small>اعتماد رسمي <i>•</i> تقارير A4 جاهزة <i>•</i> بيانات حيّة</small></div><div class="brand-credit">تصميم وتطوير: أ/ محمود عبدالمفدي محمد أبوالنجا</div></div></section><section class="login-panel"><div class="login-card role-picker-card"><h2>اختر طريقة الدخول</h2><p class="subtitle">مرحبًا ${esc(profile?.full_name||'')}. ستطبق الصلاحيات حسب الدور المختار فقط.</p><div class="role-picker-list">${rows}</div><button class="login-help" onclick="logout()">تسجيل الخروج</button></div></section></div>`;
 }
 
 function selectRole(role){
@@ -2910,6 +2911,7 @@ window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();window.v152
 window.addEventListener('appinstalled',()=>{window.v152InstallPrompt=null;v152SyncInstallBtn()});
 if('serviceWorker' in navigator&&location.protocol!=='file:')window.addEventListener('load',()=>navigator.serviceWorker.register('./service-worker.js').catch(()=>{}));
 const V145_NEWS=[
+ ['v465','اسم صانع البرنامج أسفل الشعار في شاشة الدخول.'],
  ['v464','الشعار الجديد لتوجيه العلوم في شاشة الدخول والقائمة الجانبية وترويسة كل التقارير.'],
  ['v462','«صحائف الأحوال» على الهاتف: بطاقة واضحة لكل معلم بلون حالة الصحيفة، والأزرار بكلماتها في شريط أسفل البطاقة.'],
  ['v461','شاشة اختيار الدور تُظهر «المنسق العام» لمن عُيّن منسقًا عامًا بدل «منسق المرحلة».'],
