@@ -1,0 +1,45 @@
+<!doctype html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<style>
+:root{--navy:#0f214d;--navy2:#1f4274;--gold:#ce9e48;--line:#dfe5ee;--muted:#64748b;--ok:#15803d;--okbg:#e8f7ee;--warn:#b45309;--warnbg:#fdf3e3;--bad:#b91c1c;--badbg:#fdecec}
+body{margin:0;background:#f4f6fa;font-family:"Segoe UI",Tahoma,"Noto Sans Arabic",sans-serif;color:#0f172a;padding:14px 16px}
+.cap{font-size:13px;color:var(--muted);margin:0 0 10px}
+.sum{font-weight:800;font-size:15px;margin:0 0 12px;line-height:1.7}
+.card{background:#fff;border:1px solid var(--line);border-radius:14px;margin-bottom:12px;overflow:hidden;box-shadow:0 1px 3px rgba(15,33,77,.06)}
+.card.up{border-inline-start:5px solid var(--ok)}
+.card.no{border-inline-start:5px solid var(--bad)}
+.card.got{border-inline-start:5px solid var(--warn)}
+.top{padding:12px 14px 10px}
+.row1{display:flex;align-items:flex-start;justify-content:space-between;gap:8px}
+.name{font-size:16.5px;font-weight:900;color:var(--navy);line-height:1.45}
+.st{flex:0 0 auto;font-size:12.5px;font-weight:800;padding:4px 10px;border-radius:999px;white-space:nowrap}
+.st.up{background:var(--okbg);color:var(--ok)}.st.no{background:var(--badbg);color:var(--bad)}.st.got{background:var(--warnbg);color:var(--warn)}
+.school{margin-top:4px;font-size:13.5px;color:#334155;font-weight:700}
+.meta{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin-top:8px}
+.chip{font-size:12px;font-weight:700;padding:3px 9px;border-radius:999px;background:#eef2f7;color:#475569}
+.chip.rev-ok{background:var(--okbg);color:var(--ok)}.chip.rev-diff{background:var(--badbg);color:var(--bad)}.chip.rev-no{background:#eef2f7;color:#64748b}
+.acts{display:grid;grid-template-columns:1fr 1.6fr 1fr;gap:8px;padding:10px 12px;background:#f7f9fc;border-top:1px solid var(--line)}
+.acts.one{grid-template-columns:1fr}
+.b{height:42px;border-radius:10px;font-size:14px;font-weight:800;display:flex;align-items:center;justify-content:center;gap:6px;border:1px solid #c9d3e2;background:#fff;color:var(--navy)}
+.b.p{background:linear-gradient(180deg,var(--navy2),var(--navy));color:#fff;border-color:var(--navy);box-shadow:inset 0 -2px 0 var(--gold)}
+.b.up{background:var(--ok);border-color:var(--ok);color:#fff}
+.legend{display:flex;gap:10px;flex-wrap:wrap;font-size:12px;color:var(--muted);margin:2px 0 12px}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-inline-end:4px;vertical-align:-1px}
+</style></head><body>
+<p class="cap">مقترح — «صحائف الأحوال» على الهاتف</p>
+<div class="sum">112 معلمًا — رفع 102، لم يرفع 10<br><span style="font-weight:700;font-size:13.5px;color:#334155">المراجعة: مطابقة 35 · فيها فروق 0 · لم تُراجَع 67</span></div>
+<div class="legend"><span><i style="background:var(--ok)"></i>رُفعت</span><span><i style="background:var(--warn)"></i>استُلمت</span><span><i style="background:var(--bad)"></i>لم ترفع</span></div>
+
+<div class="card up"><div class="top"><div class="row1"><div class="name">ايمان محمد حسان محمد</div><span class="st up">✓ رُفعت</span></div>
+<div class="school">🏫 ابن دقيق العيد ع</div>
+<div class="meta"><span class="chip">📅 17/11</span><span class="chip">📄 192 ك</span><span class="chip rev-no">لم تُراجَع</span></div></div>
+<div class="acts"><div class="b">👁 عرض</div><div class="b p">⇄ مقارنة</div><div class="b">⟳ استبدال</div></div></div>
+
+<div class="card up"><div class="top"><div class="row1"><div class="name">صفاء عربي احمد محمد</div><span class="st up">✓ رُفعت</span></div>
+<div class="school">🏫 ابن دقيق العيد ع</div>
+<div class="meta"><span class="chip">📅 17/11</span><span class="chip">📄 198 ك</span><span class="chip rev-ok">✓ مطابقة</span></div></div>
+<div class="acts"><div class="b">👁 عرض</div><div class="b p">⇄ مقارنة</div><div class="b">⟳ استبدال</div></div></div>
+
+<div class="card no"><div class="top"><div class="row1"><div class="name">عثمان عبدالنعيم احمد بغدادي</div><span class="st no">لم ترفع</span></div>
+<div class="school">🏫 ابن دقيق العيد ع</div></div>
+<div class="acts one"><div class="b up">⬆ رفع الصحيفة</div></div></div>
+</body></html>
