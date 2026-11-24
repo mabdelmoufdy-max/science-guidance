@@ -1,4 +1,5 @@
 <!doctype html>
+<!-- v459: بطاقة المعلم على الهاتف — زرا «إضافة انتداب» و«بيان الحالة» في سطر مستقل تحت الاسم بدل أن يضغطا الاسم والشارات (كانت الكلمات تتكسر حرفًا حرفًا على 360px). CSS فقط. -->
 <!-- v458: دور «المنسق العام» — منسق مرحلة بإسنادات المراحل الأربع يعيّنه مدير النظام من مركز التحكم (زر «المنسق العام…» في ملف المستخدم)؛ رئيسية بمقارنة المراحل وبطاقة لكل مرحلة، وقدرة «نقل مدارس الابتدائي والإعدادي بين الموجهين» مغلقة افتراضيًا. بلا اعتماد ولا حسابات ولا مركز تحكم. قاعدة البيانات v458. -->
 <!-- v457: الرئيسية تُفتح فورًا من آخر نسخة محفوظة في الهاتف (IndexedDB، 24 ساعة، لكل مستخدم ودور وفصل) ثم تتحدث في الخلفية بشارة «جارٍ تحديث البيانات…»؛ أي حفظ أو خروج يمسح النسخة المحفوظة. -->
 <!-- v454: قائمة اختيار المدارس في تقرير العجز قبل الأجر تعرض المدارس ذات العجز الموجب فقط. -->
@@ -8,7 +9,6 @@
 <!-- v449: تبويب «التدقيق» في مركز التحكم: قائمة «المصدر» (البرنامج الرئيسي/بوابة المعلمين/تلقائي) وشارة المصدر في كل سطر وعمود «المصدر» في التقرير وExcel؛ admin_audit_search3/admin_audit_actions2 مع رجوع للدالتين السابقتين. -->
 <!-- v446: حسابات المعلمين ومشرفي المدارس تستخدم بوابة المعلمين، مع إبقاء الأدوار الأخرى في البرنامج الرئيسي. -->
 <!-- v445: منع تداخل الحقول الطويلة في معاينة صحيفة الموجه والصورة وملف PDF. -->
-<!-- v444: معاينة صحيفة الموجه للطباعة أو المشاركة كصورة أو PDF بقالب المعلم. -->
 <html lang="ar" dir="rtl">
 <head>
 <!-- إعداد: أ/ محمود عبدالمفدي محمد أبوالنجا | الصفة: معلم -->
@@ -16,7 +16,7 @@
 <script>/* v226: العنوان الموحد — انظر التعليق أعلى الملف */(function(){try{if(/\.github\.io$/.test(location.hostname)&&/^\/science-guidance\/?(index\.html)?$/.test(location.pathname)&&!/[?&]stay\b/.test(location.search))location.replace('https://teachers-data-portal.vercel.app/app/'+location.hash)}catch(e){}})();</script>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#152c43">
-<title>نظام توجيه العلوم — v458</title>
+<title>نظام توجيه العلوم — v459</title>
 <link rel="manifest" href="./manifest.webmanifest">
 <link rel="icon" type="image/png" sizes="192x192" href="./app-icon-192.png">
 <link rel="apple-touch-icon" href="./app-icon-192.png">
@@ -2481,6 +2481,15 @@ span.v415-L{border-radius:10px;padding:2px 8px}
 .v458-compare .table th:first-child,.v458-compare .table td:first-child{white-space:normal}
 .v458-compare .table{min-width:0!important}
 .v458-compare .v458-total td{font-weight:700}
+@media(max-width:400px){.v458-compare .v458-of{display:none}.v458-compare .table th,.v458-compare .table td{padding:7px 2px;font-size:12px}.v458-compare .table .badge{padding:2px 6px;font-size:12px}.v458-compare .table-wrap{border-radius:8px}}
+@media(max-width:340px){.v458-compare .table th,.v458-compare .table td{padding:6px 1px;font-size:11px}.v458-compare .table .badge{padding:1px 4px;font-size:11px}}
+/* v459: بطاقة المعلم على الهاتف — الزران في سطر مستقل تحت الاسم والشارات */
+@media(max-width:700px){
+ .compact-record-summary-shell{flex-wrap:wrap;gap:8px}
+ .compact-record-summary-shell:has(.compact-record-direct-action){padding:0 12px 10px}
+ .compact-record-summary-shell:has(.compact-record-direct-action) .compact-record-toggle{flex:0 0 calc(100% + 24px);width:calc(100% + 24px);margin-inline:-12px}
+ .compact-record-summary-shell .compact-record-direct-action{flex:1 1 calc(50% - 4px);margin:0!important;min-width:0;white-space:normal}
+}
 </style>
 </head>
 <body>
@@ -2870,6 +2879,7 @@ window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();window.v152
 window.addEventListener('appinstalled',()=>{window.v152InstallPrompt=null;v152SyncInstallBtn()});
 if('serviceWorker' in navigator&&location.protocol!=='file:')window.addEventListener('load',()=>navigator.serviceWorker.register('./service-worker.js').catch(()=>{}));
 const V145_NEWS=[
+ ['v459','قائمة المعلمين على الهاتف: زرا «إضافة انتداب» و«بيان الحالة» في سطر مستقل تحت اسم المعلم فلا تتكسر الكلمات.'],
  ['v458','دور «المنسق العام»: يتابع المراحل الأربع من رئيسية واحدة بمقارنة بين المراحل، وينقل مدارس الابتدائي والإعدادي بين الموجهين. يعيّنه مدير النظام من مركز التحكم.'],
  ['v457','الصفحة الرئيسية تفتح فورًا من آخر بيانات محفوظة على جهازك ثم تتحدث تلقائيًا خلال ثوانٍ.'],
  ['v454','اختيار المدارس في تقرير العجز قبل الأجر يعرض المدارس التي بها عجز فقط.'],
@@ -17915,8 +17925,8 @@ async function v458Home(force){
  }catch(e){rows.length=0}finally{v155StageSel=keep}
  if(rows.length<2)return html;
  const sum=k=>rows.reduce((n,r)=>n+(r[k]||0),0);
- const tr=r=>`<tr><td><b>${esc(r.st)}</b></td><td>${r.schools}</td><td>${r.required}</td><td>${r.actual}</td><td><span class="badge ${r.net>0?'danger':'ok'}">${r.net}</span></td><td>${r.approved} / ${r.schools}</td></tr>`;
- const card=`<div class="card v458-compare"><h3>مقارنة المراحل</h3><div class="table-wrap"><table class="table"><thead><tr><th>المرحلة</th><th>مدارس</th><th>مطلوب</th><th>فعلي</th><th>عجز</th><th>معتمدة</th></tr></thead><tbody>${rows.map(tr).join('')}<tr class="v458-total"><td><b>الإجمالي</b></td><td>${sum('schools')}</td><td>${sum('required')}</td><td>${sum('actual')}</td><td><span class="badge ${sum('net')>0?'danger':'ok'}">${sum('net')}</span></td><td>${sum('approved')} / ${sum('schools')}</td></tr></tbody></table></div>${V458.canMove?`<div class="actions"><button type="button" class="btn primary" onclick="v356MoveOpen('ابتدائي')">نقل مدارس بين موجهين</button></div>`:''}</div>`;
+ const tr=r=>`<tr><td><b>${esc(r.st)}</b></td><td>${r.schools}</td><td>${r.required}</td><td>${r.actual}</td><td><span class="badge ${r.net>0?'danger':'ok'}">${r.net}</span></td><td>${r.approved}<span class="v458-of"> / ${r.schools}</span></td></tr>`;
+ const card=`<div class="card v458-compare"><h3>مقارنة المراحل</h3><div class="table-wrap"><table class="table"><thead><tr><th>المرحلة</th><th>مدارس</th><th>مطلوب</th><th>فعلي</th><th>عجز</th><th>معتمدة</th></tr></thead><tbody>${rows.map(tr).join('')}<tr class="v458-total"><td><b>الإجمالي</b></td><td>${sum('schools')}</td><td>${sum('required')}</td><td>${sum('actual')}</td><td><span class="badge ${sum('net')>0?'danger':'ok'}">${sum('net')}</span></td><td>${sum('approved')}<span class="v458-of"> / ${sum('schools')}</span></td></tr></tbody></table></div>${V458.canMove?`<div class="actions"><button type="button" class="btn primary" onclick="v356MoveOpen('ابتدائي')">نقل مدارس بين موجهين</button></div>`:''}</div>`;
  const re=/<div class="v168-head">[\s\S]*?<\/div><\/div>/;
  return re.test(html)?html.replace(re,m=>m+card):card+html;
 }
