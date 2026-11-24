@@ -6,7 +6,7 @@
 <meta name="robots" content="noindex,nofollow">
 <meta name="referrer" content="no-referrer">
 <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; connect-src https://xehjwzszhsaqdqmcatum.supabase.co; img-src data: 'self'; manifest-src 'self'; worker-src 'self'; base-uri 'none'; form-action 'none'">
-<title>بوابة المعلمين — v437</title>
+<title>بوابة المعلمين — v465</title>
 <link rel="manifest" href="/portal.webmanifest">
 <meta name="theme-color" content="#0f214d">
 <meta name="mobile-web-app-capable" content="yes">
@@ -170,6 +170,7 @@ body.is-login .wrap{max-width:none;padding:0}
 .lg-btn{background:linear-gradient(135deg,#0f214d,#1f4274);color:#fff;width:100%;box-shadow:inset 0 -3px 0 #ce9e48}
 .lg-extra{width:min(430px,100%);margin-top:14px;display:grid;gap:8px}
 .lg-rule{font-size:.8rem;color:#5b6580;margin-top:12px;text-align:center}
+.lg-credit{font-size:.8rem;color:#5b6580;margin-top:12px;padding-top:10px;border-top:1px solid #e3e7ee;text-align:center}
 @media(max-width:800px){
 .lg{grid-template-columns:1fr;direction:rtl}
 .lg-brand{flex-direction:row;justify-content:flex-start;gap:12px;padding:14px 16px;text-align:right;box-shadow:inset 0 -3px 0 rgba(206,158,72,.6)}
@@ -788,7 +789,8 @@ input.dpick{cursor:pointer;background-image:linear-gradient(transparent,transpar
           h('p', { class: 'sub' }, st && st.year ? 'العام الدراسي ' + st.year + (st.term ? ' — ' + st.term : '') : 'للمعلم ومشرف المدرسة'),
           S.statusErr ? h('div', { class: 'warn' }, 'تعذّر الاتصال بالخادم. ', h('button', { type: 'button', class: 'link', onclick: boot }, 'إعادة المحاولة')) : null,
           form,
-          h('div', { class: 'lg-rule' }, 'ادخل بالرقم القومي ورقم الهاتف المسجّل لك في سجل المعلمين. إن كنت مشرف مدرسة أو مسؤول بيانات ستختار الدور بعد الدخول.')),
+          h('div', { class: 'lg-rule' }, 'ادخل بالرقم القومي ورقم الهاتف المسجّل لك في سجل المعلمين. إن كنت مشرف مدرسة أو مسؤول بيانات ستختار الدور بعد الدخول.'),
+          h('div', { class: 'lg-credit' }, 'تصميم وتطوير: أ/ محمود عبدالمفدي محمد أبوالنجا')),
         h('div', { class: 'lg-extra' },
           extra('📝', 'تقديم طلب معلم بالأجر (لمعلمي العلوم فقط)', paidConfirm, 'paid-open'),
           isStandalone() ? null : extra('📲', 'تثبيت البوابة على هاتفك', installApp, 'install-open'))));
