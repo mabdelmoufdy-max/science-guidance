@@ -1,4 +1,5 @@
 <!doctype html>
+<!-- v458: دور «المنسق العام» — منسق مرحلة بإسنادات المراحل الأربع يعيّنه مدير النظام من مركز التحكم (زر «المنسق العام…» في ملف المستخدم)؛ رئيسية بمقارنة المراحل وبطاقة لكل مرحلة، وقدرة «نقل مدارس الابتدائي والإعدادي بين الموجهين» مغلقة افتراضيًا. بلا اعتماد ولا حسابات ولا مركز تحكم. قاعدة البيانات v458. -->
 <!-- v457: الرئيسية تُفتح فورًا من آخر نسخة محفوظة في الهاتف (IndexedDB، 24 ساعة، لكل مستخدم ودور وفصل) ثم تتحدث في الخلفية بشارة «جارٍ تحديث البيانات…»؛ أي حفظ أو خروج يمسح النسخة المحفوظة. -->
 <!-- v454: قائمة اختيار المدارس في تقرير العجز قبل الأجر تعرض المدارس ذات العجز الموجب فقط. -->
 <!-- v453: إصلاح قائمة اختيار المدارس في تقرير العجز قبل الأجر؛ تطبيق وإلغاء على الهاتف واستعادة المرحلة والمدارس بعد تحديث الصفحة. -->
@@ -8,7 +9,6 @@
 <!-- v446: حسابات المعلمين ومشرفي المدارس تستخدم بوابة المعلمين، مع إبقاء الأدوار الأخرى في البرنامج الرئيسي. -->
 <!-- v445: منع تداخل الحقول الطويلة في معاينة صحيفة الموجه والصورة وملف PDF. -->
 <!-- v444: معاينة صحيفة الموجه للطباعة أو المشاركة كصورة أو PDF بقالب المعلم. -->
-<!-- v443: نسخة تجربة جديدة لقائمة الهاتف، وإخفاء معاينة التقرير من بياناتي، وتوحيد طباعة صحيفة الموجه مع قالب المعلم. -->
 <html lang="ar" dir="rtl">
 <head>
 <!-- إعداد: أ/ محمود عبدالمفدي محمد أبوالنجا | الصفة: معلم -->
@@ -16,7 +16,7 @@
 <script>/* v226: العنوان الموحد — انظر التعليق أعلى الملف */(function(){try{if(/\.github\.io$/.test(location.hostname)&&/^\/science-guidance\/?(index\.html)?$/.test(location.pathname)&&!/[?&]stay\b/.test(location.search))location.replace('https://teachers-data-portal.vercel.app/app/'+location.hash)}catch(e){}})();</script>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#152c43">
-<title>نظام توجيه العلوم — v457</title>
+<title>نظام توجيه العلوم — v458</title>
 <link rel="manifest" href="./manifest.webmanifest">
 <link rel="icon" type="image/png" sizes="192x192" href="./app-icon-192.png">
 <link rel="apple-touch-icon" href="./app-icon-192.png">
@@ -2476,6 +2476,11 @@ span.v415-L{border-radius:10px;padding:2px 8px}
 .v452-school-option small{white-space:nowrap}
 @media(max-width:600px){.v452-school-popover{inset:0;inline-size:100%;block-size:100dvh;max-block-size:none;border:0;border-radius:0;padding-block:max(12px,env(safe-area-inset-top)) max(12px,env(safe-area-inset-bottom))}}
 .v457-pill{position:fixed;bottom:14px;inset-inline-start:14px;z-index:9800;background:var(--primary,#123);color:#fff;padding:6px 12px;border-radius:999px;font-size:13px;box-shadow:0 2px 8px rgba(0,0,0,.2);pointer-events:none}
+/* v458: مقارنة المراحل للمنسق العام (يستعمل أصناف النظام الموحد) */
+.v458-compare .table th,.v458-compare .table td{padding:8px 5px;font-size:13px;white-space:nowrap}
+.v458-compare .table th:first-child,.v458-compare .table td:first-child{white-space:normal}
+.v458-compare .table{min-width:0!important}
+.v458-compare .v458-total td{font-weight:700}
 </style>
 </head>
 <body>
@@ -2865,6 +2870,7 @@ window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();window.v152
 window.addEventListener('appinstalled',()=>{window.v152InstallPrompt=null;v152SyncInstallBtn()});
 if('serviceWorker' in navigator&&location.protocol!=='file:')window.addEventListener('load',()=>navigator.serviceWorker.register('./service-worker.js').catch(()=>{}));
 const V145_NEWS=[
+ ['v458','دور «المنسق العام»: يتابع المراحل الأربع من رئيسية واحدة بمقارنة بين المراحل، وينقل مدارس الابتدائي والإعدادي بين الموجهين. يعيّنه مدير النظام من مركز التحكم.'],
  ['v457','الصفحة الرئيسية تفتح فورًا من آخر بيانات محفوظة على جهازك ثم تتحدث تلقائيًا خلال ثوانٍ.'],
  ['v454','اختيار المدارس في تقرير العجز قبل الأجر يعرض المدارس التي بها عجز فقط.'],
  ['v453','العجز قبل الأجر: تطبيق اختيار المدارس أو إلغاؤه، واستعادة التقرير والفلاتر بعد تحديث الصفحة.'],
@@ -14873,16 +14879,17 @@ async function v356MovePreview(btn){
  if(!M.sel.size){if(m)m.innerHTML='<div class="notice warn">اختر مدرسة واحدة على الأقل.</div>';return}
  if(!M.to){if(m)m.innerHTML='<div class="notice warn">اختر الموجه الجديد.</div>';return}
  btn.disabled=true;
- const r=await sb.rpc('admin_move_schools',{p_school_ids:[...M.sel],p_to_supervisor:M.to,p_apply:false,p_reason:null});
+ const r=await sb.rpc(profile?.role==='admin'?'admin_move_schools':'coordinator_move_schools',{p_school_ids:[...M.sel],p_to_supervisor:M.to,p_apply:false,p_reason:null});
  if(r.error){btn.disabled=false;if(m)m.innerHTML=`<div class="notice danger">${esc(v356Err(r.error))}</div>`;return}
  M.preview=r.data;v356MoveDraw();
 }
 async function v356MoveApply(btn){
  const M=V356.move,m=document.getElementById('v356Msg');btn.disabled=true;btn.textContent='جارٍ النقل…';
- const r=await sb.rpc('admin_move_schools',{p_school_ids:[...M.sel],p_to_supervisor:M.to,p_apply:true,p_reason:(M.reason||'').trim()||null});
+ const r=await sb.rpc(profile?.role==='admin'?'admin_move_schools':'coordinator_move_schools',{p_school_ids:[...M.sel],p_to_supervisor:M.to,p_apply:true,p_reason:(M.reason||'').trim()||null});
  if(r.error){btn.disabled=false;btn.textContent='تطبيق النقل';if(m)m.innerHTML=`<div class="notice danger">${esc(v356Err(r.error))}</div>`;return}
  V356.move=null;try{if(typeof v162ReportsDatasetRaw==='function'&&v162ReportsDatasetRaw.cache)v162ReportsDatasetRaw.cache=null}catch(e){}
- await v356After('نُقلت '+v355N(r.data?.moved||0)+' مدرسة');
+ if(profile?.role==='admin')await v356After('نُقلت '+v355N(r.data?.moved||0)+' مدرسة');
+ else{closeModal();toast('نُقلت '+v355N(r.data?.moved||0)+' مدرسة');try{await reloadCurrentPage()}catch(e){}}
 }
 /* ── ربط الأزرار بشاشات المرحلة 1 ── */
 const __v356BaseProfile=v355Profile;
@@ -17865,6 +17872,88 @@ async function v457Pre(force){
  AppDataStore.invalidate=function(...a){if(!V457.self)v457Wipe();return inv.apply(this,a)};
  AppDataStore.clear=function(){v457Wipe();return clr.apply(this,arguments)}}
 /* v457-end */
+/* v458-begin: دور «المنسق العام» = منسق مرحلة بإسنادات المراحل الأربع كلها (يعيّنه مدير النظام فقط من مركز التحكم) + قدرة cross.move_schools المغلقة افتراضيًا (نقل مدارس الابتدائي/الإعدادي بين الموجهين). بلا اعتماد ولا حسابات ولا مركز تحكم ولا صلاحيات. قاعدة البيانات v458: general_coordinators، my_coordinator_scope، admin_set_general_coordinator، admin_general_coordinators، coordinator_move_schools */
+const V458={general:false,stages:[],canMove:false,p:null};
+try{Object.defineProperty(ROLE_LABELS,'stage_coordinator',{configurable:true,enumerable:true,get(){return (V458.general&&profile&&profile.role==='stage_coordinator')?'المنسق العام':'منسق المرحلة'}})}catch(e){}
+function v458Apply(){
+ try{const n=(NAV.stage_coordinator||[])[0];if(n&&n[0]==='dashboard')n[1]=V458.general?'الرئيسية':'لوحة منسق المرحلة'}catch(e){}
+ try{
+  if(!profile||profile.role!=='stage_coordinator')return;
+  const lab=ROLE_LABELS.stage_coordinator;
+  const t=document.querySelector('.top-title strong');if(t)t.textContent=lab;
+  document.querySelectorAll('.side-user').forEach(el=>[...el.childNodes].forEach(nd=>{if(nd.nodeType===3&&/^(منسق المرحلة|المنسق العام)$/.test(nd.textContent.trim()))nd.textContent=lab}));
+  const nl=document.querySelector('.nav button[data-page="dashboard"] .nav-label');if(nl&&V458.general)nl.textContent='الرئيسية';
+ }catch(e){}
+}
+function v458Ready(){
+ if(V458.p)return V458.p;
+ V458.p=(async()=>{
+  V458.general=false;V458.stages=[];V458.canMove=false;
+  if(!profile||profile.role!=='stage_coordinator'){return}
+  try{
+   const [a,b]=await Promise.all([sb.rpc('my_coordinator_scope'),sb.rpc('my_capabilities')]);
+   if(!a.error&&a.data){V458.general=!!a.data.general;V458.stages=a.data.stages||[]}
+   if(V458.general&&!b.error&&b.data)V458.canMove=(b.data.widened||[]).some(x=>x.code==='cross.move_schools');
+  }catch(e){}
+  v458Apply();
+ })();
+ return V458.p;
+}
+const __v458BaseLoadContext=loadContext;
+loadContext=async function(){V458.p=null;return __v458BaseLoadContext.apply(this,arguments)};
+if(typeof selectRole==='function'){const __v458BaseSelectRole=selectRole;selectRole=function(){V458.p=null;const r=__v458BaseSelectRole.apply(this,arguments);try{v458Ready()}catch(e){}return r}}
+/* الرئيسية: بطاقة لكل مرحلة (v323) + جدول مقارنة بين المراحل أعلاها */
+async function v458Home(force){
+ const html=await v323SupervisorHome(force);
+ const keep=v155StageSel,rows=[];
+ try{
+  const first=await v155LoadModel(false);
+  for(const st of (first.stages||[])){
+   v155StageSel=st;const m=await v155LoadModel(false),t=m.totals||{};
+   rows.push({st,schools:t.schools||0,required:t.required||0,actual:t.actual||0,net:t.net||0,approved:(m.rows||[]).filter(r=>r.status==='approved').length});
+  }
+ }catch(e){rows.length=0}finally{v155StageSel=keep}
+ if(rows.length<2)return html;
+ const sum=k=>rows.reduce((n,r)=>n+(r[k]||0),0);
+ const tr=r=>`<tr><td><b>${esc(r.st)}</b></td><td>${r.schools}</td><td>${r.required}</td><td>${r.actual}</td><td><span class="badge ${r.net>0?'danger':'ok'}">${r.net}</span></td><td>${r.approved} / ${r.schools}</td></tr>`;
+ const card=`<div class="card v458-compare"><h3>مقارنة المراحل</h3><div class="table-wrap"><table class="table"><thead><tr><th>المرحلة</th><th>مدارس</th><th>مطلوب</th><th>فعلي</th><th>عجز</th><th>معتمدة</th></tr></thead><tbody>${rows.map(tr).join('')}<tr class="v458-total"><td><b>الإجمالي</b></td><td>${sum('schools')}</td><td>${sum('required')}</td><td>${sum('actual')}</td><td><span class="badge ${sum('net')>0?'danger':'ok'}">${sum('net')}</span></td><td>${sum('approved')} / ${sum('schools')}</td></tr></tbody></table></div>${V458.canMove?`<div class="actions"><button type="button" class="btn primary" onclick="v356MoveOpen('ابتدائي')">نقل مدارس بين موجهين</button></div>`:''}</div>`;
+ const re=/<div class="v168-head">[\s\S]*?<\/div><\/div>/;
+ return re.test(html)?html.replace(re,m=>m+card):card+html;
+}
+const __v458BaseDashboard=dashboardPage;
+dashboardPage=async function(options={}){
+ if(profile?.role!=='stage_coordinator')return __v458BaseDashboard.apply(this,arguments);
+ await v458Ready();
+ if(!V458.general)return __v458BaseDashboard.apply(this,arguments);
+ try{return await v458Home(!!options.force)}catch(error){return `<div class="notice danger">تعذر تحميل الرئيسية: ${esc(error?.message||error)}</div>`}
+};
+/* صفحة «موجهو المرحلة»: زر النقل للمنسق العام */
+const __v458BaseSupervisorsPage=supervisorsPage;
+supervisorsPage=async function(){
+ const h=await __v458BaseSupervisorsPage.apply(this,arguments);
+ if(profile?.role!=='stage_coordinator')return h;
+ await v458Ready();
+ if(!(V458.general&&V458.canMove))return h;
+ return `<div class="v356-actions"><button type="button" class="btn primary" onclick="v356MoveOpen('ابتدائي')">نقل مدارس بين موجهين</button></div>`+h;
+};
+/* مركز التحكم: تعيين/إلغاء المنسق العام (مدير النظام) */
+const __v458BaseProfile=v355Profile;
+v355Profile=function(id){
+ const h=__v458BaseProfile.apply(this,arguments);const u=v355User(id);
+ if(!u||!(u.roles||[]).includes('stage_coordinator')||(u.roles||[]).includes('admin'))return h;
+ return h.replace(/(<button type="button" class="btn secondary" onclick="v356Roles\('[^']*'\)">تعديل الأدوار<\/button>)/,m=>m+`<button type="button" class="btn secondary" onclick="v458GcOpen('${esc(u.id)}')">المنسق العام…</button>`);
+};
+async function v458GcOpen(id){
+ const u=v355User(id);if(!u)return;
+ modal(`<h3>المنسق العام — ${esc(u.name)}</h3><div class="cell-sub">جارٍ التحميل…</div>`);
+ let cur=null;
+ try{const r=await sb.rpc('admin_general_coordinators');if(r.error)throw r.error;cur=(r.data||[]).find(x=>x.profile_id===id)}catch(e){return modal(`<h3>المنسق العام</h3><div class="notice danger">${esc(v356Err(e))}</div><div class="actions"><button class="btn secondary" type="button" onclick="closeModal()">إغلاق</button></div>`)}
+ const on=!!(cur&&cur.active);
+ const gives=`<ul><li>إسناد المراحل الأربع له: ابتدائي، إعدادي، ثانوي عام، ثانوي صناعي.</li><li>نقل مدارس الابتدائي والإعدادي بين الموجهين (يظهر في رئيسيته وصفحة الموجهين).</li><li>رئيسية بمقارنة المراحل وبطاقة لكل مرحلة.</li></ul><div class="cell-sub">لا يحصل على: الاعتماد، إدارة الحسابات، مركز التحكم، مصفوفة الصلاحيات، حذف المدارس.</div>`;
+ if(on)v356Confirm({title:'إلغاء المنسق العام',body:`<div class="notice warn">يُسحب من <b>${esc(u.name)}</b> إذن نقل المدارس بين الموجهين، ويعود منسق مرحلة. تبقى إسنادات المراحل كما هي، ويمكن تعديلها من «تعديل الأدوار».</div>`,ok:'إلغاء المنسق العام',onOk:async r=>{const x=await sb.rpc('admin_set_general_coordinator',{p_profile:id,p_on:false,p_reason:r||null});if(x.error)throw x.error;await v356After('أُلغي المنسق العام')}});
+ else v356Confirm({title:'تعيين منسق عام',body:`<div class="notice ok">سيحصل <b>${esc(u.name)}</b> على:${gives}</div>`,ok:'تعيين منسق عام',onOk:async r=>{const x=await sb.rpc('admin_set_general_coordinator',{p_profile:id,p_on:true,p_reason:r||null});if(x.error)throw x.error;await v356After('عُيّن منسقًا عامًا')}});
+}
+/* v458-end */
 </script>
 
 <style>
