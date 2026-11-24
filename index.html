@@ -1,4 +1,5 @@
 <!doctype html>
+<!-- v462: «صحائف الأحوال» على الهاتف بالتنسيق المعتمد (مهارة mobile-cards): بطاقة لكل معلم — الاسم والحالة، المدرسة، شارات التاريخ والحجم والمراجعة، وشريط أزرار سفلي؛ شريط جانبي بلون الحالة. CSS للهاتف فقط. -->
 <!-- v461: شاشة «اختر الدور» تُظهر «المنسق العام» بدل «منسق المرحلة» لمن عُيّن منسقًا عامًا (is_gc من my_coordinator_scope). -->
 <!-- v459: بطاقة المعلم على الهاتف — زرا «إضافة انتداب» و«بيان الحالة» في سطر مستقل تحت الاسم بدل أن يضغطا الاسم والشارات (كانت الكلمات تتكسر حرفًا حرفًا على 360px). CSS فقط. -->
 <!-- v458: دور «المنسق العام» — منسق مرحلة بإسنادات المراحل الأربع يعيّنه مدير النظام من مركز التحكم (زر «المنسق العام…» في ملف المستخدم)؛ رئيسية بمقارنة المراحل وبطاقة لكل مرحلة، وقدرة «نقل مدارس الابتدائي والإعدادي بين الموجهين» مغلقة افتراضيًا. بلا اعتماد ولا حسابات ولا مركز تحكم. قاعدة البيانات v458. -->
@@ -8,7 +9,6 @@
 <!-- v452: تقرير «العجز قبل الأجر في المدارس» مع فلترَي المرحلة والمدارس وتصدير Excel وطباعة وPDF؛ قراءة مجمّعة لكل المراحل للمنسق. -->
 <!-- v451: تقرير «بيان خطة الإدارة»: منسق المرحلة يرى كل المراحل والتعليم المجتمعي والإجمالي بأرقام مجمّعة من دالة قراءة shortage_plan_stage_totals. -->
 <!-- v449: تبويب «التدقيق» في مركز التحكم: قائمة «المصدر» (البرنامج الرئيسي/بوابة المعلمين/تلقائي) وشارة المصدر في كل سطر وعمود «المصدر» في التقرير وExcel؛ admin_audit_search3/admin_audit_actions2 مع رجوع للدالتين السابقتين. -->
-<!-- v446: حسابات المعلمين ومشرفي المدارس تستخدم بوابة المعلمين، مع إبقاء الأدوار الأخرى في البرنامج الرئيسي. -->
 <html lang="ar" dir="rtl">
 <head>
 <!-- إعداد: أ/ محمود عبدالمفدي محمد أبوالنجا | الصفة: معلم -->
@@ -16,7 +16,7 @@
 <script>/* v226: العنوان الموحد — انظر التعليق أعلى الملف */(function(){try{if(/\.github\.io$/.test(location.hostname)&&/^\/science-guidance\/?(index\.html)?$/.test(location.pathname)&&!/[?&]stay\b/.test(location.search))location.replace('https://teachers-data-portal.vercel.app/app/'+location.hash)}catch(e){}})();</script>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#152c43">
-<title>نظام توجيه العلوم — v461</title>
+<title>نظام توجيه العلوم — v462</title>
 <link rel="manifest" href="./manifest.webmanifest">
 <link rel="icon" type="image/png" sizes="192x192" href="./app-icon-192.png">
 <link rel="apple-touch-icon" href="./app-icon-192.png">
@@ -2490,6 +2490,36 @@ span.v415-L{border-radius:10px;padding:2px 8px}
  .compact-record-summary-shell:has(.compact-record-direct-action) .compact-record-toggle{flex:0 0 calc(100% + 24px);width:calc(100% + 24px);margin-inline:-12px}
  .compact-record-summary-shell .compact-record-direct-action{flex:1 1 calc(50% - 4px);margin:0!important;min-width:0;white-space:normal}
 }
+/* v462: «صحائف الأحوال» على الهاتف — بطاقة لكل معلم بالتنسيق المعتمد (مهارة mobile-cards)؛ الكمبيوتر بلا تغيير */
+.v392-legend{display:none}
+@media(max-width:760px){
+ .v392 .table-wrap:has(.v392-tbl){border:0;background:transparent;box-shadow:none}
+ .v392-legend{display:flex;gap:12px;flex-wrap:wrap;font-size:12px;color:#64748b;margin:2px 0 10px}
+ .v392-legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-inline-end:4px;vertical-align:-1px}
+ .v392-tbl tr.v392-r{grid-template-columns:minmax(0,1fr) auto;row-gap:4px;column-gap:8px;padding:12px 14px 0;margin:0 0 12px;background:#fff;border:1px solid #dfe5ee;border-inline-start:5px solid #64748b;border-radius:14px;overflow:hidden;box-shadow:0 1px 3px rgba(15,33,77,.06)}
+ .v392-tbl tr.v392-r:has(td.v392-ca:empty){padding-bottom:12px}
+ .v392-tbl tr.st-up{border-inline-start-color:#15803d}.v392-tbl tr.st-got{border-inline-start-color:#b45309}.v392-tbl tr.st-no{border-inline-start-color:#b91c1c}
+ .v392-tbl tr.v392-r td.v392-cn{font-size:16.5px;line-height:1.45;color:var(--primary-dark,#0f214d)}
+ .v392-tbl tr.v392-r td.v392-cn b{font-weight:900}
+ .v392-tbl tr.v392-r td.v392-cb{align-self:start}
+ .v392-tbl tr.v392-r .v392-badge{font-size:12.5px;font-weight:800;padding:4px 10px;white-space:nowrap}
+ .v392-tbl tr.v392-r .v392-badge.on,.v392-tbl tr.v392-r .v392-badge.rv-ok{background:#e8f7ee;color:#15803d}
+ .v392-tbl tr.v392-r .v392-badge.arch{background:#fdf3e3;color:#b45309}
+ .v392-tbl tr.v392-r .v392-badge.off,.v392-tbl tr.v392-r .v392-badge.rv-diff{background:#fdecec;color:#b91c1c}
+ .v392-tbl tr.v392-r .v392-badge.rv-none{background:#eef2f7;color:#64748b}
+ .v392-tbl tr.v392-r td.v392-cs{grid-column:1/3;grid-row:2;font-size:13.5px;font-weight:700;color:#334155}
+ .v392-tbl tr.v392-r td.v392-cs .v392-mm{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+ .v392-tbl tr.v392-r .v392-chip{display:inline-block;font-size:12px;font-weight:700;padding:3px 9px;border-radius:999px;background:#eef2f7;color:#475569;white-space:nowrap}
+ .v392-tbl tr.v392-r .v392-mm .v392-badge{font-size:12px;font-weight:700;padding:3px 9px}
+ .v392-tbl tr.v392-r td.v392-cr{display:none}
+ .v392-tbl tr.v392-r td.v392-ca{grid-column:1/3;grid-row:3;display:flex;flex-wrap:nowrap;gap:8px;justify-self:stretch;margin:8px -14px 0;padding:10px 12px;background:#f7f9fc;border-top:1px solid #dfe5ee}
+ .v392-tbl tr.v392-r td.v392-ca:empty{display:none}
+ .v392-tbl tr.v392-r td.v392-ca .btn{flex:1 1 0;min-width:0;height:42px;min-height:42px;border-radius:10px;font-size:14px;font-weight:800;justify-content:center;padding:0 6px;white-space:nowrap}
+ .v392-tbl tr.v392-r td.v392-ca .btn.primary.up{flex-grow:1.6}
+ .v392-tbl tr.v392-r .v392-ic,.v392-tbl tr.v392-r .v392-tx{display:inline}
+ .v392-tbl tr.st-no td.v392-ca .btn.primary{background:#15803d;border-color:#15803d;color:#fff;box-shadow:none}
+}
+@media(max-width:360px){.v392-tbl tr.v392-r td.v392-ca .btn{font-size:13px;padding:0 4px}}
 </style>
 </head>
 <body>
@@ -2879,6 +2909,7 @@ window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();window.v152
 window.addEventListener('appinstalled',()=>{window.v152InstallPrompt=null;v152SyncInstallBtn()});
 if('serviceWorker' in navigator&&location.protocol!=='file:')window.addEventListener('load',()=>navigator.serviceWorker.register('./service-worker.js').catch(()=>{}));
 const V145_NEWS=[
+ ['v462','«صحائف الأحوال» على الهاتف: بطاقة واضحة لكل معلم بلون حالة الصحيفة، والأزرار بكلماتها في شريط أسفل البطاقة.'],
  ['v461','شاشة اختيار الدور تُظهر «المنسق العام» لمن عُيّن منسقًا عامًا بدل «منسق المرحلة».'],
  ['v459','قائمة المعلمين على الهاتف: زرا «إضافة انتداب» و«بيان الحالة» في سطر مستقل تحت اسم المعلم فلا تتكسر الكلمات.'],
  ['v458','دور «المنسق العام»: يتابع المراحل الأربع من رئيسية واحدة بمقارنة بين المراحل، وينقل مدارس الابتدائي والإعدادي بين الموجهين. يعيّنه مدير النظام من مركز التحكم.'],
@@ -16008,11 +16039,11 @@ function v392Table(){
  const LIM=300,shown=rows.slice(0,LIM);
  const body=shown.map((x,i)=>{
   const st=x.status==='uploaded'?'<span class="v392-badge on">✓ رُفعت</span>':x.status==='archived'?'<span class="v392-badge arch">استُلمت</span>':'<span class="v392-badge off">لم ترفع</span>';
-  const mm=x.status?` · ${esc(v392Date(x.uploaded_at).slice(0,5))}${x.file_size?' · '+esc(v392Size(x.file_size).replace(' كيلو',' ك')):''}`:'';
+  const mm=(x.status?`<span class="v392-chip">📅 ${esc(v392Date(x.uploaded_at).slice(0,5))}</span>${x.file_size?`<span class="v392-chip">📄 ${esc(v392Size(x.file_size).replace(' كيلو',' ك'))}</span>`:''}`:'')+v401Badge(x); // v462: شارات الهاتف
   const vb=x.path&&x.status==='uploaded'?`<button type="button" class="btn small secondary" title="عرض" aria-label="عرض" onclick="v392View('${esc(x.path)}')"><span class="v392-ic">👁</span><span class="v392-tx">عرض</span></button>`:'';
-  return `<tr><td class="v392-c0">${i+1}</td><td class="v392-cn"><b>${esc(x.teacher_name)}</b></td><td class="v392-cs">${esc(x.school_name)}<span class="v392-mm">${mm}</span><div class="cell-sub">${esc(x.stage)}</div></td><td class="v392-cb">${st}</td><td class="v392-cd">${x.status?esc(v392Date(x.uploaded_at)):'—'}${x.status&&x.file_size?`<div class="cell-sub">${esc(v392Size(x.file_size))}</div>`:''}</td><td class="v392-cr">${v401Badge(x)}</td><td class="v392-ca">${vb}${v401Btn(x)}${v397Actions(x)}</td></tr>`;
+  return `<tr class="v392-r st-${x.status==='uploaded'?'up':x.status==='archived'?'got':'no'}"><td class="v392-c0">${i+1}</td><td class="v392-cn"><b>${esc(x.teacher_name)}</b></td><td class="v392-cs">${esc(x.school_name)}${mm?`<div class="v392-mm">${mm}</div>`:''}<div class="cell-sub">${esc(x.stage)}</div></td><td class="v392-cb">${st}</td><td class="v392-cd">${x.status?esc(v392Date(x.uploaded_at)):'—'}${x.status&&x.file_size?`<div class="cell-sub">${esc(v392Size(x.file_size))}</div>`:''}</td><td class="v392-cr">${v401Badge(x)}</td><td class="v392-ca">${vb}${v401Btn(x)}${v397Actions(x)}</td></tr>`;
  }).join('');
- return `<div class="table-wrap"><table class="v392-tbl"><thead><tr><th>#</th><th>المعلم</th><th>المدرسة</th><th>الحالة</th><th>التاريخ</th><th>المراجعة</th><th></th></tr></thead><tbody>${body}</tbody></table></div>`+(rows.length>LIM?`<div class="cell-sub" style="padding:8px">يعرض أول ${LIM} من ${rows.length} — ضيّق الفلاتر لرؤية الباقي.</div>`:'');
+ return `<div class="v392-legend"><span><i style="background:#15803d"></i>رُفعت</span><span><i style="background:#b45309"></i>استُلمت</span><span><i style="background:#b91c1c"></i>لم ترفع</span></div><div class="table-wrap"><table class="v392-tbl"><thead><tr><th>#</th><th>المعلم</th><th>المدرسة</th><th>الحالة</th><th>التاريخ</th><th>المراجعة</th><th></th></tr></thead><tbody>${body}</tbody></table></div>`+(rows.length>LIM?`<div class="cell-sub" style="padding:8px">يعرض أول ${LIM} من ${rows.length} — ضيّق الفلاتر لرؤية الباقي.</div>`:'');
 }
 function v392Filters(){
  const stages=profile?.role==='stage_coordinator'?V392.stages.map(s=>s.stage):['ابتدائي','إعدادي','ثانوي عام','ثانوي صناعي'];
