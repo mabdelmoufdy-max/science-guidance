@@ -1,4 +1,5 @@
 <!doctype html>
+<!-- v471: «سجل الدخول»: زرّا «الإجراءات» و«أوقات الدخول» داخل بطاقة المستخدم. -->
 <!-- v470: بطاقات مراحل المنسق العام: لون لكل مرحلة وزر «عرض/إخفاء التفاصيل» وإحصاءات في مربعات (تحل محل تنسيق v468). -->
 <!-- v469: تبويب «متابعة المعلمين» للمنسق العام: تنبيه بلا إسناد، وحالات الجداول الفارغة والناقصة وروابطها. -->
 <!-- v468: بطاقات مراحل المنسق العام بحدود واضحة وخلفيات لونية خفيفة وفاصل عند فتح البطاقة. -->
@@ -8,7 +9,6 @@
 <!-- v464: الشعار الجديد (توجيه العلوم — إدارة قوص التعليمية) في شاشتي الدخول واختيار الدور وفي ترويسة كل التقارير A4 وصورة المشاركة؛ الشعار الصغير في القائمة الجانبية بلا تغيير. واجهة فقط. -->
 <!-- v462: «صحائف الأحوال» على الهاتف بالتنسيق المعتمد (مهارة mobile-cards): بطاقة لكل معلم — الاسم والحالة، المدرسة، شارات التاريخ والحجم والمراجعة، وشريط أزرار سفلي؛ شريط جانبي بلون الحالة. CSS للهاتف فقط. -->
 <!-- v461: شاشة «اختر الدور» تُظهر «المنسق العام» بدل «منسق المرحلة» لمن عُيّن منسقًا عامًا (is_gc من my_coordinator_scope). -->
-<!-- v459: بطاقة المعلم على الهاتف — زرا «إضافة انتداب» و«بيان الحالة» في سطر مستقل تحت الاسم بدل أن يضغطا الاسم والشارات (كانت الكلمات تتكسر حرفًا حرفًا على 360px). CSS فقط. -->
 <html lang="ar" dir="rtl">
 <head>
 <!-- إعداد: أ/ محمود عبدالمفدي محمد أبوالنجا | الصفة: معلم -->
@@ -16,7 +16,7 @@
 <script>/* v226: العنوان الموحد — انظر التعليق أعلى الملف */(function(){try{if(/\.github\.io$/.test(location.hostname)&&/^\/science-guidance\/?(index\.html)?$/.test(location.pathname)&&!/[?&]stay\b/.test(location.search))location.replace('https://teachers-data-portal.vercel.app/app/'+location.hash)}catch(e){}})();</script>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#152c43">
-<title>نظام توجيه العلوم — v470</title>
+<title>نظام توجيه العلوم — v471</title>
 <link rel="manifest" href="./manifest.webmanifest">
 <link rel="icon" type="image/png" sizes="192x192" href="./app-icon-192.png">
 <link rel="apple-touch-icon" href="./app-icon-192.png">
@@ -2590,6 +2590,7 @@ span.v415-L{border-radius:10px;padding:2px 8px}
 .v458-follow-row small{display:block;color:var(--muted)}
 .v458-follow-row .badge{white-space:normal}
 @media(max-width:760px){.v458-follow-row>.btn{flex-basis:100%}}
+.v471-btns{display:flex;gap:8px;margin:6px 0}.v471-btns .btn{flex:1}.v471-acts{margin:6px 0}.v471-list{margin:4px 0;padding-inline-start:18px}.v471-list li{padding:3px 0;font-size:.92em;overflow-wrap:anywhere}
 </style>
 </head>
 <body>
@@ -2980,6 +2981,7 @@ window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();window.v152
 window.addEventListener('appinstalled',()=>{window.v152InstallPrompt=null;v152SyncInstallBtn()});
 if('serviceWorker' in navigator&&location.protocol!=='file:')window.addEventListener('load',()=>navigator.serviceWorker.register('./service-worker.js').catch(()=>{}));
 const V145_NEWS=[
+ ['v471','سجل الدخول: اضغط «عرض الإجراءات» داخل بطاقة المستخدم لترى ما فعله في الفترة.'],
  ['v470','بطاقات المراحل للمنسق العام: لون لكل مرحلة وزر واضح لعرض التفاصيل أو إخفائها.'],
  ['v469','تبويب «متابعة المعلمين» للمنسق العام: تنبيه بلا إسناد، وحالات الجداول الفارغة والناقصة وروابطها.'],
  ['v468','بطاقات مراحل المنسق العام بحدود واضحة وخلفيات لونية خفيفة وفاصل عند فتح البطاقة.'],
@@ -9686,11 +9688,25 @@ async function v352Load(){
 }
 /* v399: عدد الإجراءات لكل مستخدم في الفترة (من سجل التدقيق)؛ فشل الطلب لا يعطّل التقرير — يختفي العمود فقط */
 async function v399LoadActs(r){
- V352.acts=new Map();V352.actsOk=false;
+ V352.acts=new Map();V352.actsOk=false;V352.r=r;
  try{const a=await sb.rpc('admin_access_actions',{p_from:r.from,p_to:r.to});
   if(!a.error&&Array.isArray(a.data)){a.data.forEach(x=>V352.acts.set(x.profile_id,Number(x.actions)||0));V352.actsOk=true}
  }catch(e){}
 }
+/* v471: إجراءات المستخدم في الفترة داخل بطاقته في «سجل الدخول» (admin_audit_search2، عند الضغط فقط) */
+async function v471Acts(btn,pid){
+ const box=btn.closest('.v352-ses').querySelector('.v471-acts'),r=V352.r;if(!r)return;
+ if(box.dataset.done){box.hidden=!box.hidden;btn.classList.toggle('primary',!box.hidden);return}
+ const lbl=btn.textContent;btn.disabled=true;btn.textContent='جارٍ التحميل…';
+ try{
+  const x=await sb.rpc('admin_audit_search2',{p_from:r.from,p_to:r.to,p_actor:pid,p_action:null,p_q:null,p_target:null,p_before:null,p_limit:200});
+  if(x.error)throw x.error;
+  const rows=x.data||[],N=(typeof V355_ACTIONS==='object'&&V355_ACTIONS)||{};
+  box.innerHTML=rows.length?`<div class="cell-sub">الإجراءات (${rows.length}${rows.length===200?' — أحدث 200':''}):</div><ul class="v471-list">${rows.map(a=>`<li><span>${esc(v294Time(a.created_at))}</span> — <b>${esc(typeof v355Act==='function'?v355Act(a.action):(N[a.action]||a.action||'—'))}</b>${a.target_name?' · '+esc(a.target_name):''}</li>`).join('')}</ul>`:'<div class="cell-sub">لا توجد إجراءات في هذه الفترة.</div>';
+  box.dataset.done='1';box.hidden=false;btn.disabled=false;btn.textContent=lbl;btn.classList.add('primary');
+ }catch(e){btn.disabled=false;btn.textContent='تعذّر التحميل — أعد المحاولة'}
+}
+function v471Times(btn){const t=btn.closest('.v352-ses').querySelector('.v471-times');t.hidden=!t.hidden;btn.classList.toggle('primary',!t.hidden)}
 function v399Acts(n){return n===null||n===undefined?'':n===0?'بلا إجراءات':n===1?'إجراء واحد':n===2?'إجراءان':(n>=3&&n<=10)?n+' إجراءات':n+' إجراء'}
 function v352Dur(ms){const m=Math.max(1,Math.round(ms/60000));if(m<60)return m+' د';const h=Math.floor(m/60),r=m%60;return h+' س'+(r?' '+r+' د':'')}
 function v352Ms(x){return Math.max(60000,new Date(x.last_seen_at)-new Date(x.started_at))}
@@ -9715,7 +9731,7 @@ function v354DenGroups(rows){
 function v354Why(o){const m=[...o.why];return m.length===1&&o.n>1?m[0][0]:m.map(([w,c])=>c>1?w+' ×'+c:w).join('، ')}
 function v352Users(rows){
  const by=new Map();
- rows.forEach(x=>{const o=by.get(x.profile_id)||{name:x.full_name||'—',acts:V352.actsOk?(V352.acts.get(x.profile_id)||0):null,n:0,ms:0,last:'',roles:new Set(),dev:new Set(),rows:[]};o.n++;o.ms+=v352Ms(x);if(String(x.started_at)>o.last)o.last=String(x.started_at);if(x.active_role)o.roles.add(v294Role(x.active_role));if(x.device)o.dev.add(v352Dev(x.device));o.rows.push(x);by.set(x.profile_id,o)});
+ rows.forEach(x=>{const o=by.get(x.profile_id)||{pid:x.profile_id,name:x.full_name||'—',acts:V352.actsOk?(V352.acts.get(x.profile_id)||0):null,n:0,ms:0,last:'',roles:new Set(),dev:new Set(),rows:[]};o.n++;o.ms+=v352Ms(x);if(String(x.started_at)>o.last)o.last=String(x.started_at);if(x.active_role)o.roles.add(v294Role(x.active_role));if(x.device)o.dev.add(v352Dev(x.device));o.rows.push(x);by.set(x.profile_id,o)});
  return [...by.values()].sort((a,b)=>b.n-a.n||b.ms-a.ms);
 }
 function v352Tabs(){
@@ -9734,7 +9750,7 @@ function v352LogBody(){
  if(!rows.length)return '<div class="cell-sub" style="padding:10px">لا يوجد دخول مسجل في هذه الفترة. (التسجيل بدأ من 12/11/2026)</div>';
  const users=v352Users(rows),LIM=100;
  return `<div class="v294-head v352-head"><span>المستخدمون (${users.length}) — مرات الدخول (${rows.length})</span><button type="button" class="btn small secondary" onclick="v353Report('accessLog')">📄 تقرير</button></div>`+
- users.map(o=>`<details class="v352-u"><summary><b>${esc(o.name)}</b><span class="cell-sub">${esc([v352Times(o.n),v352Dur(o.ms),v399Acts(o.acts),'آخر دخول '+v294Clock(o.last),[...o.dev].join(' و')].filter(Boolean).join(' · '))}</span></summary><div class="v352-ses"><div class="cell-sub">الدور: ${esc([...o.roles].join('، ')||'—')}</div>${o.rows.slice(0,LIM).map(x=>`<div>${esc([v294Time(x.started_at),v352Dur(v352Ms(x)),v352Dev(x.device)].join(' — '))}</div>`).join('')}${o.rows.length>LIM?`<div class="cell-sub">يُعرض أحدث ${LIM} من ${o.rows.length}؛ التقرير المطبوع يعرضها كلها عند البحث باسمه.</div>`:''}</div></details>`).join('');
+ users.map(o=>`<details class="v352-u"><summary><b>${esc(o.name)}</b><span class="cell-sub">${esc([v352Times(o.n),v352Dur(o.ms),v399Acts(o.acts),'آخر دخول '+v294Clock(o.last),[...o.dev].join(' و')].filter(Boolean).join(' · '))}</span></summary><div class="v352-ses"><div class="cell-sub">الدور: ${esc([...o.roles].join('، ')||'—')}</div><div class="v471-btns">${o.acts?`<button type="button" class="btn small secondary" onclick="v471Acts(this,'${esc(o.pid)}')">الإجراءات (${o.acts})</button>`:''}<button type="button" class="btn small secondary" onclick="v471Times(this)">أوقات الدخول (${o.n})</button></div><div class="v471-acts" hidden></div><div class="v471-times" hidden>${o.rows.slice(0,LIM).map(x=>`<div>${esc([v294Time(x.started_at),v352Dur(v352Ms(x)),v352Dev(x.device)].join(' — '))}</div>`).join('')}${o.rows.length>LIM?`<div class="cell-sub">يُعرض أحدث ${LIM} من ${o.rows.length}؛ التقرير المطبوع يعرضها كلها عند البحث باسمه.</div>`:''}</div></div></details>`).join('');
 }
 function v352DenBody(){
  if(V352.err)return `<div class="notice warn">${esc(V352.err)}</div>`;
