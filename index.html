@@ -1,4 +1,5 @@
 <!doctype html>
+<!-- v466: رئيسية المنسق العام: طلبات الإجازة ثم المدارس التي تحتاج استكمالًا والعجز بعد الأجر وحالة جداول المعلمين، مع تفاصيل المراحل في قسم واحد. -->
 <!-- v465: سطر «تصميم وتطوير: أ/ محمود عبدالمفدي محمد أبوالنجا» أسفل الشعار في شاشات الدخول واختيار الدور. واجهة فقط. -->
 <!-- v464: الشعار الجديد (توجيه العلوم — إدارة قوص التعليمية) في شاشتي الدخول واختيار الدور وفي ترويسة كل التقارير A4 وصورة المشاركة؛ الشعار الصغير في القائمة الجانبية بلا تغيير. واجهة فقط. -->
 <!-- v462: «صحائف الأحوال» على الهاتف بالتنسيق المعتمد (مهارة mobile-cards): بطاقة لكل معلم — الاسم والحالة، المدرسة، شارات التاريخ والحجم والمراجعة، وشريط أزرار سفلي؛ شريط جانبي بلون الحالة. CSS للهاتف فقط. -->
@@ -8,7 +9,6 @@
 <!-- v457: الرئيسية تُفتح فورًا من آخر نسخة محفوظة في الهاتف (IndexedDB، 24 ساعة، لكل مستخدم ودور وفصل) ثم تتحدث في الخلفية بشارة «جارٍ تحديث البيانات…»؛ أي حفظ أو خروج يمسح النسخة المحفوظة. -->
 <!-- v454: قائمة اختيار المدارس في تقرير العجز قبل الأجر تعرض المدارس ذات العجز الموجب فقط. -->
 <!-- v453: إصلاح قائمة اختيار المدارس في تقرير العجز قبل الأجر؛ تطبيق وإلغاء على الهاتف واستعادة المرحلة والمدارس بعد تحديث الصفحة. -->
-<!-- v452: تقرير «العجز قبل الأجر في المدارس» مع فلترَي المرحلة والمدارس وتصدير Excel وطباعة وPDF؛ قراءة مجمّعة لكل المراحل للمنسق. -->
 <html lang="ar" dir="rtl">
 <head>
 <!-- إعداد: أ/ محمود عبدالمفدي محمد أبوالنجا | الصفة: معلم -->
@@ -16,7 +16,7 @@
 <script>/* v226: العنوان الموحد — انظر التعليق أعلى الملف */(function(){try{if(/\.github\.io$/.test(location.hostname)&&/^\/science-guidance\/?(index\.html)?$/.test(location.pathname)&&!/[?&]stay\b/.test(location.search))location.replace('https://teachers-data-portal.vercel.app/app/'+location.hash)}catch(e){}})();</script>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#152c43">
-<title>نظام توجيه العلوم — v465</title>
+<title>نظام توجيه العلوم — v466</title>
 <link rel="manifest" href="./manifest.webmanifest">
 <link rel="icon" type="image/png" sizes="192x192" href="./app-icon-192.png">
 <link rel="apple-touch-icon" href="./app-icon-192.png">
@@ -2522,6 +2522,26 @@ span.v415-L{border-radius:10px;padding:2px 8px}
 @media(max-width:360px){.v392-tbl tr.v392-r td.v392-ca .btn{font-size:13px;padding:0 4px}}
 .brand-credit{margin-top:22px;font-size:13px;color:rgba(255,255,255,.72);text-align:center;letter-spacing:.2px}.brand-credit::before{content:"";display:block;width:56px;height:2px;margin:0 auto 10px;background:var(--gold,#d4a73a);border-radius:2px;opacity:.8}
 .login-credit{margin-top:14px;text-align:center;font-size:13px;color:#5b6475}
+/* رئيسية المنسق العام فقط */
+.v458-home section>h3{margin:10px 0}
+.v458-home .v458-task{margin:0 0 8px;padding:0;min-width:0}
+.v458-task summary,.v458-all summary{cursor:pointer;min-height:44px;padding:8px 12px}
+.v458-task summary{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.v458-task>summary::before{content:"▸";color:var(--muted)}
+.v458-task[open]>summary::before{content:"▾"}
+.v458-task summary .badge{margin-inline-start:auto;white-space:nowrap}
+.v458-task[data-status="urgent"]{border-inline-start:5px solid #b45309}
+.v458-task ul{list-style:none;margin:0;padding:0 12px}
+.v458-task li{display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:8px 0;border-top:1px solid var(--line)}
+.v458-task li>span:first-child{flex:1 1 180px}
+.v458-task li small{display:block;color:var(--muted)}
+.v458-task p,.v458-home-actions{padding:8px 12px;margin:0}
+.v458-task dl{display:flex;flex-wrap:wrap;gap:8px 18px;padding:8px 12px;margin:0;border-top:1px solid var(--line)}
+.v458-task dt{color:var(--muted)}
+.v458-task dd{margin:0;font-weight:700}
+.v458-home .btn{min-height:40px;white-space:normal}
+.v458-completion-slot:not(:empty){margin-top:12px}
+@media(max-width:760px){.v458-task li>.btn{flex-basis:100%}.v458-task li>span:first-child{flex-basis:70%}}
 </style>
 </head>
 <body>
@@ -2912,6 +2932,7 @@ window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();window.v152
 window.addEventListener('appinstalled',()=>{window.v152InstallPrompt=null;v152SyncInstallBtn()});
 if('serviceWorker' in navigator&&location.protocol!=='file:')window.addEventListener('load',()=>navigator.serviceWorker.register('./service-worker.js').catch(()=>{}));
 const V145_NEWS=[
+ ['v466','رئيسية المنسق العام: طلبات الإجازة ثم المدارس التي تحتاج استكمالًا والعجز بعد الأجر وحالة جداول المعلمين، مع تفاصيل المراحل في قسم واحد.'],
  ['v465','اسم صانع البرنامج أسفل الشعار في شاشة الدخول.'],
  ['v464','الشعار الجديد لتوجيه العلوم في شاشة الدخول والقائمة الجانبية وترويسة كل التقارير.'],
  ['v462','«صحائف الأحوال» على الهاتف: بطاقة واضحة لكل معلم بلون حالة الصحيفة، والأزرار بكلماتها في شريط أسفل البطاقة.'],
@@ -4350,7 +4371,7 @@ async function reviewAllCompletionChanges(action){if(profile.role!=='admin')retu
 async function injectCompletionDashboardCards(root){
  if(!root||!['admin','stage_coordinator','supervisor','school_manager','senior_teacher'].includes(profile?.role))return;
  const data=await loadCompletionData(),pmap=completionPendingMap(data.changes),rows=completionEntityRows(data),missing=rows.filter(r=>completionEntityMissing(r)>0).length,pending=data.changes.filter(x=>x.status==='pending_admin_approval').length;
- if(root.querySelector('.completion-quick'))return;const box=document.createElement('div');box.className='completion-quick';box.innerHTML=`<button class="cq missing" onclick="completionTab='missing';go('completion')"><b>${missing}</b><span>🔴 بيانات تحتاج استكمال</span><small>افتح الحقول الناقصة في نطاق مسؤوليتك</small></button><button class="cq pending" onclick="completionTab='pending';go('completion')"><b>${pending}</b><span>🟡 تعديلات بانتظار الاعتماد</span><small>${profile.role==='admin'?'راجع واعتمد التعديلات':'متابعة حالة التعديلات المسجلة'}</small></button>`;root.prepend(box);
+ if(root.querySelector('.completion-quick'))return;const box=document.createElement('div');box.className='completion-quick';box.innerHTML=`<button class="cq missing" onclick="completionTab='missing';go('completion')"><b>${missing}</b><span>🔴 بيانات تحتاج استكمال</span><small>افتح الحقول الناقصة في نطاق مسؤوليتك</small></button><button class="cq pending" onclick="completionTab='pending';go('completion')"><b>${pending}</b><span>🟡 تعديلات بانتظار الاعتماد</span><small>${profile.role==='admin'?'راجع واعتمد التعديلات':'متابعة حالة التعديلات المسجلة'}</small></button>`;(root.querySelector('.v458-completion-slot')||root).prepend(box);
 }
 
 /* Module: approvals */
@@ -12032,8 +12053,8 @@ function renderList(){
  if(pg)pg.innerHTML=`معتمد <b>${ok}</b> من <b>${list.length}</b> مدرسة <span class="bar"><span style="width:${list.length?Math.round(ok*100/list.length):0}%"></span></span>`;
 }
 
-async function openSchool(id){
- S.sel=id;S.edit=false;S.tab='data';S.assigned=new Set();S.roster=null;S.tEdit=null;S.tAssign=null;renderList();renderMain();
+async function openSchool(id,tab='data'){
+ S.sel=id;S.edit=false;S.tab=tab;S.assigned=new Set();S.roster=null;S.tEdit=null;S.tAssign=null;renderList();renderMain();
  loadTeachers(id);
  const ids=classesOf(id).map(c=>c.id);
  if(ids.length)try{(await q(sb.from('teaching_assignments').select('class_id').in('class_id',ids))).forEach(r=>S.assigned.add(r.class_id));if(S.sel===id)renderMain()}catch(e){}
@@ -12739,21 +12760,23 @@ details.more .kv{margin-top:8px}
 .progress .bar{margin-inline-start:6px}
 `;
 let seq=0;
-async function start(){
- const my=++seq;
+async function start(target){
+ const host=document.getElementById('seHost'),my=++seq;
  try{
   S.me={...profile};
   S.year=await q(sb.from('academic_years').select('id,label').eq('is_active',true).maybeSingle());
   S.term=S.year?await q(sb.from('terms').select('id,name').eq('academic_year_id',S.year.id).eq('is_active',true).maybeSingle()):null;
   if(!S.year||!S.term)throw new Error('لا يوجد عام دراسي/فصل دراسي نشط');
   await loadAll();
-  if(my!==seq)return;
+  if(my!==seq||!host?.isConnected)return;
+  const school=target&&S.schools.find(s=>String(s.id)===target.id);
+  if(school){S.stage=school.stage;S.grp=grpOf(school.stage);S.sel=school.id;S.tab=target.tab}
   renderShell();
-  if(S.sel&&S.schools.some(x=>x.id===S.sel)){const keep=S.tab;openSchool(S.sel);if(keep&&keep!=='data'){S.tab=keep;renderMain()}}
+  if(S.sel&&S.schools.some(x=>x.id===S.sel)){openSchool(S.sel,S.tab)}
  }catch(e){
   const box=BOX();if(!box||my!==seq)return;
   box.innerHTML=`<div class="loading"><div class="notice n-bad">${esc(errText(e))}</div><br><button class="btn" id="seRetry">إعادة المحاولة</button></div>`;
-  $('seRetry').onclick=()=>{box.innerHTML='<div class="loading">جارٍ تحميل المدارس…</div>';start()};
+  $('seRetry').onclick=()=>{box.innerHTML='<div class="loading">جارٍ تحميل المدارس…</div>';start(target)};
  }
 }
 function seFit(){
@@ -12768,7 +12791,9 @@ function seMount(){
  const el=document.getElementById('seHost');if(!el)return;
  ROOT=el.shadowRoot||el.attachShadow({mode:'open'});try{window.v337Watch&&window.v337Watch(ROOT)}catch(e){}try{window.v350Watch&&window.v350Watch(ROOT)}catch(e){}
  ROOT.innerHTML=`<style>${SE_CSS}</style><div class="se-box" id="seBox"><div class="loading">جارٍ تحميل المدارس…</div></div>`;
- seFit();start();
+ const target=v458SchoolEntryTarget;
+ v458SchoolEntryTarget=null;
+ seFit();start(target?.profileId===profile?.id&&profile?.role==='stage_coordinator'&&V458.general?target:null);
 }
 window.addEventListener('resize',()=>{clearTimeout(window.__seT);window.__seT=setTimeout(seFit,120)});
 window.seMountSchoolEntry=seMount;
@@ -15767,11 +15792,12 @@ function v425Box(){
 async function v425Inject(){
  if(currentPage!=='dashboard'||!['supervisor','stage_coordinator'].includes(profile?.role))return;
  const c=document.getElementById('content');if(!c)return;
+ const slot=c.querySelector('.v458-leave-slot');
  try{await v425Load()}catch(e){console.warn('v425',e);return}
- if(currentPage!=='dashboard')return;
+ if(currentPage!=='dashboard'||(slot&&!slot.isConnected))return;
  c.querySelector('#v425Box')?.remove();const h=v425Box();if(!h)return;
  const anchor=c.querySelector('#appNavTrail');const tmp=document.createElement('div');tmp.innerHTML=h;
- if(anchor&&anchor.parentElement===c)anchor.after(tmp.firstElementChild);else c.prepend(tmp.firstElementChild)}
+ if(slot)slot.append(tmp.firstElementChild);else if(anchor&&anchor.parentElement===c)anchor.after(tmp.firstElementChild);else c.prepend(tmp.firstElementChild)}
 function v425Open(id){
  const r=__v425.find(x=>x.id===id);if(!r)return;
  const as=r.assignments||[];
@@ -17950,22 +17976,83 @@ const __v458BaseLoadContext=loadContext;
 loadContext=async function(){V458.p=null;return __v458BaseLoadContext.apply(this,arguments)};
 if(typeof selectRole==='function'){const __v458BaseSelectRole=selectRole;selectRole=function(){V458.p=null;const r=__v458BaseSelectRole.apply(this,arguments);try{v458Ready()}catch(e){}return r}}
 /* الرئيسية: بطاقة لكل مرحلة (v323) + جدول مقارنة بين المراحل أعلاها */
-async function v458Home(force){
- const html=await v323SupervisorHome(force);
- const keep=v155StageSel,rows=[];
+function v458HomeSchool(row,label,tab='data'){
+ return `<button type="button" class="btn secondary" data-school="${esc(row.id)}" data-tab="${tab}" onclick="v458GoSchool(this.dataset.school,this.dataset.tab)">${label}</button>`;
+}
+function v458HomeList(rows,action){
+ if(!rows.length)return '';
+ const item=row=>`<li><span><b>${esc(row.name)}</b><small>${esc(row.stage)}</small></span>${row.detail?`<span class="badge warn">${esc(row.detail)}</span>`:''}${action(row)}</li>`;
+ return `<ul>${rows.slice(0,3).map(item).join('')}</ul>${rows.length>3?`<details class="v458-all"><summary>عرض كل المدارس (${rows.length})</summary><ul>${rows.slice(3).map(item).join('')}</ul></details>`:''}`;
+}
+function v458HomeTask(title,count,body){
+ return `<details class="card v458-task" data-status="${count?'urgent':'clear'}"><summary><b>${title}</b><span class="badge ${count?'warn':'ok'}">${count||'لا توجد حالات'}</span></summary>${body||'<p class="muted">لا توجد حالات تحتاج متابعة.</p>'}</details>`;
+}
+let v458SchoolEntryTarget=null;
+function v458GoSchool(id,tab){
+ if(profile?.role!=='stage_coordinator'||!V458.general)return;
+ v458SchoolEntryTarget={id,tab,profileId:profile.id};
+ go('schoolEntry');
+}
+function v458GoTimetable(stage,school,status){
+ Object.assign(v306F,{stage,school,status,sup:'',apply:false});
+ go('timetableProgress');
+}
+function v458TimetableItems(rows){
+ const actions=(row,status,label)=>`<button type="button" class="btn secondary" data-stage="${esc(row.stage)}" data-school="${esc(row.id)}" data-status="${esc(status)}" onclick="v458GoTimetable(this.dataset.stage,this.dataset.school,this.dataset.status)">${label}</button>`;
+ return [V306_ST[2],V306_ST[1]].map(status=>{
+  const pending=rows.filter(r=>v306Status(r)===status),groups=v306Schools(pending)
+   .sort((a,b)=>b.list.length-a.list.length||String(a.name).localeCompare(String(b.name),'ar'));
+  const schools=groups.map(g=>({id:g.id,name:g.name,stage:g.list[0].stage,detail:g.list.length+' سجل معلم'}));
+  return v458HomeTask(status===V306_ST[2]?'جداول لم تبدأ':'جداول ناقصة',pending.length?pending.length+' سجل معلم':'',
+   v458HomeList(schools,s=>actions(s,status,'فتح الجداول'))+
+   (pending.length?`<div class="v458-home-actions">${actions({stage:'',id:''},status,'عرض كل الجداول')}</div>`:''));
+ }).join('');
+}
+async function v458LoadHomeTimetables(target){
+ const pid=profile?.id,term=activeTerm?.id;
+ const current=()=>target.isConnected&&currentPage==='dashboard'&&profile?.id===pid&&profile?.role==='stage_coordinator'&&activeTerm?.id===term&&V458.general;
+ if(!current())return;
  try{
-  const first=await v155LoadModel(false);
-  for(const st of (first.stages||[])){
-   v155StageSel=st;const m=await v155LoadModel(false),t=m.totals||{};
-   rows.push({st,schools:t.schools||0,required:t.required||0,actual:t.actual||0,net:t.net||0,approved:(m.rows||[]).filter(r=>r.status==='approved').length});
+  const rows=await v306Load(true);
+  if(current())target.innerHTML=v458TimetableItems(rows);
+ }catch(_){
+  if(current())target.innerHTML='<div class="notice warn">تعذّر تحميل بيانات الجداول. <button type="button" class="btn secondary" onclick="v458LoadHomeTimetables(this.parentElement.parentElement)">إعادة المحاولة</button></div>';
+ }
+}
+async function v458Home(force){
+ const first=await v155LoadModel(force),keep=v155StageSel,models=[];
+ try{
+  for(const stage of first.stages){
+   v155StageSel=stage;
+   models.push(stage===first.stage?first:await v155LoadModel(false));
   }
- }catch(e){rows.length=0}finally{v155StageSel=keep}
- if(rows.length<2)return html;
- const sum=k=>rows.reduce((n,r)=>n+(r[k]||0),0);
- const tr=r=>`<tr><td><b>${esc(r.st)}</b></td><td>${r.schools}</td><td>${r.required}</td><td>${r.actual}</td><td><span class="badge ${r.net>0?'danger':'ok'}">${r.net}</span></td><td>${r.approved}<span class="v458-of"> / ${r.schools}</span></td></tr>`;
- const card=`<div class="card v458-compare"><h3>مقارنة المراحل</h3><div class="table-wrap"><table class="table"><thead><tr><th>المرحلة</th><th>مدارس</th><th>مطلوب</th><th>فعلي</th><th>عجز</th><th>معتمدة</th></tr></thead><tbody>${rows.map(tr).join('')}<tr class="v458-total"><td><b>الإجمالي</b></td><td>${sum('schools')}</td><td>${sum('required')}</td><td>${sum('actual')}</td><td><span class="badge ${sum('net')>0?'danger':'ok'}">${sum('net')}</span></td><td>${sum('approved')}<span class="v458-of"> / ${sum('schools')}</span></td></tr></tbody></table></div>${V458.canMove?`<div class="actions"><button type="button" class="btn primary" onclick="v356MoveOpen('ابتدائي')">نقل مدارس بين موجهين</button></div>`:''}</div>`;
- const re=/<div class="v168-head">[\s\S]*?<\/div><\/div>/;
- return re.test(html)?html.replace(re,m=>m+card):card+html;
+ }finally{v155StageSel=keep}
+ const missing=models.flatMap(m=>m.rows.filter(r=>!r.classes||!r.ready)
+  .map(r=>({...r,stage:m.stage,detail:r.classes?'الحصص المقررة ناقصة':'بلا فصول'})));
+ const ctx={period:reportPeriod(),issuer:reportIssuer()};
+ // نفس صفوف تقرير العجز، بما فيها استبعاد المدارس التي لا يمكن حساب عجزها.
+ const shortage=await ReportAdapters.shortageAfterPaid.load(ctx).then(report=>report.rows.filter(r=>!r._group&&r._ready&&r.unfilled>0)
+  .map(r=>({id:r._schoolIds[0],name:r.school,stage:r.stage,periods:r.unfilled,detail:r.unfilled+' حصة'})).sort((a,b)=>b.periods-a.periods),()=>null);
+ const pending=new Set(missing.map(r=>r.id));
+ shortage?.forEach(r=>pending.add(r.id));
+ const missingTask=v458HomeTask('مدارس بلا فصول أو بحصص مقررة ناقصة',missing.length?missing.length+' مدرسة':'',
+  v458HomeList(missing,r=>v458HomeSchool(r,'إدخال البيانات',r.classes?'cls':'data')));
+ const reportButton='<div class="v458-home-actions"><button type="button" class="btn secondary" onclick="openReportById(\'shortageAfterPaid\',{filterState:{active:false}})">تقرير عجز المدارس بعد الأجر</button></div>';
+ const shortageTask=shortage?v458HomeTask('العجز بعد الأجر',shortage.length?shortage.reduce((n,r)=>n+r.periods,0)+' حصة · '+shortage.length+' مدرسة':'',
+  v458HomeList(shortage,r=>v458HomeSchool(r,'فتح الإسناد','tch'))+(shortage.length?reportButton:'')):
+  '<div class="notice warn">تعذّر تحميل العجز بعد الأجر. استخدم «تحديث» لإعادة المحاولة.</div>';
+ const stages=models.map(({stage,rows,totals})=>`<details class="v458-task"><summary><b>${esc(stage)}</b><span class="badge ${rows.some(r=>pending.has(r.id))?'warn':'info'}">${shortage?rows.filter(r=>pending.has(r.id)).length+' تحتاج استكمالًا أو تغطية':'العجز غير متاح'}</span></summary><dl><div><dt>مدارس</dt><dd>${totals.schools}</dd></div><div><dt>مطلوب</dt><dd>${totals.required}</dd></div><div><dt>فعلي</dt><dd>${totals.actual}</dd></div><div><dt>العجز بعد الأجر</dt><dd>${shortage?shortage.filter(r=>r.stage===stage).reduce((n,r)=>n+r.periods,0):'—'}</dd></div><div><dt>معتمدة</dt><dd>${rows.filter(r=>r.status==='approved').length}</dd></div></dl></details>`).join('');
+ return `<div class="v458-home">
+  <div class="page-head"><h2>الرئيسية</h2><div class="actions"><button type="button" class="btn secondary" onclick="loadPage(true)">تحديث</button></div></div>
+  <div class="v458-leave-slot"></div>
+  <section aria-labelledby="v458Urgent"><h3 id="v458Urgent">يحتاج تدخّل الآن</h3>
+   ${missingTask}${shortageTask}
+   <div id="v458HomeTimetables" aria-live="polite"><p class="muted">جارٍ تحميل حالة جداول المعلمين…</p></div>
+  </section>
+  <section class="card v458-home-stages"><h3>المراحل</h3>${stages}
+  ${V458.canMove?`<div class="v458-home-actions"><button type="button" class="btn secondary" onclick="v356MoveOpen('ابتدائي')">نقل مدارس بين موجهين</button></div>`:''}</section>
+  <div class="v458-completion-slot"></div>
+ </div>`;
 }
 const __v458BaseDashboard=dashboardPage;
 dashboardPage=async function(options={}){
@@ -18000,6 +18087,17 @@ async function v458GcOpen(id){
  if(on)v356Confirm({title:'إلغاء المنسق العام',body:`<div class="notice warn">يُسحب من <b>${esc(u.name)}</b> إذن نقل المدارس بين الموجهين، ويعود منسق مرحلة. تبقى إسنادات المراحل كما هي، ويمكن تعديلها من «تعديل الأدوار».</div>`,ok:'إلغاء المنسق العام',onOk:async r=>{const x=await sb.rpc('admin_set_general_coordinator',{p_profile:id,p_on:false,p_reason:r||null});if(x.error)throw x.error;await v356After('أُلغي المنسق العام')}});
  else v356Confirm({title:'تعيين منسق عام',body:`<div class="notice ok">سيحصل <b>${esc(u.name)}</b> على:${gives}</div>`,ok:'تعيين منسق عام',onOk:async r=>{const x=await sb.rpc('admin_set_general_coordinator',{p_profile:id,p_on:true,p_reason:r||null});if(x.error)throw x.error;await v356After('عُيّن منسقًا عامًا')}});
 }
+const v458LoadPage=loadPage;
+loadPage=async function(){
+ const result=await v458LoadPage.apply(this,arguments);
+ const target=document.getElementById('v458HomeTimetables');
+ if(target&&!target.dataset.started){
+  target.dataset.started='1';
+  // اترك للمتصفح فرصة رسم البنود العاجلة قبل جلب الجداول.
+  requestAnimationFrame(()=>requestAnimationFrame(()=>v458LoadHomeTimetables(target)));
+ }
+ return result;
+};
 /* v458-end */
 /* v461-begin: شاشة «اختر الدور» — «المنسق العام» بدل «منسق المرحلة» لمن عُيّن منسقًا عامًا (is_gc من my_coordinator_scope، يخص صاحب الحساب فقط ولا يتأثر بالدور النشط). تسمية فقط؛ الدور المختار يبقى stage_coordinator. */
 async function v461Mark(){
