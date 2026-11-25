@@ -1,5 +1,5 @@
 <!doctype html>
-<!-- v471: «سجل الدخول»: زر «عرض الإجراءات» داخل بطاقة المستخدم يعرض إجراءاته في الفترة. -->
+<!-- v471: «سجل الدخول»: زرّا «الإجراءات» و«أوقات الدخول» داخل بطاقة المستخدم. -->
 <!-- v470: بطاقات مراحل المنسق العام: لون لكل مرحلة وزر «عرض/إخفاء التفاصيل» وإحصاءات في مربعات (تحل محل تنسيق v468). -->
 <!-- v469: تبويب «متابعة المعلمين» للمنسق العام: تنبيه بلا إسناد، وحالات الجداول الفارغة والناقصة وروابطها. -->
 <!-- v468: بطاقات مراحل المنسق العام بحدود واضحة وخلفيات لونية خفيفة وفاصل عند فتح البطاقة. -->
@@ -2591,7 +2591,7 @@ span.v415-L{border-radius:10px;padding:2px 8px}
 .v458-follow-row small{display:block;color:var(--muted)}
 .v458-follow-row .badge{white-space:normal}
 @media(max-width:760px){.v458-follow-row>.btn{flex-basis:100%}}
-.v471-acts{margin:6px 0}.v471-list{margin:4px 0;padding-inline-start:18px}.v471-list li{padding:3px 0;font-size:.92em;overflow-wrap:anywhere}
+.v471-btns{display:flex;gap:8px;margin:6px 0}.v471-btns .btn{flex:1}.v471-acts{margin:6px 0}.v471-list{margin:4px 0;padding-inline-start:18px}.v471-list li{padding:3px 0;font-size:.92em;overflow-wrap:anywhere}
 </style>
 </head>
 <body>
@@ -9696,15 +9696,18 @@ async function v399LoadActs(r){
 }
 /* v471: إجراءات المستخدم في الفترة داخل بطاقته في «سجل الدخول» (admin_audit_search2، عند الضغط فقط) */
 async function v471Acts(btn,pid){
- const box=btn.parentNode,r=V352.r;if(!r)return;
- btn.disabled=true;btn.textContent='جارٍ التحميل…';
+ const box=btn.closest('.v352-ses').querySelector('.v471-acts'),r=V352.r;if(!r)return;
+ if(box.dataset.done){box.hidden=!box.hidden;btn.classList.toggle('primary',!box.hidden);return}
+ const lbl=btn.textContent;btn.disabled=true;btn.textContent='جارٍ التحميل…';
  try{
   const x=await sb.rpc('admin_audit_search2',{p_from:r.from,p_to:r.to,p_actor:pid,p_action:null,p_q:null,p_target:null,p_before:null,p_limit:200});
   if(x.error)throw x.error;
   const rows=x.data||[],N=(typeof V355_ACTIONS==='object'&&V355_ACTIONS)||{};
   box.innerHTML=rows.length?`<div class="cell-sub">الإجراءات (${rows.length}${rows.length===200?' — أحدث 200':''}):</div><ul class="v471-list">${rows.map(a=>`<li><span>${esc(v294Time(a.created_at))}</span> — <b>${esc(typeof v355Act==='function'?v355Act(a.action):(N[a.action]||a.action||'—'))}</b>${a.target_name?' · '+esc(a.target_name):''}</li>`).join('')}</ul>`:'<div class="cell-sub">لا توجد إجراءات في هذه الفترة.</div>';
+  box.dataset.done='1';box.hidden=false;btn.disabled=false;btn.textContent=lbl;btn.classList.add('primary');
  }catch(e){btn.disabled=false;btn.textContent='تعذّر التحميل — أعد المحاولة'}
 }
+function v471Times(btn){const t=btn.closest('.v352-ses').querySelector('.v471-times');t.hidden=!t.hidden;btn.classList.toggle('primary',!t.hidden)}
 function v399Acts(n){return n===null||n===undefined?'':n===0?'بلا إجراءات':n===1?'إجراء واحد':n===2?'إجراءان':(n>=3&&n<=10)?n+' إجراءات':n+' إجراء'}
 function v352Dur(ms){const m=Math.max(1,Math.round(ms/60000));if(m<60)return m+' د';const h=Math.floor(m/60),r=m%60;return h+' س'+(r?' '+r+' د':'')}
 function v352Ms(x){return Math.max(60000,new Date(x.last_seen_at)-new Date(x.started_at))}
@@ -9748,7 +9751,7 @@ function v352LogBody(){
  if(!rows.length)return '<div class="cell-sub" style="padding:10px">لا يوجد دخول مسجل في هذه الفترة. (التسجيل بدأ من 12/11/2026)</div>';
  const users=v352Users(rows),LIM=100;
  return `<div class="v294-head v352-head"><span>المستخدمون (${users.length}) — مرات الدخول (${rows.length})</span><button type="button" class="btn small secondary" onclick="v353Report('accessLog')">📄 تقرير</button></div>`+
- users.map(o=>`<details class="v352-u"><summary><b>${esc(o.name)}</b><span class="cell-sub">${esc([v352Times(o.n),v352Dur(o.ms),v399Acts(o.acts),'آخر دخول '+v294Clock(o.last),[...o.dev].join(' و')].filter(Boolean).join(' · '))}</span></summary><div class="v352-ses"><div class="cell-sub">الدور: ${esc([...o.roles].join('، ')||'—')}</div>${o.acts?`<div class="v471-acts"><button type="button" class="btn small secondary" onclick="v471Acts(this,'${esc(o.pid)}')">عرض الإجراءات (${o.acts})</button></div>`:''}${o.rows.slice(0,LIM).map(x=>`<div>${esc([v294Time(x.started_at),v352Dur(v352Ms(x)),v352Dev(x.device)].join(' — '))}</div>`).join('')}${o.rows.length>LIM?`<div class="cell-sub">يُعرض أحدث ${LIM} من ${o.rows.length}؛ التقرير المطبوع يعرضها كلها عند البحث باسمه.</div>`:''}</div></details>`).join('');
+ users.map(o=>`<details class="v352-u"><summary><b>${esc(o.name)}</b><span class="cell-sub">${esc([v352Times(o.n),v352Dur(o.ms),v399Acts(o.acts),'آخر دخول '+v294Clock(o.last),[...o.dev].join(' و')].filter(Boolean).join(' · '))}</span></summary><div class="v352-ses"><div class="cell-sub">الدور: ${esc([...o.roles].join('، ')||'—')}</div><div class="v471-btns">${o.acts?`<button type="button" class="btn small secondary" onclick="v471Acts(this,'${esc(o.pid)}')">الإجراءات (${o.acts})</button>`:''}<button type="button" class="btn small secondary" onclick="v471Times(this)">أوقات الدخول (${o.n})</button></div><div class="v471-acts" hidden></div><div class="v471-times" hidden>${o.rows.slice(0,LIM).map(x=>`<div>${esc([v294Time(x.started_at),v352Dur(v352Ms(x)),v352Dev(x.device)].join(' — '))}</div>`).join('')}${o.rows.length>LIM?`<div class="cell-sub">يُعرض أحدث ${LIM} من ${o.rows.length}؛ التقرير المطبوع يعرضها كلها عند البحث باسمه.</div>`:''}</div></div></details>`).join('');
 }
 function v352DenBody(){
  if(V352.err)return `<div class="notice warn">${esc(V352.err)}</div>`;
