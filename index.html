@@ -1,4 +1,5 @@
 <!doctype html>
+<!-- v469: تبويب «متابعة المعلمين» للمنسق العام: تنبيه بلا إسناد، وحالات الجداول الفارغة والناقصة وروابطها. -->
 <!-- v468: بطاقات مراحل المنسق العام بحدود واضحة وخلفيات لونية خفيفة وفاصل عند فتح البطاقة. -->
 <!-- v467: تفاصيل مراحل المنسق العام: المدارس التي تحتاج تدخّلًا مع أسبابها وروابطها، وتفصيل الحصص غير المسندة في الثانوي حسب المادة. -->
 <!-- v466: رئيسية المنسق العام: طلبات الإجازة ثم المدارس التي تحتاج استكمالًا والعجز بعد الأجر وحالة جداول المعلمين، مع تفاصيل المراحل في قسم واحد. -->
@@ -8,7 +9,6 @@
 <!-- v461: شاشة «اختر الدور» تُظهر «المنسق العام» بدل «منسق المرحلة» لمن عُيّن منسقًا عامًا (is_gc من my_coordinator_scope). -->
 <!-- v459: بطاقة المعلم على الهاتف — زرا «إضافة انتداب» و«بيان الحالة» في سطر مستقل تحت الاسم بدل أن يضغطا الاسم والشارات (كانت الكلمات تتكسر حرفًا حرفًا على 360px). CSS فقط. -->
 <!-- v458: دور «المنسق العام» — منسق مرحلة بإسنادات المراحل الأربع يعيّنه مدير النظام من مركز التحكم (زر «المنسق العام…» في ملف المستخدم)؛ رئيسية بمقارنة المراحل وبطاقة لكل مرحلة، وقدرة «نقل مدارس الابتدائي والإعدادي بين الموجهين» مغلقة افتراضيًا. بلا اعتماد ولا حسابات ولا مركز تحكم. قاعدة البيانات v458. -->
-<!-- v457: الرئيسية تُفتح فورًا من آخر نسخة محفوظة في الهاتف (IndexedDB، 24 ساعة، لكل مستخدم ودور وفصل) ثم تتحدث في الخلفية بشارة «جارٍ تحديث البيانات…»؛ أي حفظ أو خروج يمسح النسخة المحفوظة. -->
 <html lang="ar" dir="rtl">
 <head>
 <!-- إعداد: أ/ محمود عبدالمفدي محمد أبوالنجا | الصفة: معلم -->
@@ -16,7 +16,7 @@
 <script>/* v226: العنوان الموحد — انظر التعليق أعلى الملف */(function(){try{if(/\.github\.io$/.test(location.hostname)&&/^\/science-guidance\/?(index\.html)?$/.test(location.pathname)&&!/[?&]stay\b/.test(location.search))location.replace('https://teachers-data-portal.vercel.app/app/'+location.hash)}catch(e){}})();</script>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#152c43">
-<title>نظام توجيه العلوم — v468</title>
+<title>نظام توجيه العلوم — v469</title>
 <link rel="manifest" href="./manifest.webmanifest">
 <link rel="icon" type="image/png" sizes="192x192" href="./app-icon-192.png">
 <link rel="apple-touch-icon" href="./app-icon-192.png">
@@ -2574,6 +2574,20 @@ span.v415-L{border-radius:10px;padding:2px 8px}
 @media(max-width:360px){
  .v458-home-stages>.v458-stage>summary{padding-inline:8px;column-gap:5px}
 }
+/* تبويبا رئيسية المنسق العام ومتابعة المعلمين */
+.v458-home-panes{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 12px}
+.v458-home-panes .btn{flex:1 1 auto}
+.v458-home-panes .btn[aria-pressed="true"]{background:var(--primary);color:#fff;border-color:var(--primary)}
+.v458-home [hidden]{display:none!important}
+.v458-follow-shortcut{display:flex;align-items:center;justify-content:space-between;gap:8px;width:100%;min-height:44px;margin:0 0 8px;text-align:start;cursor:pointer;color:var(--ink)}
+.v458-follow-group h3{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.v458-follow-group ul{list-style:none;margin:0;padding:0}
+.v458-follow-group summary{min-height:40px;padding:10px 0;cursor:pointer}
+.v458-follow-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap;border-top:1px solid var(--line);padding:10px 0}
+.v458-follow-row>div{flex:1 1 180px;min-width:0;overflow-wrap:break-word}
+.v458-follow-row small{display:block;color:var(--muted)}
+.v458-follow-row .badge{white-space:normal}
+@media(max-width:760px){.v458-follow-row>.btn{flex-basis:100%}}
 </style>
 </head>
 <body>
@@ -2964,6 +2978,7 @@ window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();window.v152
 window.addEventListener('appinstalled',()=>{window.v152InstallPrompt=null;v152SyncInstallBtn()});
 if('serviceWorker' in navigator&&location.protocol!=='file:')window.addEventListener('load',()=>navigator.serviceWorker.register('./service-worker.js').catch(()=>{}));
 const V145_NEWS=[
+ ['v469','تبويب «متابعة المعلمين» للمنسق العام: تنبيه بلا إسناد، وحالات الجداول الفارغة والناقصة وروابطها.'],
  ['v468','بطاقات مراحل المنسق العام بحدود واضحة وخلفيات لونية خفيفة وفاصل عند فتح البطاقة.'],
  ['v467','تفاصيل مراحل المنسق العام: المدارس التي تحتاج تدخّلًا مع أسبابها وروابطها، وتفصيل الحصص غير المسندة في الثانوي حسب المادة.'],
  ['v466','رئيسية المنسق العام: طلبات الإجازة ثم المدارس التي تحتاج استكمالًا والعجز بعد الأجر وحالة جداول المعلمين، مع تفاصيل المراحل في قسم واحد.'],
@@ -8737,8 +8752,15 @@ function v101ConfirmDiscard(){return !(v101Dirty||v101SettingsDirty)||confirm('�
 function v101SetDraft(){v101Draft=new Map((v101Timetable?.slots||[]).filter(s=>s.teacher_id===v101TeacherId).map(s=>[v101SlotKey(s.weekday,s.period_number),s.assignment_id]));v101Dirty=false}
 async function teacherTimetablePage({signal}={}){
  if(!activeTerm?.id)return '<div class="notice">لا توجد فترة دراسية نشطة.</div>';
- const context=v101Context();
+ const context=v101Context(),target=v458TimetableTarget?.context===context?v458TimetableTarget:null;
+ v458TimetableTarget=null;
  const schoolsResult=await abortable(sb.from('schools').select('id,name,stage').order('name'),signal);if(schoolsResult.error)throw schoolsResult.error;
+ if(signal?.aborted||context!==v101Context())return '';
+ if(target){
+  const school=schoolsResult.data?.find(s=>s.id===target.school);
+  if(!school)return '<div class="notice warn">المدرسة غير متاحة في نطاقك الحالي.</div>';
+  v166Stage=school.stage;v101SchoolId=target.school;v101TeacherId=target.teacher;
+ }
  const allSchools=schoolsResult.data||[];if(!allSchools.length)return '<div class="notice">لا توجد مدارس متاحة لعرض الجدول.</div>';
  const v166Stages=[...new Set(allSchools.map(s=>s.stage).filter(Boolean))];if(v166Stage&&!v166Stages.includes(v166Stage))v166Stage='';
  const schools=v166Stage?allSchools.filter(s=>s.stage===v166Stage):allSchools;
@@ -8747,6 +8769,9 @@ async function teacherTimetablePage({signal}={}){
  const {data,error}=await abortable(sb.rpc('get_teacher_timetable_workspace',{p_school_id:selectedSchool,p_term_id:activeTerm.id}),signal);if(error)throw error;
  if(context!==v101Context()||signal?.aborted||(currentPage!=='teacherTimetable'&&!window.__v161EmbedTimetable))return '';
  if(!data.can_manage)data.teachers=(data.teachers||[]).filter(t=>String(t.profile_id||'')===String(profile.id));
+ if(target&&!data.teachers?.some(t=>String(t.teacher_id||t.id)===target.teacher)){
+  return '<div class="notice warn">جدول هذا المعلم غير متاح في المدرسة المختارة.</div>';
+ }
  v101Timetable={...data,school:schools.find(s=>s.id===selectedSchool),context};
  const v166CanAll=!!data.can_manage&&(data.teachers||[]).length>1;
  if(v101TeacherId==='__all__'&&!v166CanAll)v101TeacherId='';
@@ -12087,7 +12112,8 @@ function renderList(){
  if(pg)pg.innerHTML=`معتمد <b>${ok}</b> من <b>${list.length}</b> مدرسة <span class="bar"><span style="width:${list.length?Math.round(ok*100/list.length):0}%"></span></span>`;
 }
 
-async function openSchool(id,tab='data'){
+async function openSchool(id,tab='data',teacher=''){
+ S.focusT=teacher;
  S.sel=id;S.edit=false;S.tab=tab;S.assigned=new Set();S.roster=null;S.tEdit=null;S.tAssign=null;renderList();renderMain();
  loadTeachers(id);
  const ids=classesOf(id).map(c=>c.id);
@@ -12110,7 +12136,14 @@ async function loadTeachers(id){
  }catch(e){if(S.sel===id)S.roster={error:errText(e)}}
  if(S.sel===id){renderMain();renderList();qFocusTeacher()}
 }
-function qFocusTeacher(){if(!S.focusT||S.tab!=='tch')return;const el=$('tc-'+S.focusT);if(el){el.scrollIntoView({block:'center'});S.focusT=null}}
+function qFocusTeacher(){
+ if(!S.focusT||S.tab!=='tch')return;
+ const id=S.focusT,card=$('tc-'+id);
+ if(!card)return;
+ S.focusT=null;
+ card.querySelector('[data-tassign]')?.click();
+ $('tc-'+id)?.scrollIntoView({block:'center'});
+}
 function cng(c){const n=cn(c?.class_name);return c?.grade&&n===String(c.class_name??'')?`${c.grade} — ${n}`:n}
 function cn(n){const m=String(n??'').trim().match(/^(\d+)\s*\/\s*(\d+)$/);return m?`الصف ${m[1]} · فصل ${m[2]}`:String(n??'')}
 function gradeGroups(s){const cls=classesOf(s.id);return (GRADES[s.stage]||[]).map(([g,num])=>{const list=cls.filter(c=>norm(c.grade)===norm(g)).sort((a,b)=>a.class_name.localeCompare(b.class_name,'ar',{numeric:true}));return {g,num,list}})}
@@ -12806,7 +12839,7 @@ async function start(target){
   const school=target&&S.schools.find(s=>String(s.id)===target.id);
   if(school){S.stage=school.stage;S.grp=grpOf(school.stage);S.sel=school.id;S.tab=target.tab}
   renderShell();
-  if(S.sel&&S.schools.some(x=>x.id===S.sel)){openSchool(S.sel,S.tab)}
+  if(S.sel&&S.schools.some(x=>x.id===S.sel)){openSchool(S.sel,S.tab,school?target.teacher:undefined)}
  }catch(e){
   const box=BOX();if(!box||my!==seq)return;
   box.innerHTML=`<div class="loading"><div class="notice n-bad">${esc(errText(e))}</div><br><button class="btn" id="seRetry">إعادة المحاولة</button></div>`;
@@ -18022,35 +18055,93 @@ function v458HomeTask(title,count,body){
  return `<details class="card v458-task" data-status="${count?'urgent':'clear'}"><summary><b>${title}</b><span class="badge ${count?'warn':'ok'}">${count||'لا توجد حالات'}</span></summary>${body||'<p class="muted">لا توجد حالات تحتاج متابعة.</p>'}</details>`;
 }
 let v458SchoolEntryTarget=null;
-function v458GoSchool(id,tab){
+function v458GoSchool(id,tab,teacher=''){
  if(profile?.role!=='stage_coordinator'||!V458.general)return;
- v458SchoolEntryTarget={id,tab,profileId:profile.id};
+ v458SchoolEntryTarget={id,tab,teacher,profileId:profile.id};
  go('schoolEntry');
 }
-function v458GoTimetable(stage,school,status){
- Object.assign(v306F,{stage,school,status,sup:'',apply:false});
- go('timetableProgress');
+function v458ShowHomePane(pane,section=''){
+ const home=document.querySelector('.v458-home');
+ if(!home)return;
+ const teachers=pane==='teachers';
+ home.dataset.pane=pane;
+ home.querySelector('#v458HomeMain').hidden=teachers;
+ home.querySelector('#v458TeacherPane').hidden=!teachers;
+ for(const button of home.querySelectorAll('[data-v458-pane]')){
+  button.setAttribute('aria-pressed',String(button.dataset.v458Pane===pane));
+ }
+ if(section){
+  const heading=document.getElementById('v458-follow-'+section);
+  if(heading){heading.focus({preventScroll:true});heading.scrollIntoView({block:'center'})}
+ }
 }
-function v458TimetableItems(rows){
- const actions=(row,status,label)=>`<button type="button" class="btn secondary" data-stage="${esc(row.stage)}" data-school="${esc(row.id)}" data-status="${esc(status)}" onclick="v458GoTimetable(this.dataset.stage,this.dataset.school,this.dataset.status)">${label}</button>`;
- return [V306_ST[2],V306_ST[1]].map(status=>{
-  const pending=rows.filter(r=>v306Status(r)===status),groups=v306Schools(pending)
-   .sort((a,b)=>b.list.length-a.list.length||String(a.name).localeCompare(String(b.name),'ar'));
-  const schools=groups.map(g=>({id:g.id,name:g.name,stage:g.list[0].stage,detail:g.list.length+' سجل معلم'}));
-  return v458HomeTask(status===V306_ST[2]?'جداول لم تبدأ':'جداول ناقصة',pending.length?pending.length+' سجل معلم':'',
-   v458HomeList(schools,s=>actions(s,status,'فتح الجداول'))+
-   (pending.length?`<div class="v458-home-actions">${actions({stage:'',id:''},status,'عرض كل الجداول')}</div>`:''));
- }).join('');
+function v458GoTeacherTimetable(button){
+ if(profile?.role!=='stage_coordinator'||!V458.general||v101Saving||!v101ConfirmDiscard())return;
+ const {stage,school,teacher}=button.dataset;
+ v458TimetableTarget={stage,school,teacher,context:v101Context()};
+ go('teacherTimetable');
+}
+let v458TimetableTarget=null;
+function v458FollowupGroups(rows){
+ // المصدر يعيد سجلًا لكل معلم ومدرسة. المعلم ذو إسناد في أي مدرسة لا يُصنّف بلا إسناد.
+ const assigned=new Set(rows.filter(r=>Number(r.required)>0).map(r=>r.teacher_id));
+ const noAssignment=new Map(),missing=new Map(),partial=new Map();
+ for(const r of rows){
+  if(!r.teacher_id||!r.school_id)continue;
+  const status=v306Status(r);
+  if(status===V306_ST[3]&&!assigned.has(r.teacher_id)){
+   if(r.is_home_school!==false&&!noAssignment.has(r.teacher_id))noAssignment.set(r.teacher_id,r);
+  }else if(status===V306_ST[2]||status===V306_ST[1]){
+   const group=status===V306_ST[2]?missing:partial;
+   group.set(r.teacher_id+'|'+r.school_id,r);
+  }
+ }
+ const ordered=group=>[...group.values()].sort((a,b)=>String(a.stage).localeCompare(String(b.stage),'ar')||
+  String(a.school_name).localeCompare(String(b.school_name),'ar')||String(a.teacher_name).localeCompare(String(b.teacher_name),'ar'));
+ return {assignment:ordered(noAssignment),missing:ordered(missing),partial:ordered(partial)};
+}
+function v458FollowupSection(key,title,rows){
+ const assignment=key==='assignment';
+ const item=r=>{
+  const pending=Number(r.required)-Number(r.entered);
+  const reason=assignment?'بلا حصص مسندة':key==='missing'?r.required+' حصة مسندة · الجدول فارغ':'باقي '+pending+' من '+r.required+' حصة';
+  const attrs=`data-school="${esc(r.school_id)}" data-teacher="${esc(r.teacher_id)}" data-stage="${esc(r.stage)}"`;
+  const action=assignment?"v458GoSchool(this.dataset.school,'tch',this.dataset.teacher)":'v458GoTeacherTimetable(this)';
+  return `<li class="v458-follow-row"><div><b>${esc(r.teacher_name)}</b><small>${esc(r.school_name)} · ${esc(r.stage)}</small></div>
+   <span class="badge ${assignment?'danger':'warn'}">${esc(reason)}</span>
+   <button type="button" class="btn secondary" ${attrs} onclick="${action}">${assignment?'فتح الإسناد':key==='missing'?'فتح الجدول':'استكمال الجدول'}</button></li>`;
+ };
+ return `<section class="card v458-follow-group" aria-labelledby="v458-follow-${key}">
+  <h3 id="v458-follow-${key}" tabindex="-1">${title} <span class="badge ${rows.length?(assignment?'danger':'warn'):'ok'}">${rows.length||'لا توجد حالات'}</span></h3>
+  ${rows.length?`<ul>${rows.slice(0,5).map(item).join('')}</ul>`:''}
+  ${rows.length>5?`<details><summary>عرض الكل (${rows.length})</summary><ul>${rows.slice(5).map(item).join('')}</ul></details>`:''}
+ </section>`;
+}
+function v458TimetableItems(home,rows){
+ const groups=v458FollowupGroups(rows);
+ const badge=home.querySelector('#v458NoAssignmentBadge');
+ badge.hidden=!groups.assignment.length;
+ badge.textContent=groups.assignment.length?groups.assignment.length+' بلا إسناد':'';
+ const shortcuts=[['missing','جداول لم تبدأ'],['partial','جداول ناقصة']];
+ home.querySelector('#v458HomeTimetables').innerHTML=shortcuts.map(([key,label])=>`<button type="button" class="card v458-follow-shortcut" onclick="v458ShowHomePane('teachers','${key}')"><b>${label}</b><span class="badge ${groups[key].length?'warn':'ok'}">${groups[key].length?groups[key].length+' سجل معلم':'لا توجد حالات'}</span></button>`).join('');
+ home.querySelector('#v458TeacherPane').innerHTML=[
+  v458FollowupSection('assignment','معلمون بلا حصص مسندة',groups.assignment),
+  v458FollowupSection('missing','معلمون لهم حصص بلا جدول',groups.missing),
+  v458FollowupSection('partial','جداول ناقصة',groups.partial)
+ ].join('');
 }
 async function v458LoadHomeTimetables(target){
- const pid=profile?.id,term=activeTerm?.id;
- const current=()=>target.isConnected&&currentPage==='dashboard'&&profile?.id===pid&&profile?.role==='stage_coordinator'&&activeTerm?.id===term&&V458.general;
+ const home=target.closest('.v458-home'),context=v101Context();
+ const current=()=>home?.isConnected&&currentPage==='dashboard'&&context===v101Context()&&profile?.role==='stage_coordinator'&&V458.general;
  if(!current())return;
  try{
   const rows=await v306Load(true);
-  if(current())target.innerHTML=v458TimetableItems(rows);
+  if(current())v458TimetableItems(home,rows);
  }catch(_){
-  if(current())target.innerHTML='<div class="notice warn">تعذّر تحميل بيانات الجداول. <button type="button" class="btn secondary" onclick="v458LoadHomeTimetables(this.parentElement.parentElement)">إعادة المحاولة</button></div>';
+  if(!current())return;
+  const message='<div class="notice warn">تعذّر تحميل متابعة المعلمين. <button type="button" class="btn secondary" onclick="loadPage(true)">إعادة المحاولة</button></div>';
+  target.innerHTML=message;
+  home.querySelector('#v458TeacherPane').innerHTML=message;
  }
 }
 function v458StageDetails({stage,rows,totals},missing,shortage){
@@ -18155,8 +18246,15 @@ async function v458Home(force){
   '<div class="notice warn">تعذّر تحميل العجز بعد الأجر. استخدم «تحديث» لإعادة المحاولة.</div>';
  const stages=models.map(m=>v458StageDetails(m,missing.filter(r=>r.stage===m.stage),
   shortage?.filter(r=>r.stage===m.stage)??null)).join('');
- return `<div class="v458-home">
+ const teachers=document.querySelector('.v458-home')?.dataset.pane==='teachers';
+ return `<div class="v458-home" data-pane="${teachers?'teachers':'home'}">
   <div class="page-head"><h2>الرئيسية</h2><div class="actions"><button type="button" class="btn secondary" onclick="loadPage(true)">تحديث</button></div></div>
+  <div class="v458-home-panes" role="group" aria-label="رئيسية المنسق العام">
+   <button class="btn secondary" type="button" data-v458-pane="home" aria-pressed="${!teachers}" onclick="v458ShowHomePane('home')">الرئيسية</button>
+   <button class="btn secondary" type="button" data-v458-pane="teachers" aria-pressed="${teachers}" onclick="v458ShowHomePane('teachers')">متابعة المعلمين <span id="v458NoAssignmentBadge" class="badge danger" hidden></span></button>
+  </div>
+  <div id="v458TeacherPane" ${teachers?'':'hidden'}><p class="muted">جارٍ تحميل متابعة المعلمين…</p></div>
+  <div id="v458HomeMain" ${teachers?'hidden':''}>
   <div class="v458-leave-slot"></div>
   <section aria-labelledby="v458Urgent"><h3 id="v458Urgent">يحتاج تدخّل الآن</h3>
    ${missingTask}${shortageTask}
@@ -18165,6 +18263,7 @@ async function v458Home(force){
   <section class="card v458-home-stages"><h3>المراحل</h3>${stages}
   ${V458.canMove?`<div class="v458-home-actions"><button type="button" class="btn secondary" onclick="v356MoveOpen('ابتدائي')">نقل مدارس بين موجهين</button></div>`:''}</section>
   <div class="v458-completion-slot"></div>
+  </div>
  </div>`;
 }
 const __v458BaseDashboard=dashboardPage;
