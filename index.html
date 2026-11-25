@@ -1,4 +1,5 @@
 <!doctype html>
+<!-- v467: تفاصيل مراحل المنسق العام: المدارس التي تحتاج تدخّلًا مع أسبابها وروابطها، وتفصيل الحصص غير المسندة في الثانوي حسب المادة. -->
 <!-- v466: رئيسية المنسق العام: طلبات الإجازة ثم المدارس التي تحتاج استكمالًا والعجز بعد الأجر وحالة جداول المعلمين، مع تفاصيل المراحل في قسم واحد. -->
 <!-- v465: سطر «تصميم وتطوير: أ/ محمود عبدالمفدي محمد أبوالنجا» أسفل الشعار في شاشات الدخول واختيار الدور. واجهة فقط. -->
 <!-- v464: الشعار الجديد (توجيه العلوم — إدارة قوص التعليمية) في شاشتي الدخول واختيار الدور وفي ترويسة كل التقارير A4 وصورة المشاركة؛ الشعار الصغير في القائمة الجانبية بلا تغيير. واجهة فقط. -->
@@ -8,7 +9,6 @@
 <!-- v458: دور «المنسق العام» — منسق مرحلة بإسنادات المراحل الأربع يعيّنه مدير النظام من مركز التحكم (زر «المنسق العام…» في ملف المستخدم)؛ رئيسية بمقارنة المراحل وبطاقة لكل مرحلة، وقدرة «نقل مدارس الابتدائي والإعدادي بين الموجهين» مغلقة افتراضيًا. بلا اعتماد ولا حسابات ولا مركز تحكم. قاعدة البيانات v458. -->
 <!-- v457: الرئيسية تُفتح فورًا من آخر نسخة محفوظة في الهاتف (IndexedDB، 24 ساعة، لكل مستخدم ودور وفصل) ثم تتحدث في الخلفية بشارة «جارٍ تحديث البيانات…»؛ أي حفظ أو خروج يمسح النسخة المحفوظة. -->
 <!-- v454: قائمة اختيار المدارس في تقرير العجز قبل الأجر تعرض المدارس ذات العجز الموجب فقط. -->
-<!-- v453: إصلاح قائمة اختيار المدارس في تقرير العجز قبل الأجر؛ تطبيق وإلغاء على الهاتف واستعادة المرحلة والمدارس بعد تحديث الصفحة. -->
 <html lang="ar" dir="rtl">
 <head>
 <!-- إعداد: أ/ محمود عبدالمفدي محمد أبوالنجا | الصفة: معلم -->
@@ -16,7 +16,7 @@
 <script>/* v226: العنوان الموحد — انظر التعليق أعلى الملف */(function(){try{if(/\.github\.io$/.test(location.hostname)&&/^\/science-guidance\/?(index\.html)?$/.test(location.pathname)&&!/[?&]stay\b/.test(location.search))location.replace('https://teachers-data-portal.vercel.app/app/'+location.hash)}catch(e){}})();</script>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#152c43">
-<title>نظام توجيه العلوم — v466</title>
+<title>نظام توجيه العلوم — v467</title>
 <link rel="manifest" href="./manifest.webmanifest">
 <link rel="icon" type="image/png" sizes="192x192" href="./app-icon-192.png">
 <link rel="apple-touch-icon" href="./app-icon-192.png">
@@ -2542,6 +2542,16 @@ span.v415-L{border-radius:10px;padding:2px 8px}
 .v458-home .btn{min-height:40px;white-space:normal}
 .v458-completion-slot:not(:empty){margin-top:12px}
 @media(max-width:760px){.v458-task li>.btn{flex-basis:100%}.v458-task li>span:first-child{flex-basis:70%}}
+/* المدارس التي تحتاج إجراءً في مراحل المنسق العام */
+.v458-stage-breakdown{display:block;flex-basis:100%;color:var(--muted);padding-inline-start:16px}
+.v458-stage-schools{padding:0 12px}
+.v458-stage-schools li{display:block;padding:10px 0}
+.v458-stage-school-name{display:block;overflow-wrap:break-word}
+.v458-stage-reasons,.v458-stage-buttons{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
+.v458-stage-reasons .badge{white-space:normal}
+.v458-stage-stats{border-top:1px solid var(--line)}
+.v458-stage-stats>summary{color:var(--muted)}
+@media(max-width:760px){.v458-stage-buttons>.btn{flex:1 1 120px}}
 </style>
 </head>
 <body>
@@ -2932,6 +2942,7 @@ window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();window.v152
 window.addEventListener('appinstalled',()=>{window.v152InstallPrompt=null;v152SyncInstallBtn()});
 if('serviceWorker' in navigator&&location.protocol!=='file:')window.addEventListener('load',()=>navigator.serviceWorker.register('./service-worker.js').catch(()=>{}));
 const V145_NEWS=[
+ ['v467','تفاصيل مراحل المنسق العام: المدارس التي تحتاج تدخّلًا مع أسبابها وروابطها، وتفصيل الحصص غير المسندة في الثانوي حسب المادة.'],
  ['v466','رئيسية المنسق العام: طلبات الإجازة ثم المدارس التي تحتاج استكمالًا والعجز بعد الأجر وحالة جداول المعلمين، مع تفاصيل المراحل في قسم واحد.'],
  ['v465','اسم صانع البرنامج أسفل الشعار في شاشة الدخول.'],
  ['v464','الشعار الجديد لتوجيه العلوم في شاشة الدخول والقائمة الجانبية وترويسة كل التقارير.'],
@@ -18019,6 +18030,81 @@ async function v458LoadHomeTimetables(target){
   if(current())target.innerHTML='<div class="notice warn">تعذّر تحميل بيانات الجداول. <button type="button" class="btn secondary" onclick="v458LoadHomeTimetables(this.parentElement.parentElement)">إعادة المحاولة</button></div>';
  }
 }
+function v458StageDetails({stage,rows,totals},missing,shortage){
+ const schools=new Map();
+ for(const r of missing)schools.set(String(r.id),{...r,missing:r.detail});
+ for(const r of shortage||[]){
+  const id=String(r.id);
+  schools.set(id,{...schools.get(id),...r});
+ }
+ const list=[...schools.values()].sort((a,b)=>(b.periods||0)-(a.periods||0)||a.name.localeCompare(b.name,'ar'));
+ const count=list.length,secondary=stage.startsWith('ثانوي');
+ const tag=count?`مدارس تحتاج تدخّلًا (${count})`:shortage?'لا توجد حالات':'العجز غير متاح';
+ const breakdown=[missing.length?`${missing.length} بحاجة لاستكمال بيانات الفصول`:'',shortage?.length?`${shortage.length} بها عجز بعد الأجر`:''].filter(Boolean).join(' · ');
+ const item=r=>`<li data-stage-school="${esc(r.id)}">
+  <b class="v458-stage-school-name">${esc(r.name)}</b>
+  <div class="v458-stage-reasons">
+   ${r.missing?`<span class="badge warn">${esc(r.missing)}</span>`:''}
+   ${r.periods?`<span class="badge danger">عجز بعد الأجر: ${r.periods} حصة</span>`:''}
+  </div>
+  ${secondary&&r.periods?'<small data-subject-gap>جارٍ تحميل الإسناد حسب المادة…</small>':''}
+  <div class="v458-stage-buttons">
+   ${r.missing?v458HomeSchool(r,'إدخال البيانات',r.tab):''}
+   ${r.periods?v458HomeSchool(r,'فتح الإسناد','tch'):''}
+  </div>
+ </li>`;
+ const limit=5;
+ const body=count?`<ul class="v458-stage-schools">${list.slice(0,limit).map(item).join('')}</ul>
+  ${count>limit?`<details class="v458-all"><summary>عرض الكل (${count})</summary><ul class="v458-stage-schools">${list.slice(limit).map(item).join('')}</ul></details>`:''}`:
+  shortage?'<p class="muted">لا توجد مدارس تحتاج تدخّلًا.</p>':'<p class="muted">لم تظهر مدارس تحتاج استكمالًا.</p>';
+ const numbers=[['مدارس',totals.schools],['مطلوب',totals.required],['فعلي (ثابت ومنتدب)',totals.actual],
+  ['أجر مسند',totals.paid],['العجز بعد الأجر',shortage?shortage.reduce((n,r)=>n+r.periods,0):'—'],
+  ['معتمدة',rows.filter(r=>r.status==='approved').length]];
+ return `<details class="v458-task v458-stage"${secondary&&shortage?.length?' ontoggle="v458StageSubjectGaps(this)"':''}>
+  <summary><b>${esc(stage)}</b><span class="badge ${count||!shortage?'warn':'ok'}">${tag}</span>
+   ${breakdown?`<small class="v458-stage-breakdown">منها ${breakdown}</small>`:''}</summary>
+  ${body}
+  ${shortage?'':'<p class="muted">تعذّر تحميل العجز بعد الأجر لهذه المرحلة.</p>'}
+  <details class="v458-stage-stats"><summary>إحصاءات المرحلة</summary><dl>
+   ${numbers.map(([label,value])=>`<div><dt>${label}</dt><dd>${value}</dd></div>`).join('')}
+  </dl></details>
+ </details>`;
+}
+// تفاصيل الإسناد تخص كل مادة. قد يختلف مجموعها عن صافي العجز على مستوى المدرسة.
+async function v458StageSubjectGaps(section){
+ if(!section.open||section.dataset.subjectLoaded)return;
+ section.dataset.subjectLoaded='1';
+ const targets=new Map([...section.querySelectorAll('[data-subject-gap]')].map(el=>[el.closest('[data-stage-school]').dataset.stageSchool,el]));
+ const term=activeTerm?.id;
+ try{
+  const links=await v161AggregateLinks();
+  const schoolIds=[...targets.keys(),...[...links].filter(([,parent])=>targets.has(parent)).map(([id])=>id)];
+  const classes=await v103ReadAll(()=>sb.from('school_classes')
+   .select('id,school_id,class_subject_requirements(weekly_periods,subject_id,curriculum_subjects(subject_name)),teaching_assignments(weekly_periods,subject_id)')
+   .eq('term_id',term).in('school_id',schoolIds).order('id'));
+  const gaps=new Map();
+  for(const c of classes){
+   const rawId=String(c.school_id),id=links.get(rawId)||rawId;
+   const totals=gaps.get(id)||new Map();
+   gaps.set(id,totals);
+   const assigned=new Map();
+   for(const a of c.teaching_assignments||[])assigned.set(a.subject_id,(assigned.get(a.subject_id)||0)+reportNumber(a.weekly_periods));
+   for(const r of c.class_subject_requirements||[]){
+    const name=r.curriculum_subjects?.subject_name, gap=reportNumber(r.weekly_periods)-(assigned.get(r.subject_id)||0);
+    if(name&&r.subject_id&&gap>0)totals.set(name,(totals.get(name)||0)+gap);
+   }
+  }
+  if(!section.isConnected||term!==activeTerm?.id)return;
+  for(const [id,el] of targets){
+   const details=[...(gaps.get(id)||[])].sort((a,b)=>b[1]-a[1]).map(([name,gap])=>`${name}: ${gap} حصة`).join(' · ');
+   el.textContent=details?'غير مسند حسب المادة — '+details:'تفصيل المواد غير متاح في بيانات الإسناد.';
+  }
+ }catch(_){
+  if(!section.isConnected)return;
+  for(const el of targets.values())el.textContent='تعذّر تحميل تفصيل المواد. أغلق المرحلة وافتحها لإعادة المحاولة.';
+  section.removeAttribute('data-subject-loaded');
+ }
+}
 async function v458Home(force){
  const first=await v155LoadModel(force),keep=v155StageSel,models=[];
  try{
@@ -18027,21 +18113,25 @@ async function v458Home(force){
    models.push(stage===first.stage?first:await v155LoadModel(false));
   }
  }finally{v155StageSel=keep}
- const missing=models.flatMap(m=>m.rows.filter(r=>!r.classes||!r.ready)
-  .map(r=>({...r,stage:m.stage,detail:r.classes?'الحصص المقررة ناقصة':'بلا فصول'})));
+ const {classes=[]}=await v91LoadReportsDataset(),classCounts=new Map();
+ for(const c of classes)classCounts.set(String(c.school_id),(classCounts.get(String(c.school_id))||0)+1);
+ const missing=models.flatMap(m=>m.rows.flatMap(r=>{
+  const detailed=classCounts.get(String(r.id))||0;
+  const detail=!detailed?'بلا فصول مدخلة':detailed<r.classes?'الفصول المدخلة ناقصة':!r.ready?'الحصص المقررة ناقصة':'';
+  return detail?[{...r,stage:m.stage,detail,tab:detailed?'cls':'data'}]:[];
+ }));
  const ctx={period:reportPeriod(),issuer:reportIssuer()};
  // نفس صفوف تقرير العجز، بما فيها استبعاد المدارس التي لا يمكن حساب عجزها.
  const shortage=await ReportAdapters.shortageAfterPaid.load(ctx).then(report=>report.rows.filter(r=>!r._group&&r._ready&&r.unfilled>0)
   .map(r=>({id:r._schoolIds[0],name:r.school,stage:r.stage,periods:r.unfilled,detail:r.unfilled+' حصة'})).sort((a,b)=>b.periods-a.periods),()=>null);
- const pending=new Set(missing.map(r=>r.id));
- shortage?.forEach(r=>pending.add(r.id));
  const missingTask=v458HomeTask('مدارس بلا فصول أو بحصص مقررة ناقصة',missing.length?missing.length+' مدرسة':'',
-  v458HomeList(missing,r=>v458HomeSchool(r,'إدخال البيانات',r.classes?'cls':'data')));
+  v458HomeList(missing,r=>v458HomeSchool(r,'إدخال البيانات',r.tab)));
  const reportButton='<div class="v458-home-actions"><button type="button" class="btn secondary" onclick="openReportById(\'shortageAfterPaid\',{filterState:{active:false}})">تقرير عجز المدارس بعد الأجر</button></div>';
  const shortageTask=shortage?v458HomeTask('العجز بعد الأجر',shortage.length?shortage.reduce((n,r)=>n+r.periods,0)+' حصة · '+shortage.length+' مدرسة':'',
   v458HomeList(shortage,r=>v458HomeSchool(r,'فتح الإسناد','tch'))+(shortage.length?reportButton:'')):
   '<div class="notice warn">تعذّر تحميل العجز بعد الأجر. استخدم «تحديث» لإعادة المحاولة.</div>';
- const stages=models.map(({stage,rows,totals})=>`<details class="v458-task"><summary><b>${esc(stage)}</b><span class="badge ${rows.some(r=>pending.has(r.id))?'warn':'info'}">${shortage?rows.filter(r=>pending.has(r.id)).length+' تحتاج استكمالًا أو تغطية':'العجز غير متاح'}</span></summary><dl><div><dt>مدارس</dt><dd>${totals.schools}</dd></div><div><dt>مطلوب</dt><dd>${totals.required}</dd></div><div><dt>فعلي</dt><dd>${totals.actual}</dd></div><div><dt>العجز بعد الأجر</dt><dd>${shortage?shortage.filter(r=>r.stage===stage).reduce((n,r)=>n+r.periods,0):'—'}</dd></div><div><dt>معتمدة</dt><dd>${rows.filter(r=>r.status==='approved').length}</dd></div></dl></details>`).join('');
+ const stages=models.map(m=>v458StageDetails(m,missing.filter(r=>r.stage===m.stage),
+  shortage?.filter(r=>r.stage===m.stage)??null)).join('');
  return `<div class="v458-home">
   <div class="page-head"><h2>الرئيسية</h2><div class="actions"><button type="button" class="btn secondary" onclick="loadPage(true)">تحديث</button></div></div>
   <div class="v458-leave-slot"></div>
