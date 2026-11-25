@@ -1,4 +1,5 @@
 <!doctype html>
+<!-- v468: بطاقات مراحل المنسق العام بحدود واضحة وخلفيات لونية خفيفة وفاصل عند فتح البطاقة. -->
 <!-- v467: تفاصيل مراحل المنسق العام: المدارس التي تحتاج تدخّلًا مع أسبابها وروابطها، وتفصيل الحصص غير المسندة في الثانوي حسب المادة. -->
 <!-- v466: رئيسية المنسق العام: طلبات الإجازة ثم المدارس التي تحتاج استكمالًا والعجز بعد الأجر وحالة جداول المعلمين، مع تفاصيل المراحل في قسم واحد. -->
 <!-- v465: سطر «تصميم وتطوير: أ/ محمود عبدالمفدي محمد أبوالنجا» أسفل الشعار في شاشات الدخول واختيار الدور. واجهة فقط. -->
@@ -8,7 +9,6 @@
 <!-- v459: بطاقة المعلم على الهاتف — زرا «إضافة انتداب» و«بيان الحالة» في سطر مستقل تحت الاسم بدل أن يضغطا الاسم والشارات (كانت الكلمات تتكسر حرفًا حرفًا على 360px). CSS فقط. -->
 <!-- v458: دور «المنسق العام» — منسق مرحلة بإسنادات المراحل الأربع يعيّنه مدير النظام من مركز التحكم (زر «المنسق العام…» في ملف المستخدم)؛ رئيسية بمقارنة المراحل وبطاقة لكل مرحلة، وقدرة «نقل مدارس الابتدائي والإعدادي بين الموجهين» مغلقة افتراضيًا. بلا اعتماد ولا حسابات ولا مركز تحكم. قاعدة البيانات v458. -->
 <!-- v457: الرئيسية تُفتح فورًا من آخر نسخة محفوظة في الهاتف (IndexedDB، 24 ساعة، لكل مستخدم ودور وفصل) ثم تتحدث في الخلفية بشارة «جارٍ تحديث البيانات…»؛ أي حفظ أو خروج يمسح النسخة المحفوظة. -->
-<!-- v454: قائمة اختيار المدارس في تقرير العجز قبل الأجر تعرض المدارس ذات العجز الموجب فقط. -->
 <html lang="ar" dir="rtl">
 <head>
 <!-- إعداد: أ/ محمود عبدالمفدي محمد أبوالنجا | الصفة: معلم -->
@@ -16,7 +16,7 @@
 <script>/* v226: العنوان الموحد — انظر التعليق أعلى الملف */(function(){try{if(/\.github\.io$/.test(location.hostname)&&/^\/science-guidance\/?(index\.html)?$/.test(location.pathname)&&!/[?&]stay\b/.test(location.search))location.replace('https://teachers-data-portal.vercel.app/app/'+location.hash)}catch(e){}})();</script>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#152c43">
-<title>نظام توجيه العلوم — v467</title>
+<title>نظام توجيه العلوم — v468</title>
 <link rel="manifest" href="./manifest.webmanifest">
 <link rel="icon" type="image/png" sizes="192x192" href="./app-icon-192.png">
 <link rel="apple-touch-icon" href="./app-icon-192.png">
@@ -2552,6 +2552,28 @@ span.v415-L{border-radius:10px;padding:2px 8px}
 .v458-stage-stats{border-top:1px solid var(--line)}
 .v458-stage-stats>summary{color:var(--muted)}
 @media(max-width:760px){.v458-stage-buttons>.btn{flex:1 1 120px}}
+/* بطاقات المراحل في رئيسية المنسق العام. الخلفية تفصل البطاقة، والشارة تدل على الحالة. */
+.v458-home-stages>.v458-stage{
+ --stage-tint:#f1f6fc;
+ margin:0 0 10px;
+ border:1px solid #c9d7e6;
+ border-radius:12px;
+ background:var(--stage-tint);
+}
+.v458-home-stages>.v458-stage:nth-of-type(2){--stage-tint:#f1f7f8}
+.v458-home-stages>.v458-stage:nth-of-type(3){--stage-tint:#f5f3fa}
+.v458-home-stages>.v458-stage:nth-of-type(4){--stage-tint:#f3f6fa}
+.v458-home-stages>.v458-stage>summary{padding:10px 12px;gap:6px 8px}
+.v458-home-stages>.v458-stage>summary>b{min-width:0}
+.v458-home-stages>.v458-stage>summary>.badge{white-space:normal}
+.v458-home-stages>.v458-stage>summary>.v458-stage-breakdown{padding-inline-start:18px}
+.v458-home-stages>.v458-stage>summary:focus-visible{outline:2px solid var(--primary);outline-offset:-3px;border-radius:11px}
+.v458-home-stages>.v458-stage[open]>summary{border-bottom:1px solid #c9d7e6}
+.v458-home-stages>.v458-stage[open]>ul:first-of-type li:first-child{border-top:0}
+.v458-home-stages>.v458-home-actions{margin-top:14px;padding:12px 0 0;border-top:1px solid var(--line)}
+@media(max-width:360px){
+ .v458-home-stages>.v458-stage>summary{padding-inline:8px;column-gap:5px}
+}
 </style>
 </head>
 <body>
@@ -2942,6 +2964,7 @@ window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();window.v152
 window.addEventListener('appinstalled',()=>{window.v152InstallPrompt=null;v152SyncInstallBtn()});
 if('serviceWorker' in navigator&&location.protocol!=='file:')window.addEventListener('load',()=>navigator.serviceWorker.register('./service-worker.js').catch(()=>{}));
 const V145_NEWS=[
+ ['v468','بطاقات مراحل المنسق العام بحدود واضحة وخلفيات لونية خفيفة وفاصل عند فتح البطاقة.'],
  ['v467','تفاصيل مراحل المنسق العام: المدارس التي تحتاج تدخّلًا مع أسبابها وروابطها، وتفصيل الحصص غير المسندة في الثانوي حسب المادة.'],
  ['v466','رئيسية المنسق العام: طلبات الإجازة ثم المدارس التي تحتاج استكمالًا والعجز بعد الأجر وحالة جداول المعلمين، مع تفاصيل المراحل في قسم واحد.'],
  ['v465','اسم صانع البرنامج أسفل الشعار في شاشة الدخول.'],
