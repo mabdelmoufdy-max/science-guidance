@@ -1,4 +1,5 @@
 <!doctype html>
+<!-- v470: بطاقات مراحل المنسق العام: لون لكل مرحلة وزر «عرض/إخفاء التفاصيل» وإحصاءات في مربعات (تحل محل تنسيق v468). -->
 <!-- v469: تبويب «متابعة المعلمين» للمنسق العام: تنبيه بلا إسناد، وحالات الجداول الفارغة والناقصة وروابطها. -->
 <!-- v468: بطاقات مراحل المنسق العام بحدود واضحة وخلفيات لونية خفيفة وفاصل عند فتح البطاقة. -->
 <!-- v467: تفاصيل مراحل المنسق العام: المدارس التي تحتاج تدخّلًا مع أسبابها وروابطها، وتفصيل الحصص غير المسندة في الثانوي حسب المادة. -->
@@ -8,7 +9,6 @@
 <!-- v462: «صحائف الأحوال» على الهاتف بالتنسيق المعتمد (مهارة mobile-cards): بطاقة لكل معلم — الاسم والحالة، المدرسة، شارات التاريخ والحجم والمراجعة، وشريط أزرار سفلي؛ شريط جانبي بلون الحالة. CSS للهاتف فقط. -->
 <!-- v461: شاشة «اختر الدور» تُظهر «المنسق العام» بدل «منسق المرحلة» لمن عُيّن منسقًا عامًا (is_gc من my_coordinator_scope). -->
 <!-- v459: بطاقة المعلم على الهاتف — زرا «إضافة انتداب» و«بيان الحالة» في سطر مستقل تحت الاسم بدل أن يضغطا الاسم والشارات (كانت الكلمات تتكسر حرفًا حرفًا على 360px). CSS فقط. -->
-<!-- v458: دور «المنسق العام» — منسق مرحلة بإسنادات المراحل الأربع يعيّنه مدير النظام من مركز التحكم (زر «المنسق العام…» في ملف المستخدم)؛ رئيسية بمقارنة المراحل وبطاقة لكل مرحلة، وقدرة «نقل مدارس الابتدائي والإعدادي بين الموجهين» مغلقة افتراضيًا. بلا اعتماد ولا حسابات ولا مركز تحكم. قاعدة البيانات v458. -->
 <html lang="ar" dir="rtl">
 <head>
 <!-- إعداد: أ/ محمود عبدالمفدي محمد أبوالنجا | الصفة: معلم -->
@@ -16,7 +16,7 @@
 <script>/* v226: العنوان الموحد — انظر التعليق أعلى الملف */(function(){try{if(/\.github\.io$/.test(location.hostname)&&/^\/science-guidance\/?(index\.html)?$/.test(location.pathname)&&!/[?&]stay\b/.test(location.search))location.replace('https://teachers-data-portal.vercel.app/app/'+location.hash)}catch(e){}})();</script>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#152c43">
-<title>نظام توجيه العلوم — v469</title>
+<title>نظام توجيه العلوم — v470</title>
 <link rel="manifest" href="./manifest.webmanifest">
 <link rel="icon" type="image/png" sizes="192x192" href="./app-icon-192.png">
 <link rel="apple-touch-icon" href="./app-icon-192.png">
@@ -2527,8 +2527,8 @@ span.v415-L{border-radius:10px;padding:2px 8px}
 .v458-home .v458-task{margin:0 0 8px;padding:0;min-width:0}
 .v458-task summary,.v458-all summary{cursor:pointer;min-height:44px;padding:8px 12px}
 .v458-task summary{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
-.v458-task>summary::before{content:"▸";color:var(--muted)}
-.v458-task[open]>summary::before{content:"▾"}
+.v458-task:not(.v458-stage)>summary::before{content:"▸";color:var(--muted)}
+.v458-task:not(.v458-stage)[open]>summary::before{content:"▾"}
 .v458-task summary .badge{margin-inline-start:auto;white-space:nowrap}
 .v458-task[data-status="urgent"]{border-inline-start:5px solid #b45309}
 .v458-task ul{list-style:none;margin:0;padding:0 12px}
@@ -2552,28 +2552,30 @@ span.v415-L{border-radius:10px;padding:2px 8px}
 .v458-stage-stats{border-top:1px solid var(--line)}
 .v458-stage-stats>summary{color:var(--muted)}
 @media(max-width:760px){.v458-stage-buttons>.btn{flex:1 1 120px}}
-/* بطاقات المراحل في رئيسية المنسق العام. الخلفية تفصل البطاقة، والشارة تدل على الحالة. */
-.v458-home-stages>.v458-stage{
- --stage-tint:#f1f6fc;
- margin:0 0 10px;
- border:1px solid #c9d7e6;
- border-radius:12px;
- background:var(--stage-tint);
-}
-.v458-home-stages>.v458-stage:nth-of-type(2){--stage-tint:#f1f7f8}
-.v458-home-stages>.v458-stage:nth-of-type(3){--stage-tint:#f5f3fa}
-.v458-home-stages>.v458-stage:nth-of-type(4){--stage-tint:#f3f6fa}
-.v458-home-stages>.v458-stage>summary{padding:10px 12px;gap:6px 8px}
-.v458-home-stages>.v458-stage>summary>b{min-width:0}
+/* v470: بطاقات المراحل في رئيسية المنسق العام — لون لكل مرحلة وزر عرض/إخفاء واضح (تحل محل v468). */
+.v458-home-stages>.v458-stage{--sa:#2563eb;--st:#eff5ff;margin:0 0 12px;background:#fff;border:1px solid #d5dee9;border-inline-start:6px solid var(--sa);border-radius:12px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,.06)}
+.v458-home-stages>.v458-stage:nth-of-type(2){--sa:#0d9488;--st:#ecfaf8}
+.v458-home-stages>.v458-stage:nth-of-type(3){--sa:#7c3aed;--st:#f5f0ff}
+.v458-home-stages>.v458-stage:nth-of-type(4){--sa:#c2410c;--st:#fff4ec}
+.v458-home-stages>.v458-stage>summary{list-style:none;padding:12px;gap:4px 8px}
+.v458-home-stages>.v458-stage>summary::-webkit-details-marker{display:none}
+.v458-home-stages>.v458-stage>summary>b{min-width:0;font-size:1.06em;color:var(--sa)}
 .v458-home-stages>.v458-stage>summary>.badge{white-space:normal}
-.v458-home-stages>.v458-stage>summary>.v458-stage-breakdown{padding-inline-start:18px}
-.v458-home-stages>.v458-stage>summary:focus-visible{outline:2px solid var(--primary);outline-offset:-3px;border-radius:11px}
-.v458-home-stages>.v458-stage[open]>summary{border-bottom:1px solid #c9d7e6}
+.v458-home-stages>.v458-stage>summary>.v458-stage-breakdown{padding-inline-start:0}
+.v458-home-stages>.v458-stage>summary::after{content:"عرض التفاصيل ▾";flex-basis:100%;text-align:center;margin-top:6px;padding:7px;border-radius:8px;background:var(--st);color:var(--sa);font-weight:700;font-size:.9em}
+.v458-home-stages>.v458-stage[open]>summary{background:var(--st);border-bottom:1px solid #d5dee9}
+.v458-home-stages>.v458-stage[open]>summary::after{content:"إخفاء التفاصيل ▴";background:#fff}
+.v458-home-stages>.v458-stage>summary:focus-visible{outline:2px solid var(--sa);outline-offset:-3px}
 .v458-home-stages>.v458-stage[open]>ul:first-of-type li:first-child{border-top:0}
+.v458-home-stages>.v458-stage .v458-stage-stats>summary{list-style:none;justify-content:space-between;margin:8px 12px;padding:8px 12px;border:1px dashed var(--sa);border-radius:8px;color:var(--sa);font-weight:700}
+.v458-home-stages>.v458-stage .v458-stage-stats>summary::-webkit-details-marker{display:none}
+.v458-home-stages>.v458-stage .v458-stage-stats>summary::after{content:"عرض ▾";font-size:.85em}
+.v458-home-stages>.v458-stage .v458-stage-stats[open]>summary::after{content:"إخفاء ▴"}
+.v458-home-stages>.v458-stage .v458-stage-stats dl{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}
+.v458-home-stages>.v458-stage .v458-stage-stats dl>div{background:#f6f8fb;border-radius:8px;padding:6px 4px;text-align:center;min-width:0}
+.v458-home-stages>.v458-stage .v458-stage-stats dt{font-size:.82em;overflow-wrap:anywhere}
 .v458-home-stages>.v458-home-actions{margin-top:14px;padding:12px 0 0;border-top:1px solid var(--line)}
-@media(max-width:360px){
- .v458-home-stages>.v458-stage>summary{padding-inline:8px;column-gap:5px}
-}
+@media(max-width:360px){.v458-home-stages>.v458-stage>summary{padding-inline:8px;column-gap:5px}}
 /* تبويبا رئيسية المنسق العام ومتابعة المعلمين */
 .v458-home-panes{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 12px}
 .v458-home-panes .btn{flex:1 1 auto}
@@ -2978,6 +2980,7 @@ window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();window.v152
 window.addEventListener('appinstalled',()=>{window.v152InstallPrompt=null;v152SyncInstallBtn()});
 if('serviceWorker' in navigator&&location.protocol!=='file:')window.addEventListener('load',()=>navigator.serviceWorker.register('./service-worker.js').catch(()=>{}));
 const V145_NEWS=[
+ ['v470','بطاقات المراحل للمنسق العام: لون لكل مرحلة وزر واضح لعرض التفاصيل أو إخفائها.'],
  ['v469','تبويب «متابعة المعلمين» للمنسق العام: تنبيه بلا إسناد، وحالات الجداول الفارغة والناقصة وروابطها.'],
  ['v468','بطاقات مراحل المنسق العام بحدود واضحة وخلفيات لونية خفيفة وفاصل عند فتح البطاقة.'],
  ['v467','تفاصيل مراحل المنسق العام: المدارس التي تحتاج تدخّلًا مع أسبابها وروابطها، وتفصيل الحصص غير المسندة في الثانوي حسب المادة.'],
