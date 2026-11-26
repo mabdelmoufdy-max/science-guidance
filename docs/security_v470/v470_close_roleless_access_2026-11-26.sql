@@ -56,6 +56,7 @@ do $$ begin
   if pg_get_functiondef('public.lookup_identity_by_civil(text)'::regprocedure) not like '%-- v470%' then raise exception 'v470: الدالة لم تتغير'; end if;
 end $$;
 
-insert into public.audit_log(action, entity_type, new_data)
-values ('v470_close_roleless_access','security', jsonb_build_object('items','view,ssc_read,lookup_identity_by_civil,audit_insert'));
+insert into public.audit_log(actor_role, action, entity_type, entity_id, old_data, new_data)
+values ('admin','v470_close_roleless_access','security','v470', null,
+        jsonb_build_object('items','teacher_workload_summary,ssc_read,lookup_identity_by_civil,audit_insert'));
 commit;

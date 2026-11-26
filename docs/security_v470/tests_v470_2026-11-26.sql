@@ -8,7 +8,6 @@ select set_config('t.civ',  (select civil_id from public.teacher_records where c
 select set_config('t.out','',true);
 set local role authenticated;
 do $$ declare r text;
-  procedure_note text;
 begin
   -- (أ) حساب بلا دور (= موظف مدرسة في الخيار أ)، مع ترويسة مزيفة admin
   perform set_config('request.jwt.claims','{"sub":"11111111-2222-3333-4444-555555555555","role":"authenticated"}',true);
