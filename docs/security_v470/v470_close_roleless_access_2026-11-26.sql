@@ -7,7 +7,10 @@ begin;
 
 do $$ begin
   if to_regclass('private.v470_backup') is not null then
-    raise exception 'v470: مطبّق بالفعل (private.v470_backup موجود) — شغّل ملف الرجوع أولًا';
+    raise exception 'v470: مطبّق بالفعل (private.v470_backup موجود) — شغّل ملف الرجوع أولًا' using errcode = 'V4701';
+  end if;
+  if (select atttypid from pg_attribute where attrelid = 'public.audit_log'::regclass and attname = 'id') <> 'bigint'::regtype then
+    raise exception 'v470: audit_log.id ليس bigint — توقف' using errcode = 'V4703';
   end if;
 end $$;
 
@@ -54,7 +57,7 @@ begin
   if d !~* 'language plpgsql' then raise exception 'v470: الدالة ليست plpgsql — توقف'; end if;
   if d !~* E'\\nbegin\\n' then raise exception 'v470: لم يوجد begin في الدالة — توقف'; end if;
   d := regexp_replace(d, E'\\nbegin\\n',
-    E'\nbegin\n  if coalesce((select private.current_app_role())::text, '''') not in (''admin'',''stage_coordinator'',''supervisor'',''senior_teacher'') then return jsonb_build_object(''valid'', false, ''exists'', false); end if; -- v470\n', 'i');
+    E'\nbegin\n  -- v470: الأدوار المسموحة = admin, stage_coordinator, supervisor (جدول المراجعة) + senior_teacher عمدًا:\n  -- «حساب المدرسة» يستعمل هذه الدالة في شاشة «إضافة معلمين بسرعة» (index.html: seniorTeacherAddTeacherForm ← uxSmartifyForm ← uxLookupCivil).\n  if coalesce((select private.current_app_role())::text, '''') not in (''admin'',''stage_coordinator'',''supervisor'',''senior_teacher'') then return jsonb_build_object(''valid'', false, ''exists'', false); end if; -- v470\n', 'i');
   execute d;
 end $$;
 
